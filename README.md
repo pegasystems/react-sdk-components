@@ -1,1 +1,1 @@
-# react-sdk-infra
+# react-sdk-components
