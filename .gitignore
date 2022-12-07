@@ -1,0 +1,12 @@
+# files to ignore
+
+.DS_Store
+node_modules
+/dist
+/distAuthoring
+/__DO_NOT_COMMIT
+
+**/lib
+**/**/lib
+
+**/tsconfig.*.tsbuildinfo

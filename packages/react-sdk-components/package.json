@@ -1,0 +1,14 @@
+{
+  "name": "react-sdk-components",
+  "version": "0.22.0",
+  "description": "React SDK Components and Bridge",
+  "_filesComment": "During packing, npm ignores everything NOT in the files list",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pegasystems",
+  "license": "SEE LICENCE IN LICENSE"
+}
