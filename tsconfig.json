@@ -1,0 +1,43 @@
+{
+  "extends": "@pega/tsconfig/index.json",
+  "include": ["./**/*"],
+  "exclude": ["**/lib/**/*", "**/node_modules/**"],
+  "compilerOptions": {
+
+    // Copied from SDK-R - JEA
+    "experimentalDecorators": true,
+    "strict": true,
+    "sourceMap": true,
+    "module": "ES2020",
+    "target": "ES2020",
+    "moduleResolution": "node",
+    "jsx": "react", // May be different options for this with newer versions of React
+    "allowJs": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    // End of copied from SDK-R
+
+    // Declare all ambient type declarations here for VSCode.
+    // Override with only specific types for other configurations.
+
+    // Next lines commented out - JEA
+    "types": [
+    ],
+    "typeRoots": ["node_modules/@types", "typings"],
+    
+    "noEmit": false,    // JEA - was false
+    "incremental": true,
+    "inlineSources": true,  // JEA - was true
+
+    // Update to usage of "import type" so these can inherit "error" and true from @pega/tsconfig.
+    "importsNotUsedAsValues": "remove",
+    "isolatedModules": false,
+
+    "baseUrl": "./",
+    // JEA - The "paths" may be for VS Code
+    "paths": {
+      // JEA - Bob thinks this may have been necessary for some VS Code intellisense but not sure.
+      "react-sdk-components": ["packages/react-sdk-components/src/*.jsx"]
+    }
+  }
+}

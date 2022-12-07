@@ -1,0 +1,33 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "include": [
+    "./src/**/*.js",
+    "./src/**/*.jsx",
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+  ],
+  "exclude": [
+    "./src/**/*.test.ts",
+    "./src/**/*.test.tsx",
+    "./src/**/*.mock.ts",
+    "./src/**/*.mock.tsx",
+    "./src/**/*.mock.json",
+    "./src/**/*.stories.ts",
+    "./src/**/*.stories.tsx",
+    "./src/docs/**",
+    "./src/**/mocks/**",
+    "./node_modules/**"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "types": [],
+    "noEmit": false
+  },
+  "references": [
+    {
+      "path": "./tsconfig.pkg.json"
+    }
+  ]
+}
