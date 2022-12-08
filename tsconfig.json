@@ -1,7 +1,12 @@
 {
   "extends": "@pega/tsconfig/index.json",
-  "include": ["./**/*"],
-  "exclude": ["**/lib/**/*", "**/node_modules/**"],
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    "**/lib/**/*", 
+    "**/node_modules/**"
+  ],
   "compilerOptions": {
 
     // Copied from SDK-R - JEA
@@ -16,6 +21,9 @@
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     // End of copied from SDK-R
+
+    // Need to add this to remove errors of .js files trying to compile to the same path
+    "outDir": "./lib",
 
     // Declare all ambient type declarations here for VSCode.
     // Override with only specific types for other configurations.

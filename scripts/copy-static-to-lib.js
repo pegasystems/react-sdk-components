@@ -20,14 +20,21 @@ const copyStaticFiles = function(dirPath, arrayOfFiles) {
       const theExt = path.extname(file);
       // console.log(`dirPath: ${dirPath} file: ${file} extension: ${theExt}`);
       if (extensionsToCopy.includes(theExt)) {
-        const fromPath = path.join(__dirname, '..', `${dirPath}/${file}` );
-        console.log(`  copy to lib: ${file}`);
-        // console.log(`    from: ${fromPath}`);
-        const toPath = fromPath.replace('/src/', '/lib/');
-        // console.log(`      to: ${toPath}`);
+        const toPath = dirPath.replace('/src/', '/lib/');
+        // create the toPath if it doesn't exist so we can copy into it
+        if (!fs.existsSync(toPath)) { 
+          console.log( `     Creating ${toPath}`)
+          fs.mkdirSync(toPath, { recursive: true })
+        }
+        // console.log(`\ndirPath: ${dirPath} file: ${file} extension: ${theExt} | toPath: ${toPath}`);
+        const fromFullPath = path.join(__dirname, '..', `${dirPath}/${file}` );
+        const toFullPath = path.join(__dirname, '..', `${toPath}/${file}` );
+        console.log(`\n  copy to lib: ${file}`);
+        console.log(`    from: ${fromFullPath}`);
+        console.log(`      to: ${toFullPath}`);
         // Copy file fromPath toPath
         try {
-          fs.copyFileSync(fromPath, toPath);
+          fs.copyFileSync(fromFullPath, toFullPath);
         }
         catch(err) {
           console.error(`copyStaticFiles: Unable to copy file from src to lib: ${err}`);
