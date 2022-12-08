@@ -8,7 +8,7 @@
     "build-sdk": "npm run compile-ts",
     "postbuild-sdk": "npm run copy-static-files-to-lib",
     "ci": "npm run clean && npm install",
-    "clean": "rimraf-standalone.js ./node_modules",
+    "clean": "node rimraf-standalone.js ./node_modules",
     "delete-tsbuildinfo": "rm -f packages/react-sdk-components/*.*.tsbuildinfo",
     "clear-lib": "rm -rf packages/react-sdk-components/lib",
     "prepare-code-for-compilation": "node scripts/build-exports.js",
