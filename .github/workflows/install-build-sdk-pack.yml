@@ -29,7 +29,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies, run build-sdk, and pack
-        run: npm install
-      - run: npm run ci
+        run: npm run ci
       - run: npm run build-sdk
       - run: npm pack ./packages/react-sdk-components/
