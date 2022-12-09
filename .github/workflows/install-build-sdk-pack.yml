@@ -1,7 +1,17 @@
 name: Install, build-sdk, and pack
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+
+  push:
+    branches:
+      - master
+      - 'release/**'
+
+  pull_request:
+    branches:
+      - master
+      - 'release/**'  
 
 jobs:
   build:
@@ -18,7 +28,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install dependencies and run lint
+      - name: Install dependencies, run build-sdk, and pack
         run: npm run ci
       - run: npm run build-sdk
       - run: npm pack ./packages/react-sdk-components/
