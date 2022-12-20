@@ -719,10 +719,7 @@ export default function ListView(props) {
   function _showFilteredIcon(columnId) {
     for (const filterObj of filterByColumns) {
       if (filterObj['ref'] === columnId) {
-        if (filterObj['containsFilterValue'] !== '') {
-          return true;
-        }
-        return false;
+        return (filterObj['containsFilterValue'] !== '');
       }
     }
 

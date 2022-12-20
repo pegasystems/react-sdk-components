@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 
 declare const PCore;
 

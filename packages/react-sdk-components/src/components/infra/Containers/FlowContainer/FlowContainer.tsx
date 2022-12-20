@@ -130,11 +130,7 @@ export default function FlowContainer(props) {
     if (caseViewMode && caseViewMode === "review") {
       return true;
     }
-    if (caseViewMode && caseViewMode === "perform") {
-      return false;
-    }
-
-    return true;
+    return (caseViewMode && caseViewMode === "perform");
   }
 
 
@@ -223,10 +219,8 @@ export default function FlowContainer(props) {
 
     const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS);
     // const allAssignments = [];
-    if (childCases && childCases.length > 0) {
-      return true;
-    }
-    return false;
+    
+    return (childCases && childCases.length > 0);
   }
 
 

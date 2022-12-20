@@ -76,6 +76,7 @@ export default function View(props) {
       // This is the node_modules version of react_pconnect!
       const theLocalComponent = SdkComponentMap.getLocalComponentMap()[template];
       if ( theLocalComponent !== undefined) {
+          // eslint-disable-next-line no-console
           console.log(`View component found ${template}: Local`);
           ViewTemplate = theLocalComponent
       } else {
@@ -98,105 +99,11 @@ export default function View(props) {
 
     } else {
 
+      // eslint-disable-next-line no-console
       console.warn(`View: SdkComponentMap expected but not found.`)
 
-      switch(template) {
-        // case "CaseSummary":
-        //   ViewTemplate = CaseSummary;
-        //   break;
-  
-        // case "CaseView":
-        //   ViewTemplate = CaseView;
-        //   break;
-  
-        // case "DefaultForm":
-        //   ViewTemplate = DefaultForm;
-        //   break;
-  
-        // case "Details":
-        //   ViewTemplate = Details;
-        //   break;
-  
-        // case "DetailsTwoColumn":
-        //   ViewTemplate = DetailsTwoColumn;
-        //   break;
-  
-        // case "ListPage":
-        //   ViewTemplate = ListPage;
-        //   break;
-  
-        // case "ListView": {
-        //   ViewTemplate = ListView;
-        //   const bInForm = true;
-        //   props = { ...props, bInForm};
-        //   break;
-        // }
-  
-        // case "NarrowWideForm":
-        //   ViewTemplate= NarrowWideForm;
-        //   break;
-  
-        // case "NarrowWidePage":
-        //   ViewTemplate= NarrowWidePage;
-        //   break;
-  
-        // case "NarrowWideDetails":
-        //   ViewTemplate= NarrowWideDetails;
-        //   break;
-  
-        // case "OneColumn":
-        //   ViewTemplate = OneColumn;
-        //   break;
-  
-        // case "OneColumnTab":
-        //   ViewTemplate = OneColumnTab;
-        //   break;
-  
-        // case 'SimpleTable':
-        //   ViewTemplate = SimpleTable;
-        //   break;
-  
-        // case "SubTabs":
-        //   ViewTemplate = SubTabs;
-        //   break;
-  
-        // case "OneColumnPage":
-        //   ViewTemplate = OneColumnPage;
-        //   break;
-  
-        // case "TwoColumn":
-        //   ViewTemplate = TwoColumn;
-        //   break;
-  
-        // case "TwoColumnPage":
-        //   ViewTemplate = TwoColumnPage;
-        //   break;
-  
-        // case "WideNarrowForm":
-        //   ViewTemplate= WideNarrowForm;
-        //   break;
-  
-        // case "WideNarrowPage":
-        //   ViewTemplate= WideNarrowPage;
-        //   break;
-  
-        // case "WideNarrowDetails":
-        //   ViewTemplate= WideNarrowDetails;
-        //   break;
-  
-        // case "InlineDashboardPage":
-        //   ViewTemplate= InlineDashboardPage;
-        //   break;
-  
-        // case "DataReference":
-        //   ViewTemplate= DataReference;
-        //   break;
-  
-        default:
-          // eslint-disable-next-line no-console
-          console.error(`View: Trying to render an unknown template: ${template}`);
-          break;
-      }
+      // eslint-disable-next-line no-console
+      console.error(`View: Trying to render an unknown template: ${template}`);
   
     }
 
