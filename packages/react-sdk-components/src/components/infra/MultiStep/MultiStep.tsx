@@ -55,11 +55,7 @@ export default function MultiStep(props) {
       }
 
       function _showHLine(index: number): boolean {
-        if (index < arNavigationSteps.length - 1) {
-          return true;
-        }
-
-        return false;
+        return (index < arNavigationSteps.length - 1);
       }
 
       function buttonPress(sAction: string, sButtonType: string) {

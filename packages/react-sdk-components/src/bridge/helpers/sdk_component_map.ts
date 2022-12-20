@@ -142,10 +142,12 @@ class ComponentMap {
       const theLocalCompPromise = this.readLocalSdkComponentMap(inLocalSdkComponentMap);
       const thePegaCompPromise = this.readPegaSdkComponentMap(pegaSdkComponentMap);
 
-      Promise.all([theLocalCompPromise, thePegaCompPromise]).then((results) => {
+
+      Promise.all([theLocalCompPromise, thePegaCompPromise]).then((/* results */) => {
         return this.sdkComponentMap;
       }).catch((error) => {
-        console.error(`Error in readSdkComponentMap`);
+        // eslint-disable-next-line no-console
+        console.error(`Error in readSdkComponentMap: ${error}`);
       })
 
     } else {
@@ -177,7 +179,8 @@ class ComponentMap {
   }
 
   setLocalComponentMap(inLocalSdkComponentMap) {
-    return this.sdkComponentMap.localComponentMap = inLocalSdkComponentMap;
+    this.sdkComponentMap.localComponentMap = inLocalSdkComponentMap;
+    return this.sdkComponentMap.localComponentMap;
   }
 
   getPegaProvidedComponentMap = () => {
@@ -185,7 +188,8 @@ class ComponentMap {
   }
 
   setPegaProvidedComponentMap = (inPegaProvidedComponentMap) => {
-    return this.sdkComponentMap.pegaProvidedComponentMap = inPegaProvidedComponentMap
+    this.sdkComponentMap.pegaProvidedComponentMap = inPegaProvidedComponentMap
+    return this.sdkComponentMap.pegaProvidedComponentMap;
   }
 
 }

@@ -92,11 +92,8 @@ export const hasAssignments = (pConnect) => {
   const assignments = pConnect.getValue(CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS);
   const childCasesAssignments = getChildCaseAssignments(pConnect);
 
-  if (assignments || childCasesAssignments || isCaseWideLocalAction(pConnect)) {
-    return true;
-  }
-  return false;
-};
+  return (assignments || childCasesAssignments || isCaseWideLocalAction(pConnect));
+}
 
 export const showBanner = (getPConnect) => {
   const pConnect = getPConnect();

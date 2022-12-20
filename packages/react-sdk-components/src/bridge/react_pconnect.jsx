@@ -123,6 +123,7 @@ const getComponent = (c11nEnv, declarative) => {
       // This is the node_modules version of react_pconnect!
       const theLocalComponent = SdkComponentMap.getLocalComponentMap()[componentType];
       if ( theLocalComponent !== undefined) {
+          // eslint-disable-next-line no-console
           console.log(`react_pconnect getComponent found ${componentType}: Local`);
           component = theLocalComponent
       } else {
@@ -139,8 +140,9 @@ const getComponent = (c11nEnv, declarative) => {
     } else {
       // We no longer handle the "old" switch statement that was here in the original packaging.
       //  All components seen here need to be in the SdkComponentMap
+      // eslint-disable-next-line no-console
       console.error(`SdkComponentMap not defined! Unable to process component: ${componentType}`);
-      // eslint-disable-next-line sonarjs/max-switch-cases
+      
     }
   } else {
     // eslint-disable-next-line no-console
