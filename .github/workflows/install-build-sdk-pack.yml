@@ -1,4 +1,4 @@
-name: Install, build-sdk, and pack
+name: ci, build:dev, build-sdk, and pack
 
 on:
   workflow_dispatch:
