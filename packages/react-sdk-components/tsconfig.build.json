@@ -16,7 +16,8 @@
     "./src/**/*.stories.tsx",
     "./src/docs/**",
     "./src/**/mocks/**",
-    "./node_modules/**"
+    "./node_modules/**",
+    "./src/samples/**",
   ],
   "compilerOptions": {
     "composite": true,

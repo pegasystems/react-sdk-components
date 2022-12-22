@@ -1,4 +1,4 @@
-name: Install, build-sdk, and pack
+name: ci, build:dev, build-sdk, and pack
 
 on:
   workflow_dispatch:
@@ -30,5 +30,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies, run build-sdk, and pack
         run: npm run ci
+      - run: npm run build:dev
       - run: npm run build-sdk-complete
       - run: npm run pack-sdk
