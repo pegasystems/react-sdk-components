@@ -20,7 +20,7 @@ installs all of the npm packages needed
 1.  **Work in VS Code** - live reload should allow you to see changes in browser
 
 1.  Once you're ready to build a new packaging of the SDK components. <br>
-**npm run build-sdk** - compiles all of the necessary code and puts the contents of the npm packaging in **packages/react-sdk-components/lib**
+**npm run build-sdk-complete** - runs lint and compiles all of the necessary code and puts the contents of the npm packaging in **packages/react-sdk-components/lib**
 
 
 
