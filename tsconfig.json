@@ -7,6 +7,8 @@
     "**/lib/**/*", 
     "**/node_modules/**",
     "**/dist/**/*",
+    "**/tests/**",
+    "playwright.config.js"
     ],
   "compilerOptions": {
 

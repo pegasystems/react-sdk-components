@@ -28,7 +28,9 @@
     "start-dev-https": "webpack serve --https",
     "start-prod": "http-server ./dist --port 3502 --gzip --brotli --cors --proxy http://localhost:3502?",
     "start-prod-https": "http-server ./dist --port 3502 --gzip --brotli --cors --ssl --cert private.pem --key private.key --proxy https://localhost:3502?",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node playwright-message.js && playwright test --project=chromium MediaCo/portal MediaCo/embedded",
+    "test:headed": "playwright test --headed --project=chromium MediaCo/portal MediaCo/embedded",
+    "test-report": "playwright show-report"
   },
   "author": "Pegasystems",
   "license": "SEE LICENSE IN LICENSE",
@@ -63,6 +65,7 @@
     "@pega/prettier-config": "^0.4.0",
     "@pega/stylelint-config": "^0.4.0",
     "@pega/tsconfig": "^0.4.0",
+    "@playwright/test": "^1.28.0",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "clean-webpack-plugin": "^3.0.0",
     "commitlint": "^17.3.0",

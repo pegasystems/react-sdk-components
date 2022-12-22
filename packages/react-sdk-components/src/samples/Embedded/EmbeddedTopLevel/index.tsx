@@ -582,7 +582,7 @@ export default function EmbeddedTopLevel() {
                     We need to gather a little information about you.
                 </div>
                 <div>
-                    <img src="assets/img/cableinfo.png" className={classes.pegaPartAccompanimentImage} />
+                    <img src="../../../assets/img/cableinfo.png" className={classes.pegaPartAccompanimentImage} />
                 </div>
 
             </div>
