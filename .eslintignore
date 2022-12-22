@@ -5,6 +5,9 @@ webpack.config.js
 **/*.d.ts
 **/*.d.ts.map
 
+## Don't lint the test files
+**/tests
+
 ## lib is the output directory of the Sdk packaging for npm. Don't lint these generated files
 **/lib
 
