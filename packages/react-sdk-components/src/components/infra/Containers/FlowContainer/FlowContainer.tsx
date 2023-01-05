@@ -7,8 +7,8 @@ import { Card, CardHeader, Avatar, Typography } from "@material-ui/core";
 import { Utils } from '../../../helpers/utils';
 import { Alert } from '@material-ui/lab';
 
-import Assignment from '../../Assignment/Assignment';
-import ToDo from "../../ToDo/ToDo";
+import Assignment from '../../Assignment';
+import ToDo from "../../ToDo";
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import StoreContext from "../../../../bridge/Context/StoreContext";
@@ -130,7 +130,12 @@ export default function FlowContainer(props) {
     if (caseViewMode && caseViewMode === "review") {
       return true;
     }
-    return (caseViewMode && caseViewMode === "perform");
+    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+    if (caseViewMode && caseViewMode === "perform") {
+      return false;
+    }
+
+    return true;
   }
 
 
@@ -219,8 +224,11 @@ export default function FlowContainer(props) {
 
     const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS);
     // const allAssignments = [];
-    
-    return (childCases && childCases.length > 0);
+    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+    if (childCases && childCases.length > 0) {
+      return true;
+    }
+    return false;
   }
 
 

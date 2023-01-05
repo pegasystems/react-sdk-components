@@ -4,18 +4,16 @@ import PropTypes, { object } from "prop-types";
 import isEqual from 'lodash.isequal';
 // import ReAuthMessageModal from "../ReAuthenticationModal";
 import { Box, CircularProgress } from "@material-ui/core";
-
-// import StoreContext from "../../bridge/Context/StoreContext";
-// import createPConnectComponent from "../../bridge/react_pconnect";
-import StoreContext from "../../../bridge/Context/StoreContext";
 import createPConnectComponent from "../../../bridge/react_pconnect";
 import { LazyMap as LazyComponentMap } from "../../../components_map";
+import StoreContext from "../../../bridge/Context/StoreContext";
+import Utils from '../../helpers/utils';
 
 declare const PCore;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
-// Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesirable results and
+// Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
 // is totally at your own risk.
 //
 
@@ -39,7 +37,7 @@ function getItemView(routingInfo, renderingMode) {
       if (
         items[key] &&
         items[key].view &&
-        Object.keys(items[key].view).length > 0
+        !Utils.isEmptyObject(items[key].view)
       ) {
         viewConfigs.push(items[key]);
       }
