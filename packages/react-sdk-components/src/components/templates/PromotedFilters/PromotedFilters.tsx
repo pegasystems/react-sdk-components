@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
-
 import ListView from '../ListView';
 import Utils from '../../helpers/utils';
 import './PromotedFilters.css';

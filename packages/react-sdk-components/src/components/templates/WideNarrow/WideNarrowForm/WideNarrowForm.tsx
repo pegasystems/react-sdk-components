@@ -1,6 +1,6 @@
 import React from "react";
 
-import '../WideNarrow/WideNarrow.css';
+import './WideNarrowForm.css';
 
 export default function WideNarrowForm(props) {
   const {children} = props;

@@ -80,7 +80,8 @@ export default function SimpleTableManual(props) {
     contextClass,
     hideAddRow,
     hideDeleteRow,
-    propertyLabel
+    propertyLabel,
+    fieldMetadata
   } = props;
   const pConn = getPConnect();
   const [rowData, setRowData] = useState([]);
@@ -99,6 +100,8 @@ export default function SimpleTableManual(props) {
   const [displayDialogContainsValue, setDisplayDialogContainsValue] = useState<string>('');
   const [displayDialogDateFilter, setDisplayDialogDateFilter] = useState<string>('notequal');
   const [displayDialogDateValue, setDisplayDialogDateValue] = useState<string>('');
+
+  const parameters = fieldMetadata?.datasource?.parameters;
 
   const label = labelProp || propertyLabel;
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
@@ -197,7 +200,7 @@ export default function SimpleTableManual(props) {
   function generateRowsData() {
     // if dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (dataPageName) {
-      getDataPage(dataPageName, context).then(listData => {
+      getDataPage(dataPageName, parameters, context).then(listData => {
         const data = formatRowsData(listData);
         myRows = data;
         setRowData(data);
@@ -244,11 +247,19 @@ export default function SimpleTableManual(props) {
   // console.log(JSON.stringify(rowData));
 
   const addRecord = () => {
-    pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
+    if (PCore.getPCoreVersion()?.includes('8.7')) {
+      pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
+    } else {
+      pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
+    }
   };
 
   const deleteRecord = index => {
-    pConn.getListActions().deleteEntry(index, pageReference);
+    if (PCore.getPCoreVersion()?.includes('8.7')) {
+      pConn.getListActions().deleteEntry(index, pageReference);
+    } else {
+      pConn.getListActions().deleteEntry(index);
+    }
   };
 
   function buildElementsForTable() {
@@ -467,7 +478,11 @@ export default function SimpleTableManual(props) {
   function _showFilteredIcon(columnId) {
     for (const filterObj of filterByColumns) {
       if (filterObj['ref'] === columnId) {
-        return (filterObj['containsFilterValue'] !== '');
+        // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+        if (filterObj['containsFilterValue'] !== '') {
+          return true;
+        }
+        return false;
       }
     }
 

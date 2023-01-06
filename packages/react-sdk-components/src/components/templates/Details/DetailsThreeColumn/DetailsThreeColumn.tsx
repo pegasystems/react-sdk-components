@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 // import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
 import DetailsFields from '../../../designSystemExtensions/DetailsFields';
 
-export default function DetailsTwoColumn(props) {
+export default function DetailsThreeColumn(props) {
   const { children } = props;
   const arFields: Array<any> = [];
 
@@ -13,27 +13,29 @@ export default function DetailsTwoColumn(props) {
     arFields.push(theChildrenOfChild);
   }
 
-  if (arFields.length !== 2) {
+  if (arFields.length !== 3) {
     // eslint-disable-next-line no-console
-    console.error(`DetailsTwoColumn expects 2 children and received ${arFields.length}`);
+    console.error(`DetailsThreeColumn expects 3 children and received ${arFields.length}`);
   }
 
-
   return (
-    <div id="DetailsTwoColumn">
+    <div id='DetailsThreeColumn'>
       <Grid container spacing={1}>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <DetailsFields fields={arFields[0]} />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <DetailsFields fields={arFields[1]} />
+        </Grid>
+        <Grid item xs={4}>
+          <DetailsFields fields={arFields[2]} />
         </Grid>
       </Grid>
     </div>
-  )
+  );
 }
 
-DetailsTwoColumn.propTypes = {
+DetailsThreeColumn.propTypes = {
   // showLabel: PropTypes.bool,
   // label: PropTypes.string,
   // getPConnect: PropTypes.func.isRequired,

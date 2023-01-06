@@ -40,7 +40,7 @@ export const useNavBar = () => useContext(NavContext);
  * The wrapper handles knowing how to take in just children and mapping
  * to the Cosmos template. This could be a combination of things but it knows...
  */
-export function AppShell(props) {
+export default function AppShell(props) {
   const {
     pages,
     caseTypes,
@@ -437,5 +437,3 @@ AppShell.propTypes = {
   // httpMessages: PropTypes.arrayOf(PropTypes.string),
   // activeCases: PropTypes.arrayOf(PropTypes.object)
 };
-
-export default AppShell;

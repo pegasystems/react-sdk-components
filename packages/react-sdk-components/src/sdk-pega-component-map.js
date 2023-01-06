@@ -13,7 +13,7 @@ import AutoComplete from '../src/components/forms/AutoComplete';
 import CancelAlert from '../src/components/forms/CancelAlert';
 import CaseHistory from '../src/components/widgets/CaseHistory';
 import CaseSummary from '../src/components/templates/CaseSummary';
-import CaseView from '../src/components/templates/CaseView/CaseView';
+import CaseView from '../src/components/templates/CaseView';
 import Checkbox from '../src/components/forms/Checkbox';
 import Currency from '../src/components/helpers/formatters/Currency';
 import DashboardFilter from '../src/components/infra/DashboardFilter';

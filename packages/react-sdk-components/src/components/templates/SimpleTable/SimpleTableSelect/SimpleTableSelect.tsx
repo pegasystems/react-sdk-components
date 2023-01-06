@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from "react";
-import ListView from '../../ListView/ListView';
+import ListView from '../../ListView';
 import SimpleTable from '../SimpleTable';
 
-import PromotedFilters from '../../PromotedFilters/PromotedFilters';
+import PromotedFilters from '../../PromotedFilters';
 
 const isSelfReferencedProperty = (param, referenceProp) => {
   const [, parentPropName] = param.split('.');
