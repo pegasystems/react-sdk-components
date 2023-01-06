@@ -1,7 +1,7 @@
 import React from "react";
 // import PropTypes from "prop-types";
 // import Grid from '@material-ui/core/Grid';
-import DetailsFields from '../../../designSystemExtensions/DetailsFields/DetailsFields';
+import DetailsFields from '../../../designSystemExtensions/DetailsFields';
 
 export default function NarrowWideDetails(props) {
   const { a, b, children } = props;

@@ -1,6 +1,6 @@
 import React from 'react';
-import FieldGroupTemplate from '../../../designSystemExtensions/FieldGroupList';
-import SimpleTableManual from '../SimpleTableManual/SimpleTableManual';
+import FieldGroupTemplate from '../../FieldGroupTemplate/';
+import SimpleTableManual from '../SimpleTableManual';
 
 declare const PCore: any;
 

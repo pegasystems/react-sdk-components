@@ -2,19 +2,17 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import { Utils } from '../../../helpers/utils';
+import { Utils } from '../../helpers/utils';
 import { Card, CardHeader, Avatar, Typography, Divider } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
-// import StoreContext from "../../../bridge/Context/StoreContext";
-import StoreContext from "../../../../bridge/Context/StoreContext";
-
-import CaseViewActionsMenu from "../CaseViewActionsMenu";
-import VerticalTabs from '../../../infra/VerticalTabs';
-import DeferLoad from '../../../infra/DeferLoad';
+import StoreContext from "../../../bridge/Context/StoreContext";
+import CaseViewActionsMenu from "./CaseViewActionsMenu";
+import VerticalTabs from '../../infra/VerticalTabs';
+import DeferLoad from '../../infra/DeferLoad';
 
 
 declare const PCore;

@@ -35,7 +35,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { Radio } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
-import { filterData } from '../SimpleTable/helpers';
+import { filterData } from '../../templates/SimpleTable/helpers';
 import './ListView.css';
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -59,14 +59,17 @@ const filterByColumns: Array<any> = [];
 
 export default function ListView(props) {
   const { getPConnect, bInForm } = props;
-  const { globalSearch, presets, referenceList, rowClickAction, selectionMode, referenceType, payload } = props;
+  const { globalSearch, presets, referenceList, rowClickAction, selectionMode, referenceType, payload, parameters, compositeKeys } = props;
 
   const thePConn = getPConnect();
   const componentConfig = thePConn.getComponentConfig();
   const resolvedConfigProps = thePConn.getConfigProps();
 
-  /** pyGUID is used for Data classes and pyID is for Work classes */
-  const rowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
+  /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */
+  const defRowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
+
+  /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
+  const rowID = compositeKeys && compositeKeys[0] ? compositeKeys[0] : defRowID;
 
   const [arRows, setRows] = useState<Array<any>>([]);
   const [arColumns, setColumns] = useState<Array<any>>([]);
@@ -90,6 +93,10 @@ export default function ListView(props) {
   let dashboardFilterPayload: any ;
   // Will be sent in the dashboardFilterPayload
   let selectParam: Array<any> = [];
+
+  // dataview parameters coming from the ListPage
+  // This constant will also be used for parameters coming from from other components/utility fnctions in future
+  const dataViewParameters = parameters;
 
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -482,7 +489,7 @@ export default function ListView(props) {
     return PCore.getDataPageUtils().getDataAsync(
       referenceList,
       context,
-      payload && payload.dataViewParameters,
+      payload ? payload.dataViewParameters : dataViewParameters,
       null,
       payload ? payload.query : dashboardFilterPayload && dashboardFilterPayload.query
     );
@@ -719,7 +726,11 @@ export default function ListView(props) {
   function _showFilteredIcon(columnId) {
     for (const filterObj of filterByColumns) {
       if (filterObj['ref'] === columnId) {
-        return (filterObj['containsFilterValue'] !== '');
+        // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+        if (filterObj['containsFilterValue'] !== '') {
+          return true;
+        }
+        return false;
       }
     }
 

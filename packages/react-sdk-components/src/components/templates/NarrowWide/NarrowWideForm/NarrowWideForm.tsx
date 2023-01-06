@@ -1,6 +1,6 @@
 import React from "react";
 
-import '../NarrowWide/NarrowWide.css';
+import './NarrowWideForm.css';
 
 export default function NarrowWideForm(props) {
   const {children} = props;

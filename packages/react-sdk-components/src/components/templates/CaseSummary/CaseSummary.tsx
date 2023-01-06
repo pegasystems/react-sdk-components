@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import CaseSummaryFields from '../../designSystemExtensions/CaseSummaryFields/CaseSummaryFields';
+import CaseSummaryFields from '../../designSystemExtensions/CaseSummaryFields';
 
 export default function CaseSummary(props) {
   const { getPConnect, children } = props;
