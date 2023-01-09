@@ -15,7 +15,7 @@ import CaseHistory from '../src/components/widgets/CaseHistory';
 import CaseSummary from '../src/components/templates/CaseSummary';
 import CaseView from '../src/components/templates/CaseView';
 import Checkbox from '../src/components/forms/Checkbox';
-import Currency from '../src/components/helpers/formatters/Currency';
+import Currency from '../src/components/forms/Currency';
 import DashboardFilter from '../src/components/infra/DashboardFilter';
 import DataReference from '../src/components/templates/DataReference';
 import Date from '../src/components/forms/Date';
