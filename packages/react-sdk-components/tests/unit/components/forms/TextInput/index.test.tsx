@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import TextInput from '@pega/react-sdk-components/lib/components/forms/TextInput';
+import TextInput from '../../../../../src/components/forms/TextInput';
 
 const getDefaultProps = (): any => {
   return {
