@@ -4,6 +4,7 @@
 webpack.config.js
 **/*.d.ts
 **/*.d.ts.map
+**/*.test.tsx
 
 ## Don't lint the test files
 **/tests

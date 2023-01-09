@@ -132,7 +132,8 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("Next")').click();
 
-    await expect(page.locator(`td >> text="${caseID[0]}"`)).toBeVisible();
+    const assignment = page.locator('div[id="Assignment"]');
+    await expect(assignment.locator(`div >> span >> text="${caseID[0]}"`)).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
 
