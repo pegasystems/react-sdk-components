@@ -1,7 +1,7 @@
 {
-  "name": "react-sdk-components",
-  "version": "0.22.0",
-  "description": "React SDK Components and Bridge",
+  "name": "@pega/react-sdk-components",
+  "version": "0.23.0",
+  "description": "React SDK Infrastructure: bridge and components",
   "_filesComment": "During packing, npm ignores everything NOT in the files list",
   "files": [
     "lib"
