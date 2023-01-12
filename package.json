@@ -9,7 +9,7 @@
     "build-sdk": "npm run compile-ts",
     "postbuild-sdk": "npm run copy-static-files-to-lib && npm run edit-pega-components-map",
     "pack-sdk": "npm pack ./packages/react-sdk-components",
-    "ci": "npm run clean && npm install",
+    "ci": "npm run clean && npm install --force",
     "clean": "node rimraf-standalone.js ./node_modules ./dist && npm run clear-lib",
     "delete-tsbuildinfo": "rm -f packages/react-sdk-components/*.*.tsbuildinfo",
     "clear-lib": "node rimraf-standalone.js ./lib packages/react-sdk-components/lib",
