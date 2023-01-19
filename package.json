@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "0.23.1",
+  "version": "0.23.2",
   "description": "React SDK Infrastructure: bridge and components",
   "main": "index.ts",
   "scripts": {
@@ -20,6 +20,7 @@
     "lint": "npx eslint \"**/src/**\"",
     "lint-errors-only": "npx eslint \"packages/react-sdk-components/src/**\" --quiet",
     "build-dev-only": "webpack --mode=development",
+    "build-prod-only": "webpack --mode=production",
     "build:dev": "run-p -l lint build-dev-only",
     "build:dev:ci": "npm run ci && npm run build:dev",
     "build:prod": "run-p -l lint build-prod-only",
@@ -84,6 +85,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-sonarjs": "^0.17.0",
     "html-webpack-plugin": "^5.5.0",
+    "http-server": "^13.0.0",
     "json5": ">=1.0.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.1",
