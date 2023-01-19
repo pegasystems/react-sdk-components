@@ -25,11 +25,11 @@ export default function Phone(props) {
     'data-test-id': testId
   };
 
-  if(displayMode === 'LABELS_LEFT'){
+  if(displayMode === 'LABELS_LEFT') {
     const field = {
       [label]: value
     };
-    return <FieldValueList item={field}/>
+    return <FieldValueList item={field} />
   }
 
   if (readOnly) {
@@ -80,7 +80,7 @@ export default function Phone(props) {
       required={required}
       disabled={disabled}
       onChange={handleChange}
-      onBlur={handleBlur}
+      onBlur={!readOnly ? handleBlur : undefined}
       error={status === 'error'}
       label={label}
       value={value}
