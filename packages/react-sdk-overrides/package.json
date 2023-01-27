@@ -1,7 +1,7 @@
 {
-  "name": "@pega/react-sdk-components",
+  "name": "@pega/react-sdk-overrides",
   "version": "0.23.4",
-  "description": "React SDK Infrastructure: bridge and components",
+  "description": "React SDK - Code for overriding components",
   "_filesComment": "During packing, npm ignores everything NOT in the files list",
   "files": [
     "lib"

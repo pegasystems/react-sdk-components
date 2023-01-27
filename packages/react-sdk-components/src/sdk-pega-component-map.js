@@ -1,6 +1,6 @@
 // When this code is run from the generated npm module, the components are
 //  placed in the npm module's 'lib' directory. So, we expect to import from there.
-//  This file should import and expose ALL of the components that may be 
+//  This file should import and expose ALL of the components that may be
 //  dynamically rendered at runtime via calls to react_pconnect or the View component
 
 import ActionButtons from '../src/components/infra/ActionButtons'; // '../lib/components/infra/ActionButtons';
@@ -25,10 +25,12 @@ import DefaultForm from '../src/components/templates/DefaultForm';
 import DeferLoad from '../src/components/infra/DeferLoad';
 import Details from '../src/components/templates/Details/Details';
 import DetailsSubTabs from '../src/components/templates/Details/DetailsSubTabs';
+import DetailsThreeColumn from './components/templates/Details/DetailsThreeColumn';
 import DetailsTwoColumn from '../src/components/templates/Details/DetailsTwoColumn/DetailsTwoColumn';
 import Dropdown from '../src/components/forms/Dropdown';
 import ErrorBoundary from '../src/components/infra/ErrorBoundary';
 import Email from '../src/components/forms/Email/Email';
+import FieldGroupTemplate from './components/templates/FieldGroupTemplate';
 import FileUtility from '../src/components/widgets/FileUtility/FileUtility';
 import FlowContainer from '../src/components/infra/Containers/FlowContainer';
 import Followers from '../src/components/widgets/Followers';
@@ -38,6 +40,7 @@ import Integer from '../src/components/forms/Integer';
 import ListPage from '../src/components/templates/ListPage/ListPage';
 import ListView from '../src/components/templates/ListView';
 import ModalViewContainer from '../src/components/infra/Containers/ModalViewContainer/ModalViewContainer';
+import MultiReferenceReadOnly from './components/templates/MultiReferenceReadOnly';
 import MultiStep from '../src/components/infra/MultiStep';
 import NarrowWide from '../src/components/templates/NarrowWide/NarrowWide';
 import NarrowWideDetails from '../src/components/templates/NarrowWide/NarrowWideDetails';
@@ -58,18 +61,20 @@ import RootContainer from '../src/components/infra/RootContainer/RootContainer';
 import SemanticLink from '../src/components/forms/SemanticLink';
 import Stages from '../src/components/infra/Stages';
 import SubTabs from '../src/components/templates/SubTabs';
-import TextArea from '../src/components/forms/TextArea';
-import TextContent from '../src/components/forms/TextContent';
-import TextInput from '../src/components/forms/TextInput/TextInput';
 import SimpleTable from '../src/components/templates/SimpleTable/SimpleTable';
 import SimpleTableManual from '../src/components/templates/SimpleTable/SimpleTableManual';
 import SimpleTableSelect from '../src/components/templates/SimpleTable/SimpleTableSelect';
+import SingleReferenceReadOnly from './components/templates/SingleReferenceReadOnly';
 import SummaryItem from '../src/components/widgets/SummaryItem';
 import SummaryList from '../src/components/widgets/SummaryList';
+import TextArea from '../src/components/forms/TextArea';
+import TextContent from '../src/components/forms/TextContent';
+import TextInput from '../src/components/forms/TextInput/TextInput';
 import Time from '../src/components/forms/Time';
 import ToDo from '../src/components/infra/ToDo';
 import TwoColumn from '../src/components/templates/TwoColumn/TwoColumn';
 import TwoColumnPage from '../src/components/templates/TwoColumn/TwoColumnPage';
+import TwoColumnTab from './components/templates/TwoColumn/TwoColumnTab';
 import URL from '../src/components/forms/URL';
 import UserReference from '../src/components/forms/UserReference';
 import VerticalTabs from '../src/components/infra/VerticalTabs';
@@ -112,11 +117,13 @@ const pegaSdkComponentMap = {
   'DefaultForm': DefaultForm,
   'Details': Details,
   'DetailsSubTabs': DetailsSubTabs,
+  'DetailsThreeColumn': DetailsThreeColumn,
   'DetailsTwoColumn': DetailsTwoColumn,
   'DeferLoad': DeferLoad,
   'Dropdown': Dropdown,
   'Email': Email,
   'ErrorBoundary': ErrorBoundary,
+  'FieldGroupTemplate': FieldGroupTemplate,
   'FileUtility': FileUtility,
   'FlowContainer': FlowContainer,
   'Followers': Followers,
@@ -126,6 +133,7 @@ const pegaSdkComponentMap = {
   'ListPage': ListPage,
   'ListView': ListView,
   'ModalViewContainer': ModalViewContainer,
+  'MultiReferenceReadOnly': MultiReferenceReadOnly,
   'MultiStep': MultiStep,
   'NarrowWide': NarrowWide,
   'NarrowWideDetails': NarrowWideDetails,
@@ -147,6 +155,7 @@ const pegaSdkComponentMap = {
   'SimpleTable': SimpleTable,
   'SimpleTableManual': SimpleTableManual,
   'SimpleTableSelect': SimpleTableSelect,
+  'SingleReferenceReadOnly': SingleReferenceReadOnly,
   'Stages': Stages,
   'SubTabs': SubTabs,
   'SummaryItem': SummaryItem,
@@ -158,6 +167,7 @@ const pegaSdkComponentMap = {
   'Todo': ToDo,
   'TwoColumn': TwoColumn,
   'TwoColumnPage': TwoColumnPage,
+  'TwoColumnTab': TwoColumnTab,
   'URL': URL,
   'UserReference': UserReference,
   'VerticalTabs': VerticalTabs,
