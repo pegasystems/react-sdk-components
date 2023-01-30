@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-// NOTE: The @ts-nocheck above tells TypseScript not to check this file for various problems
+// NOTE: The @ts-nocheck above tells TypeScript not to check this file for various problems
 
 'use strict';
 
@@ -114,8 +114,8 @@ const readDirsForCode = async () => {
     })
     const arr = await Promise.all(
       dirs.flatMap(dir => {
-        /* JEA mod - was cosmos- below */
-        dir.isDirectory() && /^react-sdk-(?!demos)/.test(dir.name) ? [createIndex(dir.name, 'src')] : []
+        /* JEA mod - was cosmos- below - don't process react-sdk-overrides  */
+        dir.isDirectory() && !(dir.name.includes("react-sdk-overrides")) && /^react-sdk-(?!demos)/.test(dir.name) ? [createIndex(dir.name, 'src')] : []
       }
       )
     );
