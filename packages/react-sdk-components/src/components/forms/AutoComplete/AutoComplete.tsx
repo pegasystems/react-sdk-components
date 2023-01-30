@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable @typescript-eslint/no-shadow */
 import React, { useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -55,7 +53,6 @@ export default function AutoComplete(props) {
   } = props;
   let parameters = datasourceMetadata?.datasource?.parameters;
   const context = getPConnect().getContextName();
-  const dataPageName = datasourceMetadata?.datasource?.name;
   let { listType, datasource = [], columns = [] } = props;
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState<Array<IOption>>([]);
@@ -71,8 +68,8 @@ export default function AutoComplete(props) {
   const flattenParameters = (params = {}) => {
     const flatParams = {};
     Object.keys(params).forEach((key) => {
-      const { name, value } = params[key];
-      flatParams[name] = value;
+      const { name, value: theVal } = params[key];
+      flatParams[name] = theVal;
     });
 
     return flatParams;
@@ -114,7 +111,7 @@ export default function AutoComplete(props) {
 
   useEffect(() => {
     if (!displayMode && listType !== 'associated') {
-      getDataPage(dataPageName, parameters, context).then((results: any) => {
+      getDataPage(datasource, parameters, context).then((results: any) => {
         const optionsData: Array<any> = [];
         const displayColumn = getDisplayFieldsMetaData(columns);
         results?.forEach(element => {
