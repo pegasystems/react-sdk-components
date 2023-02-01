@@ -1,0 +1,236 @@
+// @ts-nocheck
+
+// NOTE: The @ts-nocheck above tells TypeScript not to check this file for various problems
+
+'use strict';
+
+const fs = require("fs");
+const path = require("path");
+const replaceInFile = require('replace-in-file');
+
+// overridesPkgDir is path where the files in the package are
+const overridesPkgDir = 'packages/react-sdk-overrides/lib';
+
+// overrideLibDir is the path to where we've previously copied
+//  the files in packages/react-sdk-overrides/lib
+const overridesLibDir = path.join(__dirname, '..', overridesPkgDir);
+
+// keep track of how many path updates we actually make
+let iPathReplacements = 0;
+// keep track of how many paths may still need to be replaced
+let iMayNeedPathReplacement = 0;
+
+/**
+ * getAllFilesInDir
+ *
+ * @param {*} dirPath path to start recursive descent
+ * @param {*} arrFiles array of files so far. Start with empty array
+ * @returns list of all files (recursive descent) in the given directory
+ */
+const getAllFilesInDir = function(dirPath, arrFiles) {
+
+  const files = fs.readdirSync(dirPath);
+  arrFiles = arrFiles || [];
+
+  files.forEach(function(file) {
+    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+      // console.log(`about to iterate over: ${file}`);
+      arrFiles = getAllFilesInDir(dirPath + "/" + file, arrFiles)
+    } else {
+      // console.log(` --> about to push: ${file}`);
+      arrFiles.push(path.join(dirPath, "/", file))
+    }
+  })
+
+  return arrFiles;
+}
+
+/**
+ * hasRelativeCompDir
+ *
+ * @param {*} inMatch string we're searching in
+ * @param {*} splitSep the split separator we're using
+ * @param {*} arrDirNames an array of directory names that we're looking for after a splitSep
+ * @returns {boolean} true if <splitSep><one of appDirNames entries> exists, otherwise false
+ */
+const hasRelativeCompDir = function (inMatch, splitSep, arrDirNames) {
+  let bFound = false;
+
+  for (let dirName of arrDirNames) {
+    const strTarget = `${splitSep}${dirName}`;
+    if (inMatch.includes(strTarget)) {
+      bFound = true;
+      return bFound;
+    }
+  }
+
+  return bFound;
+
+}
+
+const startsWithOneOf = function (inStr, arrDirNames) {
+  let bFound = false;
+
+  for (let dirName of arrDirNames) {
+    if (inStr.startsWith(dirName)) {
+      bFound = true;
+      return bFound;
+    }
+  }
+  return bFound;
+
+}
+
+/**
+ * processRelativeComponentRef
+ *
+ * @param {*} inMatch string we're searching in
+ * @param {*} splitSep the split separator we're using
+ * @param {*} arrDirNames an array of directory names that we're looking for after a splitSep
+ * @returns {string} string that should replace inMatch (with relative path replacements)
+ */
+const processRelativeComponentRef = function(inMatch, splitSep, arrDirNames) {
+  let retString = "";
+  const relativePathReplacement = '@pega/react-sdk-components/lib/components/';
+
+  // console.log(`    in processRelativeComponentRef`);
+
+  //  If inMatch does contain '../', then split by '../' and proceed
+  //    Clear retString
+  //    Copy fragment to retString until encounter an empty fragment (where a '../' was)
+  //      If next fragment empty, proceed
+  //      If next fragment not empty and begins with one of the sdkCompDirSubDirs string,
+  //        insert '@pega/react-sdk-components/lib/components/ and append remaining fragment(s)
+  //
+  //  Example: import NavBar from '../../infra/NavBar';
+  //  becomes:  import NavBar from '@pega/react-sdk-components/lib/components/infra/NavBar';
+
+  if (!hasRelativeCompDir(inMatch, splitSep, arrDirNames)) {
+    throw(`!!!! -> Can't process relative component directory when there isn't one! ${inMatch}`);
+  }
+
+  const matchFragments = inMatch.split(splitSep);
+  // console.log( `    --> matchFragments: ${JSON.stringify(matchFragments)}`);
+
+  // Clear out retString. We're building it up from the matchFragments
+  retString = '';
+
+  matchFragments.forEach( (frag, index, origArray) => {
+    // initial fragment should be non-empty
+    if (frag.length !== 0 && index == 0) {
+      retString = `${retString}${frag}`;
+
+    } else if (frag.length !== 0 && startsWithOneOf(frag, origArray)) {
+      // Working on fragments that are NOT the first fragment - so should be at/beyond first '../'
+      //  This algorithm skips any empty fragments (which would be where '../' are)
+      // if this fragment not empty and starts with one of our dir names,
+      //  Add in the relativePathReplacement and this fragment
+      retString = `${retString}${relativePathReplacement}${frag}`;
+    }
+  })
+
+  // console.log(`retString: ${retString}`);
+  // return that string that the import line should be replaced with
+  return retString;
+
+
+}
+
+/**
+ * processImportLine
+ *
+ * @param {*} inMatch - should be a line starting with import
+ * @returns string that inMatch should be replaced with (possible import path updates)
+ */
+const processImportLine = function (inMatch) {
+  // console.log(`  in processImportLine: |${inMatch}|`);
+
+  const sdkCompSubDirs = ['designSystemExtensions', 'forms', 'helpers', 'infra', 'templates', 'widgets' ];
+
+  let retString = inMatch;    // default to return incoming matched string
+  const splitWith = '../';
+
+  // pseudocode:
+  //  1. If inMatch doesn't contain '../', then return inMatch (nothing to process)
+  //  2. If inMatch does contain '../' followed by one of our SsdkCompSubDirs then process as relative component reference
+  //  3. If inMatch does contain '../' but NOT one of our SsdkCompSubDirs, then further processing...
+
+  //  1. If inMatch doesn't contain '../', then return inMatch (nothing to process)
+  if (!inMatch.includes(splitWith)) {
+    return inMatch;
+  }
+
+  //  2. If inMatch does contain '../' followed by one of our SsdkCompSubDirs, then process as relative component reference
+  if (hasRelativeCompDir(inMatch, splitWith, sdkCompSubDirs)) {
+    const replacementString = processRelativeComponentRef(inMatch, splitWith, sdkCompSubDirs);
+    console.log(`  --> replacing with: ${replacementString}`);
+    iPathReplacements = iPathReplacements + 1;
+    return replacementString;
+  }
+
+  //  3. If inMatch does contain '../' but NOT one of our SsdkCompSubDirs, then return inMatch for now
+  if (!hasRelativeCompDir(inMatch, splitWith, sdkCompSubDirs)) {
+    // more work to do
+    console.log(` ----> More work to do: ${inMatch}`);
+    iMayNeedPathReplacement = iMayNeedPathReplacement + 1;
+    return inMatch;
+  }
+
+  return retString;
+}
+
+
+/**
+ * processOverrideFile
+ *
+ * @param {*} filePath absolute path to file being process
+ *
+ * This function processes the given file which is expected to be a file in the overrides/lib
+ * directory. It finds relative paths of import statements to other components/files in the
+ * react-sdk-components package and updates those relative paths
+ * (ex: import FieldValueList from '../../designSystemExtensions/FieldValueList';)
+ * and updates those to the appropriate @pega/react-sdk-components path
+ * (ex: import FieldValueList from '@pega/react-sdk-components/lib/components/designSystemExtensions/FieldValueList';)
+ */
+const processOverrideFile = function(filePath) {
+
+  // trim off the directory info from the string to make it shorter
+  console.log( `\nProcessing override file: ${filePath.slice(overridesLibDir.length)}`);
+
+  // The regex gets any complete line starting with 'import '. We then process it in the processImportLine function
+  //  the 'gm' (m for multiline) makes sure we get the matches for EVERY line in the file that starts with import
+  const options = {
+    files: filePath,
+    from: /^import .+/gm,
+    to: (match) => processImportLine(match),
+    countMatches: true
+  }
+
+  const theResults = replaceInFile.sync(options);
+
+  const { hasChanged, file } = theResults[0];
+  // console.log(`replacement results: ${JSON.stringify(results[0])}`);
+  if (hasChanged) {
+    // trim off the directory info from the string to make it shorter
+    console.log(`  edited: ${file.slice(overridesLibDir.length)}`);
+  } else {
+    // console.log(`NOT edited: ${file}: found ${numMatches} | replaced ${numReplacements}`);
+  }
+
+}
+
+const processSdkOverrides = async () => {
+  console.log(`in processSdkOverrides`);
+  iPathReplacements = 0;
+  iMayNeedPathReplacement = 0;
+  const allFilesInDir = getAllFilesInDir(overridesLibDir, []);
+  allFilesInDir.forEach( file => {
+    processOverrideFile(file);
+  })
+  console.log(`Processed ${allFilesInDir.length} files in ${overridesPkgDir}`);
+  console.log(`  paths replaced: ${iPathReplacements}`);
+  console.log(`  paths needing work: ${iMayNeedPathReplacement}`);
+
+};
+
+processSdkOverrides();
