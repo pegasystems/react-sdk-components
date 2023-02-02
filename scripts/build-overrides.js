@@ -7,6 +7,7 @@
 const fs = require("fs");
 const path = require("path");
 const replaceInFile = require('replace-in-file');
+const overrideConstants = require('./override-constants');
 
 // overridesPkgDir is path where the files in the package are
 const overridesPkgDir = 'packages/react-sdk-overrides/lib';
@@ -14,6 +15,14 @@ const overridesPkgDir = 'packages/react-sdk-overrides/lib';
 // overrideLibDir is the path to where we've previously copied
 //  the files in packages/react-sdk-overrides/lib
 const overridesLibDir = path.join(__dirname, '..', overridesPkgDir);
+
+// NOTE: Does not need to end with 'bridge/' because the fragment we're
+//  inserting this into already starts with bridge/
+const relativePathReplacementPrefix = '@pega/react-sdk-components/lib/';
+
+// NOTE: Needs to end with 'components/' because the fragment we're
+//  inserting this into just starts with the component name without 'components/'
+const relativePathReplacementComponents = '@pega/react-sdk-components/lib/components/';
 
 // keep track of how many path updates we actually make
 let iPathReplacements = 0;
@@ -45,15 +54,18 @@ const getAllFilesInDir = function(dirPath, arrFiles) {
   return arrFiles;
 }
 
+
 /**
- * hasRelativeCompDir
+ * hasRelativeDir
+ *  returns true iff inMatch contains a relative reference to one of the directories in arrDirNames
+ *  ex: ../bridge, ../infra, ../forms, etc. depending on the arrDirNames passed in
  *
  * @param {*} inMatch string we're searching in
  * @param {*} splitSep the split separator we're using
  * @param {*} arrDirNames an array of directory names that we're looking for after a splitSep
  * @returns {boolean} true if <splitSep><one of appDirNames entries> exists, otherwise false
  */
-const hasRelativeCompDir = function (inMatch, splitSep, arrDirNames) {
+const hasRelativeDir = function (inMatch, splitSep, arrDirNames) {
   let bFound = false;
 
   for (let dirName of arrDirNames) {
@@ -63,10 +75,56 @@ const hasRelativeCompDir = function (inMatch, splitSep, arrDirNames) {
       return bFound;
     }
   }
-
   return bFound;
-
 }
+
+
+/**
+ * hasRelativeComponent
+ *  return true iff the relative reference is directly to a component
+ *  ex: ../TextInput, ../Operator, etc.
+ *
+ * @param {*} inMatch string we're searching in
+ * @param {*} splitSep the split separator we're using
+ * @param {*} compLocMap JSON object that maps componentName to the component directory its in
+ *              Used to test whether a string is a component and, if so where to find it
+ * @returns {boolean} true if <splitSep><one of appDirNames entries> exists, otherwise false
+ */
+const hasRelativeComponent = function (inMatch, splitSep, compLocMap) {
+  let bFound = false;
+
+  const matchFragments = inMatch.split(splitSep);
+
+  // There are 2 cases:
+  //  a: when there is a single ../ in inMatch, there will be 2 fragments.
+  //      [0] the import prelude
+  //      [1] the rest of the import line which MAY start with a component name (and that's what we want to check)
+  //  b: when there is more than one occurrence of ../, there will be more than 2 fragments
+  //      [0] the import prelude
+  //      [n] empty entries where each represents a place where ../../ was encountered
+  //      [last] the rest of the import line which MAY start with a component name (and that's what we want to check)
+
+  // we can check whether the relative path is to a component name by looking at the last fragment and extracting
+  //  ONLY the first part (where there may be a ';' (end of line) or '/' (a longer path))
+  //  If that first part is a component name, we can rewrite the path using the first fragment and the last fragment
+  //    and putting the correct component directory in the rewritten path
+
+  // const importPrelude = matchFragments[0];
+  const relativeImportDetail = matchFragments[matchFragments.length - 1];
+
+  // console.log(`hasRelativeComponent: ${importPrelude} <more path info> ${relativeImportDetail}`);
+
+  const matchDetails = relativeImportDetail.split(/\W/);  // split by non alphanumerics (\W regex)
+  const possibleComponent = matchDetails[0];
+  // console.log(`  possibleComponent: ${possibleComponent}`);
+
+  if (compLocMap[possibleComponent]) {
+    // console.log(`  IS A COMPONENT`);
+    bFound = true;
+  }
+  return bFound;
+}
+
 
 const startsWithOneOf = function (inStr, arrDirNames) {
   let bFound = false;
@@ -78,22 +136,21 @@ const startsWithOneOf = function (inStr, arrDirNames) {
     }
   }
   return bFound;
-
 }
 
+
 /**
- * processRelativeComponentRef
+ * processRelativeBridgeDirRef
  *
  * @param {*} inMatch string we're searching in
  * @param {*} splitSep the split separator we're using
  * @param {*} arrDirNames an array of directory names that we're looking for after a splitSep
  * @returns {string} string that should replace inMatch (with relative path replacements)
  */
-const processRelativeComponentRef = function(inMatch, splitSep, arrDirNames) {
+const processRelativeBridgeDirRef = function(inMatch, splitSep, arrDirNames) {
   let retString = "";
-  const relativePathReplacement = '@pega/react-sdk-components/lib/components/';
 
-  // console.log(`    in processRelativeComponentRef`);
+  // console.log(`    in processRelativeBridgeDirRef`);
 
   //  If inMatch does contain '../', then split by '../' and proceed
   //    Clear retString
@@ -105,7 +162,60 @@ const processRelativeComponentRef = function(inMatch, splitSep, arrDirNames) {
   //  Example: import NavBar from '../../infra/NavBar';
   //  becomes:  import NavBar from '@pega/react-sdk-components/lib/components/infra/NavBar';
 
-  if (!hasRelativeCompDir(inMatch, splitSep, arrDirNames)) {
+  if (!hasRelativeDir(inMatch, splitSep, arrDirNames)) {
+    throw(`!!!! -> Can't process relative bridge directory when there isn't one! ${inMatch}`);
+  }
+
+  const matchFragments = inMatch.split(splitSep);
+  // console.log( `    --> matchFragments: ${JSON.stringify(matchFragments)}`);
+
+  // Clear out retString. We're building it up from the matchFragments
+  retString = '';
+
+  matchFragments.forEach( (frag, index, origArray) => {
+    // initial fragment should be non-empty
+    if (frag.length !== 0 && index == 0) {
+      retString = `${retString}${frag}`;
+
+    } else if (frag.length !== 0 && startsWithOneOf(frag, origArray)) {
+      // Working on fragments that are NOT the first fragment - so should be at/beyond first '../'
+      //  This algorithm skips any empty fragments (which would be where '../' are)
+      // if this fragment not empty and starts with one of our dir names,
+      //  concatenate retString and frag (the frag will already start with 'bridge')
+      retString = `${retString}${relativePathReplacementPrefix}${frag}`;
+    }
+  });
+
+  // console.log(`retString: ${retString}`);
+  // return that string that the import line should be replaced with
+  return retString;
+}
+
+
+/**
+ * processRelativeComponentDirRef
+ *
+ * @param {*} inMatch string we're searching in
+ * @param {*} splitSep the split separator we're using
+ * @param {*} arrDirNames an array of directory names that we're looking for after a splitSep
+ * @returns {string} string that should replace inMatch (with relative path replacements)
+ */
+const processRelativeComponentDirRef = function(inMatch, splitSep, arrDirNames) {
+  let retString = "";
+
+  // console.log(`    in processRelativeComponentDirRef`);
+
+  //  If inMatch does contain '../', then split by '../' and proceed
+  //    Clear retString
+  //    Copy fragment to retString until encounter an empty fragment (where a '../' was)
+  //      If next fragment empty, proceed
+  //      If next fragment not empty and begins with one of the sdkCompDirSubDirs string,
+  //        insert '@pega/react-sdk-components/lib/components/ and append remaining fragment(s)
+  //
+  //  Example: import NavBar from '../../infra/NavBar';
+  //  becomes:  import NavBar from '@pega/react-sdk-components/lib/components/infra/NavBar';
+
+  if (!hasRelativeDir(inMatch, splitSep, arrDirNames)) {
     throw(`!!!! -> Can't process relative component directory when there isn't one! ${inMatch}`);
   }
 
@@ -124,17 +234,114 @@ const processRelativeComponentRef = function(inMatch, splitSep, arrDirNames) {
       // Working on fragments that are NOT the first fragment - so should be at/beyond first '../'
       //  This algorithm skips any empty fragments (which would be where '../' are)
       // if this fragment not empty and starts with one of our dir names,
-      //  Add in the relativePathReplacement and this fragment
-      retString = `${retString}${relativePathReplacement}${frag}`;
+      //  Add in the relativePathReplacementComponents and this fragment
+      retString = `${retString}${relativePathReplacementComponents}${frag}`;
     }
   })
 
   // console.log(`retString: ${retString}`);
   // return that string that the import line should be replaced with
   return retString;
+}
 
+
+/**
+ * processRelativeComponentRef
+ *
+ * @param {*} inMatch string we're searching in
+ * @param {*} splitSep the split separator we're using
+ * @param {*} compLocMap JSON object that maps componentName to the component directory its in
+ *              Used to test whether a string is a component and, if so where to find it
+ * @returns {string} string that should replace inMatch (with relative path replacements)
+ */
+const processRelativeComponentRef = function(inMatch, splitSep, compLocMap) {
+  let retString = "";
+
+  // console.log(`    in processRelativeComponentRef`);
+
+  if (!hasRelativeComponent(inMatch, splitSep, compLocMap)) {
+    throw(`!!!! -> Can't process relative component when there isn't one! ${inMatch}`);
+  }
+
+  // There are 2 cases:
+  //  a: when there is a single ../ in inMatch, there will be 2 fragments.
+  //      [0] the import prelude
+  //      [1] the rest of the import line which MAY start with a component name (and that's what we want to check)
+  //  b: when there is more than one occurrence of ../, there will be more than 2 fragments
+  //      [0] the import prelude
+  //      [n] empty entries where each represents a place where ../../ was encountered
+  //      [last] the rest of the import line which MAY start with a component name (and that's what we want to check)
+
+  // we can check whether the relative path is to a component name by looking at the last fragment and extracting
+  //  ONLY the first part (where there may be a ';' (end of line) or '/' (a longer path))
+  //  If that first part is a component name, we can rewrite the path using the first fragment and the last fragment
+  //    and putting the correct component directory in the rewritten path
+
+  const matchFragments = inMatch.split(splitSep);
+
+  const importPrelude = matchFragments[0];
+  const relativeImportDetail = matchFragments[matchFragments.length - 1];
+
+  // console.log(`processRelativeComponentRef: ${importPrelude} <more path info> ${relativeImportDetail}`);
+
+  const matchDetails = relativeImportDetail.split(/\W/);  // split by non alphanumerics (\W regex)
+  const possibleComponent = matchDetails[0];
+  // console.log(`  possibleComponent: ${possibleComponent}`);
+
+  if (overrideConstants.SDK_COMP_LOCATION_MAP[possibleComponent]) {
+    const theCompDir = overrideConstants.SDK_COMP_LOCATION_MAP[possibleComponent];
+    retString = `${importPrelude}${relativePathReplacementComponents}${theCompDir}/${relativeImportDetail}`;
+  }
+
+  // console.log(`retString: ${retString}`);
+  // return that string that the import line should be replaced with
+  return retString;
+}
+
+
+/**
+ * processTopLevelContent
+ *
+ * @param {*} inMatch string we're searching in
+ * @param {*} splitSep the split separator we're using
+ * @param {*} arrTopLevel an array of top-level content that we're looking for after a splitSep
+ * @returns {string} string that should replace inMatch (with relative path replacements)
+ */
+const processTopLevelContent = function(inMatch, splitSep, arrTopLevel) {
+  let retString = "";
+
+  // console.log(`    in processTopLevelContent`);
+
+  if (!hasRelativeDir(inMatch, splitSep, arrTopLevel)) {
+    throw(`!!!! -> Can't process top-level content when there isn't one! ${inMatch}`);
+  }
+
+  const matchFragments = inMatch.split(splitSep);
+  // console.log( `    --> matchFragments: ${JSON.stringify(matchFragments)}`);
+
+  // Clear out retString. We're building it up from the matchFragments
+  retString = '';
+
+  matchFragments.forEach( (frag, index, origArray) => {
+    // initial fragment should be non-empty
+    if (frag.length !== 0 && index == 0) {
+      retString = `${retString}${frag}`;
+
+    } else if (frag.length !== 0 && startsWithOneOf(frag, origArray)) {
+      // Working on fragments that are NOT the first fragment - so should be at/beyond first '../'
+      //  This algorithm skips any empty fragments (which would be where '../' are)
+      // if this fragment not empty and starts with one of our dir names,
+      //  concatenate rtString and frag (the frag will already start with 'bridge')
+      retString = `${retString}${relativePathReplacementPrefix}${frag}`;
+    }
+  });
+
+  // console.log(`retString: ${retString}`);
+  // return that string that the import line should be replaced with
+  return retString;
 
 }
+
 
 /**
  * processImportLine
@@ -145,37 +352,61 @@ const processRelativeComponentRef = function(inMatch, splitSep, arrDirNames) {
 const processImportLine = function (inMatch) {
   // console.log(`  in processImportLine: |${inMatch}|`);
 
-  const sdkCompSubDirs = ['designSystemExtensions', 'forms', 'helpers', 'infra', 'templates', 'widgets' ];
-
   let retString = inMatch;    // default to return incoming matched string
   const splitWith = '../';
 
   // pseudocode:
   //  1. If inMatch doesn't contain '../', then return inMatch (nothing to process)
-  //  2. If inMatch does contain '../' followed by one of our SsdkCompSubDirs then process as relative component reference
-  //  3. If inMatch does contain '../' but NOT one of our SsdkCompSubDirs, then further processing...
+  //  2. If inMatch does contain '../' followed by sdkBridgeDir then process as relative bridge reference
+  //  3. If inMatch does contain '../' followed by one of our sdkCompSubDirs then process as relative component DIR reference
+  //  4. If inMatch does contain '../' followed directly by a component name, the process as relative component reference
+  //  5. If inMatch does contain '../' followed directly by a top-level content name, the process as relative top-level content reference
+  //  otherwise, return inMatch unprocessed..
 
   //  1. If inMatch doesn't contain '../', then return inMatch (nothing to process)
   if (!inMatch.includes(splitWith)) {
     return inMatch;
   }
 
-  //  2. If inMatch does contain '../' followed by one of our SsdkCompSubDirs, then process as relative component reference
-  if (hasRelativeCompDir(inMatch, splitWith, sdkCompSubDirs)) {
-    const replacementString = processRelativeComponentRef(inMatch, splitWith, sdkCompSubDirs);
+  //  2. If inMatch does contain '../' followed by sdkBridgeDir then process as relative bridge reference
+  if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_BRIDGE_DIR)) {
+    const replacementString = processRelativeBridgeDirRef(inMatch, splitWith, overrideConstants.SDK_BRIDGE_DIR);
     console.log(`  --> replacing with: ${replacementString}`);
     iPathReplacements = iPathReplacements + 1;
     return replacementString;
   }
 
-  //  3. If inMatch does contain '../' but NOT one of our SsdkCompSubDirs, then return inMatch for now
-  if (!hasRelativeCompDir(inMatch, splitWith, sdkCompSubDirs)) {
-    // more work to do
-    console.log(` ----> More work to do: ${inMatch}`);
-    iMayNeedPathReplacement = iMayNeedPathReplacement + 1;
-    return inMatch;
+  //  3. If inMatch does contain '../' followed by one of our sdkCompSubDirs, then process as relative component DIR reference
+  if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_COMP_SUBDIRS)) {
+    const replacementString = processRelativeComponentDirRef(inMatch, splitWith, overrideConstants.SDK_COMP_SUBDIRS);
+    console.log(`  --> replacing with: ${replacementString}`);
+    iPathReplacements = iPathReplacements + 1;
+    return replacementString;
   }
 
+  //  4. If inMatch does contain '../' followed by directly by a component name, the process as relative component reference
+  if (hasRelativeComponent(inMatch, splitWith, overrideConstants.SDK_COMP_LOCATION_MAP)) {
+    // console.log(` ----> hasRelativeComponent: ${inMatch}`);
+
+    const replacementString = processRelativeComponentRef(inMatch, splitWith, overrideConstants.SDK_COMP_LOCATION_MAP);
+    console.log(`  --> replacing with: ${replacementString}`);
+    iPathReplacements = iPathReplacements + 1;
+    return replacementString;
+  }
+
+  //  5. If inMatch does contain '../' followed directly by a top-level content name, the process as relative top-level content reference
+  if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_TOP_LEVEL_CONTENT)) {
+    // console.log(` ----> hasTopLevelContent: ${inMatch}`);
+
+    const replacementString = processTopLevelContent(inMatch, splitWith, overrideConstants.SDK_TOP_LEVEL_CONTENT);
+    console.log(`  --> replacing with: ${replacementString}`);
+    iPathReplacements = iPathReplacements + 1;
+    return replacementString;
+  }
+
+  // more work to do
+  console.log(` ----> More work to do: ${inMatch}`);
+  iMayNeedPathReplacement = iMayNeedPathReplacement + 1;
   return retString;
 }
 
@@ -219,6 +450,7 @@ const processOverrideFile = function(filePath) {
 
 }
 
+
 const processSdkOverrides = async () => {
   console.log(`in processSdkOverrides`);
   iPathReplacements = 0;
@@ -230,7 +462,7 @@ const processSdkOverrides = async () => {
   console.log(`Processed ${allFilesInDir.length} files in ${overridesPkgDir}`);
   console.log(`  paths replaced: ${iPathReplacements}`);
   console.log(`  paths needing work: ${iMayNeedPathReplacement}`);
-
 };
 
+// Run the code to build the override output
 processSdkOverrides();

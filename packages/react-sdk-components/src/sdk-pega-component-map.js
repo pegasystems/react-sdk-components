@@ -3,7 +3,7 @@
 //  This file should import and expose ALL of the components that may be
 //  dynamically rendered at runtime via calls to react_pconnect or the View component
 
-import ActionButtons from '../src/components/infra/ActionButtons'; // '../lib/components/infra/ActionButtons';
+import ActionButtons from '../src/components/infra/ActionButtons';
 import AppAnnouncement from '../src/components/widgets/AppAnnouncement';
 import AppShell from '../src/components/templates/AppShell/AppShell';
 import Assignment from '../src/components/infra/Assignment/Assignment';
@@ -13,6 +13,7 @@ import AutoComplete from '../src/components/forms/AutoComplete';
 import CancelAlert from '../src/components/forms/CancelAlert';
 import CaseHistory from '../src/components/widgets/CaseHistory';
 import CaseSummary from '../src/components/templates/CaseSummary';
+import CaseSummaryFields from '../src/components/designSystemExtensions/CaseSummaryFields';
 import CaseView from '../src/components/templates/CaseView';
 import Checkbox from '../src/components/forms/Checkbox';
 import Currency from '../src/components/forms/Currency';
@@ -28,8 +29,8 @@ import DetailsSubTabs from '../src/components/templates/Details/DetailsSubTabs';
 import DetailsThreeColumn from './components/templates/Details/DetailsThreeColumn';
 import DetailsTwoColumn from '../src/components/templates/Details/DetailsTwoColumn/DetailsTwoColumn';
 import Dropdown from '../src/components/forms/Dropdown';
-import ErrorBoundary from '../src/components/infra/ErrorBoundary';
 import Email from '../src/components/forms/Email/Email';
+import ErrorBoundary from '../src/components/infra/ErrorBoundary';
 import FieldGroupTemplate from './components/templates/FieldGroupTemplate';
 import FileUtility from '../src/components/widgets/FileUtility/FileUtility';
 import FlowContainer from '../src/components/infra/Containers/FlowContainer';
@@ -50,6 +51,7 @@ import NavBar from '../src/components/infra/NavBar';
 import OneColumn from '../src/components/templates/OneColumn/OneColumn';
 import OneColumnPage from '../src/components/templates/OneColumn/OneColumnPage';
 import OneColumnTab from '../src/components/templates/OneColumn/OneColumnTab';
+import Operator from '../src/components/designSystemExtensions/Operator';
 import Percentage from '../src/components/forms/Percentage';
 import Phone from '../src/components/forms/Phone/Phone';
 import PromotedFilters from '../src/components/templates/PromotedFilters';
@@ -59,12 +61,12 @@ import Reference from '../src/components/infra/Reference/Reference';
 import Region from '../src/components/infra/Region/Region';
 import RootContainer from '../src/components/infra/RootContainer/RootContainer';
 import SemanticLink from '../src/components/forms/SemanticLink';
-import Stages from '../src/components/infra/Stages';
-import SubTabs from '../src/components/templates/SubTabs';
 import SimpleTable from '../src/components/templates/SimpleTable/SimpleTable';
 import SimpleTableManual from '../src/components/templates/SimpleTable/SimpleTableManual';
 import SimpleTableSelect from '../src/components/templates/SimpleTable/SimpleTableSelect';
 import SingleReferenceReadOnly from './components/templates/SingleReferenceReadOnly';
+import Stages from '../src/components/infra/Stages';
+import SubTabs from '../src/components/templates/SubTabs';
 import SummaryItem from '../src/components/widgets/SummaryItem';
 import SummaryList from '../src/components/widgets/SummaryList';
 import TextArea from '../src/components/forms/TextArea';
@@ -106,6 +108,7 @@ const pegaSdkComponentMap = {
   'CancelAlert': CancelAlert,
   'CaseHistory': CaseHistory,
   'CaseSummary': CaseSummary,
+  'CaseSummaryFields': CaseSummaryFields,
   'CaseView': CaseView,
   'Checkbox': Checkbox,
   'Currency': Currency,
@@ -115,11 +118,11 @@ const pegaSdkComponentMap = {
   'DateTime': DateTime,
   'Decimal': Decimal,
   'DefaultForm': DefaultForm,
+  'DeferLoad': DeferLoad,
   'Details': Details,
   'DetailsSubTabs': DetailsSubTabs,
   'DetailsThreeColumn': DetailsThreeColumn,
   'DetailsTwoColumn': DetailsTwoColumn,
-  'DeferLoad': DeferLoad,
   'Dropdown': Dropdown,
   'Email': Email,
   'ErrorBoundary': ErrorBoundary,
@@ -143,6 +146,7 @@ const pegaSdkComponentMap = {
   'OneColumn': OneColumn,
   'OneColumnPage': OneColumnPage,
   'OneColumnTab': OneColumnTab,
+  'Operator': Operator,
   'Percentage': Percentage,
   'Phone': Phone,
   'PromotedFilters': PromotedFilters,
