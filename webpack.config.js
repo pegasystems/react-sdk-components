@@ -10,7 +10,11 @@ module.exports = (env, argv) => {
   const pluginsToAdd = [];
   const webpackMode = argv.mode;
 
-  pluginsToAdd.push(new CleanWebpackPlugin());
+  //  NOTE: we allow dangerouslyAllowCleanPatternsOutsideProject so we can cleanup outside the
+  //    normal directory structure without getting webpack errors when live-reload recompiles
+  //    See: https://github.com/johnagan/clean-webpack-plugin
+  pluginsToAdd.push(new CleanWebpackPlugin( {dry: true, verbose: false, dangerouslyAllowCleanPatternsOutsideProject: true}));
+
   pluginsToAdd.push(
     new HtmlWebpackPlugin({
       template: './packages/react-sdk-components/src/auth.html',

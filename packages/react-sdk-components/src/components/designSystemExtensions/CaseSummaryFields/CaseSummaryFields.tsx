@@ -4,7 +4,7 @@ import isDeepEqual from 'fast-deep-equal/react';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Operator from '../Operator/Operator';
+import Operator from '../Operator';
 
 import './CaseSummaryFields.css';
 
