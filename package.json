@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "0.23.5",
+  "version": "0.23.6",
   "description": "React SDK packaging: bridge and components, overrides",
   "main": "index.ts",
   "scripts": {
@@ -12,7 +12,7 @@
 
     "prebuild-overrides": "shx rm -rf ./packages/react-sdk-overrides/lib && shx cp -r ./packages/react-sdk-components/src/components ./packages/react-sdk-overrides/lib",
     "build-overrides": "node scripts/build-overrides",
-    "postbuild-overrides": "shx ls ./packages/react-sdk-overrides/lib",
+    "postbuild-overrides": "echo build-overrides completed",
 
     "ci": "npm run clean && npm install --force",
     "clean": "npx shx --yes rm -rf ./node_modules ./dist && npm run clear-lib",
