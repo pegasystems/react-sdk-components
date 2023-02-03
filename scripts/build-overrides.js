@@ -57,8 +57,8 @@ const getAllFilesInDir = function(dirPath, arrFiles) {
 
 /**
  * hasRelativeDir
- *  returns true iff inMatch contains a relative reference to one of the directories in arrDirNames
- *  ex: ../bridge, ../infra, ../forms, etc. depending on the arrDirNames passed in
+ *  returns true iff inMatch contains a relative reference to an entry in arrDirNames
+ *  ex: ../bridge, ../infra, ../forms, ../components_map, etc. depending on the arrDirNames passed in
  *
  * @param {*} inMatch string we're searching in
  * @param {*} splitSep the split separator we're using
@@ -156,8 +156,8 @@ const processRelativeBridgeDirRef = function(inMatch, splitSep, arrDirNames) {
   //    Clear retString
   //    Copy fragment to retString until encounter an empty fragment (where a '../' was)
   //      If next fragment empty, proceed
-  //      If next fragment not empty and begins with one of the sdkCompDirSubDirs string,
-  //        insert '@pega/react-sdk-components/lib/components/ and append remaining fragment(s)
+  //      If next fragment not empty and begins with one of the overrideConstants.SDK_BRIDGE_DIR strings,
+  //        insert '@pega/react-sdk-components/lib/ and append remaining fragment(s)
   //
   //  Example: import NavBar from '../../infra/NavBar';
   //  becomes:  import NavBar from '@pega/react-sdk-components/lib/components/infra/NavBar';
@@ -209,7 +209,7 @@ const processRelativeComponentDirRef = function(inMatch, splitSep, arrDirNames) 
   //    Clear retString
   //    Copy fragment to retString until encounter an empty fragment (where a '../' was)
   //      If next fragment empty, proceed
-  //      If next fragment not empty and begins with one of the sdkCompDirSubDirs string,
+  //      If next fragment not empty and begins with one of the overrideConstants.SDK_COMP_SUBDIRS strings,
   //        insert '@pega/react-sdk-components/lib/components/ and append remaining fragment(s)
   //
   //  Example: import NavBar from '../../infra/NavBar';
