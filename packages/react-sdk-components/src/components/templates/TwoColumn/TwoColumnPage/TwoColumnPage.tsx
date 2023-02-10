@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-// import { TwoColumnPage as TwoColumn } from "@pega/cosmos-react-core";
-import TwoColumn from '../TwoColumn';
+import TwoColumn from '../TwoColumn/TwoColumn';
 
 /*
  * The wrapper handles knowing how to take in just children
