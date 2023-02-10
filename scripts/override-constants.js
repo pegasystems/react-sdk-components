@@ -9,8 +9,11 @@ const sdkBridgeDir = [ 'bridge'];
 // array of top level content (@pega/react-sdk-components/lib) that we needs to be exposed
 const sdkTopLevelContent = [ 'components_map' ];
 
-// associative array where <key> is component name and <value> is its top-level component directory
+// associative array where <key> is component name (or other file) and <value> is its top-level component directory
+//  where that file is found
 //  ex: 'TextInput': 'forms' indicates that there's TextInput is in the components/forms directory
+//    'SimpleTable' is in 'templates/SimpleTable/SimpleTable' subdirectory
+//    'simpleTableHelpers' is in templates/SimpleTable' directory (a non-component entry in this table)
 const sdkComponentLocationMap = {
   'ActionButtons': 'infra',
   'AppAnnouncement': 'widgets',
@@ -70,9 +73,10 @@ const sdkComponentLocationMap = {
   'Region': 'infra',
   'RootContainer': 'infra',
   'SemanticLink': 'forms',
-  'SimpleTable': 'templates',
-  'SimpleTableManual': 'templates',
-  'SimpleTableSelect': 'templates',
+  'SimpleTable': 'templates/SimpleTable',
+  'simpleTableHelpers': 'templates/SimpleTable',
+  'SimpleTableManual': 'templates/SimpleTable',
+  'SimpleTableSelect': 'templates/SimpleTable',
   'SingleReferenceReadOnly': 'templates',
   'Stages': 'infra',
   'SubTabs': 'templates',

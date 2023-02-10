@@ -35,7 +35,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { Radio } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
-import { filterData } from '../../templates/SimpleTable/helpers';
+import { filterData } from '../../templates/SimpleTable/simpleTableHelpers';
 import './ListView.css';
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
