@@ -14,7 +14,7 @@
     "build-overrides": "node scripts/build-overrides",
     "postbuild-overrides": "echo build-overrides completed",
 
-    "ci": "npm run clean && npm install --force",
+    "ci": "npm run clean && npm install",
     "clean": "npx shx --yes rm -rf ./node_modules ./dist && npm run clear-lib",
     "delete-tsbuildinfo": "rm -f packages/react-sdk-components/*.*.tsbuildinfo",
     "clear-lib": "npx shx --yes rm -rf ./lib packages/react-sdk-components/lib",
@@ -85,6 +85,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^27.1.7",
     "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-mdx": "^2.0.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
