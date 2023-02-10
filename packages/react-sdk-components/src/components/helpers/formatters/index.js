@@ -58,7 +58,7 @@ function parseDateInISO(value) {
   return value ? getDateObject(value).toISOString() : value;
 }
 
-export function format(value, type, options) {
+export function format(value, type, options = {}) {
   let formattedValue;
 
   switch (type?.toLowerCase()) {
