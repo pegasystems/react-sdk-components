@@ -189,6 +189,8 @@ export default function SimpleTableManual(props) {
   }
 
   const formatRowsData = data => {
+    if(!data) return {};
+
     return data.map(item => {
       return displayedColumns.reduce((dataForRow, colKey) => {
         dataForRow[colKey] = getRowValue(item, colKey);
@@ -585,7 +587,7 @@ export default function SimpleTableManual(props) {
                 .slice(0)
                 .map(row => {
                   return (
-                    <TableRow key={row[1]}>
+                    <TableRow key={row[displayedColumns[0]]}>
                       {displayedColumns.map(colKey => {
                         return (
                           <TableCell key={colKey} className={classes.tableCell}>
