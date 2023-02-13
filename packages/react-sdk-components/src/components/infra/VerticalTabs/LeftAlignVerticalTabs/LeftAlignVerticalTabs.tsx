@@ -13,7 +13,7 @@ import {
 
 // In this styling, "root" is the top-level "Tab" object (which is the button)
 //  and the button contains spans that will match on the '> span'
-const LeftAlignVerticalTab: any = withStyles((/* theme */) => ({
+const LeftAlignVerticalTabs: any = withStyles((/* theme */) => ({
   root: {
     width: '100%',
     maxWidth: '100%',
@@ -24,4 +24,4 @@ const LeftAlignVerticalTab: any = withStyles((/* theme */) => ({
   },
 }))((props) => <div><Tab {...props} /><Divider /></div>);
 
-export default LeftAlignVerticalTab;
+export default LeftAlignVerticalTabs;

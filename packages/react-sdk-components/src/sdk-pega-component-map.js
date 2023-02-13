@@ -4,6 +4,7 @@
 //  dynamically rendered at runtime via calls to react_pconnect or the View component
 
 import ActionButtons from '../src/components/infra/ActionButtons';
+import ActionButtonsForFileUtil from './components/widgets/FileUtility/ActionButtonsForFileUtil';
 import AppAnnouncement from '../src/components/widgets/AppAnnouncement';
 import AppShell from '../src/components/templates/AppShell/AppShell';
 import Assignment from '../src/components/infra/Assignment/Assignment';
@@ -15,6 +16,7 @@ import CaseHistory from '../src/components/widgets/CaseHistory';
 import CaseSummary from '../src/components/templates/CaseSummary';
 import CaseSummaryFields from '../src/components/designSystemExtensions/CaseSummaryFields';
 import CaseView from '../src/components/templates/CaseView';
+import CaseViewActionsMenu from './components/templates/CaseViewActionsMenu';
 import Checkbox from '../src/components/forms/Checkbox';
 import Currency from '../src/components/forms/Currency';
 import DashboardFilter from '../src/components/infra/DashboardFilter';
@@ -38,6 +40,7 @@ import Followers from '../src/components/widgets/Followers';
 import InlineDashboard from '../src/components/templates/InlineDashboard';
 import InlineDashboardPage from '../src/components/templates/InlineDashboardPage/InlineDashboardPage';
 import Integer from '../src/components/forms/Integer';
+import LeftAlignVerticalTabs from './components/infra/VerticalTabs/LeftAlignVerticalTabs';
 import ListPage from '../src/components/templates/ListPage/ListPage';
 import ListView from '../src/components/templates/ListView';
 import ModalViewContainer from '../src/components/infra/Containers/ModalViewContainer/ModalViewContainer';
@@ -79,7 +82,7 @@ import TwoColumnPage from '../src/components/templates/TwoColumn/TwoColumnPage';
 import TwoColumnTab from './components/templates/TwoColumn/TwoColumnTab';
 import URL from '../src/components/forms/URL';
 import UserReference from '../src/components/forms/UserReference';
-import VerticalTabs from '../src/components/infra/VerticalTabs';
+import VerticalTabs from '../src/components/infra/VerticalTabs/VerticalTabs';
 import View from '../src/components/infra/View';
 import ViewContainer from '../src/components/infra/Containers/ViewContainer';
 import WideNarrow from '../src/components/templates/WideNarrow/WideNarrow';
@@ -99,6 +102,7 @@ import WideNarrowPage from '../src/components/templates/WideNarrow/WideNarrowPag
 
 const pegaSdkComponentMap = {
   'ActionButtons': ActionButtons,
+  'ActionButtonsForFileUtil': ActionButtonsForFileUtil,
   'AppAnnouncement': AppAnnouncement,
   'AppShell': AppShell,
   'Assignment': Assignment,
@@ -110,6 +114,7 @@ const pegaSdkComponentMap = {
   'CaseSummary': CaseSummary,
   'CaseSummaryFields': CaseSummaryFields,
   'CaseView': CaseView,
+  'CaseViewActionsMenu': CaseViewActionsMenu,
   'Checkbox': Checkbox,
   'Currency': Currency,
   'DashboardFilter': DashboardFilter,
@@ -133,6 +138,7 @@ const pegaSdkComponentMap = {
   'InlineDashboard': InlineDashboard,
   'InlineDashboardPage': InlineDashboardPage,
   'Integer': Integer,
+  'LeftAlignVerticalTabs': LeftAlignVerticalTabs,
   'ListPage': ListPage,
   'ListView': ListView,
   'ModalViewContainer': ModalViewContainer,
