@@ -2,7 +2,7 @@ import React, { Children } from "react";
 import PropTypes from "prop-types";
 
 // import { TwoColumnPage as TwoColumn } from "@pega/cosmos-react-core";
-import WideNarrow from '../WideNarrow';
+import WideNarrow from '../WideNarrow/WideNarrow';
 
 /*
  * The wrapper handles knowing how to take in just children and mapping

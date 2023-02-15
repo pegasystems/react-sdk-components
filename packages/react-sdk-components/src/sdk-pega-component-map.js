@@ -3,7 +3,8 @@
 //  This file should import and expose ALL of the components that may be
 //  dynamically rendered at runtime via calls to react_pconnect or the View component
 
-import ActionButtons from '../src/components/infra/ActionButtons'; // '../lib/components/infra/ActionButtons';
+import ActionButtons from '../src/components/infra/ActionButtons';
+import ActionButtonsForFileUtil from './components/widgets/FileUtility/ActionButtonsForFileUtil';
 import AppAnnouncement from '../src/components/widgets/AppAnnouncement';
 import AppShell from '../src/components/templates/AppShell/AppShell';
 import Assignment from '../src/components/infra/Assignment/Assignment';
@@ -13,7 +14,9 @@ import AutoComplete from '../src/components/forms/AutoComplete';
 import CancelAlert from '../src/components/forms/CancelAlert';
 import CaseHistory from '../src/components/widgets/CaseHistory';
 import CaseSummary from '../src/components/templates/CaseSummary';
+import CaseSummaryFields from '../src/components/designSystemExtensions/CaseSummaryFields';
 import CaseView from '../src/components/templates/CaseView';
+import CaseViewActionsMenu from './components/templates/CaseViewActionsMenu';
 import Checkbox from '../src/components/forms/Checkbox';
 import Currency from '../src/components/forms/Currency';
 import DashboardFilter from '../src/components/infra/DashboardFilter';
@@ -28,8 +31,8 @@ import DetailsSubTabs from '../src/components/templates/Details/DetailsSubTabs';
 import DetailsThreeColumn from './components/templates/Details/DetailsThreeColumn';
 import DetailsTwoColumn from '../src/components/templates/Details/DetailsTwoColumn/DetailsTwoColumn';
 import Dropdown from '../src/components/forms/Dropdown';
-import ErrorBoundary from '../src/components/infra/ErrorBoundary';
 import Email from '../src/components/forms/Email/Email';
+import ErrorBoundary from '../src/components/infra/ErrorBoundary';
 import FieldGroupTemplate from './components/templates/FieldGroupTemplate';
 import FileUtility from '../src/components/widgets/FileUtility/FileUtility';
 import FlowContainer from '../src/components/infra/Containers/FlowContainer';
@@ -37,6 +40,7 @@ import Followers from '../src/components/widgets/Followers';
 import InlineDashboard from '../src/components/templates/InlineDashboard';
 import InlineDashboardPage from '../src/components/templates/InlineDashboardPage/InlineDashboardPage';
 import Integer from '../src/components/forms/Integer';
+import LeftAlignVerticalTabs from './components/infra/VerticalTabs/LeftAlignVerticalTabs';
 import ListPage from '../src/components/templates/ListPage/ListPage';
 import ListView from '../src/components/templates/ListView';
 import ModalViewContainer from '../src/components/infra/Containers/ModalViewContainer/ModalViewContainer';
@@ -50,6 +54,7 @@ import NavBar from '../src/components/infra/NavBar';
 import OneColumn from '../src/components/templates/OneColumn/OneColumn';
 import OneColumnPage from '../src/components/templates/OneColumn/OneColumnPage';
 import OneColumnTab from '../src/components/templates/OneColumn/OneColumnTab';
+import Operator from '../src/components/designSystemExtensions/Operator';
 import Percentage from '../src/components/forms/Percentage';
 import Phone from '../src/components/forms/Phone/Phone';
 import PromotedFilters from '../src/components/templates/PromotedFilters';
@@ -59,12 +64,12 @@ import Reference from '../src/components/infra/Reference/Reference';
 import Region from '../src/components/infra/Region/Region';
 import RootContainer from '../src/components/infra/RootContainer/RootContainer';
 import SemanticLink from '../src/components/forms/SemanticLink';
-import Stages from '../src/components/infra/Stages';
-import SubTabs from '../src/components/templates/SubTabs';
 import SimpleTable from '../src/components/templates/SimpleTable/SimpleTable';
 import SimpleTableManual from '../src/components/templates/SimpleTable/SimpleTableManual';
 import SimpleTableSelect from '../src/components/templates/SimpleTable/SimpleTableSelect';
 import SingleReferenceReadOnly from './components/templates/SingleReferenceReadOnly';
+import Stages from '../src/components/infra/Stages';
+import SubTabs from '../src/components/templates/SubTabs';
 import SummaryItem from '../src/components/widgets/SummaryItem';
 import SummaryList from '../src/components/widgets/SummaryList';
 import TextArea from '../src/components/forms/TextArea';
@@ -77,7 +82,7 @@ import TwoColumnPage from '../src/components/templates/TwoColumn/TwoColumnPage';
 import TwoColumnTab from './components/templates/TwoColumn/TwoColumnTab';
 import URL from '../src/components/forms/URL';
 import UserReference from '../src/components/forms/UserReference';
-import VerticalTabs from '../src/components/infra/VerticalTabs';
+import VerticalTabs from '../src/components/infra/VerticalTabs/VerticalTabs';
 import View from '../src/components/infra/View';
 import ViewContainer from '../src/components/infra/Containers/ViewContainer';
 import WideNarrow from '../src/components/templates/WideNarrow/WideNarrow';
@@ -97,6 +102,7 @@ import WideNarrowPage from '../src/components/templates/WideNarrow/WideNarrowPag
 
 const pegaSdkComponentMap = {
   'ActionButtons': ActionButtons,
+  'ActionButtonsForFileUtil': ActionButtonsForFileUtil,
   'AppAnnouncement': AppAnnouncement,
   'AppShell': AppShell,
   'Assignment': Assignment,
@@ -106,7 +112,9 @@ const pegaSdkComponentMap = {
   'CancelAlert': CancelAlert,
   'CaseHistory': CaseHistory,
   'CaseSummary': CaseSummary,
+  'CaseSummaryFields': CaseSummaryFields,
   'CaseView': CaseView,
+  'CaseViewActionsMenu': CaseViewActionsMenu,
   'Checkbox': Checkbox,
   'Currency': Currency,
   'DashboardFilter': DashboardFilter,
@@ -115,11 +123,11 @@ const pegaSdkComponentMap = {
   'DateTime': DateTime,
   'Decimal': Decimal,
   'DefaultForm': DefaultForm,
+  'DeferLoad': DeferLoad,
   'Details': Details,
   'DetailsSubTabs': DetailsSubTabs,
   'DetailsThreeColumn': DetailsThreeColumn,
   'DetailsTwoColumn': DetailsTwoColumn,
-  'DeferLoad': DeferLoad,
   'Dropdown': Dropdown,
   'Email': Email,
   'ErrorBoundary': ErrorBoundary,
@@ -130,6 +138,7 @@ const pegaSdkComponentMap = {
   'InlineDashboard': InlineDashboard,
   'InlineDashboardPage': InlineDashboardPage,
   'Integer': Integer,
+  'LeftAlignVerticalTabs': LeftAlignVerticalTabs,
   'ListPage': ListPage,
   'ListView': ListView,
   'ModalViewContainer': ModalViewContainer,
@@ -143,6 +152,7 @@ const pegaSdkComponentMap = {
   'OneColumn': OneColumn,
   'OneColumnPage': OneColumnPage,
   'OneColumnTab': OneColumnTab,
+  'Operator': Operator,
   'Percentage': Percentage,
   'Phone': Phone,
   'PromotedFilters': PromotedFilters,

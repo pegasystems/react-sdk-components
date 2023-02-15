@@ -10,8 +10,8 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
 import StoreContext from "../../../bridge/Context/StoreContext";
-import CaseViewActionsMenu from "./CaseViewActionsMenu";
-import VerticalTabs from '../../infra/VerticalTabs';
+import CaseViewActionsMenu from "../CaseViewActionsMenu";
+import VerticalTabs from '../../infra/VerticalTabs/VerticalTabs';
 import DeferLoad from '../../infra/DeferLoad';
 
 

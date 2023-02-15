@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import TextField from '@material-ui/core/TextField';
-import { Utils } from '../../helpers/utils';
+import { Utils } from '../../../helpers/utils';
 import download from "downloadjs";
-import SummaryList from '../SummaryList';
-import ActionButtonsForFileUtil from './ActionButtonsForFileUtil';
+import SummaryList from '../../SummaryList';
+import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
 import './FileUtility.css';
 import  { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Button } from '@material-ui/core';
-import { validateMaxSize } from '../../infra/Attachment/AttachmentUtils';
+import { validateMaxSize } from '../../../infra/Attachment/AttachmentUtils';
 import { CircularProgress } from "@material-ui/core";
 
 declare const PCore;
