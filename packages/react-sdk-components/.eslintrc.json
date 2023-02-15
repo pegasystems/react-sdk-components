@@ -16,7 +16,13 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["node_modules", "packages/*/lib", "!.storybook", ".storybook/public"],
+  "ignorePatterns": [
+    "node_modules",
+    "packages/*/lib",
+    "!.storybook",
+    ".storybook/public",
+    "**/**/*.json"
+  ],
   "rules": {
 
     // Note: the "0" means to allow it. 1 = warning, 2 = error
