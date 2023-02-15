@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from '@material-ui/core/styles'
 
 import Tabs from '@material-ui/core/Tabs';
-import LeftAlignVerticalTab from '../LeftAlignVerticalTabs/LeftAlignVerticalTabs';
+import LeftAlignVerticalTab from '../LeftAlignVerticalTabs';
 
 
 // The MuiTabs-indicator class is in a span whose parent is div (under the Tabs root component)

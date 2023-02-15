@@ -1,6 +1,8 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from '@material-ui/core/styles';
+
+import { NavContext } from '../../helpers/reactContextHelpers';
 
 // import {
 //   Avatar,
@@ -32,9 +34,6 @@ const useStyles = makeStyles((theme) => ({
 
 declare const PCore;
 
-
-const NavContext = createContext({open: false, setOpen: f => f});
-export const useNavBar = () => useContext(NavContext);
 
 /*
  * The wrapper handles knowing how to take in just children and mapping
