@@ -8,7 +8,7 @@ import './FileUtility.css';
 import  { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Button } from '@material-ui/core';
-import { validateMaxSize } from '../../../infra/Attachment/AttachmentUtils';
+import { validateMaxSize } from '../../../widgets/Attachment/AttachmentUtils';
 import { CircularProgress } from "@material-ui/core";
 
 declare const PCore;
