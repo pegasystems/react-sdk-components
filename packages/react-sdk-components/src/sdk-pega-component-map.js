@@ -9,7 +9,7 @@ import AppAnnouncement from '../src/components/widgets/AppAnnouncement';
 import AppShell from '../src/components/templates/AppShell/AppShell';
 import Assignment from '../src/components/infra/Assignment/Assignment';
 import AssignmentCard from '../src/components/infra/AssignmentCard/AssignmentCard';
-import Attachment from '../src/components/infra/Attachment/Attachment';
+import Attachment from '../src/components/widgets/Attachment';
 import AutoComplete from '../src/components/forms/AutoComplete';
 import CancelAlert from '../src/components/forms/CancelAlert';
 import CaseHistory from '../src/components/widgets/CaseHistory';

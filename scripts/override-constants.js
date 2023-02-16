@@ -21,7 +21,7 @@ const sdkComponentLocationMap = {
   'AppShell': 'templates',
   'Assignment': 'infra',
   'AssignmentCard': 'infra',
-  'Attachment': 'infra',
+  'Attachment': 'widgets',
   'AutoComplete': 'forms',
   'CancelAlert': 'forms',
   'CaseHistory': 'widgets',
