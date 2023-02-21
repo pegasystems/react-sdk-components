@@ -2,7 +2,7 @@
 
 import { Button } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize, getIconForAttachment } from './AttachmentUtils';
+import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize, getIconForAttachment } from '../../helpers/attachmentHelpers';
 import './Attachment.css';
 import SummaryList from '../../widgets/SummaryList'
 import { CircularProgress } from "@material-ui/core";
