@@ -1,0 +1,9 @@
+{
+  "name": "DataReference",
+  "description": "Data Reference Template",
+  "type": "Template",
+  "icon": "DataReference.svg",
+  "subtype": "DATAVIEW",
+  "properties": [
+  ]
+}

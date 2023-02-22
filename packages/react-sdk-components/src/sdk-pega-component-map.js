@@ -76,7 +76,7 @@ import TextArea from '../src/components/forms/TextArea';
 import TextContent from '../src/components/forms/TextContent';
 import TextInput from '../src/components/forms/TextInput/TextInput';
 import Time from '../src/components/forms/Time';
-import ToDo from '../src/components/infra/ToDo';
+import ToDo from '../src/components/widgets/ToDo';
 import TwoColumn from '../src/components/templates/TwoColumn/TwoColumn';
 import TwoColumnPage from '../src/components/templates/TwoColumn/TwoColumnPage';
 import TwoColumnTab from './components/templates/TwoColumn/TwoColumnTab';

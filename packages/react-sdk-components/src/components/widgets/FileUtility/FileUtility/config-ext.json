@@ -1,0 +1,9 @@
+{
+  "name": "FileUtility",
+  "label": "Attachments",
+  "description": "Attachments",
+  "type": "Widget",
+  "subtype": "CASE",
+  "properties": [
+  ]
+}

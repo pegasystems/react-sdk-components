@@ -1,0 +1,9 @@
+{
+  "name": "TwoColumnTab",
+  "label": "Two column",
+  "description": "Two column",
+  "type": "Template",
+  "subtype": "TAB",
+  "properties": [
+  ]
+}

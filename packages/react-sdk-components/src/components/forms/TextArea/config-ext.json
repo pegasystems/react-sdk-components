@@ -1,0 +1,9 @@
+{
+  "name": "TextArea",
+  "label": "Text area",
+  "description": "Text (paragraph)",
+  "type": "Field",
+  "subtype": "Text-Paragraph",
+  "properties": [
+  ]
+}

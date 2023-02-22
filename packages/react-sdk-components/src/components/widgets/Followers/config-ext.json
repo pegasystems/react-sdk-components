@@ -1,0 +1,9 @@
+{
+  "name": "Followers",
+  "label": "Followers",
+  "description": "Followers",
+  "type": "Widget",
+  "subtype": "CASE",
+  "properties": [
+  ]
+}

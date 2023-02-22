@@ -1,0 +1,9 @@
+{
+  "name": "CaseHistory",
+  "label": "Case history",
+  "description": "Case history widget",
+  "type": "Widget",
+  "subtype": "CASE",
+  "properties": [
+  ]
+}

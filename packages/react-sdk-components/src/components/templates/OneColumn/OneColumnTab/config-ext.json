@@ -1,0 +1,9 @@
+{
+  "name": "OneColumnTab",
+  "label": "One column",
+  "description": "One column",
+  "type": "Template",
+  "subtype": "TAB",
+  "properties": [
+  ]
+}
