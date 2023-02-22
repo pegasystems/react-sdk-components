@@ -1,0 +1,9 @@
+{
+  "name": "WideNarrowPage",
+  "label": "Wide-narrow",
+  "description": "Wide-narrow Page Template",
+  "type": "Template",
+  "subtype": "PAGE",
+  "properties": [
+  ]
+}

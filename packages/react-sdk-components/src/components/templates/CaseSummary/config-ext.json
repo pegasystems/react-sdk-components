@@ -1,0 +1,9 @@
+{
+  "name": "CaseSummary",
+  "label": "Summary data",
+  "description": "Case summary template",
+  "type": "Template",
+  "subtype": "SUMMARY",
+  "properties": [
+  ]
+}

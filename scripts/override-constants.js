@@ -89,7 +89,7 @@ const sdkComponentLocationMap = {
   'TextContent': 'forms',
   'TextInput': 'forms',
   'Time': 'forms',
-  'ToDo': 'infra',
+  'ToDo': 'widgets',
   'TwoColumn': 'templates',
   'TwoColumnPage': 'templates',
   'TwoColumnTab': 'templates',

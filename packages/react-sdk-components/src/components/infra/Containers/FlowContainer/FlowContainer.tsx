@@ -8,7 +8,7 @@ import { Utils } from '../../../helpers/utils';
 import { Alert } from '@material-ui/lab';
 
 import Assignment from '../../Assignment';
-import ToDo from "../../ToDo";
+import ToDo from "../../../widgets/ToDo";
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import StoreContext from "../../../../bridge/Context/StoreContext";
