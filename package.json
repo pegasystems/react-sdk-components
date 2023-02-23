@@ -9,11 +9,9 @@
     "build-sdk": "npm run compile-ts",
     "postbuild-sdk": "npm run copy-static-files-to-lib && npm run edit-pega-components-map",
     "pack-sdk": "npm pack ./packages/react-sdk-components",
-
     "prebuild-overrides": "shx rm -rf ./packages/react-sdk-overrides/lib && shx cp -r ./packages/react-sdk-components/src/components ./packages/react-sdk-overrides/lib",
     "build-overrides": "node scripts/build-overrides",
     "postbuild-overrides": "echo build-overrides completed",
-
     "ci": "npm run clean && npm install",
     "clean": "npx shx --yes rm -rf ./node_modules ./dist && npm run clear-lib",
     "delete-tsbuildinfo": "rm -f packages/react-sdk-components/*.*.tsbuildinfo",
@@ -36,7 +34,9 @@
     "start-prod-https": "http-server ./dist --port 3502 --gzip --brotli --cors --ssl --cert private.pem --key private.key --proxy https://localhost:3502?",
     "test": "node playwright-message.js && playwright test --project=chromium MediaCo/portal MediaCo/embedded",
     "test:headed": "playwright test --headed --project=chromium MediaCo/portal MediaCo/embedded",
-    "test-report": "playwright show-report"
+    "test-report": "playwright show-report",
+    "test-jest": "jest --watchAll",
+    "test-jest-coverage": "jest --watchAll --coverage"
   },
   "author": "Pegasystems",
   "license": "SEE LICENSE IN LICENSE",
@@ -74,6 +74,7 @@
     "@playwright/test": "^1.28.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.2",
+    "@types/jest": "^29.4.0",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "clean-webpack-plugin": "^3.0.0",
     "commitlint": "^17.3.0",
@@ -91,6 +92,8 @@
     "eslint-plugin-sonarjs": "^0.17.0",
     "html-webpack-plugin": "^5.5.0",
     "http-server": "^13.0.0",
+    "jest": "^29.4.0",
+    "jest-environment-jsdom": "^29.4.0",
     "json5": ">=1.0.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.1",
@@ -100,6 +103,7 @@
     "shx": "^0.3.4",
     "stylelint": "^14.16.0",
     "style-loader": "^2.0.0",
+    "ts-jest": "^29.0.5",
     "ts-loader": "^8.4.0",
     "typescript": "^4.7.4",
     "webpack": "^5.24.2",
