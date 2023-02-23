@@ -4,7 +4,7 @@
     "./**/*"
   ],
   "exclude": [
-    "**/lib/**/*", 
+    "**/lib/**/*",
     "**/node_modules/**",
     "**/dist/**/*",
     "**/tests/**",
@@ -31,11 +31,12 @@
     // Declare all ambient type declarations here for VSCode.
     // Override with only specific types for other configurations.
 
-    // Next lines commented out - JEA
+    // Values in types help get jest tests working - JEA
     "types": [
+      "jest", "@testing-library/jest-dom"
     ],
     "typeRoots": ["node_modules/@types", "typings"],
-    
+
     "noEmit": false,    // JEA - was false
     "incremental": true,
     "inlineSources": true,  // JEA - was true
