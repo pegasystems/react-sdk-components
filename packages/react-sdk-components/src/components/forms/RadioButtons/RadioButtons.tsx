@@ -10,6 +10,7 @@ import {
 
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
+import FieldValueList from '../../designSystemExtensions/FieldValueList';
 
 export default function RadioButtons(props) {
   const {
@@ -21,7 +22,8 @@ export default function RadioButtons(props) {
     helperText,
     status,
     required,
-    inline
+    inline,
+    displayMode
   } = props;
   const [theSelectedButton, setSelectedButton] = useState(value);
 
@@ -40,6 +42,13 @@ export default function RadioButtons(props) {
     setSelectedButton(value);
   }, [value]);
 
+  if (displayMode === 'LABELS_LEFT') {
+    const field = {
+      [label]: value
+    };
+    return <FieldValueList item={field} />;
+  }
+
   const handleChange = event => {
     handleEvent(actionsApi, 'changeNblur', propName, event.target.value);
   };
@@ -51,11 +60,12 @@ export default function RadioButtons(props) {
   return (
     <FormControl error={status === 'error'} required={required}>
       <FormLabel component='legend'>{label}</FormLabel>
-      <RadioGroup 
-        value={theSelectedButton} 
-        onChange={handleChange} 
-        onBlur={!readOnly ? handleBlur : undefined} 
-        row={inline}>
+      <RadioGroup
+        value={theSelectedButton}
+        onChange={handleChange}
+        onBlur={!readOnly ? handleBlur : undefined}
+        row={inline}
+      >
         {theOptions.map(theOption => {
           return (
             <FormControlLabel
