@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { SdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import ErrorBoundary from '../ErrorBoundary';
 
-import { getAllFields } from '../../templates/utils';
+import { getAllFields } from '../../template/utils';
 
 // Need to import any templates that we might render
 
@@ -73,7 +73,7 @@ export default function View(props) {
 
       // eslint-disable-next-line no-console
       console.error(`View: Trying to render an unknown template: ${template}`);
-  
+
     }
 
     // for debugging/investigation

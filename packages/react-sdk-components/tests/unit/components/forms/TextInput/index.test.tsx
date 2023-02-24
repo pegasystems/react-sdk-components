@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import TextInput from '../../../../../src/components/forms/TextInput';
+import TextInput from '../../../../../src/components/field/TextInput';
 
 const getDefaultProps = (): any => {
   return {

@@ -4,7 +4,7 @@ export default {
   // Currency: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Currency" */ "./components/forms/Currency")
+  //       import(/* webpackChunkName: "Currency" */ "./components/field/Currency")
   //     )
   //   ],
   //   scripts: []
@@ -101,7 +101,7 @@ export default {
   // Todo: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Todo" */ "./components/Widgets/Todo")
+  //       import(/* webpackChunkName: "Todo" */ "./components/widget/Todo")
   //     )
   //   ]
   // },
@@ -126,7 +126,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "TextInput" */ "./components/forms/TextInput"
+  //         /* webpackChunkName: "TextInput" */ "./components/field/TextInput"
   //       )
   //     )
   //   ]
@@ -134,7 +134,7 @@ export default {
   // Phone: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Phone" */ "./components/forms/Phone")
+  //       import(/* webpackChunkName: "Phone" */ "./components/field/Phone")
   //     )
   //   ]
   // },
@@ -142,7 +142,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "Percentage" */ "./components/forms/Percentage"
+  //         /* webpackChunkName: "Percentage" */ "./components/field/Percentage"
   //       )
   //     )
   //   ]
@@ -150,28 +150,28 @@ export default {
   // Email: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Email" */ "./components/forms/Email")
+  //       import(/* webpackChunkName: "Email" */ "./components/field/Email")
   //     )
   //   ]
   // },
   // Integer: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Integer" */ "./components/forms/Integer")
+  //       import(/* webpackChunkName: "Integer" */ "./components/field/Integer")
   //     )
   //   ]
   // },
   // Decimal: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Decimal" */ "./components/forms/Decimal")
+  //       import(/* webpackChunkName: "Decimal" */ "./components/field/Decimal")
   //     )
   //   ]
   // },
   // URL: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "URL" */ "./components/forms/URL")
+  //       import(/* webpackChunkName: "URL" */ "./components/field/URL")
   //     )
   //   ]
   // },
@@ -179,7 +179,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "SemanticLink" */ "./components/forms/SemanticLink"
+  //         /* webpackChunkName: "SemanticLink" */ "./components/field/SemanticLink"
   //       )
   //     )
   //   ]
@@ -199,7 +199,7 @@ export default {
   // Checkbox: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Checkbox" */ "./components/forms/Checkbox")
+  //       import(/* webpackChunkName: "Checkbox" */ "./components/field/Checkbox")
   //     )
   //   ]
   // },
@@ -208,7 +208,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "RadioButtons" */
-  //         "./components/forms/RadioButtons"
+  //         "./components/field/RadioButtons"
   //       )
   //     )
   //   ]
@@ -216,35 +216,35 @@ export default {
   // DateTime: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "DateTime" */ "./components/forms/DateTime")
+  //       import(/* webpackChunkName: "DateTime" */ "./components/field/DateTime")
   //     )
   //   ]
   // },
   // Date: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Date" */ "./components/forms/Date")
+  //       import(/* webpackChunkName: "Date" */ "./components/field/Date")
   //     )
   //   ]
   // },
   // Time: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Time" */ "./components/forms/Time")
+  //       import(/* webpackChunkName: "Time" */ "./components/field/Time")
   //     )
   //   ]
   // },
   // Text: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Text" */ "./components/forms/Text")
+  //       import(/* webpackChunkName: "Text" */ "./components/field/Text")
   //     )
   //   ]
   // },
   // TextArea: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "TextArea" */ "./components/forms/TextArea")
+  //       import(/* webpackChunkName: "TextArea" */ "./components/field/TextArea")
   //     )
   //   ]
   // },
@@ -252,7 +252,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "TextContent" */ "./components/forms/TextContent"
+  //         /* webpackChunkName: "TextContent" */ "./components/field/TextContent"
   //       )
   //     )
   //   ]
@@ -260,7 +260,7 @@ export default {
   // RichText: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "RichText" */ "./components/forms/RichText")
+  //       import(/* webpackChunkName: "RichText" */ "./components/field/RichText")
   //     )
   //   ]
   // },
@@ -286,7 +286,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "ListView" */
-  //         "./components/Templates/ListView"
+  //         "./components/template/ListView"
   //       )
   //     )
   //   ]
@@ -296,7 +296,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "SimpleTable" */
-  //         "./components/Templates/SimpleTable"
+  //         "./components/template/SimpleTable"
   //       )
   //     )
   //   ]
@@ -306,7 +306,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "DataReference" */
-  //         "./components/Templates/DataReference"
+  //         "./components/template/DataReference"
   //       )
   //     )
   //   ]
@@ -316,7 +316,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "ListPage" */
-  //         "./components/Templates/ListPage"
+  //         "./components/template/ListPage"
   //       )
   //     )
   //   ]
@@ -326,7 +326,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "OneColumnPage" */
-  //         "./components/Templates/PageLayout/OneColumnPage"
+  //         "./components/template/PageLayout/OneColumnPage"
   //       )
   //     )
   //   ]
@@ -336,7 +336,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "TwoColumnPage" */
-  //         "./components/Templates/PageLayout/TwoColumnPage"
+  //         "./components/template/PageLayout/TwoColumnPage"
   //       )
   //     )
   //   ]
@@ -346,7 +346,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "ThreeColumnPage" */
-  //         "./components/Templates/PageLayout/ThreeColumnPage"
+  //         "./components/template/PageLayout/ThreeColumnPage"
   //       )
   //     )
   //   ]
@@ -356,7 +356,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "NarrowWidePage" */
-  //         "./components/Templates/PageLayout/NarrowWidePage"
+  //         "./components/template/PageLayout/NarrowWidePage"
   //       )
   //     )
   //   ]
@@ -366,7 +366,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "WideNarrowPage" */
-  //         "./components/Templates/PageLayout/WideNarrowPage"
+  //         "./components/template/PageLayout/WideNarrowPage"
   //       )
   //     )
   //   ]
@@ -374,7 +374,7 @@ export default {
   // Page: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Page" */ "./components/Templates/Page")
+  //       import(/* webpackChunkName: "Page" */ "./components/template/Page")
   //     )
   //   ]
   // },
@@ -382,7 +382,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "TabbedPage" */ "./components/Templates/TabbedPage"
+  //         /* webpackChunkName: "TabbedPage" */ "./components/template/TabbedPage"
   //       )
   //     )
   //   ]
@@ -392,7 +392,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "OneColumn" */
-  //         "./components/Templates/Forms/OneColumn"
+  //         "./components/template/field/OneColumn"
   //       )
   //     )
   //   ]
@@ -402,7 +402,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "TwoColumn" */
-  //         "./components/Templates/Forms/TwoColumn"
+  //         "./components/template/field/TwoColumn"
   //       )
   //     )
   //   ]
@@ -412,7 +412,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "NarrowWideForm" */
-  //         "./components/Templates/Forms/NarrowWide"
+  //         "./components/template/field/NarrowWide"
   //       )
   //     )
   //   ]
@@ -422,7 +422,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "WideNarrowForm" */
-  //         "./components/Templates/Forms/WideNarrow"
+  //         "./components/template/field/WideNarrow"
   //       )
   //     )
   //   ]
@@ -432,7 +432,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "DefaultForm" */
-  //         "./components/Templates/Forms/DefaultForm"
+  //         "./components/template/field/DefaultForm"
   //       )
   //     )
   //   ]
@@ -442,7 +442,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "OneColumnTab" */
-  //         "./components/Templates/Tab"
+  //         "./components/template/Tab"
   //       )
   //     )
   //   ]
@@ -452,7 +452,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "TwoColumnTab" */
-  //         "./components/Templates/Tab"
+  //         "./components/template/Tab"
   //       )
   //     )
   //   ]
@@ -462,7 +462,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "ThreeColumnTab" */
-  //         "./components/Templates/Tab"
+  //         "./components/template/Tab"
   //       )
   //     )
   //   ]
@@ -472,7 +472,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "WideNarrowTab" */
-  //         "./components/Templates/Tab"
+  //         "./components/template/Tab"
   //       )
   //     )
   //   ]
@@ -482,7 +482,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "NarrowWideTab" */
-  //         "./components/Templates/Tab"
+  //         "./components/template/Tab"
   //       )
   //     )
   //   ]
@@ -492,7 +492,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "RepeatingTemplate" */
-  //         "./components/Templates/RepeatingTemplate"
+  //         "./components/template/RepeatingTemplate"
   //       )
   //     )
   //   ]
@@ -502,7 +502,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "AppShell" */
-  //         "./components/Templates/AppShell"
+  //         "./components/template/AppShell"
   //       )
   //     )
   //   ]
@@ -512,7 +512,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "SubTabs" */
-  //         "./components/Templates/Tab/SubTabs"
+  //         "./components/template/Tab/SubTabs"
   //       )
   //     )
   //   ]
@@ -522,7 +522,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "CaseView" */
-  //         "./components/Templates/CaseView"
+  //         "./components/template/CaseView"
   //       )
   //     )
   //   ]
@@ -532,7 +532,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "CasePreview" */
-  //         "./components/Templates/CasePreview"
+  //         "./components/template/CasePreview"
   //       )
   //     )
   //   ]
@@ -542,7 +542,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "CaseSummary" */
-  //         "./components/Templates/CaseSummary"
+  //         "./components/template/CaseSummary"
   //       )
   //     )
   //   ]
@@ -552,7 +552,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "Details" */
-  //         "./components/Templates/Details"
+  //         "./components/template/Details"
   //       )
   //     )
   //   ]
@@ -562,7 +562,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "DetailsTwoColumn" */
-  //         "./components/Templates/Details"
+  //         "./components/template/Details"
   //       )
   //     )
   //   ]
@@ -572,7 +572,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "DetailsThreeColumn" */
-  //         "./components/Templates/Details"
+  //         "./components/template/Details"
   //       )
   //     )
   //   ]
@@ -582,7 +582,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "DetailsSubTabs" */
-  //         "./components/Templates/Details/SubTabs"
+  //         "./components/template/Details/SubTabs"
   //       )
   //     )
   //   ]
@@ -592,7 +592,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "NarrowWideDetails" */
-  //         "./components/Templates/Details"
+  //         "./components/template/Details"
   //       )
   //     )
   //   ]
@@ -602,7 +602,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "WideNarrowDetails" */
-  //         "./components/Templates/Details"
+  //         "./components/template/Details"
   //       )
   //     )
   //   ]
@@ -610,7 +610,7 @@ export default {
   // Dropdown: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Dropdown" */ "./components/forms/Dropdown")
+  //       import(/* webpackChunkName: "Dropdown" */ "./components/field/Dropdown")
   //     )
   //   ]
   // },
@@ -643,7 +643,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "AppAnnouncement" */ "./components/Widgets/AppAnnouncement"
+  //         /* webpackChunkName: "AppAnnouncement" */ "./components/widget/AppAnnouncement"
   //       )
   //     )
   //   ]
@@ -652,7 +652,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "CaseHistory" */ "./components/Widgets/CaseHistory"
+  //         /* webpackChunkName: "CaseHistory" */ "./components/widget/CaseHistory"
   //       )
   //     )
   //   ]
@@ -727,7 +727,7 @@ export default {
   // Location: {
   //   modules: [
   //     loadable(() =>
-  //       import(/* webpackChunkName: "Location" */ "./components/forms/Location")
+  //       import(/* webpackChunkName: "Location" */ "./components/field/Location")
   //     )
   //   ]
   // },
@@ -742,7 +742,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "FileUtility" */ "./components/Widgets/FileUtility"
+  //         /* webpackChunkName: "FileUtility" */ "./components/widget/FileUtility"
   //       )
   //     )
   //   ]
@@ -751,7 +751,7 @@ export default {
   //   modules: [
   //     loadable(() =>
   //       import(
-  //         /* webpackChunkName: "Followers" */ "./components/Widgets/Followers"
+  //         /* webpackChunkName: "Followers" */ "./components/widget/Followers"
   //       )
   //     )
   //   ]
@@ -761,7 +761,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "AutoComplete" */
-  //         "./components/forms/AutoComplete"
+  //         "./components/field/AutoComplete"
   //       )
   //     )
   //   ]
@@ -801,7 +801,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "UserReference" */
-  //         "./components/forms/UserReference"
+  //         "./components/field/UserReference"
   //       )
   //     )
   //   ]
@@ -811,7 +811,7 @@ export default {
   //     loadable(() =>
   //       import(
   //         /* webpackChunkName: "CaseOperator" */
-  //         "./components/Widgets/CaseOperator"
+  //         "./components/widget/CaseOperator"
   //       )
   //     )
   //   ]
