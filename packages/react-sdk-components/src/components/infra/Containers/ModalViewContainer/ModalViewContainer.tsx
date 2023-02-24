@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import Assignment from '../../Assignment';
-import CancelAlert from '../../../forms/CancelAlert';
+import CancelAlert from '../../../field/CancelAlert';
 import Utils from '../../../helpers/utils';
 
 declare const PCore;

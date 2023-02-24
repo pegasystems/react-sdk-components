@@ -345,9 +345,9 @@ const processImportLine = function (inMatch) {
  * This function processes the given file which is expected to be a file in the overrides/lib
  * directory. It finds relative paths of import statements to other components/files in the
  * react-sdk-components package and updates those relative paths
- * (ex: import FieldValueList from '../../designSystemExtensions/FieldValueList';)
+ * (ex: import FieldValueList from '../../designSystemExtension/FieldValueList';)
  * and updates those to the appropriate @pega/react-sdk-components path
- * (ex: import FieldValueList from '@pega/react-sdk-components/lib/components/designSystemExtensions/FieldValueList';)
+ * (ex: import FieldValueList from '@pega/react-sdk-components/lib/components/designSystemExtension/FieldValueList';)
  */
 const processOverrideFile = function(filePath) {
 
