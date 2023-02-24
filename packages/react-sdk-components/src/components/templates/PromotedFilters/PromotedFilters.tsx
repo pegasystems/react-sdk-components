@@ -57,7 +57,7 @@ function isValidInput(input) {
 
 export default function PromotedFilters(props) {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
-  const { getPConnect, viewName, filters, listViewProps, pageClass } = props;
+  const { getPConnect, viewName, filters, listViewProps, pageClass, parameters } = props;
   const [initTable, setInitTable] = useState(false);
   const [payload, setPayload] = useState({});
   const filtersProperties = {};
@@ -109,7 +109,7 @@ export default function PromotedFilters(props) {
       if (PCore.getFormUtils().isFormValid(transientItemID) && isValidInput(formValues)) {
         setInitTable(true);
         const Query: any = {
-          dataViewParameters: {}
+          dataViewParameters: parameters
         };
 
         if (!Utils.isEmptyObject(promotedFilters)) {
@@ -156,5 +156,6 @@ PromotedFilters.propTypes = {
   viewName: PropTypes.string.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   listViewProps: PropTypes.objectOf(PropTypes.any).isRequired,
-  pageClass: PropTypes.string.isRequired
+  pageClass: PropTypes.string.isRequired,
+  parameters: PropTypes.object
 };
