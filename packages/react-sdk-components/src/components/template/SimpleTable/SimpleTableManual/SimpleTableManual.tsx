@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import { buildFieldsForTable, filterData } from '../simpleTableHelpers';
+import { buildFieldsForTable, filterData } from '../../../helpers/simpleTableHelpers';
 import { getDataPage } from '../../../helpers/data_page';
 import Link from '@material-ui/core/Link';
 import { getReferenceList } from '../../../helpers/field-group-utils';
