@@ -13,7 +13,6 @@ const sdkTopLevelContent = [ 'components_map' ];
 //  where that file is found
 //  ex: 'TextInput': 'field' indicates that there's TextInput is in the components/field directory
 //    'SimpleTable' is in 'template/SimpleTable/SimpleTable' subdirectory
-//    'simpleTableHelpers' is in template/SimpleTable' directory (a non-component entry in this table)
 const sdkComponentLocationMap = {
   'ActionButtons': 'infra',
   'ActionButtonsForFileUtil': 'widget/FileUtility',
@@ -77,7 +76,6 @@ const sdkComponentLocationMap = {
   'RootContainer': 'infra',
   'SemanticLink': 'field',
   'SimpleTable': 'template/SimpleTable',
-  'simpleTableHelpers': 'template/SimpleTable',
   'SimpleTableManual': 'template/SimpleTable',
   'SimpleTableSelect': 'template/SimpleTable',
   'SingleReferenceReadOnly': 'template',

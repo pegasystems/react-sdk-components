@@ -1,4 +1,4 @@
-import { Utils } from '../../helpers/utils';
+import { Utils } from './utils';
 
 declare const PCore;
 
