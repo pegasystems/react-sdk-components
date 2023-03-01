@@ -28,8 +28,6 @@ import DefaultForm from './components/template/DefaultForm';
 import DeferLoad from './components/infra/DeferLoad';
 import Details from './components/template/Details/Details';
 import DetailsSubTabs from './components/template/Details/DetailsSubTabs';
-import DetailsThreeColumn from './components/template/Details/DetailsThreeColumn';
-import DetailsTwoColumn from './components/template/Details/DetailsTwoColumn/DetailsTwoColumn';
 import Dropdown from './components/field/Dropdown';
 import Email from './components/field/Email/Email';
 import ErrorBoundary from './components/infra/ErrorBoundary';
@@ -47,7 +45,6 @@ import ModalViewContainer from './components/infra/Containers/ModalViewContainer
 import MultiReferenceReadOnly from './components/template/MultiReferenceReadOnly';
 import MultiStep from './components/infra/MultiStep';
 import NarrowWide from './components/template/NarrowWide/NarrowWide';
-import NarrowWideDetails from './components/template/NarrowWide/NarrowWideDetails';
 import NarrowWideForm from './components/template/NarrowWide/NarrowWideForm';
 import NarrowWidePage from './components/template/NarrowWide/NarrowWidePage';
 import NavBar from './components/infra/NavBar';
@@ -86,7 +83,6 @@ import VerticalTabs from './components/infra/VerticalTabs/VerticalTabs';
 import View from './components/infra/View';
 import ViewContainer from './components/infra/Containers/ViewContainer';
 import WideNarrow from './components/template/WideNarrow/WideNarrow';
-import WideNarrowDetails from './components/template/WideNarrow/WideNarrowDetails';
 import WideNarrowForm from './components/template/WideNarrow/WideNarrowForm';
 import WideNarrowPage from './components/template/WideNarrow/WideNarrowPage';
 
@@ -126,8 +122,8 @@ const pegaSdkComponentMap = {
   'DeferLoad': DeferLoad,
   'Details': Details,
   'DetailsSubTabs': DetailsSubTabs,
-  'DetailsThreeColumn': DetailsThreeColumn,
-  'DetailsTwoColumn': DetailsTwoColumn,
+  'DetailsThreeColumn': Details,
+  'DetailsTwoColumn': Details,
   'Dropdown': Dropdown,
   'Email': Email,
   'ErrorBoundary': ErrorBoundary,
@@ -145,7 +141,7 @@ const pegaSdkComponentMap = {
   'MultiReferenceReadOnly': MultiReferenceReadOnly,
   'MultiStep': MultiStep,
   'NarrowWide': NarrowWide,
-  'NarrowWideDetails': NarrowWideDetails,
+  'NarrowWideDetails': Details,
   'NarrowWideForm': NarrowWideForm,
   'NarrowWidePage': NarrowWidePage,
   'NavBar': NavBar,
@@ -184,7 +180,7 @@ const pegaSdkComponentMap = {
   'View': View,
   'ViewContainer': ViewContainer,
   'WideNarrow': WideNarrow,
-  'WideNarrowDetails': WideNarrowDetails,
+  'WideNarrowDetails': Details,
   'WideNarrowForm': WideNarrowForm,
   'WideNarrowPage': WideNarrowPage
 };
