@@ -8,6 +8,9 @@ node_modules
 
 **/lib
 **/**/lib
-playwright-report
+
+# output for jest and playwright output
+tests/coverage
+tests/playwright-report
 
 **/tsconfig.*.tsbuildinfo

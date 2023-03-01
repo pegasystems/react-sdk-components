@@ -32,9 +32,9 @@
     "start-dev-https": "webpack serve --https",
     "start-prod": "http-server ./dist --port 3502 --gzip --brotli --cors --proxy http://localhost:3502?",
     "start-prod-https": "http-server ./dist --port 3502 --gzip --brotli --cors --ssl --cert private.pem --key private.key --proxy https://localhost:3502?",
-    "test": "node playwright-message.js && playwright test --project=chromium MediaCo/portal MediaCo/embedded",
+    "test": "node scripts/playwright-message.js && playwright test --project=chromium MediaCo/portal MediaCo/embedded",
     "test:headed": "playwright test --headed --project=chromium MediaCo/portal MediaCo/embedded",
-    "test-report": "playwright show-report",
+    "test-report": "playwright show-report tests/playwright-report",
     "test-jest": "jest --watchAll",
     "test-jest-coverage": "jest --watchAll --coverage"
   },
