@@ -1,9 +1,0 @@
-{
-  "name": "DetailsTwoColumn",
-  "label": "Details (Two column)",
-  "description": "Details (Two column)",
-  "type": "Template",
-  "subtype": "DETAILS",
-  "properties": [
-  ]
-}

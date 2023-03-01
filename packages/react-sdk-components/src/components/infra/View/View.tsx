@@ -18,6 +18,15 @@ import './View.css';
 //
 
 const FORMTEMPLATES = ['OneColumn', 'TwoColumn', 'DefaultForm', 'WideNarrow', 'NarrowWide'];
+const NO_HEADER_TEMPLATES = [
+  'SubTabs',
+  'SimpleTable',
+  'Details',
+  'DetailsTwoColumn',
+  'DetailsThreeColumn',
+  'NarrowWideDetails',
+  'WideNarrowDetails'
+];
 
 export default function View(props) {
   const { children, template, getPConnect, mode } = props;
@@ -104,7 +113,7 @@ export default function View(props) {
 
     return (
       <div className='grid-column'>
-        {showLabel && template !== 'SubTabs' && template !== 'SimpleTable' && template !== 'Details' && (
+        {showLabel && !NO_HEADER_TEMPLATES.includes(template) && (
           <div className='template-title-container'>
             <span>{label}</span>
           </div>
