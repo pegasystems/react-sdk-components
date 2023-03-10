@@ -113,6 +113,11 @@ export function format(value, type, options = {}) {
       break;
     }
 
+    case "userreference": {
+      formattedValue = value.userName;
+      break;
+    }
+
     default:
       formattedValue = value;
   }
