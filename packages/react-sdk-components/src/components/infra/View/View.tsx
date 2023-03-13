@@ -18,6 +18,15 @@ import './View.css';
 //
 
 const FORMTEMPLATES = ['OneColumn', 'TwoColumn', 'DefaultForm', 'WideNarrow', 'NarrowWide'];
+const NO_HEADER_TEMPLATES = [
+  'SubTabs',
+  'SimpleTable',
+  'Details',
+  'DetailsTwoColumn',
+  'DetailsThreeColumn',
+  'NarrowWideDetails',
+  'WideNarrowDetails'
+];
 
 export default function View(props) {
   const { children, template, getPConnect, mode } = props;
@@ -45,35 +54,33 @@ export default function View(props) {
     if (SdkComponentMap) {
       // This is the node_modules version of react_pconnect!
       const theLocalComponent = SdkComponentMap.getLocalComponentMap()[template];
-      if ( theLocalComponent !== undefined) {
-          // eslint-disable-next-line no-console
-          console.log(`View component found ${template}: Local`);
-          ViewTemplate = theLocalComponent
+      if (theLocalComponent !== undefined) {
+        // eslint-disable-next-line no-console
+        console.log(`View component found ${template}: Local`);
+        ViewTemplate = theLocalComponent;
       } else {
-          const thePegaProvidedComponent = SdkComponentMap.getPegaProvidedComponentMap()[template];
-          if ( thePegaProvidedComponent !== undefined) {
-            // console.log(`View component found ${template}: Pega-provided`);
-            ViewTemplate = thePegaProvidedComponent;
-          } else {
-              // eslint-disable-next-line no-console
-              console.error(`View component can't find template type ${template}`);
-              ViewTemplate = ErrorBoundary;
-          }
+        const thePegaProvidedComponent = SdkComponentMap.getPegaProvidedComponentMap()[template];
+        if (thePegaProvidedComponent !== undefined) {
+          // console.log(`View component found ${template}: Pega-provided`);
+          ViewTemplate = thePegaProvidedComponent;
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(`View component can't find template type ${template}`);
+          ViewTemplate = ErrorBoundary;
+        }
       }
 
-      if (template === "ListView") {
+      if (template === 'ListView') {
         // special case for ListView - add in a prop
         const bInForm = true;
-        props = { ...props, bInForm};
+        props = { ...props, bInForm };
       }
     } else {
-
       // eslint-disable-next-line no-console
-      console.warn(`View: SdkComponentMap expected but not found.`)
+      console.warn(`View: SdkComponentMap expected but not found.`);
 
       // eslint-disable-next-line no-console
       console.error(`View: Trying to render an unknown template: ${template}`);
-
     }
 
     // for debugging/investigation
@@ -104,7 +111,7 @@ export default function View(props) {
 
     return (
       <div className='grid-column'>
-        {showLabel && template !== 'SubTabs' && template !== 'SimpleTable' && template !== 'Details' && (
+        {showLabel && !NO_HEADER_TEMPLATES.includes(template) && (
           <div className='template-title-container'>
             <span>{label}</span>
           </div>
