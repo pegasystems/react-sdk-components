@@ -16,7 +16,8 @@ export default function TextArea(props) {
     testId,
     fieldMetadata,
     helperText,
-    displayMode
+    displayMode,
+    hideLabel
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -24,11 +25,12 @@ export default function TextArea(props) {
 
   let readOnlyProp = {};
 
-  if(displayMode === 'LABELS_LEFT') {
-    const field = {
-      [label]: value
-    };
-    return <FieldValueList item={field} />
+  if (displayMode === 'LABELS_LEFT') {
+    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+  }
+
+  if (displayMode === 'STACKED_LARGE_VAL') {
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
