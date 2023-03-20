@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { SdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import ErrorBoundary from '../ErrorBoundary';
 
-import { getAllFields } from '../../template/utils';
+import { getAllFields } from '../../helpers/template-utils';
 
 // Need to import any templates that we might render
 
