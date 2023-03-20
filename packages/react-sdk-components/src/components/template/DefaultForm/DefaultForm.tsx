@@ -1,7 +1,7 @@
 import React, { createElement } from "react";
 import PropTypes from "prop-types";
 
-import { getInstructions } from '../utils';
+import { getInstructions } from '../../helpers/template-utils';
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
 import './DefaultForm.css';
