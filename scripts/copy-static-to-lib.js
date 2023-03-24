@@ -22,7 +22,7 @@ const copyStaticFiles = function(dirPath, arrayOfFiles) {
       if (extensionsToCopy.includes(theExt)) {
         const toPath = dirPath.replace('/src/', '/lib/');
         // create the toPath if it doesn't exist so we can copy into it
-        if (!fs.existsSync(toPath)) { 
+        if (!fs.existsSync(toPath)) {
           console.log( `     Creating ${toPath}`)
           fs.mkdirSync(toPath, { recursive: true })
         }
