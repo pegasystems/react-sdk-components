@@ -286,8 +286,7 @@ export default function FlowContainer(props) {
   }
 
 
-  // From WC SDK updateSelf - so do this in useEffect that's run only when the props change...
-
+  // From SDK-WC updateSelf - so do this in useEffect that's run only when the props change...
   useEffect(() => {
     const localPConn = arNewChildren[0].getPConnect();
 
@@ -388,7 +387,7 @@ export default function FlowContainer(props) {
             theNewChildren.push(configObject);
             setArNewChildren(theNewChildren);
 
-            // JEA - adapted from Nebula FlowContainer since we want to render children that are React components
+            // JEA - adapted from Constellation DX Components FlowContainer since we want to render children that are React components
             const root = createElement(createPConnectComponent(), configObject);
             setArNewChildrenAsReact([root]);
 
