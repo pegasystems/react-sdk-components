@@ -25,7 +25,8 @@ const NO_HEADER_TEMPLATES = [
   'DetailsTwoColumn',
   'DetailsThreeColumn',
   'NarrowWideDetails',
-  'WideNarrowDetails'
+  'WideNarrowDetails',
+  'Confirmation'
 ];
 
 export default function View(props) {

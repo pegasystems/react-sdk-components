@@ -18,6 +18,7 @@ import CaseSummaryFields from './components/designSystemExtension/CaseSummaryFie
 import CaseView from './components/template/CaseView';
 import CaseViewActionsMenu from './components/template/CaseViewActionsMenu';
 import Checkbox from './components/field/Checkbox';
+import Confirmation from './components/template/Confirmation';
 import Currency from './components/field/Currency';
 import DashboardFilter from './components/infra/DashboardFilter';
 import DataReference from './components/template/DataReference';
@@ -116,6 +117,7 @@ const pegaSdkComponentMap = {
   'CaseView': CaseView,
   'CaseViewActionsMenu': CaseViewActionsMenu,
   'Checkbox': Checkbox,
+  'Confirmation': Confirmation,
   'Currency': Currency,
   'DashboardFilter': DashboardFilter,
   'DataReference': DataReference,
