@@ -29,6 +29,7 @@ const sdkComponentLocationMap = {
   'CaseView': 'template',
   'CaseViewActionsMenu': 'template',
   'Checkbox': 'field',
+  'Confirmation': 'template',
   'Currency': 'field',
   'DashboardFilter': 'infra',
   'DataReference': 'template',
