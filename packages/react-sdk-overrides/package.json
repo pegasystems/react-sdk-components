@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-overrides",
-  "version": "0.23.19",
+  "version": "0.23.20",
   "description": "React SDK - Code for overriding components",
   "_filesComment": "During packing, npm ignores everything NOT in the files list",
   "files": [
