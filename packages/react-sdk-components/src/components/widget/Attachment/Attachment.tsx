@@ -421,17 +421,16 @@ export default function Attachment(props) {
           }
         );
       }
-
-      PCore.getPubSubUtils().subscribe(
-        PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION,
-        resetAttachmentStoredState,
-        caseID
-      );
-      return () => {
-        PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, caseID);
-      };
     }
-  }
+    }
+    PCore.getPubSubUtils().subscribe(
+      PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION,
+      resetAttachmentStoredState,
+      caseID
+    );
+    return () => {
+      PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, caseID);
+    };
   }, []);
 
   let content = (
