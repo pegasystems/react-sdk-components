@@ -90,7 +90,7 @@ import WideNarrow from './components/template/WideNarrow/WideNarrow';
 import WideNarrowDetails from './components/template/WideNarrow/WideNarrowDetails';
 import WideNarrowForm from './components/template/WideNarrow/WideNarrowForm';
 import WideNarrowPage from './components/template/WideNarrow/WideNarrowPage';
-
+import BannerPage from './components/template/BannerPage';
 
 // pegaSdkComponentMap is the JSON object where we'll store the components that are
 // the default implementations provided by the SDK. These will be used if there isn't
@@ -188,7 +188,8 @@ const pegaSdkComponentMap = {
   'WideNarrow': WideNarrow,
   'WideNarrowDetails': WideNarrowDetails,
   'WideNarrowForm': WideNarrowForm,
-  'WideNarrowPage': WideNarrowPage
+  'WideNarrowPage': WideNarrowPage,
+  'BannerPage': BannerPage
 };
 
 export default pegaSdkComponentMap;

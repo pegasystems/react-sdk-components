@@ -100,7 +100,8 @@ const sdkComponentLocationMap = {
   'WideNarrow': 'template',
   'WideNarrowDetails': 'template',
   'WideNarrowForm': 'template',
-  'WideNarrowPage': 'template'
+  'WideNarrowPage': 'template',
+  'BannerPage': 'template'
 };
 
 // Now package them up so they can be 'require'd from build-overrides.js
