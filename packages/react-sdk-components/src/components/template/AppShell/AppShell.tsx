@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import WssNavBar from '../WssNavBar';
 import { Utils } from '../../helpers/utils';
 import Avatar from '@material-ui/core/Avatar';
 import { NavContext } from '../../helpers/reactContextHelpers';
 import './AppShell.css';
 
-// AppShell can emit NavBar
+// AppShell can emit NavBar or WssNavBar
 import NavBar from '../../infra/NavBar';
+import WssNavBar from '../../template/WssNavBar';
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -11,6 +11,8 @@ import Assignment from './components/infra/Assignment/Assignment';
 import AssignmentCard from './components/infra/AssignmentCard/AssignmentCard';
 import Attachment from './components/widget/Attachment';
 import AutoComplete from './components/field/AutoComplete';
+import Banner from './components/designSystemExtension/Banner';
+import BannerPage from './components/template/BannerPage';
 import CancelAlert from './components/field/CancelAlert';
 import CaseHistory from './components/widget/CaseHistory';
 import CaseSummary from './components/template/CaseSummary';
@@ -90,7 +92,7 @@ import WideNarrow from './components/template/WideNarrow/WideNarrow';
 import WideNarrowDetails from './components/template/WideNarrow/WideNarrowDetails';
 import WideNarrowForm from './components/template/WideNarrow/WideNarrowForm';
 import WideNarrowPage from './components/template/WideNarrow/WideNarrowPage';
-import BannerPage from './components/template/BannerPage';
+import WssNavBar from './components/template/WssNavBar/WssNavBar';
 
 // pegaSdkComponentMap is the JSON object where we'll store the components that are
 // the default implementations provided by the SDK. These will be used if there isn't
@@ -110,6 +112,8 @@ const pegaSdkComponentMap = {
   'AssignmentCard': AssignmentCard,
   'Attachment': Attachment,
   'AutoComplete': AutoComplete,
+  'Banner': Banner,
+  'BannerPage': BannerPage,
   'CancelAlert': CancelAlert,
   'CaseHistory': CaseHistory,
   'CaseSummary': CaseSummary,
@@ -189,7 +193,7 @@ const pegaSdkComponentMap = {
   'WideNarrowDetails': WideNarrowDetails,
   'WideNarrowForm': WideNarrowForm,
   'WideNarrowPage': WideNarrowPage,
-  'BannerPage': BannerPage
+  'WssNavBar': WssNavBar
 };
 
 export default pegaSdkComponentMap;
