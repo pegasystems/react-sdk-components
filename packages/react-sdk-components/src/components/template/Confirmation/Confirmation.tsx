@@ -7,11 +7,25 @@ import React from 'react';
 import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers';
 import ToDo from '../../widget/ToDo';
 import Details from '../Details/Details';
-import { Button } from '@material-ui/core';
+import { Button, Card, makeStyles } from '@material-ui/core';
 
 declare const PCore;
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  }
+}));
+
 export default function Confirmation(props) {
+  const classes = useStyles();
   const CONSTS = PCore.getConstants();
   const [showConfirmView, setShowConfirmView] = useState(true);
   const { showTasks, getPConnect, datasource } = props;
@@ -38,8 +52,8 @@ export default function Confirmation(props) {
   const detailProps = { ...props, showLabel: false };
   const showDetails = detailProps?.children?.[0]?.props?.getPConnect()?.getChildren()?.length > 0;
   return showConfirmView ? (
-    <Fragment>
-      <h2>{props.showLabel ? props.label : ''}</h2>
+    <Card className={classes.root}>
+      <h2 id='confirm-label'>{props.showLabel ? props.label : ''}</h2>
       {showDetails ? <Details {...detailProps} /> : undefined}
       {showTasks ? (
         toDoList && toDoList.length > 0 ? (
@@ -49,6 +63,7 @@ export default function Confirmation(props) {
             getPConnect={getPConnect}
             type={CONSTS.TODO}
             headerText='Open Tasks'
+            isConfirm
           />
         ) : undefined
       ) : undefined}
@@ -57,15 +72,18 @@ export default function Confirmation(props) {
           Done
         </Button>
       </div>
-    </Fragment>
+    </Card>
   ) : toDoList && toDoList.length > 0 ? (
-    <ToDo
-      {...props}
-      datasource={{ source: toDoList }}
-      getPConnect={getPConnect}
-      type={CONSTS.TODO}
-      headerText='Tasks'
-    />
+    <Card className={classes.root}>
+      <ToDo
+        {...props}
+        datasource={{ source: toDoList }}
+        getPConnect={getPConnect}
+        type={CONSTS.TODO}
+        headerText='Tasks'
+        isConfirm
+      />
+    </Card>
   ) : null;
 }
 
