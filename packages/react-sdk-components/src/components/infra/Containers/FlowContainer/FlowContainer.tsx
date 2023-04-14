@@ -15,7 +15,7 @@ import StoreContext from '../../../../bridge/Context/StoreContext';
 import DayjsUtils from '@date-io/dayjs';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-import { addContainerItem, getToDoAssignments } from './helpers';
+import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
 
 declare const PCore;
 
@@ -312,7 +312,6 @@ export default function FlowContainer(props) {
       }
     }
 
-
     // if have caseMessage show message and end
     const theCaseMessages = thePConn.getValue('caseMessages');
 
@@ -337,70 +336,70 @@ export default function FlowContainer(props) {
     }
 
     // this check in routingInfo, mimic React to check and get the internals of the
-      // flowContainer and force updates to pConnect/redux
-      if (routingInfo && loadingInfo !== undefined) {
-        // debugging/investigation help
-        // console.log(`${thePConn.getComponentName()}: >>routingInfo: ${JSON.stringify(routingInfo)}`);
+    // flowContainer and force updates to pConnect/redux
+    if (routingInfo && loadingInfo !== undefined) {
+      // debugging/investigation help
+      // console.log(`${thePConn.getComponentName()}: >>routingInfo: ${JSON.stringify(routingInfo)}`);
 
-        const currentOrder = routingInfo.accessedOrder;
-        const currentItems = routingInfo.items;
-        const type = routingInfo.type;
-        if (currentOrder && currentItems) {
-          // JA - making more similar to React version
-          const key = currentOrder[currentOrder.length - 1];
+      const currentOrder = routingInfo.accessedOrder;
+      const currentItems = routingInfo.items;
+      const type = routingInfo.type;
+      if (currentOrder && currentItems) {
+        // JA - making more similar to React version
+        const key = currentOrder[currentOrder.length - 1];
 
-          // save off itemKey to be used for finishAssignment, etc.
-          // debugger;
-          setItemKey(key);
+        // save off itemKey to be used for finishAssignment, etc.
+        // debugger;
+        setItemKey(key);
 
-          if (
-            currentOrder.length > 0 &&
-            currentItems[key] &&
-            currentItems[key].view &&
-            type === 'single' &&
-            !Utils.isEmptyObject(currentItems[key].view)
-          ) {
-            const currentItem = currentItems[key];
-            const rootView = currentItem.view;
-            const { context } = rootView.config;
-            const config = { meta: rootView };
+        if (
+          currentOrder.length > 0 &&
+          currentItems[key] &&
+          currentItems[key].view &&
+          type === 'single' &&
+          !Utils.isEmptyObject(currentItems[key].view)
+        ) {
+          const currentItem = currentItems[key];
+          const rootView = currentItem.view;
+          const { context } = rootView.config;
+          const config = { meta: rootView };
 
-            config['options'] = {
-              context: currentItem.context,
-              pageReference: context || localPConn.getPageReference(),
-              hasForm: true,
-              isFlowContainer: true,
-              containerName: localPConn.getContainerName(),
-              containerItemName: key,
-              parentPageReference: localPConn.getPageReference()
-            };
+          config['options'] = {
+            context: currentItem.context,
+            pageReference: context || localPConn.getPageReference(),
+            hasForm: true,
+            isFlowContainer: true,
+            containerName: localPConn.getContainerName(),
+            containerItemName: key,
+            parentPageReference: localPConn.getPageReference()
+          };
 
-            const configObject = PCore.createPConnect(config);
+          const configObject = PCore.createPConnect(config);
 
-            // Since we're setting an array, need to add in an appropriate key
-            //  to remove React warning.
-            configObject['key'] = config['options'].parentPageReference;
+          // Since we're setting an array, need to add in an appropriate key
+          //  to remove React warning.
+          configObject['key'] = config['options'].parentPageReference;
 
-            // keep track of these changes
-            const theNewChildren: Array<Object> = [];
-            theNewChildren.push(configObject);
-            setArNewChildren(theNewChildren);
+          // keep track of these changes
+          const theNewChildren: Array<Object> = [];
+          theNewChildren.push(configObject);
+          setArNewChildren(theNewChildren);
 
-            // JEA - adapted from Constellation DX Components FlowContainer since we want to render children that are React components
-            const root = createElement(createPConnectComponent(), configObject);
-            setArNewChildrenAsReact([root]);
+          // JEA - adapted from Constellation DX Components FlowContainer since we want to render children that are React components
+          const root = createElement(createPConnectComponent(), configObject);
+          setArNewChildrenAsReact([root]);
 
-            const oWorkItem = configObject.getPConnect(); // was theNewChildren[0].getPConnect()
-            const oWorkData = oWorkItem.getDataObject();
+          const oWorkItem = configObject.getPConnect(); // was theNewChildren[0].getPConnect()
+          const oWorkData = oWorkItem.getDataObject();
 
-            // check if have oWorkData, there are times due to timing of state change, when this
-            // may not be available
-            if (oWorkData) {
-              setContainerName(getActiveViewLabel() || oWorkData.caseInfo.assignments?.[0].name);
-            }
+          // check if have oWorkData, there are times due to timing of state change, when this
+          // may not be available
+          if (oWorkData) {
+            setContainerName(getActiveViewLabel() || oWorkData.caseInfo.assignments?.[0].name);
           }
         }
       }
+    }
   }, [props]);
 
   const caseId = thePConn.getCaseSummary().content.pyID;
@@ -412,6 +411,8 @@ export default function FlowContainer(props) {
   if (instructionText === undefined) {
     instructionText = '';
   }
+
+  const bShowBanner = showBanner(getPConnect);
 
   return (
     <div style={{ textAlign: 'left' }} id={buildName} className='psdk-flow-container-top'>
@@ -465,7 +466,7 @@ export default function FlowContainer(props) {
           <Alert severity='success'>{caseMessages}</Alert>
         </div>
       )}
-      {bShowConfirm && <div>{arNewChildrenAsReact}</div>}
+      {bShowConfirm && bShowBanner && <div>{arNewChildrenAsReact}</div>}
     </div>
   );
 }
