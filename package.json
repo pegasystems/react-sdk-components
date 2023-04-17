@@ -1,13 +1,13 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "0.23.22",
+  "version": "0.23.23",
   "description": "React SDK packaging: bridge and components, overrides",
   "main": "index.ts",
   "scripts": {
     "build-sdk-complete": "run-p -l lint build-sdk",
     "prebuild-sdk": "npm run delete-tsbuildinfo && npm run clear-lib && npm run prepare-code-for-compilation",
     "build-sdk": "npm run compile-ts",
-    "postbuild-sdk": "npm run copy-static-files-to-lib && npm run edit-pega-components-map && npm run copy-doc-files-to-lib",
+    "postbuild-sdk": "npm run copy-static-files-to-lib && npm run edit-pega-components-map && npm run copy-doc-files-to-lib && npm run copy-local-component-map-to-lib",
     "pack-sdk": "npm pack ./packages/react-sdk-components",
     "prebuild-overrides": "shx rm -rf ./packages/react-sdk-overrides/lib && shx cp -r ./packages/react-sdk-components/src/components ./packages/react-sdk-overrides/lib",
     "build-overrides": "node scripts/build-overrides",
@@ -20,6 +20,7 @@
     "compile-ts": "tsc -b tsconfig.build.json",
     "copy-static-files-to-lib": "node scripts/copy-static-to-lib.js",
     "copy-doc-files-to-lib": "shx mkdir -p ./packages/react-sdk-components/lib/doc && shx cp -r ./packages/react-sdk-components/doc ./packages/react-sdk-components/lib",
+    "copy-local-component-map-to-lib": "shx cp ./packages/react-sdk-components/sdk-local-component-map.js ./packages/react-sdk-components/lib",
     "edit-pega-components-map": "node scripts/edit-pega-components-map-in-lib.js",
     "lint": "npx eslint \"packages/react-sdk-components/src/**\"",
     "lint-errors-only": "npx eslint \"packages/react-sdk-components/src/**\" --quiet",
