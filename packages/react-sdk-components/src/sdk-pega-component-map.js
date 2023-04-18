@@ -62,6 +62,7 @@ import Percentage from './components/field/Percentage';
 import Phone from './components/field/Phone/Phone';
 import PromotedFilters from './components/template/PromotedFilters';
 import Pulse from './components/designSystemExtension/Pulse';
+import QuickCreate from './components/widget/QuickCreate';
 import RadioButtons from './components/field/RadioButtons';
 import Reference from './components/infra/Reference/Reference';
 import Region from './components/infra/Region/Region';
@@ -93,6 +94,7 @@ import WideNarrowDetails from './components/template/WideNarrow/WideNarrowDetail
 import WideNarrowForm from './components/template/WideNarrow/WideNarrowForm';
 import WideNarrowPage from './components/template/WideNarrow/WideNarrowPage';
 import WssNavBar from './components/template/WssNavBar/WssNavBar';
+import WssQuickCreate from './components/designSystemExtension/WssQuickCreate';
 
 // pegaSdkComponentMap is the JSON object where we'll store the components that are
 // the default implementations provided by the SDK. These will be used if there isn't
@@ -163,6 +165,7 @@ const pegaSdkComponentMap = {
   'Phone': Phone,
   'PromotedFilters': PromotedFilters,
   'Pulse': Pulse,
+  'QuickCreate': QuickCreate,
   'reference': Reference,
   'RadioButtons': RadioButtons,
   'Region': Region,
@@ -193,7 +196,8 @@ const pegaSdkComponentMap = {
   'WideNarrowDetails': WideNarrowDetails,
   'WideNarrowForm': WideNarrowForm,
   'WideNarrowPage': WideNarrowPage,
-  'WssNavBar': WssNavBar
+  'WssNavBar': WssNavBar,
+  'WssQuickcreate': WssQuickCreate
 };
 
 export default pegaSdkComponentMap;
