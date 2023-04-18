@@ -62,6 +62,7 @@ import Percentage from './components/field/Percentage';
 import Phone from './components/field/Phone/Phone';
 import PromotedFilters from './components/template/PromotedFilters';
 import Pulse from './components/designSystemExtension/Pulse';
+import QuickCreate from './components/widget/QuickCreate';
 import RadioButtons from './components/field/RadioButtons';
 import Reference from './components/infra/Reference/Reference';
 import Region from './components/infra/Region/Region';
@@ -163,6 +164,7 @@ const pegaSdkComponentMap = {
   'Phone': Phone,
   'PromotedFilters': PromotedFilters,
   'Pulse': Pulse,
+  'QuickCreate': QuickCreate,
   'reference': Reference,
   'RadioButtons': RadioButtons,
   'Region': Region,

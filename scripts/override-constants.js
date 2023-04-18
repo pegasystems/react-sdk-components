@@ -22,6 +22,8 @@ const sdkComponentLocationMap = {
   'AssignmentCard': 'infra',
   'Attachment': 'widget',
   'AutoComplete': 'field',
+  'BannerPage': 'template',
+  'Banner': 'designSystemExtension',
   'CancelAlert': 'field',
   'CaseHistory': 'widget',
   'CaseSummary': 'template',
@@ -71,6 +73,7 @@ const sdkComponentLocationMap = {
   'Phone': 'field',
   'PromotedFilters': 'template',
   'Pulse': 'designSystemExtension',
+  'QuickCreate': 'widget',
   'reference': 'infra',
   'RadioButtons': 'field',
   'Region': 'infra',
@@ -101,7 +104,8 @@ const sdkComponentLocationMap = {
   'WideNarrowDetails': 'template',
   'WideNarrowForm': 'template',
   'WideNarrowPage': 'template',
-  'BannerPage': 'template'
+  'WssQuickCreate': 'designSystemExtension',
+  'WssNavBar': 'template'
 };
 
 // Now package them up so they can be 'require'd from build-overrides.js
