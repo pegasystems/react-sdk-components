@@ -134,9 +134,9 @@ export default function View(props) {
 
   if (children) {
     return <>{children}</>;
-  } else {
-    return <div id='View'>View has no children.</div>;
   }
+
+  return null;
 }
 
 View.defaultProps = {
