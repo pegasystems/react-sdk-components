@@ -56,7 +56,7 @@ export default function WssNavBar(props) {
   };
 
   const navLinksContent = (
-    <Box
+    <Box id="nav-links"
       sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}
       style={{ justifyContent: alignment }}
     >
@@ -73,7 +73,7 @@ export default function WssNavBar(props) {
       <AppBar position='static' color='primary'>
         <Container maxWidth='xl'>
           <Toolbar disableGutters style={{ justifyContent: 'space-between' }}>
-            <Button style={{ textTransform: 'capitalize' }} onClick={appInfo.onClick}>
+            <Button id="appName" style={{ textTransform: 'capitalize' }} onClick={appInfo.onClick}>
               <img src={appInfo.imageSrc} className={classes.appListLogo} />
               <span className={classes.appName}>{appInfo.appName}</span>
             </Button>
