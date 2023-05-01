@@ -2,33 +2,44 @@
 
 # React SDK Components
 
-The **React SDK Components** repo provides the Pega [**React SDK**](https://github.com/pegasystems/react-sdk) with an
-npm package containing the **bridge** to the ConstellationJS Engine and the default **components** on which clients
-can modify, replace, or add components to suit their specific needs.
+The **React SDK Components** repo is used to create the [**@pega/react-sdk-components**](https://www.npmjs.com/package/@pega/react-sdk-components)
+and [**@pega/react-sdk-overrides**](https://www.npmjs.com/package/@pega/react-sdk-overrides) npm packages
+used by the Pega [**Constellation React SDK**](https://community.pega.com/marketplace/component/react-sdk).
+These packages provide the initial set of components used by the **React SDK** to render DX Components with
+a design system other than Pega Constellation design system.
 
+This repository is provided to allow **React SDK** users easier access to the source code for
+the DX Components that are in the npm packages mentioned above. As a public repo, we expect
+that most users will use it as a reference to review and learn from the code that's in the
+npm packages.
+
+To create a project to use the Constellation React SDK, please use the **React SDK**. You can get started
+with the React SDK using the information (including pointers to online documentation) at
+[**Pega Community**](https://community.pega.com/marketplace/component/react-sdk) and the React SDK code
+on [**GitHub**](https://community.pega.com/marketplace/component/react-sdk).
 <br>
+<hr />
 
-# Normal workflow
+   ## License
 
-1.  **npm run ci** - cleans up all generated files from previous use and 
-installs all of the npm packages needed
+This project is licensed under the terms of the **Apache 2** license.
 
-1.  **npm run build:dev** - runs lint and a development build
-
-1.  **npm run start-dev** - starts a development server (with live reload)
-
-1.  **Work in VS Code** - live reload should allow you to see changes in browser
-
-1.  Once you're ready to build a new packaging of the SDK components. <br>
-**npm run build-sdk-complete** - runs lint and compiles all of the necessary code and puts the contents of the npm packaging in **packages/react-sdk-components/lib**
+You can see the full license [here](LICENSE) or directly on [apache.org](https://www.apache.org/licenses/LICENSE-2.0).
 
 
+<hr />
 
-1.  Then, when you want to create the .tgz file, <br>
-**npm run pack-sdk** - creates the .tgz file of the compiled code in **packages/react-sdk-components/lib**
+## Contributing
 
+We welcome contributions to the React SDK project.
 
-<br>
-<hr>
-<br>
-_more later..._
+Refer to our [guidelines for contributors](./docs/CONTRIBUTING.md) if you are interested in contributing to the project.
+
+<hr />
+## Additional Resources
+
+* [Constellation React SDK](https://github.com/pegasystems/react-sdk)
+* [Constellation SDKs Documentation](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/constellation-sdks.html)
+* [Troubleshooting Constellation SDKs](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/troubleshooting-constellation-sdks.html)
+* [MediaCo sample application](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/mediaco-sample-application.html)
+* [Material UI](https://v4.mui.com/)
