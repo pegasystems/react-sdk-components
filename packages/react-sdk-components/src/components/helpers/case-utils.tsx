@@ -1,5 +1,5 @@
 import React from 'react';
-import AlertBanner from '../components/designSystemExtension/AlertBanner';
+import AlertBanner from '../designSystemExtension/AlertBanner';
 
 declare let PCore: any;
 

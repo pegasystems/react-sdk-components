@@ -9,7 +9,7 @@ import createPConnectComponent from '../../../../bridge/react_pconnect';
 import Assignment from '../../Assignment';
 import CancelAlert from '../../../field/CancelAlert';
 import Utils from '../../../helpers/utils';
-import { getBanners } from '../../../../utils/case-utils';
+import { getBanners } from '../../../helpers/case-utils';
 
 declare const PCore;
 
