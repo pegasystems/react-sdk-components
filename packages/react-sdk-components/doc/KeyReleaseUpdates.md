@@ -1,4 +1,4 @@
-### **Release SDK-R-C 8.23.10 (24 April 2023)**
+#### **Release SDK-R-C 8.23.10 (24 April 2023)**
 
 This is the initial release of the React SDK Components packages:
 [**@pega/react-sdk-components**](ttps://www.npmjs.com/package/@pega/react-sdk-components)
