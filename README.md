@@ -48,7 +48,7 @@ You can see the full license [here](LICENSE) or directly on [apache.org](https:/
 
 ## Contributing
 
-We welcome contributions to the React SDK project.
+We welcome contributions to the React SDK Components project.
 
 Refer to our [guidelines for contributors](./docs/CONTRIBUTING.md) if you are interested in contributing to the project.
 
