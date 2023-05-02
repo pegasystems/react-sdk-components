@@ -1,8 +1,8 @@
 #### **Release SDK-R-C 8.23.10 (24 April 2023)**
 
 This is the initial release of the React SDK Components packages:
-[**@pega/react-sdk-components**](ttps://www.npmjs.com/package/@pega/react-sdk-components)
-and [**@pega/react-sdk-overrides**](ttps://www.npmjs.com/package/@pega/react-sdk-overrides).
+[**@pega/react-sdk-components**](https://www.npmjs.com/package/@pega/react-sdk-components)
+and [**@pega/react-sdk-overrides**](https://www.npmjs.com/package/@pega/react-sdk-overrides).
 This release contains all of the bridge and component code that was in the original
 packaging of the React SDK (which is now available in the React SDK's release/8.8.10 branch).
 
