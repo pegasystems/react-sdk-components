@@ -1,5 +1,5 @@
-Projects in the react-sdk-components repository usea third-party libraries or other resources that may
+Projects in the react-sdk-components repository use third-party libraries or other resources that may
 be distributed under licenses different than the react-sdk-components software.
 
-The third-party libraries and links to their licenses can be found in the 
+The third-party libraries and links to their licenses can be found in the
 node_modules folder after **npm install** in each project has been run.
