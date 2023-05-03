@@ -1,3 +1,13 @@
+#### **Release SDK-R-C 8.23.11 (xx xxxx 2023)**
+
+* Added new AlertBanner component (in designSystemExtension) and its use in Assignment and ModalViewContainer
+* Bug fixes in Decimal and Attachment components
+
+<br />
+
+<hr />
+
+
 #### **Release SDK-R-C 8.23.10 (24 April 2023)**
 
 This is the initial release of the React SDK Components packages:
