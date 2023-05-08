@@ -45,3 +45,7 @@ body {
   vertical-align: top;
   padding: 0px;
 }
+
+input[readonly]+svg {
+  opacity: 0.5;
+}
