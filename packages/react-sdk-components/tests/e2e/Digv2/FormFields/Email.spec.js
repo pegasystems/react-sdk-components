@@ -120,10 +120,10 @@ test.describe('E2E test', () => {
       page.locator('input[data-test-id="c30b8043cb501907a3e7b186fb37a85b"]')
     ).toBeVisible();
 
-    const neverVisibleCurrency = await page.locator(
+    const neverVisibleEmail = await page.locator(
       'input[data-test-id="5aa7a927ac4876abf1fcff6187ce5d76"]'
     );
-    await expect(neverVisibleCurrency).not.toBeVisible();
+    await expect(neverVisibleEmail).not.toBeVisible();
 
     const conditionallyVisibleEmail = await page.locator(
       'input[data-test-id="7f544a3551e7d7e51222dec315e7add5"]'
