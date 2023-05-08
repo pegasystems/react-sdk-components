@@ -17,6 +17,7 @@ export default function CheckboxComponent(props) {
     readOnly,
     testId,
     required,
+    disabled,
     status,
     helperText,
     validatemessage,
@@ -53,12 +54,12 @@ export default function CheckboxComponent(props) {
     thePConn.getValidationApi().validate(event.target.checked);
   };
 
-  let theCheckbox = <Checkbox color='primary' />;
+  let theCheckbox = <Checkbox color='primary' disabled={disabled} />;
 
   if (readOnly) {
     // Workaround for lack of InputProps readOnly from https://github.com/mui-org/material-ui/issues/17043
     //  Also note that we need to turn off the onChange call in the FormControlLabel wrapper, too. See below!
-    theCheckbox = <Checkbox value={value || false} onChange={handleChange} readOnly={readOnly} />;
+    theCheckbox = <Checkbox value={value || false} readOnly={readOnly} />;
   }
 
   return (
