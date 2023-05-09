@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('E2E test', () => {
   let attributes;
 
-  test('should login, create case and run the Currency tests', async ({ page }) => {
+  test('should login, create case and run the Boolean tests', async ({ page }) => {
     await common.Login(
       config.config.apps.digv2.user.username,
       config.config.apps.digv2.user.password,
@@ -36,55 +36,60 @@ test.describe('E2E test', () => {
     const complexFieldsCase = page.locator('div[role="button"]:has-text("Form Field")');
     await complexFieldsCase.click();
 
-    /** Selecting Currency from the Category dropdown */
+    /** Selecting Boolean from the Category dropdown */
     const selectedCategory = page.locator('div[data-test-id="76729937a5eb6b0fd88c42581161facd"]');
     await selectedCategory.click();
-    await page.getByRole('option', { name: 'Currency' }).click();
+    await page.getByRole('option', { name: 'Boolean' }).click();
 
     /** Selecting Required from the Sub Category dropdown */
     let selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
     await selectedSubCategory.click();
     await page.getByRole('option', { name: 'Required' }).click();
 
-    /** Required tests */
-    const notRequiredCurrency = page.locator(
-      'input[data-test-id="cab671a0ad307780a2de423a3d19924e"]'
+    // Checking required boolean field
+    const requiredBooleanLabel = page.locator(
+      'label[data-test-id="325f4eb20dc7c90a4fb697cd6c6bf0ea"]'
     );
-    attributes = await common.getAttributes(notRequiredCurrency);
-    await expect(attributes.includes('required')).toBeFalsy();
+    requiredBooleanLabel.click(); // check required field
+    requiredBooleanLabel.click(); // uncheck required field
+    await expect(page.locator('p:has-text("Cannot be blank")')).toBeVisible();
+    requiredBooleanLabel.click();
+    await expect(page.locator('p:has-text("Cannot be blank")')).toBeHidden();
 
-    const requiredCurrency = page.locator(
-      'input[data-test-id="77af0bd660f2e0276e23a7db7d48235a"]'
+    // Checking not required boolean field
+    const notRequiredBooleanLabel = page.locator(
+      'label[data-test-id="da0d9f2c08a5bebe777c814af80a2351"]'
     );
-    attributes = await common.getAttributes(requiredCurrency);
-    await expect(attributes.includes('required')).toBeTruthy();
+    notRequiredBooleanLabel.click(); // check required field
+    notRequiredBooleanLabel.click(); // uncheck required field
+    await expect(page.locator('p:has-text("Cannot be blank")')).toBeHidden();
 
     /** Selecting Disable from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
     await selectedSubCategory.click();
     await page.getByRole('option', { name: 'Disable' }).click();
 
-    // /** Disable tests */
-    const alwaysDisabledCurrency = page.locator(
-      'input[data-test-id="0d14f3717305e0238966749e6a853dad"]'
+    // Disable tests
+    const alwaysDisabledBoolean = page.locator(
+      'label[data-test-id="2f75cd75149315abb9d17aedfe1e129f"] input'
     );
-    attributes = await common.getAttributes(alwaysDisabledCurrency);
+    attributes = await common.getAttributes(alwaysDisabledBoolean);
     await expect(attributes.includes('disabled')).toBeTruthy();
 
-    const conditionallyDisabledCurrency = page.locator(
-      'input[data-test-id="d5e33df8e1d99971f69b7c0015a5ea58"]'
+    const conditionallyDisabledBoolean = page.locator(
+      'label[data-test-id="a1e631c61eef59321ecda65e5b1e74df"] input'
     );
-    attributes = await common.getAttributes(conditionallyDisabledCurrency);
+    attributes = await common.getAttributes(conditionallyDisabledBoolean);
     if (isDisabled) {
       await expect(attributes.includes('disabled')).toBeTruthy();
     } else {
       await expect(attributes.includes('disabled')).toBeFalsy();
     }
 
-    const neverDisabledCurrency = page.locator(
-      'input[data-test-id="40fba95f48961ac8ead17beca7535294"]'
+    const neverDisabledBoolean = page.locator(
+      'label[data-test-id="c02c55807a1cda4f36c9736c17230e27"] input'
     );
-    attributes = await common.getAttributes(neverDisabledCurrency);
+    attributes = await common.getAttributes(neverDisabledBoolean);
     await expect(attributes.includes('disabled')).toBeFalsy();
 
     /** Selecting Update from the Sub Category dropdown */
@@ -93,19 +98,19 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Update' }).click();
 
     /** Update tests */
-    const readonlyCurrency = page.locator(
-      'input[data-test-id="32bc05c9bac42b8d76ea72511afa89d0"]'
+    // readonly boolean field
+    const readonlyBoolean = page.locator(
+      'label[data-test-id="1a2aa7aad5f32dbd4638c3d5cf7b5d29"] input'
     );
-    attributes = await common.getAttributes(readonlyCurrency);
+    attributes = await common.getAttributes(readonlyBoolean);
     await expect(attributes.includes('readonly')).toBeTruthy();
 
-    const editableCurrency = page.locator(
-      'input[data-test-id="837e53069fc48e63debdee7fa61fbc1a"]'
+    // editable boolean field
+    const editableBoolean = page.locator(
+      'label[data-test-id="d8d1f4bcad30bda634454182e0d1e67c"] input'
     );
-
-    editableCurrency.type("120");
-
-    attributes = await common.getAttributes(editableCurrency);
+    editableBoolean.click();
+    attributes = await common.getAttributes(editableBoolean);
     await expect(attributes.includes('readonly')).toBeFalsy();
 
     /** Selecting Visibility from the Sub Category dropdown */
@@ -114,23 +119,24 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Visibility' }).click();
 
     /** Visibility tests */
-    await expect(
-      page.locator('input[data-test-id="756f918704ee7dcd859928f068d02633"]')
-    ).toBeVisible();
-
-    const neverVisibleCurrency = await page.locator(
-      'input[data-test-id="5aa7a927ac4876abf1fcff6187ce5d76"]'
+    const alwaysVisibleBoolean = page.locator(
+      'label[data-test-id="9a31d647526143ebb08c22a58836510d"] input'
     );
-    await expect(neverVisibleCurrency).not.toBeVisible();
+    await expect(alwaysVisibleBoolean).toBeVisible();
 
-    const conditionallyVisibleCurrency = await page.locator(
-      'input[data-test-id="730a18d88ac68c9cc5f89bf5f6a5caea"]'
+    const neverVisibleBoolean = await page.locator(
+      'label[data-test-id="521a807a0967b9fbbcc4a1232f1f8b46"] input'
+    );
+    await expect(neverVisibleBoolean).not.toBeVisible();
+
+    const conditionallyVisibleBoolean = await page.locator(
+      'label[data-test-id="dfbced3de44b50c470a58131004c31fe"] input'
     );
 
     if (isVisible) {
-      await expect(conditionallyVisibleCurrency).toBeVisible();
+      await expect(conditionallyVisibleBoolean).toBeVisible();
     } else {
-      await expect(conditionallyVisibleCurrency).not.toBeVisible();
+      await expect(conditionallyVisibleBoolean).not.toBeVisible();
     }
   }, 10000);
 });
