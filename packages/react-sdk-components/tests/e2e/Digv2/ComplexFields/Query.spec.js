@@ -5,7 +5,7 @@ const common = require('../../../common');
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal');
+  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
 });
 
 test.describe('E2E test', () => {
