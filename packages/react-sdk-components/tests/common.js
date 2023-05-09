@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 
 const Login = async (username, password, page) => {
-  await page.locator('#txtUserID').type(username);
-  await page.locator('#txtPassword').type(password);
+  await page.locator('input[id="txtUserID"]').type(username);
+  await page.locator('input[id="txtPassword"]').type(password);
   await page.locator('#submit_row .loginButton').click();
 };
 
