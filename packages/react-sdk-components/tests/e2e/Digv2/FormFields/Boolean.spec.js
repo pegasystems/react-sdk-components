@@ -52,9 +52,9 @@ test.describe('E2E test', () => {
     );
     requiredBooleanLabel.click(); // check required field
     requiredBooleanLabel.click(); // uncheck required field
-    await expect(page.locator('p:has-text("Cannot be blank")')).toBeVisible();
+    await expect(page.locator('p.Mui-error.Mui-required')).toBeVisible();
     requiredBooleanLabel.click();
-    await expect(page.locator('p:has-text("Cannot be blank")')).toBeHidden();
+    await expect(page.locator('p.Mui-error.Mui-required')).toBeHidden();
 
     // Checking not required boolean field
     const notRequiredBooleanLabel = page.locator(
@@ -62,7 +62,7 @@ test.describe('E2E test', () => {
     );
     notRequiredBooleanLabel.click(); // check required field
     notRequiredBooleanLabel.click(); // uncheck required field
-    await expect(page.locator('p:has-text("Cannot be blank")')).toBeHidden();
+    await expect(page.locator('p.Mui-error.Mui-required')).toBeHidden();
 
     /** Selecting Disable from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
