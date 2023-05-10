@@ -17,6 +17,7 @@ export default function URLComponent(props) {
     onChange,
     onBlur,
     readOnly,
+    testId,
     helperText,
     displayMode,
     hideLabel
@@ -35,6 +36,12 @@ export default function URLComponent(props) {
     return <TextInput {...props} />;
   }
 
+  let testProp = {};
+
+  testProp = {
+    'data-test-id': testId
+  };
+
   return (
     <TextField
       type='url'
@@ -50,6 +57,7 @@ export default function URLComponent(props) {
       error={status === 'error'}
       label={label}
       value={value}
+      InputProps={{ inputProps: { ...testProp } }}
     />
   );
 }
