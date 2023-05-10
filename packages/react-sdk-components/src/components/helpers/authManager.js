@@ -139,7 +139,7 @@ const initOAuth = (bInit) => {
     if( 'silentTimeout' in sdkConfigAuth ) {
       authConfig.silentTimeout = sdkConfigAuth.silentTimeout;
     }
-    if( bNoInitialRedirect ) {
+    if( bNoInitialRedirect && sdkConfigAuth.mashupUserIdentifier && sdkConfigAuth.mashupPassword) {
       authConfig.userIdentifier = sdkConfigAuth.mashupUserIdentifier;
       authConfig.password = sdkConfigAuth.mashupPassword;
     }
