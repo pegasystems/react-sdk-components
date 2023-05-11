@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('E2E test', () => {
   let attributes;
 
-  test('should login, create case and run the Email tests', async ({ page }) => {
+  test('should login, create case and run the Integer tests', async ({ page }) => {
     await common.Login(
       config.config.apps.digv2.user.username,
       config.config.apps.digv2.user.password,
@@ -36,10 +36,10 @@ test.describe('E2E test', () => {
     const complexFieldsCase = page.locator('div[role="button"]:has-text("Form Field")');
     await complexFieldsCase.click();
 
-    /** Selecting Email from the Category dropdown */
+    /** Selecting Integer from the Category dropdown */
     const selectedCategory = page.locator('div[data-test-id="76729937a5eb6b0fd88c42581161facd"]');
     await selectedCategory.click();
-    await page.getByRole('option', { name: 'Email' }).click();
+    await page.getByRole('option', { name: 'Integer' }).click();
 
     /** Selecting Required from the Sub Category dropdown */
     let selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
@@ -48,23 +48,18 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("submit")').click();
 
-    await expect(page.locator('p.Mui-error.Mui-required')).toBeVisible();
-
     /** Required tests */
-    const requiredEmail = page.locator(
-      'input[data-test-id="96fa7548c363cdd5adb29c2c2749e436"]'
+    const requiredInteger = page.locator(
+      'input[data-test-id="0658481a174254dded4a0c1ffe6b8380"]'
     );
-
-    requiredEmail.type("John@doe.com");
-    await expect(page.locator('p.Mui-error.Mui-required')).toBeHidden();
-
-    attributes = await common.getAttributes(requiredEmail);
+    requiredInteger.type("10000");
+    attributes = await common.getAttributes(requiredInteger);
     await expect(attributes.includes('required')).toBeTruthy();
 
-    const notRequiredEmail = page.locator(
-      'input[data-test-id="ead104471c2e64511e7593a80b823e42"]'
+    const notrequiredInteger = page.locator(
+      'input[data-test-id="898ba585340f471eecde6b5e798e4df9"]'
     );
-    attributes = await common.getAttributes(notRequiredEmail);
+    attributes = await common.getAttributes(notrequiredInteger);
     await expect(attributes.includes('required')).toBeFalsy();
 
     /** Selecting Disable from the Sub Category dropdown */
@@ -73,26 +68,26 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Disable' }).click();
 
     // /** Disable tests */
-    const alwaysDisabledEmail = page.locator(
-      'input[data-test-id="b949bbfd05d3e96a0102055e448dd7ab"]'
+    const alwaysDisabledInteger = page.locator(
+      'input[data-test-id="54a4d3f4aa52da1985ec70df7cae41bf"]'
     );
-    attributes = await common.getAttributes(alwaysDisabledEmail);
+    attributes = await common.getAttributes(alwaysDisabledInteger);
     await expect(attributes.includes('disabled')).toBeTruthy();
 
-    const conditionallyDisabledEmail = page.locator(
-      'input[data-test-id="23104b6fc0da1045beb3f037698201aa"]'
+    const conditionallyDisabledInteger = page.locator(
+      'input[data-test-id="880afccc457382196a2164f04aeeb19d"]'
     );
-    attributes = await common.getAttributes(conditionallyDisabledEmail);
+    attributes = await common.getAttributes(conditionallyDisabledInteger);
     if (isDisabled) {
       await expect(attributes.includes('disabled')).toBeTruthy();
     } else {
       await expect(attributes.includes('disabled')).toBeFalsy();
     }
 
-    const neverDisabledEmail = page.locator(
-      'input[data-test-id="15d6a12d383c87b8695f8f11523af8c6"]'
+    const neverDisabledInteger = page.locator(
+      'input[data-test-id="42369a000d05b1bb387c743252b94085"]'
     );
-    attributes = await common.getAttributes(neverDisabledEmail);
+    attributes = await common.getAttributes(neverDisabledInteger);
     await expect(attributes.includes('disabled')).toBeFalsy();
 
     /** Selecting Update from the Sub Category dropdown */
@@ -101,23 +96,18 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Update' }).click();
 
     /** Update tests */
-    const readonlyEmail = page.locator(
-      'input[data-test-id="88ee5a6a4cc37dab09907ea81c546a19"]'
+    const readonlyInteger = page.locator(
+      'input[data-test-id="c6f04035ab4212992a31968bf190875b"]'
     );
-    attributes = await common.getAttributes(readonlyEmail);
+    attributes = await common.getAttributes(readonlyInteger);
     await expect(attributes.includes('readonly')).toBeTruthy();
 
-    const editableEmail = page.locator(
-      'input[data-test-id="c75f8a926bb5e08fd8342f7fe45dc344"]'
+    const editableInteger = page.locator(
+      'input[data-test-id="c2aac6ae0d08ac599edf0ea4f27c5437"]'
     );
-    editableEmail.type("Johndoe.com");
-    await editableEmail.blur();
-    await expect(page.locator('p:has-text("Invalid value specified for EmailEditable")')).toBeVisible();
-    editableEmail.fill("John@doe.com");
-    await editableEmail.blur();
-    await expect(page.locator('p:has-text("Invalid value specified for EmailEditable")')).toBeHidden();
+    editableInteger.type("10000");
 
-    attributes = await common.getAttributes(editableEmail);
+    attributes = await common.getAttributes(editableInteger);
     await expect(attributes.includes('readonly')).toBeFalsy();
 
     /** Selecting Visibility from the Sub Category dropdown */
@@ -127,22 +117,22 @@ test.describe('E2E test', () => {
 
     /** Visibility tests */
     await expect(
-      page.locator('input[data-test-id="c30b8043cb501907a3e7b186fb37a85b"]')
+      page.locator('input[data-test-id="4c6e4bb7d9b71d6b45cd6ae61b9ca334"]')
     ).toBeVisible();
 
-    const neverVisibleEmail = await page.locator(
-      'input[data-test-id="5aa7a927ac4876abf1fcff6187ce5d76"]'
+    const neverVisibleInteger = await page.locator(
+      'input[data-test-id="98c754d4acf25bb98ea8a2c46b28275c"]'
     );
-    await expect(neverVisibleEmail).not.toBeVisible();
+    await expect(neverVisibleInteger).not.toBeVisible();
 
-    const conditionallyVisibleEmail = await page.locator(
-      'input[data-test-id="7f544a3551e7d7e51222dec315e7add5"]'
+    const conditionallyVisibleInteger = await page.locator(
+      'input[data-test-id="655ddd9a5d76e464311c32d2b53bf963"]'
     );
 
     if (isVisible) {
-      await expect(conditionallyVisibleEmail).toBeVisible();
+      await expect(conditionallyVisibleInteger).toBeVisible();
     } else {
-      await expect(conditionallyVisibleEmail).not.toBeVisible();
+      await expect(conditionallyVisibleInteger).not.toBeVisible();
     }
   }, 10000);
 });

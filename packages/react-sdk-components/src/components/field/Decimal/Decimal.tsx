@@ -23,7 +23,8 @@ export default function Decimal(props) {
     hideLabel,
     currencyISOCode = "USD",
     decimalPrecision = 2,
-    showGroupSeparators = true
+    showGroupSeparators = true,
+    testId
   } = props;
 
   const pConn = getPConnect();
@@ -62,6 +63,12 @@ export default function Decimal(props) {
     readOnlyProp = { readOnly: true };
   }
 
+  let testProp = {};
+
+  testProp = {
+    'data-test-id': testId
+  };
+
   function decimalOnChange(event) {
     // update internal value
     setDecimalvalue(event?.target?.value);
@@ -88,7 +95,7 @@ export default function Decimal(props) {
       type='text'
       outputFormat='number'
       textAlign='left'
-      InputProps={{ ...readOnlyProp, inputProps: { value: decValue } }}
+      InputProps={{ ...readOnlyProp, inputProps: { ...testProp, value: decValue } }}
       currencySymbol=''
       decimalCharacter={theCurrDec}
       digitGroupSeparator={showGroupSeparators ? theCurrSep : ''}
