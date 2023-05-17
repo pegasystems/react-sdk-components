@@ -2,6 +2,7 @@
 
 * Added new AlertBanner component (in designSystemExtension) and its use in Assignment and ModalViewContainer
 * Bug fixes in Decimal and Attachment components
+* Empty dropdown datasource causes infinite load issue fixed
 
 <br />
 
