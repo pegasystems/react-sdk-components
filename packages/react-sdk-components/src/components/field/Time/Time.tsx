@@ -17,7 +17,8 @@ export default function Time(props) {
     readOnly,
     helperText,
     displayMode,
-    hideLabel
+    hideLabel,
+    testId
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -32,6 +33,12 @@ export default function Time(props) {
   if (readOnly) {
     return <TextInput {...props} />;
   }
+
+  let testProp = {};
+
+  testProp = {
+    'data-test-id': testId
+  };
 
   const handleChange = date => {
     const theValue = date && date.isValid() ? date.format('HH:mm') : null;
@@ -68,6 +75,7 @@ export default function Time(props) {
       format='hh:mm a'
       value={timeValue}
       onChange={handleChange}
+      InputProps={{ inputProps: { ...testProp } }}
     />
   );
 }
