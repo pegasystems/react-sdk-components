@@ -2,6 +2,8 @@ import { createElement } from 'react';
 
 import createPConnectComponent from '../../bridge/react_pconnect';
 
+declare const PCore: any;
+
 /**
  *
  * @param {*} pConn - pConnect object of the view
@@ -48,7 +50,7 @@ export const buildView = (pConn, index, viewConfigPath) => {
       hasForm: true
     }
   };
-  // eslint-disable-next-line no-undef
+
   const view = PCore.createPConnect(config);
   if (pConn.getConfigProps()?.displayMode === 'LABELS_LEFT') {
     view.getPConnect()?.setInheritedProp('displayMode', 'LABELS_LEFT');

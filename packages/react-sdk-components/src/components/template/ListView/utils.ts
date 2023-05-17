@@ -1,5 +1,6 @@
-/* eslint-disable no-undef */
 import getDefaultViewMeta from './DefaultViewMeta';
+
+declare const PCore: any;
 
 const USER_REFERENCE = 'UserReference';
 const PAGE = '!P!';
@@ -72,7 +73,7 @@ export const isEmbeddedField = (field) => {
  * @returns {Array}           Metadata of configured embedded fields
  */
 export function getConfigEmbeddedFieldsMeta(configFields, classID) {
-  const configEmbeddedFieldsMeta = [];
+  const configEmbeddedFieldsMeta:Array<any> = [];
   configFields.forEach((field) => {
     let value = field;
     if (isEmbeddedField(value)) {
@@ -172,9 +173,9 @@ function getPresetMetaAttribute(attribute) {
       (primaryField) =>
         !presetConfigFields.some((presetConfigField) => presetConfigField.config.value.split('.')[1] === primaryField)
     );
-    const uncommonFieldsRawMeta = [];
+    const uncommonFieldsRawMeta:Array<any> = [];
     uncommonFieldsList.forEach((uncommonField) => {
-      const uncommonFieldMeta = metaFields.find((metaField) => metaField.fieldID === uncommonField);
+      const uncommonFieldMeta= metaFields.find((metaField) => metaField.fieldID === uncommonField);
       if (uncommonFieldMeta) uncommonFieldsRawMeta.push(uncommonFieldMeta);
     });
     const uncommonFieldsConfigMeta = generateViewMetaData(uncommonFieldsRawMeta, classID, true);
@@ -444,8 +445,8 @@ function populateRenderingOptions(name, config, field) {
   }
 }
 export function initializeColumns(
-  fields = [],
-  getMappedProperty
+  fields:Array<any> = [],
+  getMappedProperty:any = null
 ) {
   return fields.map((field, originalColIndex) => {
     let name = field.config.value;
@@ -495,9 +496,9 @@ export const getItemKey = (fields) => {
 };
 
 export function preparePatchQueryFields(fields, isDataObject = false, classID = '') {
-  const queryFields = [];
+  const queryFields:Array<any> = [];
   fields.forEach((field) => {
-    const patchFields = [];
+    const patchFields:Array<any> = [];
     if (field.cellRenderer === 'WorkLink') {
       if (field.customObject && field.customObject.isAssignmentLink) {
         const associationName = field.name.includes(':') ? `${field.name.split(':')[0]}:` : '';
@@ -542,7 +543,7 @@ export const readContextResponse = async (context, params) => {
   } = params;
   const { promisesResponseArray, apiContext: otherContext } = context;
   // eslint-disable-next-line sonarjs/no-unused-collection
-  const listOfComponents = [];
+  const listOfComponents:Array<any> = [];
   const {
     data: { fields: metaFields, classID, isQueryable }
   } = promisesResponseArray[0];
@@ -562,7 +563,7 @@ export const readContextResponse = async (context, params) => {
 
 
   if (isDataObject) {
-    const compositeKeys = [];
+    const compositeKeys:Array<any> = [];
     const dataViewName = PCore.getDataTypeUtils().getSavableDataPage(classID);
     const dataPageKeys = PCore.getDataTypeUtils().getDataPageKeys(dataViewName);
     dataPageKeys?.forEach((item) =>

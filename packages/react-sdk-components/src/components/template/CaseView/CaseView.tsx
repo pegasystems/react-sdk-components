@@ -56,7 +56,7 @@ export default function CaseView(props) {
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
 
-  const { displayOnlyFA } = useContext(StoreContext);
+  const { displayOnlyFA } = useContext<any>(StoreContext);
 
   const thePConn = getPConnect();
 

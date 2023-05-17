@@ -42,11 +42,11 @@ export const getIconFromFileType = (fileType) => {
   return icon;
 };
 
-export const getIconForAttachment = (attachment) => {
+export const getIconForAttachment = (inThis:any , attachment:any) => {
   let icon;
   switch (attachment.type) {
     case "FILE":
-      icon = this.getIconFromFileType(attachment.mimeType);
+      icon = inThis.getIconFromFileType(attachment.mimeType);
       break;
     case "URL":
       icon = "chain";

@@ -21,7 +21,7 @@ export default function ViewContainer(props) {
   // const { getPConnect, children, routingInfo, name } = props;
   const { getPConnect, name, mode, limit, loadingInfo, routingInfo } = props;
 
-  const { displayOnlyFA } = useContext(StoreContext);
+  const { displayOnlyFA } = useContext<any>(StoreContext);
 
 
   const { CONTAINER_TYPE, APP } = PCore.getConstants();

@@ -1,7 +1,8 @@
 import { getLocale } from "./common";
 import CurrencyMap from "./CurrencyMap";
 
-function NumberFormatter(value, { locale, decPlaces = 2 } = {}) {
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+function NumberFormatter(value, { locale = "en-US", decPlaces = 2, style="", currency="USD" } = {}) {
   const currentLocale = getLocale(locale);
   if (value !== null && value !== undefined) {
     return Number(value).toLocaleString(currentLocale, {
@@ -14,7 +15,7 @@ function NumberFormatter(value, { locale, decPlaces = 2 } = {}) {
 
 function CurrencyFormatter(
   value,
-  { symbol = true, position, locale, decPlaces = 2, style = "currency", currency = "USD" } = {}
+  { symbol = true, position="before", locale="en-US", decPlaces = 2, style = "currency", currency = "USD" } = {}
 ) {
   const currentLocale = getLocale(locale);
   let formattedValue = value;
@@ -56,7 +57,7 @@ function CurrencyFormatter(
   return formattedValue;
 }
 
-function SymbolFormatter(value, { symbol, suffix = true, locale } = {}) {
+function SymbolFormatter(value, { symbol="$", suffix = true, locale="en-US" } = {}) {
   let formattedValue = value;
   if (value !== null && value !== undefined) {
     formattedValue = NumberFormatter(value, { locale });

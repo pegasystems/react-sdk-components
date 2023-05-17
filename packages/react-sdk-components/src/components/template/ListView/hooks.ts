@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { getContext, readContextResponse } from './utils';
 
+declare const PCore:any;
+
 export default function useInit(props) {
-  const PCore = window.PCore;
   const {
     referenceList,
     getPConnect,

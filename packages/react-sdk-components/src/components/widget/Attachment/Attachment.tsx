@@ -76,7 +76,7 @@ export default function Attachment(props) {
     return setNewFiles(arFiles);
   }
 
-  function getNewListUtilityItemProps({
+  function getNewListUtilityItemProps(this: any, {
     att,
     cancelFile,
     downloadFile,
@@ -135,7 +135,7 @@ export default function Attachment(props) {
     return  {
       id: att.ID,
       visual: {
-        icon: getIconForAttachment(att),
+        icon: getIconForAttachment(this, att),
         progress: att.progress === 100 ? undefined: att.progress,
       },
       primary: {

@@ -1,5 +1,7 @@
 //  From CosmosReact DX Components
 
+declare const PCore: any;
+
 //  Moved PCore.getConstants() into each function in which it's used until we can
 //  make sure that this code isn't run until PCore is defined (after onPCoreReady)
 // const { CASE_INFO } = window.PCore.getConstants();
@@ -14,8 +16,8 @@ export const addContainerItem = (pConnect) => {
 
   if(caseViewMode !== "review") {
     const target = contextName.substring(0, contextName.lastIndexOf("_"));
-    const activeContainerItemID = window.PCore.getContainerUtils().getActiveContainerItemName(target);
-    const containerItemData = window.PCore.getContainerUtils().getContainerItemData(target, activeContainerItemID);
+    const activeContainerItemID = PCore.getContainerUtils().getActiveContainerItemName(target);
+    const containerItemData = PCore.getContainerUtils().getContainerItemData(target, activeContainerItemID);
 
     if(containerItemData) {
       ({ key, flowName } = containerItemData);
@@ -35,11 +37,11 @@ export const addContainerItem = (pConnect) => {
 export const hasContainerItems = (pConnect) => {
   const contextName = pConnect.getContextName();
   const containerName = pConnect.getContainerName();
-  return window.PCore.getContainerUtils().hasContainerItems(`${contextName}/${containerName}`);
+  return PCore.getContainerUtils().hasContainerItems(`${contextName}/${containerName}`);
 }
 
 export const getActiveCaseActionName = (pConnect) => {
-  const { CASE_INFO } = window.PCore.getConstants();
+  const { CASE_INFO } = PCore.getConstants();
   const caseActions = pConnect.getValue(CASE_INFO.CASE_INFO_ACTIONS);
   const activeActionID = pConnect.getValue(CASE_INFO.ACTIVE_ACTION_ID);
   const activeAction = caseActions.find(
@@ -49,7 +51,7 @@ export const getActiveCaseActionName = (pConnect) => {
 };
 
 export const getFirstCaseActionName = (pConnect) => {
-  const { CASE_INFO } = window.PCore.getConstants();
+  const { CASE_INFO } = PCore.getConstants();
   const caseActions = pConnect.getValue(CASE_INFO.CASE_INFO_ACTIONS);
   return caseActions[0]?.name || "";
 };
@@ -59,7 +61,7 @@ export const hasNotificationMessages = (pConnect) => {
 };
 
 export const isCaseWideLocalAction = (pConnect) => {
-  const { CASE_INFO } = window.PCore.getConstants();
+  const { CASE_INFO } = PCore.getConstants();
   const actionID = pConnect.getValue(CASE_INFO.ACTIVE_ACTION_ID);
   const caseActions = pConnect.getValue(CASE_INFO.CASE_INFO_ACTIONS);
   if (caseActions && actionID) {
@@ -72,23 +74,25 @@ export const isCaseWideLocalAction = (pConnect) => {
 };
 
 export const getChildCaseAssignments = (pConnect) => {
-  const { CASE_INFO } = window.PCore.getConstants();
+  const { CASE_INFO } = PCore.getConstants();
   const childCases = pConnect.getValue(CASE_INFO.CHILD_ASSIGNMENTS);
   let allAssignments = [];
   if (childCases && childCases.length > 0) {
-    childCases.forEach(({ assignments = [], Name }) => {
-      const childCaseAssignments = assignments.map((assignment) => ({
-        ...assignment,
-        caseName: Name
-      }));
-      allAssignments = allAssignments.concat(childCaseAssignments);
+    childCases.forEach(({ assignments, Name }) => {
+      if (assignments) {
+        const childCaseAssignments = assignments.map((assignment) => ({
+          ...assignment,
+          caseName: Name
+        }));
+        allAssignments = allAssignments.concat(childCaseAssignments);
+      }
     });
   }
   return allAssignments;
 };
 
 export const hasAssignments = (pConnect) => {
-  const { CASE_INFO } = window.PCore.getConstants();
+  const { CASE_INFO } = PCore.getConstants();
   const assignments = pConnect.getValue(CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS);
   const childCasesAssignments = getChildCaseAssignments(pConnect);
 
@@ -118,7 +122,7 @@ export const isRenderWithToDoWrapper = (getPConnect, options) => {
 };
 
 export const getToDoAssignments = (pConnect) => {
-  const { CASE_INFO } = window.PCore.getConstants();
+  const { CASE_INFO } = PCore.getConstants();
   const caseActions = pConnect.getValue(CASE_INFO.CASE_INFO_ACTIONS);
   const assignmentLabel = pConnect.getValue(CASE_INFO.ASSIGNMENT_LABEL);
   const assignments =
