@@ -2,6 +2,8 @@
 /* eslint-disable no-undef */
 const path = require('path');
 const { test, expect } = require('@playwright/test');
+import { attachCoverageReport } from 'monocart-reporter';
+
 const config = require('../../config');
 const common = require('../../common');
 const endpoints = require("../../../../../sdk-config.json");
@@ -196,5 +198,12 @@ test.describe('E2E test', () => {
 });
 
 test.afterEach(async ({ page }) => {
+  const coverageData = await page.evaluate(() => window.__coverage__);
+  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
+  // coverage report
+  const report = await attachCoverageReport(coverageData, test.info(), {
+    outputDir: "./test-reports/e2e/MediaCo/portal"
+  });
+  console.log(report.summary);
   await page.close();
 });

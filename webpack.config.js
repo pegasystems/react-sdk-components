@@ -176,7 +176,22 @@ module.exports = (env, argv) => {
           loader: 'url-loader',
           options: { limit: 10000, mimetype: 'application/font-woff' }
         },
-        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' }
+        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
+        {
+          test: /\.(js|ts|jsx|tsx)$/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              plugins: ['babel-plugin-istanbul']
+            }
+          },
+          enforce: 'post',
+          exclude: [
+              /\.(e2e|spec)\.ts$/,
+              /node_modules/,
+              /(ngfactory|ngstyle)\.js/
+            ]
+        }
       ]
     },
     resolve: {

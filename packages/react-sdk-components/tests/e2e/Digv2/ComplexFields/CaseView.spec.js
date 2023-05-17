@@ -4,6 +4,8 @@
 /** We're testing the visibility of tabs within the Case Summary area in the Case View here, more tests to be added in the future. */
 
 const { test, expect } = require('@playwright/test');
+import { attachCoverageReport } from 'monocart-reporter';
+
 const config = require('../../../config');
 const common = require('../../../common');
 
@@ -61,5 +63,12 @@ test.describe('E2E test', () => {
 });
 
 test.afterEach(async ({ page }) => {
+  const coverageData = await page.evaluate(() => window.__coverage__);
+  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
+  // coverage report
+  const report = await attachCoverageReport(coverageData, test.info(), {
+    outputDir: "./test-reports/e2e/DigV2/ComplexFields/CaseView"
+  });
+  console.log(report.summary);
   await page.close();
 });
