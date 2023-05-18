@@ -2,6 +2,8 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
+import { attachCoverageReport } from 'monocart-reporter';
+
 const config = require('../../../config');
 const common = require('../../../common');
 
@@ -87,11 +89,16 @@ test.describe('E2E test', () => {
     await expect(page.locator('div >> text="Case View"')).toBeHidden();
 
     await expect(page.locator(`span >> text=${caseID}`)).toBeHidden();
-
-    await page.close();
   }, 10000);
 });
 
 test.afterEach(async ({ page }) => {
+  const coverageData = await page.evaluate(() => window.__coverage__);
+  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
+  // coverage report
+  const report = await attachCoverageReport(coverageData, test.info(), {
+    outputDir: "./test-reports/e2e/DigV2/ViewTemplates/Confirmation"
+  });
+  console.log(report.summary);
   await page.close();
 });
