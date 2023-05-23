@@ -16,7 +16,6 @@ export default function Dropdown(props) {
     label,
     required,
     disabled,
-    placeholder,
     value = '',
     datasource = [],
     validatemessage,
@@ -28,6 +27,8 @@ export default function Dropdown(props) {
     hideLabel,
     onRecordChange
   } = props;
+  let { placeholder } = props;
+  placeholder = placeholder || 'Select...';
   const [options, setOptions] = useState<Array<IOption>>([]);
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -36,8 +37,9 @@ export default function Dropdown(props) {
   const propName = thePConn.getStateProps().value;
 
   useEffect(() => {
-    const optionsList = Utils.getOptionList(props, getPConnect().getDataObject());
-    optionsList.unshift({ key: 'Select', value: 'Select...' });
+    const list = Utils.getOptionList(props, getPConnect().getDataObject());
+    const optionsList = [...list];
+    optionsList.unshift({ key: placeholder, value: placeholder });
     setOptions(optionsList);
   }, [datasource]);
 
@@ -62,7 +64,7 @@ export default function Dropdown(props) {
   };
 
   const handleChange = evt => {
-    const selectedValue = evt.target.value === 'Select' ? '' : evt.target.value;
+    const selectedValue = evt.target.value === placeholder ? '' : evt.target.value;
     handleEvent(actionsApi, 'changeNblur', propName, selectedValue);
     if (onRecordChange) {
       onRecordChange(evt);
@@ -83,7 +85,7 @@ export default function Dropdown(props) {
       onChange={!readOnly ? handleChange : undefined}
       error={status === 'error'}
       label={label}
-      value={value === '' && !readOnly ? 'Select' : value}
+      value={value === '' && !readOnly ? placeholder : value}
       select
       InputProps={{ ...readOnlyProp, ...testProp }}
     >
