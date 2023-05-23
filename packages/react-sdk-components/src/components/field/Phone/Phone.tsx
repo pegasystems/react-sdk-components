@@ -50,7 +50,8 @@ export default function Phone(props) {
           label={label}
           value={value}
           InputProps={{
-            readOnly: true
+            readOnly: true,
+            inputProps: { ...testProp }
           }}
           disableDropdown={disableDropdown}
         />
