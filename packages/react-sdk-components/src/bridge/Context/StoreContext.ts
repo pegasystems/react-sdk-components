@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 declare const process:any;
 
-// Argument was null but that failed TypeScript compilation. Change to no arg
+// Argument was null but that failed TypeScript compilation. Change to empty object
 
 const ReactReduxContext = createContext({});
 

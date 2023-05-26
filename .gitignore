@@ -12,5 +12,6 @@ node_modules
 # output for jest and playwright output
 tests/coverage
 tests/playwright-report
+test-reports
 
 **/tsconfig.*.tsbuildinfo
