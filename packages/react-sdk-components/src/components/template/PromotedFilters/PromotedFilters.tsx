@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import ListView from '../ListView';
-import Utils from '../../helpers/utils';
+import { isEmptyObject } from '../../helpers/common-utils';
 import './PromotedFilters.css';
 
 declare const PCore;
@@ -112,7 +112,7 @@ export default function PromotedFilters(props) {
           dataViewParameters: parameters
         };
 
-        if (!Utils.isEmptyObject(promotedFilters)) {
+        if (!isEmptyObject(promotedFilters)) {
           Query.query = { filter: { filterConditions: promotedFilters } };
         }
         setPayload(Query);

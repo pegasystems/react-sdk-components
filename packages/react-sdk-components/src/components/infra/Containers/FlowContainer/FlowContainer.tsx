@@ -16,6 +16,7 @@ import DayjsUtils from '@date-io/dayjs';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
+import { isEmptyObject } from '../../../helpers/common-utils';
 
 declare const PCore;
 
@@ -328,7 +329,7 @@ export default function FlowContainer(props) {
       PCore.getPubSubUtils().publish('assignmentFinished');
 
       // debugger;
-      setCheckSvg(Utils.getImageSrc('check', PCore.getAssetLoader().getStaticServerUrl()));
+      setCheckSvg(Utils.getImageSrc('check', Utils.getSDKStaticConentUrl()));
     } else {
       // debugger;
       setHasCaseMessages(false);
@@ -357,7 +358,7 @@ export default function FlowContainer(props) {
           currentItems[key] &&
           currentItems[key].view &&
           type === 'single' &&
-          !Utils.isEmptyObject(currentItems[key].view)
+          !isEmptyObject(currentItems[key].view)
         ) {
           const currentItem = currentItems[key];
           const rootView = currentItem.view;
