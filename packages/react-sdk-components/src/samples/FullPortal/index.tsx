@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
 import StoreContext from "../../bridge/Context/StoreContext";
-import createPConnectComponent from "../../bridge/react_pconnect";
+import createPConnectComponent from '../../bridge/react_pconnect';
 import { SdkConfigAccess } from '../../components/helpers/config_access';
 import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers';
 import { loginIfNecessary } from '../../components/helpers/authManager';

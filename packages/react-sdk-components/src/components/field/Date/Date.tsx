@@ -3,7 +3,7 @@ import { KeyboardDatePicker } from '@material-ui/pickers';
 import TextInput from '../TextInput';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import { format } from '../../helpers/formatters/';
+import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo} from '../../helpers/date-format-utils';
 
 export default function Date(props) {

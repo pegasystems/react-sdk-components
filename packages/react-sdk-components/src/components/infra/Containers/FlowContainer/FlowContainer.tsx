@@ -18,7 +18,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
 import { isEmptyObject } from '../../../helpers/common-utils';
 
-declare const PCore;
+declare const PCore:any;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -54,7 +54,7 @@ export default function FlowContainer(props) {
 
   const { getPConnect, routingInfo } = props;
 
-  const { displayOnlyFA } = useContext(StoreContext);
+  const { displayOnlyFA } = useContext<any>(StoreContext);
 
   const thePConn = getPConnect();
 

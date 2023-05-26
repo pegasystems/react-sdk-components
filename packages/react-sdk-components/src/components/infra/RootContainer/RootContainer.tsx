@@ -56,7 +56,7 @@ const RootContainer = (props) => {
     routingInfo
   } = props;
 
-  const { displayOnlyFA, isMashup } = useContext(StoreContext);
+  const { displayOnlyFA, isMashup } = useContext<any>(StoreContext);
 
 
   const pConn = getPConnect();

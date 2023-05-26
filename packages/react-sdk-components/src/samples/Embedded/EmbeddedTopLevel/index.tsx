@@ -401,7 +401,7 @@ export default function EmbeddedTopLevel() {
   // One time (initialization) subscriptions and related unsubscribe
   useEffect(() => {
 
-    getSdkConfig().then( sdkConfig => {
+    getSdkConfig().then( (sdkConfig:any) => {
       const sdkConfigAuth = sdkConfig.authConfig;
 
       if( !sdkConfigAuth.mashupClientId && sdkConfigAuth.customAuthType === "Basic" ) {

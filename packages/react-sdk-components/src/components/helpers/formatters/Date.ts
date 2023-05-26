@@ -14,7 +14,7 @@ const types = ["fromNow", "customFormat"];
 // value should be in ISO 8601 format.
 function DateFormatter(
   value,
-  { type = types[1], format = "DD/MM/YYYY", timezone } = {}
+  { type = types[1], format = "DD/MM/YYYY", timezone = "America/New_York" } = {}
 ) {
   if (!value) return value;
   switch (type) {
