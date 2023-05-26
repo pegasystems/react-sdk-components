@@ -64,6 +64,9 @@ export default function CaseView(props) {
 
   const editAction = availableActions.find((action) => action.ID === 'pyUpdateCaseDetails');
 
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'CaseView';
+
   /**
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
@@ -174,7 +177,7 @@ export default function CaseView(props) {
   function getActionButtonsHtml(): any {
 
     const aBHtml = <Box>
-            {editAction && (<Button onClick={() => {_editClick()}}>Edit</Button>)}
+            {editAction && (<Button onClick={() => {_editClick()}}>{localizedVal('Edit', localeCategory)}</Button>)}
             <CaseViewActionsMenu getPConnect={getPConnect} availableActions={availableActions} availableProcesses={availableProcesses} />
         </Box>;
 

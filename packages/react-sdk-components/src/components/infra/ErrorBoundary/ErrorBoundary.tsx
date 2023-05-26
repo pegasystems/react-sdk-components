@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 declare const PCore;
 
 function ErrorBoundary(props) {
-  const ERROR_TEXT = PCore.getErrorHandler().getGenericFailedMessage();
+  const errorMsg = PCore.getErrorHandler().getGenericFailedMessage();
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'Messages';
+  const ERROR_TEXT = localizedVal(errorMsg, localeCategory);
   const WORK_AREA = "workarea";
   const ERROR_WHILE_RENDERING = "ERROR_WHILE_RENDERING";
   const { getPConnect, isInternalError } = props;
@@ -21,9 +24,9 @@ function ErrorBoundary(props) {
 
   if (!isInternalError) {
     // eslint-disable-next-line no-console
-    console.error(`Unable to load the component ${pConn.getComponentName()}
-    This might be due to the view meta data getting corrupted or the component file missing.
-    Raw meta data for the component: ${JSON.stringify(pConn.getRawMetadata())}`);
+    console.error(`${localizedVal('Unable to load the component', localeCategory)} ${pConn.getComponentName()}
+    ${localizedVal(`This might be due to the view meta data getting corrupted or the component file missing.
+    Raw meta data for the component:`, localeCategory)} ${JSON.stringify(pConn.getRawMetadata())}`);
   }
 
   if (pConn.getConfigProps().type === "page") {
