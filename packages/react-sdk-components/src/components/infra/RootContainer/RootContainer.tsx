@@ -78,12 +78,15 @@ const RootContainer = (props) => {
 
   let hasBanner = false;
   let banners: any = null;
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'Messages';
+
   const messages = httpMessages
-    ? httpMessages.map((msg) => msg.message)
+    ? httpMessages.map((msg) => localizedVal(msg.message, localeCategory))
     : httpMessages;
 
   hasBanner = messages && messages.length > 0;
-  banners = hasBanner && (<div>RootContainer: trying to emit Banner with {messages}</div>);
+  banners = hasBanner && (<div>{localizedVal(`RootContainer: trying to emit Banner with ${messages}`, localeCategory)}</div>);
 
   const MemoizedModalViewContainer = useMemo(() => {
     return createElement(
@@ -123,7 +126,7 @@ const RootContainer = (props) => {
 
     switch (componentName) {
       case "View":
-        noPortalContent = <div>getNoPortalContent: RootContainer wants to render View in noPortal mode</div>
+        noPortalContent = <div>{localizedVal('getNoPortalContent: RootContainer wants to render View in noPortal mode', localeCategory)}</div>
         break;
 
       case "ViewContainer": {
@@ -148,7 +151,7 @@ const RootContainer = (props) => {
       }
 
       default:
-        noPortalContent = <div>getNoPortalContent: RootContainer wants to render NO componentName in noPortal mode</div>
+        noPortalContent = <div>{localizedVal('getNoPortalContent: RootContainer wants to render NO componentName in noPortal mode', localeCategory)}</div>
         break;
 
     }
@@ -220,7 +223,7 @@ const RootContainer = (props) => {
   }
   else if (renderingMode === "noPortal") {
     // eslint-disable-next-line no-console
-    console.log(`RootContainer rendering in noPortal mode`);
+    console.log(`${localizedVal('RootContainer rendering in noPortal mode', localeCategory)}`);
 
     const theChildren = pConn.getChildren();
     if (theChildren && (theChildren.length === 1)) {
@@ -238,7 +241,7 @@ const RootContainer = (props) => {
   else if (children && children.length > 0) {
     return (
       <React.Fragment>
-        <div>RootContainer: Has children. Trying to show ModalManager with children, etc.</div>
+        <div>{localizedVal('RootContainer: Has children. Trying to show ModalManager with children, etc.', localeCategory)}</div>
         {children}
         {MemoizedModalViewContainer}
       </React.Fragment>
@@ -257,7 +260,7 @@ const RootContainer = (props) => {
   } else {
     return (
       <div id="root-container">
-        <div>RootContainer: Should be ModalManager, etc.</div>
+        <div>{localizedVal('RootContainer: Should be ModalManager, etc.', localeCategory)}</div>
       </div>
     );
   }

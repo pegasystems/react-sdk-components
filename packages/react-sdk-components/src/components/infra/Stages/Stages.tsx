@@ -61,6 +61,7 @@ export default function Stages(props) {
   const { getPConnect, stages } = props;
   const pConn = getPConnect();
 
+
   const filteredStages = getFilteredStages(stages);
   const currentStageID = pConn.getValue(PCore.getConstants().CASE_INFO.STAGEID);
   const stagesObj = filteredStages.map((stage, index, arr) => {

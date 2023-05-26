@@ -4,9 +4,13 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+declare const PCore;
 export default function CaseViewActionsMenu(props) {
   const {getPConnect, availableActions, availableProcesses} = props;
   const thePConn = getPConnect();
+
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'CaseView';
 
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -46,7 +50,7 @@ export default function CaseViewActionsMenu(props) {
   return (
     <React.Fragment>
       <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-        Actions...
+        {localizedVal('Actions...', localeCategory)}
       </Button>
       <Menu
         id="simple-menu"

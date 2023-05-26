@@ -223,7 +223,7 @@ export default function ToDo(props) {
       <List>
         {assignments.map(assignment => (
           <>
-            <div className='psdk-todo-avatar-header'>
+            <div className='psdk-todo-avatar-header' key={getAssignmentId(assignment)}>
               <Avatar className={classes.avatar} style={{ marginRight: '16px' }}>
                 {currentUserInitials}
               </Avatar>

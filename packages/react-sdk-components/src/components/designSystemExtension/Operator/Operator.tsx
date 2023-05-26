@@ -59,6 +59,8 @@ export default function Operator(props) {
   function showOperatorDetails(event) {
 
     const operatorPreviewPromise = PCore.getUserApi().getOperatorDetails(caseOpId);
+    const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+    const localeCategory = 'Operator';
 
     operatorPreviewPromise.then((res) => {
       const fillerString = "---";
@@ -71,27 +73,27 @@ export default function Operator(props) {
         fields = [
           {
             id: "pyPosition",
-            name: "Position",
+            name: localizedVal("Position", localeCategory),
             value: res.data.pyOperatorInfo.pyPosition ? res.data.pyOperatorInfo.pyPosition : fillerString
           },
           {
             id: "pyOrganization",
-            name: "Organization",
+            name: localizedVal("Organization", localeCategory),
             value: res.data.pyOperatorInfo.pyOrganization ? res.data.pyOperatorInfo.pyOrganization : fillerString
           },
           {
             id: "ReportToUserName",
-            name: "Reports to",
+            name: localizedVal('Reports to', localeCategory),
             value: res.data.pyOperatorInfo.pyReportToUserName ? res.data.pyOperatorInfo.pyReportToUserName : fillerString
           },
           {
             id: "pyTelephone",
-            name: "Telephone",
+            name: localizedVal('Telephone', localeCategory),
             value: res.data.pyOperatorInfo.pyTelephone ? <a href={`tel:${res.data.pyOperatorInfo.pyTelephone}`}>{res.data.pyOperatorInfo.pyTelephone}</a> : fillerString
           },
           {
             id: "pyEmailAddress",
-            name: "Email address",
+            name: localizedVal('Email address', localeCategory),
             value: res.data.pyOperatorInfo.pyEmailAddress ? <a href={`mailto:${res.data.pyOperatorInfo.pyEmailAddress}`}>{res.data.pyOperatorInfo.pyEmailAddress}</a> : fillerString
           }
         ];
@@ -101,27 +103,27 @@ export default function Operator(props) {
         fields = [
           {
             id: "pyPosition",
-            name: "Position",
+            name: localizedVal("Position", localeCategory),
             value: fillerString
           },
           {
             id: "pyOrganization",
-            name: "Organization",
+            name: localizedVal("Organization", localeCategory),
             value: fillerString
           },
           {
             id: "ReportToUserName",
-            name: "Reports to",
+            name: localizedVal('Reports to', localeCategory),
             value: fillerString
           },
           {
             id: "pyTelephone",
-            name: "Telephone",
+            name: localizedVal('Telephone', localeCategory),
             value: fillerString
           },
           {
             id: "pyEmailAddress",
-            name: "Email address",
+            name: localizedVal('Email address', localeCategory),
             value: fillerString
           }
         ];
