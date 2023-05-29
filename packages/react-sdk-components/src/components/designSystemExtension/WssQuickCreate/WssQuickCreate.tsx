@@ -7,8 +7,8 @@ export default function WssQuickCreate(props) {
 
   return (
     <div>
-      <h1 className='quick-link-heading'>{heading}</h1>
-      <ul className='quick-link-ul-list'>
+      <h1 id="quick-links-heading" className='quick-link-heading'>{heading}</h1>
+      <ul id="quick-links" className='quick-link-ul-list'>
         {actions &&
           actions.map(element => {
             return (
