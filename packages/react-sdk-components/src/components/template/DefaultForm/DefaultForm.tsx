@@ -44,7 +44,8 @@ export default function DefaultForm(props) {
     <>
       {instructions && (
         <div className='psdk-default-form-instruction-text'>
-           <div key="instructions" dangerouslySetInnerHTML={{ __html: instructions }} />
+          {/* server performs sanitization method for instructions html content */}
+          <div key="instructions" dangerouslySetInnerHTML={{ __html: instructions }} />
         </div>
       )}
       <div className={divClass}>{dfChildren}</div>
