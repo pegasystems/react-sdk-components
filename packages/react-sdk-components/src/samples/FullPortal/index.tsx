@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -7,7 +7,8 @@ import StoreContext from '../../bridge/Context/StoreContext';
 import createPConnectComponent from '../../bridge/react_pconnect';
 import { SdkConfigAccess } from '../../components/helpers/config_access';
 import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers';
-import { loginIfNecessary, logout } from '../../components/helpers/authManager';
+import { loginIfNecessary } from '../../components/helpers/authManager';
+import InvalidPortal from './InvalidPortal';
 
 import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../sdk-local-component-map';
@@ -23,6 +24,9 @@ function useQuery() {
 }
 
 export default function FullPortal() {
+  const [isInvalidPortal, setIsInvalidPortal] = useState(false);
+  const [portalName, setPortalName] = useState('');
+
   const query = useQuery();
   if (query.get('portal')) {
     const portalValue: any = query.get('portal');
@@ -153,21 +157,8 @@ export default function FullPortal() {
       defaultPortal &&
       SdkConfigAccess.getSdkConfigServer().excludePortals.includes(defaultPortal)
     ) {
-      const rootElement = document.getElementById('pega-root') as HTMLElement;
-      rootElement.classList.add('portal-load-error');
-      rootElement.innerHTML = `<div>
-                                Unable to open portal: <span class="portal-name">${defaultPortal}</span><br />
-                                Please authenticate as an end user operator, rather than a developer or an administrator.
-                              </div>`;
-      const logoutButton = document.createElement('button');
-      logoutButton.innerText = 'Logout';
-      logoutButton.classList.add('logout-btn');
-      logoutButton.addEventListener('click', () => {
-        rootElement.classList.remove('portal-load-error');
-        logout();
-      });
-
-      rootElement.appendChild(logoutButton);
+      setIsInvalidPortal(true);
+      setPortalName(defaultPortal);
     } else if (myLoadDefaultPortal && defaultPortal) {
       // eslint-disable-next-line no-console
       console.log(`Loading default portal`);
@@ -194,9 +185,10 @@ export default function FullPortal() {
     });
   }, []);
 
-  return (
+  return isInvalidPortal ? (
+    <InvalidPortal name={portalName} />
+  ) : (
     <div>
-      {/* <h4>React SDK: /portal</h4> */}
       <div id='pega-root'></div>
     </div>
   );
