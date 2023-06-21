@@ -49,7 +49,7 @@ export default function DefaultForm(props) {
         <div className='psdk-default-form-instruction-text'>
           {/* server performs sanitization method for instructions html content */}
           { /* eslint-disable react/no-danger */ }
-          <div key='instructions' dangerouslySetInnerHTML={{ __html: instructions }} />
+          <div key="instructions" id="instruction-text" dangerouslySetInnerHTML={{ __html: instructions }} />
         </div>
       )}
       <div className={divClass}>{dfChildren}</div>
