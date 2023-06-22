@@ -60,6 +60,7 @@ export default function Stages(props) {
 
   const { getPConnect, stages } = props;
   const pConn = getPConnect();
+  const key = `${pConn.getCaseInfo().getClassName()}!CASE!${pConn.getCaseInfo().getName()}`.toUpperCase();
 
 
   const filteredStages = getFilteredStages(stages);
@@ -67,7 +68,7 @@ export default function Stages(props) {
   const stagesObj = filteredStages.map((stage, index, arr) => {
     const theID = stage.ID || stage.id;
     return {
-      name: stage.name,
+      name: PCore.getLocaleUtils().getLocaleValue(stage.name, null, key),
       id: theID,
       complete: stage.visited_status === "completed",
       current: (theID === currentStageID),
