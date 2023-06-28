@@ -56,15 +56,12 @@ const RootContainer = (props) => {
     routingInfo
   } = props;
 
-  const { displayOnlyFA, isMashup } = useContext<any>(StoreContext);
+  const { displayOnlyFA } = useContext<any>(StoreContext);
 
 
   const pConn = getPConnect();
 
   const options = { "context": "app" };
-  if (isMashup) {
-    options["context"] = "root";
-  }
 
   const [componentName, setComponentName] = useState("");
 
