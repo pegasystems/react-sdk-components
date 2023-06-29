@@ -269,7 +269,7 @@ const constellationInit = (authConfig, tokenInfo, authTokenUpdated, fnReauth) =>
     window.myLoadPortal = bootstrapShell.loadPortal;
     window.myLoadDefaultPortal = bootstrapShell.loadDefaultPortal;
 
-    bootstrapShell.bootstrapWithAuthHeader(constellationBootConfig, 'shell').then(() => {
+    bootstrapShell.bootstrapWithAuthHeader(constellationBootConfig, 'pega-root').then(() => {
       // eslint-disable-next-line no-console
       console.log('Bootstrap successful!');
       gbC11NBootstrapInProgress = false;
