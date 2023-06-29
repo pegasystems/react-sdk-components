@@ -471,9 +471,10 @@ export default function EmbeddedTopLevel() {
       
       const options = {
         pageName: 'pyEmbedAssignment',
-        startingFields: {
-          Package: sLevel
-        }
+        startingFields: mashupCaseType === "DIXL-MediaCo-Work-NewService" ?
+          {
+            Package: sLevel
+          } : {}
       };
       PCore.getMashupApi().createCase(mashupCaseType, PCore.getConstants().APP.APP, options).then(() => {
         // eslint-disable-next-line no-console
