@@ -11,7 +11,9 @@ import CancelAlert from '../../../field/CancelAlert';
 import { getBanners } from '../../../helpers/case-utils';
 import { isEmptyObject } from '../../../helpers/common-utils';
 
-declare const PCore;
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 8 errors)
+declare const PCore: any;
+
 
 function buildName(pConnect, name = '') {
   const context = pConnect.getContextName();

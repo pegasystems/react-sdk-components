@@ -1,7 +1,5 @@
 import { Utils } from './utils';
 
-declare const PCore;
-
 export const TABLE_CELL = "SdkRenderer";
 export const DELETE_ICON = "DeleteIcon";
 

@@ -2,7 +2,6 @@ import React from 'react';
 import FieldGroupTemplate from '../../FieldGroupTemplate';
 import SimpleTableManual from '../SimpleTableManual';
 
-declare const PCore: any;
 
 export default function SimpleTable(props) {
   const { getPConnect, multiRecordDisplayAs, allowTableEdit } = props;

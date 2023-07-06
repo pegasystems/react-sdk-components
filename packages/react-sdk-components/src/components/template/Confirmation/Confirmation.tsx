@@ -9,7 +9,6 @@ import ToDo from '../../widget/ToDo';
 import Details from '../Details/Details';
 import { Button, Card, makeStyles } from '@material-ui/core';
 
-declare const PCore;
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -8,6 +8,7 @@ import SummaryList from '../SummaryList'
 import { CircularProgress } from "@material-ui/core";
 import download from "downloadjs";
 
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
 
 function getCurrentAttachmentsList(context) {

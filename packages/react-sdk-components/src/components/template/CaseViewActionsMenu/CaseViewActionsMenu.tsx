@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-declare const PCore;
+
 export default function CaseViewActionsMenu(props) {
   const { getPConnect, availableActions, availableProcesses, caseTypeID, caseTypeName } = props;
   const thePConn = getPConnect();

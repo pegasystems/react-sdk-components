@@ -9,7 +9,7 @@ const isSelfReferencedProperty = (param, referenceProp) => {
   const [, parentPropName] = param.split('.');
   return parentPropName === referenceProp;
 };
-declare const PCore;
+
 /**
  * SimpleTable react component
  * @param {*} props - props

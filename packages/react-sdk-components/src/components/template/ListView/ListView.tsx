@@ -42,6 +42,8 @@ import './ListView.css';
 import useInit from './hooks'
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
+
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 3 errors)
 declare const PCore: any;
 
 let myRows: Array<any>;

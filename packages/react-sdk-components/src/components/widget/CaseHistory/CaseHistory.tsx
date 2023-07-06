@@ -10,8 +10,8 @@ import TableRow from '@material-ui/core/TableRow';
 import isDeepEqual from 'fast-deep-equal/react';
 import { Utils } from '../../helpers/utils';
 
-declare const PCore;
-
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
+declare const PCore: any;
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({

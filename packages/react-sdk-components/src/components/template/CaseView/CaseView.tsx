@@ -14,7 +14,9 @@ import CaseViewActionsMenu from '../CaseViewActionsMenu';
 import VerticalTabs from '../../infra/VerticalTabs/VerticalTabs';
 import DeferLoad from '../../infra/DeferLoad';
 
-declare const PCore;
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
+declare const PCore: any;
+
 
 const useStyles = makeStyles(theme => ({
   root: {

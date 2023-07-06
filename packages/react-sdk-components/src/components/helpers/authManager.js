@@ -276,14 +276,11 @@ const constellationInit = (authConfig, tokenInfo, authTokenUpdated, fnReauth) =>
 
       // Setup listener for the reauth event
       if( tokenInfo ) {
-        // eslint-disable-next-line no-undef
         PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_FULL_REAUTH, fnReauth, "authFullReauth");
       } else {
         // customReauth event introduced with 8.8
-        // eslint-disable-next-line no-undef
         const sEvent = PCore.getConstants().PUB_SUB_EVENTS.EVENT_CUSTOM_REAUTH;
         if( sEvent ) {
-          // eslint-disable-next-line no-undef
           PCore.getPubSubUtils().subscribe(sEvent, fnReauth, "doReauth");
         }
       }

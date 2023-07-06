@@ -1,4 +1,5 @@
-declare const PCore;
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
+declare const PCore: any;
 
 // eslint-disable-next-line import/prefer-default-export
 export const getDataPage = (dataPageName, parameters, context) => {

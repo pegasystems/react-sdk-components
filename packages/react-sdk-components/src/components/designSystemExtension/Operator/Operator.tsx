@@ -9,7 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Utils from '../../helpers/utils';
 
-declare const PCore: any;
 
 const useStyles = makeStyles((theme) => ({
   root: {

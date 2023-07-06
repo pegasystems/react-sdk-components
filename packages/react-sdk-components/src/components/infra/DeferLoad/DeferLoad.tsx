@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
-declare const PCore;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with

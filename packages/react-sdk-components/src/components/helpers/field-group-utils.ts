@@ -2,7 +2,6 @@ import { createElement } from 'react';
 
 import createPConnectComponent from '../../bridge/react_pconnect';
 
-declare const PCore: any;
 
 /**
  *
