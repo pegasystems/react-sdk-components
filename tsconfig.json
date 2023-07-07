@@ -32,9 +32,8 @@
     // Override with only specific types for other configurations.
 
     // Values in types help get jest tests working - JEA
-    //  20230705-Added "pcore-pconnect-types" as we added the @pega/pcore-pconnect-typesdefs package
     "types": [
-      "jest", "@testing-library/jest-dom", "pcore-pconnect-types"
+      "jest", "@testing-library/jest-dom"
     ],
     "typeRoots": ["node_modules/@types", "typings"],
 

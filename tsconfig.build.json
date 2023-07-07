@@ -5,5 +5,14 @@
     {
       "path":"./packages/react-sdk-components/tsconfig.build.json"
     },
-  ]
+  ],
+  "compilerOptions": {
+    // Values in types help get jest tests working - JEA
+    "types": [
+      "jest", "@testing-library/jest-dom"
+    ],
+    "typeRoots": ["node_modules/@types", "typings"],
+
+    "skipLibCheck": true,
+  },
 }

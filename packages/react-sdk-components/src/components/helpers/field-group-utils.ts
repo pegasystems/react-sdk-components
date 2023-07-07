@@ -29,7 +29,9 @@ export const getReferenceList = pConn => {
  * @param {*} viewConfigPath - boolean value to check for children in config
  * @returns {*} - return the react element of the view
  */
-export const buildView = (pConn, index, viewConfigPath) => {
+// NOTE: use of type "any" is required since TypeScript doesn't allow private/protected properties
+//  to be exported from a class (TS4094 error)
+export const buildView: any = (pConn, index, viewConfigPath) => {
   const context = pConn.getContextName();
   const referenceList = getReferenceList(pConn);
 
