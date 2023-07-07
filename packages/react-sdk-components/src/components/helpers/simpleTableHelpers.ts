@@ -216,7 +216,7 @@ export const getAddRowCallback = (pConnect, index) => {
  */
 // NOTE: use of type "any" is required since TypeScript doesn't allow private/protected properties
 //  to be exported from a class (TS4094 error)
-export const createPConnect: any = (contextName, referenceList, pageReference) => {
+export function createPConnect(contextName, referenceList, pageReference): any {
   const options = {
     context: contextName,
     pageReference,

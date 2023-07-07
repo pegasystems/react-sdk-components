@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { createElement, ReactElement } from 'react';
 
 import createPConnectComponent from '../../bridge/react_pconnect';
 
@@ -29,9 +29,7 @@ export const getReferenceList = pConn => {
  * @param {*} viewConfigPath - boolean value to check for children in config
  * @returns {*} - return the react element of the view
  */
-// NOTE: use of type "any" is required since TypeScript doesn't allow private/protected properties
-//  to be exported from a class (TS4094 error)
-export const buildView: any = (pConn, index, viewConfigPath) => {
+export function buildView(pConn, index, viewConfigPath): ReactElement {
   const context = pConn.getContextName();
   const referenceList = getReferenceList(pConn);
 
