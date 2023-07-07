@@ -7,12 +7,7 @@
     },
   ],
   "compilerOptions": {
-    // Values in types help get jest tests working - JEA
-    "types": [
-      "jest", "@testing-library/jest-dom"
-    ],
-    "typeRoots": ["node_modules/@types", "typings"],
-
+    // Must be true in order to not see errors in the @pega/pcore-pconnect-typedefs files themselves
     "skipLibCheck": true,
   },
 }
