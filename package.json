@@ -108,7 +108,7 @@
     "replace-in-file": "^6.3.5",
     "sass-loader": "^10.1.1",
     "shx": "^0.3.4",
-    "stylelint": "^14.16.0",
+    "stylelint": "^15.10.1",
     "style-loader": "^2.0.0",
     "ts-jest": "^29.0.5",
     "ts-loader": "^8.4.0",
