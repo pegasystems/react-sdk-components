@@ -1,6 +1,3 @@
-
-declare const PCore;
-
 export const getDeferFriendlyTabs = allTabs => {
   return allTabs.map(tab => {
     const theTabCompConfig = tab.getPConnect().getConfigProps();

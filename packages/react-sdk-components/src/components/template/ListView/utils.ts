@@ -1,5 +1,6 @@
 import getDefaultViewMeta from './DefaultViewMeta';
 
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
 declare const PCore: any;
 
 const USER_REFERENCE = 'UserReference';

@@ -1,6 +1,5 @@
 //  This file is adapted from React DX components/template/utils.js
 
-declare const PCore: any;
 
 export function getAllFields(pConnect: any) {
   const metadata = pConnect.getRawMetadata();

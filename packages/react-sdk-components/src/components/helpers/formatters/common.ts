@@ -1,5 +1,3 @@
-declare const PCore:any;
-
 export function getLocale(locale = "en-US") {
   // use locale if specified
   if (locale) return locale;

@@ -58,7 +58,6 @@ const useStyles = makeStyles((/* theme */) => ({
   }
 }));
 
-declare const PCore: any;
 
 let menuColumnId = '';
 let menuColumnType = '';

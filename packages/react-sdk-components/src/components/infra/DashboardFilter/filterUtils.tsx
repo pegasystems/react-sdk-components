@@ -5,7 +5,9 @@ import { Grid, Link } from '@material-ui/core';
 import React from 'react';
 import DashboardFilter from './DashboardFilter';
 
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
 declare const PCore: any;
+
 
 export const createFilter = (value, fieldId, comparator = 'EQ') => {
   return {

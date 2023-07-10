@@ -35,7 +35,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useNavBar } from '../../helpers/reactContextHelpers';
 import { logout } from '../../helpers/authManager';
 
-declare const PCore;
 
 const iconMap = {
   'pi pi-headline': <HomeOutlinedIcon fontSize='large' />,

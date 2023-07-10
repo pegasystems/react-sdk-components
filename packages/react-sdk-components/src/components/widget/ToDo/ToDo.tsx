@@ -28,8 +28,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import './ToDo.css';
 
-declare const PCore: any;
-
 const isChildCase = assignment => {
   return assignment.isChild;
 };

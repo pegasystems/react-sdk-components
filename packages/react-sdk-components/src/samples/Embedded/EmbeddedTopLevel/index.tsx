@@ -18,12 +18,9 @@ import { getSdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../../sdk-local-component-map';
 
 
-
-// declare var gbLoggedIn: boolean;
-// declare var login: Function;
-// declare var logout: Function;
-
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
+
 declare const myLoadMashup: any;
 
 const useStyles = makeStyles((theme) => ({
@@ -468,7 +465,7 @@ export default function EmbeddedTopLevel() {
         const caseTypes = PCore.getEnvironmentInfo().environmentInfoObject.pyCaseTypeList;
         mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
       }
-      
+
       const options = {
         pageName: 'pyEmbedAssignment',
         startingFields: mashupCaseType === "DIXL-MediaCo-Work-NewService" ?
@@ -479,7 +476,7 @@ export default function EmbeddedTopLevel() {
       PCore.getMashupApi().createCase(mashupCaseType, PCore.getConstants().APP.APP, options).then(() => {
         // eslint-disable-next-line no-console
         console.log('createCase rendering is complete');
-      });  
+      });
     });
 
   }

@@ -12,7 +12,6 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-declare const PCore: any;
 
 export default function DashboardFilter(props) {
   const { children, name, filterProp, type, metadata, getPConnect } = props;

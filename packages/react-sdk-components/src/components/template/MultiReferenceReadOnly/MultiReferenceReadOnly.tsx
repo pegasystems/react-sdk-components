@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-declare const PCore;
 export default function MultiReferenceReadOnly(props) {
   const { getPConnect, label, hideLabel, config } = props;
   const { referenceList, readonlyContextList } = config;

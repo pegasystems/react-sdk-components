@@ -5,7 +5,9 @@ import AutoComplete from '../AutoComplete';
 import Dropdown from '../Dropdown';
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
 
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 errors)
 declare const PCore: any;
+
 const DROPDOWN_LIST = 'Drop-down list';
 const SEARCH_BOX = 'Search box';
 

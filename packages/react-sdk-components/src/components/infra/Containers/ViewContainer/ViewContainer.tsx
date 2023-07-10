@@ -8,8 +8,6 @@ import { isEmptyObject } from '../../../helpers/common-utils';
 // ViewContainer can emit View
 // import View from '../View';
 
-declare const PCore;
-
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and

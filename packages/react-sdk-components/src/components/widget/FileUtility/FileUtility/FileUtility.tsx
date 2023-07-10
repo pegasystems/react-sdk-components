@@ -11,7 +11,9 @@ import { Button } from '@material-ui/core';
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { CircularProgress } from "@material-ui/core";
 
-declare const PCore;
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
+declare const PCore: any;
+
 
 export default function FileUtility(props) {
   const { getPConnect } = props;

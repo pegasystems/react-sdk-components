@@ -9,7 +9,9 @@ import { LazyMap as LazyComponentMap } from "../../../components_map";
 import StoreContext from "../../../bridge/Context/StoreContext";
 import { isEmptyObject } from '../../helpers/common-utils';
 
-declare const PCore;
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
+declare const PCore: any;
+
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with

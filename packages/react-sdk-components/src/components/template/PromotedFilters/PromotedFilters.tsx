@@ -7,7 +7,7 @@ import ListView from '../ListView';
 import { isEmptyObject } from '../../helpers/common-utils';
 import './PromotedFilters.css';
 
-declare const PCore;
+
 const localeCategory = 'SimpleTable';
 const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
   'TextInput',

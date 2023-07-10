@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { connect, Provider, shallowEqual } from 'react-redux';
 import ReactReduxContext from '../../bridge/Context/StoreContext';
 
-declare const PCore: any;
 
 const connectToState = (mapStateToProps = () => {}) => {
   return (Component: any) => {

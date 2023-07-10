@@ -6,7 +6,6 @@ import FieldGroup from '../../designSystemExtension/FieldGroup';
 import FieldGroupList from '../../designSystemExtension/FieldGroupList';
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
 
-declare const PCore: any;
 
 export default function FieldGroupTemplate(props) {
   const {

@@ -2,8 +2,6 @@ import React from "react";
 import WssQuickCreate from '../../designSystemExtension/WssQuickCreate';
 import { Utils } from '../../helpers/utils';
 
-declare const PCore: any;
-
 export default function QuickCreate(props) {
   const { getPConnect, heading, showCaseIcons, classFilter } = props;
   const pConn = getPConnect();

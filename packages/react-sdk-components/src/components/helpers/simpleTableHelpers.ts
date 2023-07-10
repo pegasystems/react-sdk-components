@@ -1,7 +1,5 @@
 import { Utils } from './utils';
 
-declare const PCore;
-
 export const TABLE_CELL = "SdkRenderer";
 export const DELETE_ICON = "DeleteIcon";
 
@@ -216,7 +214,9 @@ export const getAddRowCallback = (pConnect, index) => {
  * @param {string} referenceList - referenceList
  * @param {string} pageReference - pageReference
  */
-export const createPConnect = (contextName, referenceList, pageReference) => {
+// NOTE: use of type "any" is required since TypeScript doesn't allow private/protected properties
+//  to be exported from a class (TS4094 error)
+export function createPConnect(contextName, referenceList, pageReference): any {
   const options = {
     context: contextName,
     pageReference,

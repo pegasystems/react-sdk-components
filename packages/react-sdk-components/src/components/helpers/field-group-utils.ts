@@ -1,8 +1,7 @@
-import { createElement } from 'react';
+import { createElement, ReactElement } from 'react';
 
 import createPConnectComponent from '../../bridge/react_pconnect';
 
-declare const PCore: any;
 
 /**
  *
@@ -30,7 +29,7 @@ export const getReferenceList = pConn => {
  * @param {*} viewConfigPath - boolean value to check for children in config
  * @returns {*} - return the react element of the view
  */
-export const buildView = (pConn, index, viewConfigPath) => {
+export function buildView(pConn, index, viewConfigPath): ReactElement {
   const context = pConn.getContextName();
   const referenceList = getReferenceList(pConn);
 

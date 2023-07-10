@@ -24,7 +24,6 @@ const routingInfoCompare = (next, prev) => {
   return (
     'routingInfo' in next &&
     (!shallowEqual(next.routingInfo, prev.routingInfo) ||
-      // eslint-disable-next-line no-undef
       !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
   );
 };
@@ -38,7 +37,6 @@ export const setVisibilityForList = (c11nEnv, visibility) => {
   const { selectionMode, selectionList, renderMode, referenceList } = c11nEnv.getComponentConfig();
   // usecase:multiselect, fieldgroup, editable table
   if (
-    // eslint-disable-next-line no-undef
     (selectionMode === PCore.getConstants().LIST_SELECTION_MODE.MULTI && selectionList) ||
     (renderMode === 'Editable' && referenceList)
   ) {
@@ -101,7 +99,6 @@ const connectRedux = (component, c11nEnv) => {
         for (const key in allStateProps) {
           if (
             (isClassIDCompare(key, prev) && !shallowEqual(next[key], prev[key])) ||
-            // eslint-disable-next-line no-undef
             (next.routingInfo && !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
           ) {
             return false;
@@ -112,7 +109,6 @@ const connectRedux = (component, c11nEnv) => {
         //  primaryFields and secondary Fields
         if (allStateProps.status === '.pyStatusWork') {
           for (const key in prev) {
-            // eslint-disable-next-line no-undef
             if (!PCore.isDeepEqual(next[key], prev[key])) {
               return false;
             }
@@ -127,7 +123,6 @@ const connectRedux = (component, c11nEnv) => {
 
 const getComponent = c11nEnv => {
   // PCore is defined in pxBootstrapShell - eventually will be exported in place of constellationCore
-  // eslint-disable-next-line no-undef
   const ComponentsRegistry = PCore.getComponentsRegistry();
   const type = c11nEnv.getComponentName();
 
@@ -343,7 +338,6 @@ const createPConnectComponent = () => {
 
 // Move these into SdkConstellationReady so PCore is available
 document.addEventListener('SdkConstellationReady', () => {
-  // eslint-disable-next-line no-undef
   PCore.registerComponentCreator((c11nEnv, additionalProps = {}) => {
     const PConnectComp = createPConnectComponent();
     return createElement(PConnectComp, {
@@ -354,15 +348,12 @@ document.addEventListener('SdkConstellationReady', () => {
     });
   });
 
-  // eslint-disable-next-line no-undef
   PCore.getAssetLoader().register('component-loader', async (componentNames = []) => {
     const promises = [];
     componentNames.forEach(comp => {
       if (/^[A-Z]/.test(comp) && !LazyComponentMap[comp]) {
         if (!ComponentMap[comp]) {
-          // eslint-disable-next-line no-undef
           const srcUrl = `${PCore.getAssetLoader().getConstellationServiceUrl()}/v860/${PCore.getAssetLoader().getAppAlias()}/component/${comp}.js`;
-          // eslint-disable-next-line no-undef
           promises.push(PCore.getAssetLoader().getLoader()(srcUrl, 'script'));
         } else {
           if (ComponentMap[comp].modules && ComponentMap[comp].modules.length) {
@@ -373,7 +364,6 @@ document.addEventListener('SdkConstellationReady', () => {
           if (ComponentMap[comp].scripts && ComponentMap[comp].scripts.length) {
             ComponentMap[comp].scripts.forEach(script => {
               promises.push(
-                // eslint-disable-next-line no-undef
                 PCore.getAssetLoader().getLoader()(script, 'script')
               );
             });
