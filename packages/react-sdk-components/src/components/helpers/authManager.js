@@ -155,13 +155,19 @@ const initOAuth = (bInit) => {
     if( sSI ) {
       try {
           const oSI = JSON.parse(sSI);
-          if( oSI.authorizeUri !== authConfig.authorizeUri ||
-              oSI.appAlias !== authConfig.appAlias ||
-              oSI.clientId !== authConfig.clientId ||
-              oSI.userIdentifier !== authConfig.userIdentifier ||
-              oSI.password !== authConfig.password) {
+          const aAttribs = ['authorizeUri', 'appAlias', 'clientId', 'authService', 'userIdentifier'];
+          for( let i = 0; i<aAttribs.length; i += 1 ) {
+            const attrib = aAttribs[i];
+            const currValue = oSI[attrib];
+            const newValue = authConfig[attrib];
+            if( currValue !== newValue ) {
+              // eslint-disable-next-line no-console
+              console.log(`Clearing credentials due to mismatch for attribute: ${attrib};` +
+                `currValue (${currValue}) does not match new desired value (${newValue})`);
               clearAuthMgr();
               sSI = null;
+              break;
+            }
           }
       } catch(e) {
         // do nothing
