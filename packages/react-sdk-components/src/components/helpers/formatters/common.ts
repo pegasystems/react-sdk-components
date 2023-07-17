@@ -1,4 +1,4 @@
-export function getLocale(locale = "en-US") {
+export function getLocale(locale='') {
   // use locale if specified
   if (locale) return locale;
   // otherwise, use operator locale if it's defined
