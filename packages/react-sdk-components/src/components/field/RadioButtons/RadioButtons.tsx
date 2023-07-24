@@ -48,7 +48,7 @@ displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
 const localeContext = metaData?.datasource?.tableType === 'DataPage' ? 'datapage' : 'associated';
 const localeClass = localeContext === 'datapage' ? '@baseclass' : className;
 const localeName = localeContext === 'datapage' ? metaData?.datasource?.name : configProperty;
-const localePath = localeContext === 'datapage' ? displayName : '';
+const localePath = localeContext === 'datapage' ? displayName : localeName;
 
 
 
