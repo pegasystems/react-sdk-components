@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 // import { FieldGroup } from "@pega/cosmos-react-core";
 // import { LazyMap as LazyComponentMap } from "../../components_map";
 
-import { SdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
-import ErrorBoundary from '../ErrorBoundary';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 import { getAllFields } from '../../helpers/template-utils';
 
@@ -57,38 +56,12 @@ export default function View(props) {
   //  JA - React SDK not using LazyComponentMap yet
   if (template /* && LazyComponentMap[template] */) {
     // const ViewTemplate = LazyComponentMap[template];
-    let ViewTemplate: any;
+    const ViewTemplate: any = getComponentFromMap(template);
 
-    if (SdkComponentMap) {
-      // This is the node_modules version of react_pconnect!
-      const theLocalComponent = SdkComponentMap.getLocalComponentMap()[template];
-      if (theLocalComponent !== undefined) {
-        // eslint-disable-next-line no-console
-        console.log(`View component found ${template}: Local`);
-        ViewTemplate = theLocalComponent;
-      } else {
-        const thePegaProvidedComponent = SdkComponentMap.getPegaProvidedComponentMap()[template];
-        if (thePegaProvidedComponent !== undefined) {
-          // console.log(`View component found ${template}: Pega-provided`);
-          ViewTemplate = thePegaProvidedComponent;
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(`View component can't find template type ${template}`);
-          ViewTemplate = ErrorBoundary;
-        }
-      }
-
-      if (template === 'ListView') {
-        // special case for ListView - add in a prop
-        const bInForm = true;
-        props = { ...props, bInForm };
-      }
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn(`View: SdkComponentMap expected but not found.`);
-
-      // eslint-disable-next-line no-console
-      console.error(`View: Trying to render an unknown template: ${template}`);
+    if (template === 'ListView') {
+      // special case for ListView - add in a prop
+      const bInForm = true;
+      props = { ...props, bInForm };
     }
 
     // for debugging/investigation

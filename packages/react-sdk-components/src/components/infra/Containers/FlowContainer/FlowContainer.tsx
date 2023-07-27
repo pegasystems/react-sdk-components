@@ -7,9 +7,6 @@ import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
 import { Utils } from '../../../helpers/utils';
 import { Alert } from '@material-ui/lab';
 
-import Assignment from '../../Assignment';
-import ToDo from '../../../widget/ToDo';
-
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import StoreContext from '../../../../bridge/Context/StoreContext';
 import DayjsUtils from '@date-io/dayjs';
@@ -17,6 +14,9 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
 import { isEmptyObject } from '../../../helpers/common-utils';
+// Need to get correct implementation from component map for Assignment and ToDo
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 3 errors)
 declare const PCore: any;
@@ -85,6 +85,10 @@ export default function FlowContainer(props) {
   const localeCategory = 'Messages';
 
   const classes = useStyles();
+
+  // Get the proper implementation (local or Pega-provided) for these components that are emitted below
+  const Assignment = getComponentFromMap("Assignment");
+  const ToDo = getComponentFromMap("Todo");   // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
 
   function initContainer() {
     const ourPConn = getPConnect();
