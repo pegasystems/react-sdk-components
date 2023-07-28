@@ -71,6 +71,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalViewContainer = props => {
+  // Get the proper implementation (local or Pega-provided) for these components that are emitted below
+  const Assignment = getComponentFromMap("Assignment");
+  const CancelAlert = getComponentFromMap("CancelAlert");
+
   const classes = useStyles();
 
   const routingInfoRef = useRef({});
@@ -94,8 +98,6 @@ const ModalViewContainer = props => {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Data Object';
 
-  const Assignment = getComponentFromMap("Assignment");
-  const CancelAlert = getComponentFromMap("CancelAlert");
 
   function showAlert(payload) {
     const { latestItem } = getKeyAndLatestItem(routingInfoRef.current, pConn);

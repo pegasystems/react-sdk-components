@@ -50,6 +50,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FlowContainer(props) {
+    // Get the proper implementation (local or Pega-provided) for these components that are emitted below
+    const Assignment = getComponentFromMap("Assignment");
+    const ToDo = getComponentFromMap("Todo");   // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
+
   const pCoreConstants = PCore.getConstants();
   const { TODO } = pCoreConstants;
   const todo_headerText = 'To do';
@@ -86,9 +90,6 @@ export default function FlowContainer(props) {
 
   const classes = useStyles();
 
-  // Get the proper implementation (local or Pega-provided) for these components that are emitted below
-  const Assignment = getComponentFromMap("Assignment");
-  const ToDo = getComponentFromMap("Todo");   // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
 
   function initContainer() {
     const ourPConn = getPConnect();
