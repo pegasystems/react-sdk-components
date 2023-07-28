@@ -6,8 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-import Assignment from '../../Assignment';
-import CancelAlert from '../../../field/CancelAlert';
+// Need to get correct implementation from component map for Assignment and CancelAlert
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { getBanners } from '../../../helpers/case-utils';
 import { isEmptyObject } from '../../../helpers/common-utils';
 
@@ -71,6 +71,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalViewContainer = props => {
+  // Get the proper implementation (local or Pega-provided) for these components that are emitted below
+  const Assignment = getComponentFromMap("Assignment");
+  const CancelAlert = getComponentFromMap("CancelAlert");
+
   const classes = useStyles();
 
   const routingInfoRef = useRef({});
@@ -93,6 +97,7 @@ const ModalViewContainer = props => {
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Data Object';
+
 
   function showAlert(payload) {
     const { latestItem } = getKeyAndLatestItem(routingInfoRef.current, pConn);

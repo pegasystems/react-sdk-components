@@ -102,6 +102,27 @@ class ComponentMap {
 
 }
 
+export function getComponentFromMap(inComponentName: string): any {
+  let theComponentImplementation = null;
+  const theLocalComponent = SdkComponentMap.getLocalComponentMap()[inComponentName];
+  if (theLocalComponent !== undefined) {
+    // eslint-disable-next-line no-console
+    console.log(`Requested component found ${inComponentName}: Local`);
+    theComponentImplementation = theLocalComponent;
+  } else {
+    const thePegaProvidedComponent = SdkComponentMap.getPegaProvidedComponentMap()[inComponentName];
+    if (thePegaProvidedComponent !== undefined) {
+      // console.log(`Requested component found ${inComponentName}: Pega-provided`);
+      theComponentImplementation = thePegaProvidedComponent;
+    } else {
+      // eslint-disable-next-line no-console
+      console.error(`Requested component has neither Local nor Pega-provided implementation: ${inComponentName}`);
+      theComponentImplementation = getComponentFromMap("ErrorBoundary");
+    }
+  }
+  return theComponentImplementation;
+}
+
 
 // Implement Factory function to allow async load
 //  See https://stackoverflow.com/questions/49905178/asynchronous-operations-in-constructor/49906064#49906064 for inspiration
