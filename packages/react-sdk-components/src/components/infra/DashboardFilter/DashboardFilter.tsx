@@ -10,7 +10,12 @@ import { getFilterExpression } from './filterUtils';
 import { TextField } from '@material-ui/core';
 import React from 'react';
 import DatePicker from 'react-datepicker';
+
 import 'react-datepicker/dist/react-datepicker.css';
+
+import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+
+declare const PCore: typeof PCoreType;
 
 
 export default function DashboardFilter(props) {

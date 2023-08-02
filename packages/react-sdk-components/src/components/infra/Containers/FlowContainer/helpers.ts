@@ -1,3 +1,8 @@
+import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+
+declare const PCore: typeof PCoreType;
+
+
 //  Moved PCore.getConstants() into each function in which it's used until we can
 //  make sure that this code isn't run until PCore is defined (after onPCoreReady)
 // const { CASE_INFO } = window.PCore.getConstants();

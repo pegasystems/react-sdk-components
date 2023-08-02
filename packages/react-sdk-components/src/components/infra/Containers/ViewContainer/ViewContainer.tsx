@@ -4,6 +4,10 @@ import { Box, CircularProgress } from "@material-ui/core";
 import createPConnectComponent from "../../../../bridge/react_pconnect";
 import StoreContext from "../../../../bridge/Context/StoreContext";
 import { isEmptyObject } from '../../../helpers/common-utils';
+import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+
+declare const PCore: typeof PCoreType;
+
 
 // ViewContainer can emit View
 // import View from '../View';
