@@ -41,16 +41,14 @@ export default function RadioButtons(props) {
   configProperty = configProperty.startsWith('.') ? configProperty.substring(1) : configProperty;
 
   const metaData = Array.isArray(fieldMetadata)
-  ? fieldMetadata.filter((field) => field?.classID === className)[0]
-  : fieldMetadata;
-let displayName = metaData?.datasource?.propertyForDisplayText;
-displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
-const localeContext = metaData?.datasource?.tableType === 'DataPage' ? 'datapage' : 'associated';
-const localeClass = localeContext === 'datapage' ? '@baseclass' : className;
-const localeName = localeContext === 'datapage' ? metaData?.datasource?.name : configProperty;
-const localePath = localeContext === 'datapage' ? displayName : localeName;
-
-
+    ? fieldMetadata.filter(field => field?.classID === className)[0]
+    : fieldMetadata;
+  let displayName = metaData?.datasource?.propertyForDisplayText;
+  displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
+  const localeContext = metaData?.datasource?.tableType === 'DataPage' ? 'datapage' : 'associated';
+  const localeClass = localeContext === 'datapage' ? '@baseclass' : className;
+  const localeName = localeContext === 'datapage' ? metaData?.datasource?.name : configProperty;
+  const localePath = localeContext === 'datapage' ? displayName : localeName;
 
   // theOptions will be an array of JSON objects that are literally key/value pairs.
   //  Ex: [ {key: "Basic", value: "Basic"} ]
@@ -62,11 +60,30 @@ const localePath = localeContext === 'datapage' ? displayName : localeName;
   }, [value]);
 
   if (displayMode === 'LABELS_LEFT') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return (
+      <FieldValueList
+        name={hideLabel ? '' : label}
+        value={thePConn.getLocalizedValue(
+          value,
+          localePath,
+          thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
+        )}
+      />
+    );
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return (
+      <FieldValueList
+        name={hideLabel ? '' : label}
+        value={thePConn.getLocalizedValue(
+          value,
+          localePath,
+          thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
+        )}
+        variant='stacked'
+      />
+    );
   }
 
   const handleChange = event => {
@@ -91,13 +108,11 @@ const localePath = localeContext === 'datapage' ? displayName : localeName;
             <FormControlLabel
               value={theOption.key}
               key={theOption.key}
-              label={
-                thePConn.getLocalizedValue(
-                  theOption.value,
-                  localePath,
-                  thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
-                )
-              }
+              label={thePConn.getLocalizedValue(
+                theOption.value,
+                localePath,
+                thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
+              )}
               control={<Radio key={theOption.key} color='primary' disabled={readOnly} />}
             />
           );
