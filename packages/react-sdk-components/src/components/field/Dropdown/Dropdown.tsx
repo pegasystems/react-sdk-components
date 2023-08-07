@@ -42,12 +42,12 @@ export default function Dropdown(props) {
   useEffect(() => {
     const list = Utils.getOptionList(props, getPConnect().getDataObject());
     const optionsList = [...list];
-    optionsList.unshift({ key: placeholder, value: placeholder });
+    optionsList.unshift({ key: placeholder, value: thePConn.getLocalizedValue(placeholder) });
     setOptions(optionsList);
   }, [datasource]);
 
   const metaData = Array.isArray(fieldMetadata)
-    ? fieldMetadata.filter((field) => field?.classID === className)[0]
+    ? fieldMetadata.filter(field => field?.classID === className)[0]
     : fieldMetadata;
 
   let displayName = metaData?.datasource?.propertyForDisplayText;
@@ -60,11 +60,30 @@ export default function Dropdown(props) {
   let readOnlyProp = {};
 
   if (displayMode === 'LABELS_LEFT') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return (
+      <FieldValueList
+        name={hideLabel ? '' : label}
+        value={thePConn.getLocalizedValue(
+          value,
+          localePath,
+          thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
+        )}
+      />
+    );
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return (
+      <FieldValueList
+        name={hideLabel ? '' : label}
+        value={thePConn.getLocalizedValue(
+          value,
+          localePath,
+          thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
+        )}
+        variant='stacked'
+      />
+    );
   }
 
   if (readOnly) {
