@@ -31,7 +31,6 @@ test.describe('E2E test', () => {
 
     const newServiceCase = page.locator('div[role="button"]:has-text("New Service")');
     await newServiceCase.click();
-
     caseID = await page.locator('#caseId').textContent();
 
     const firstNameInput = page.locator('input[data-test-id="BC910F8BDF70F29374F496F05BE0330C"]');
@@ -119,6 +118,8 @@ test.describe('E2E test', () => {
     const attachmentID = await page.locator('div[id="attachment-ID"]').textContent();
     await page.setInputFiles(`#${attachmentID}`, filePath);
 
+    const PCoreVersion = await page.evaluate(() => window.PCore.getPCoreVersion());
+
     await Promise.all([
       page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}${endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ""}/api/application/v2/attachments/upload`)
     ]);
@@ -126,7 +127,7 @@ test.describe('E2E test', () => {
     await page.locator('button:has-text("submit")').click();
 
     await Promise.all([
-      page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}${endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ""}/api/application/v2/cases/${currentCaseID}/attachments`),
+      page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}${endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ""}/api/application/v2/cases/${currentCaseID}/attachments${PCoreVersion.includes('8.23') ? '?includeThumbnail=false' : ''}`),
     ]);
 
     const attachmentCount = await page.locator('div[id="attachments-count"]').textContent();
