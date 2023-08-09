@@ -70,7 +70,7 @@
     "@pega/configs": "^0.4.0",
     "@pega/cspell-config": "^0.4.0",
     "@pega/eslint-config": "^0.4.0",
-    "@pega/pcore-pconnect-typedefs": "latest",
+    "@pega/pcore-pconnect-typedefs": "0.0.6",
     "@pega/prettier-config": "^0.4.0",
     "@pega/stylelint-config": "^0.4.0",
     "@pega/tsconfig": "^0.4.0",
