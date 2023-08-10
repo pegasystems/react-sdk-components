@@ -7,6 +7,10 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
+import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+
+declare const PCore: typeof PCoreType;
+
 
 export default function Assignment(props) {
   const { getPConnect, children, itemKey, isInModal, banners } = props;

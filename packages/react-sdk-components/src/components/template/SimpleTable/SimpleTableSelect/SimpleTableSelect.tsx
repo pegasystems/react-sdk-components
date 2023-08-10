@@ -5,6 +5,11 @@ import SimpleTable from '../SimpleTable';
 
 import PromotedFilters from '../../PromotedFilters';
 
+import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+
+declare const PCore: typeof PCoreType;
+
+
 const isSelfReferencedProperty = (param, referenceProp) => {
   const [, parentPropName] = param.split('.');
   return parentPropName === referenceProp;

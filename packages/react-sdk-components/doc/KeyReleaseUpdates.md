@@ -1,8 +1,12 @@
-#### **Release SDK-R-C 8.23.11 (xx xxxx 2023)**
+#### **Release SDK-R-C 8.23.11 (10 August 2023)**
 
+* Many significant improvements to localization
 * Added new AlertBanner component (in designSystemExtension) and its use in Assignment and ModalViewContainer
 * Bug fixes in Decimal and Attachment components
-* Fixed some cases where dropdown items weren't properly loaded from datasource
+* Fixed some cases where Dropdown items weren't properly loaded from datasource
+* Infrastructure components (FlowContainer and ModalViewContainer) now use overridden component implementations when overrides are available.
+* Bug fixes
+* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?page=1&q=is%3Apr+is%3Amerged). This release includes all PRs since (and including) #117 and #165.
 
 <br />
 
