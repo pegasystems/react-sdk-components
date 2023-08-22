@@ -419,10 +419,6 @@ export default function FlowContainer(props) {
     ? getPConnect().getCaseSummary().assignments?.[0].urgency
     : '';
   const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName());
-  let instructionText = thePConn.getCaseSummary()?.assignments?.[0]?.instructions;
-  if (instructionText === undefined) {
-    instructionText = '';
-  }
 
   const bShowBanner = showBanner(getPConnect);
 
@@ -437,9 +433,6 @@ export default function FlowContainer(props) {
                 subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
                 avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
               ></CardHeader>
-              {instructionText !== '' ? (
-                <Typography variant='caption'>{instructionText}</Typography>
-              ) : null}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
                   {arNewChildrenAsReact}
@@ -449,9 +442,6 @@ export default function FlowContainer(props) {
           ) : (
             <Card className={classes.root}>
               <Typography variant='h6'>{containerName}</Typography>
-              {instructionText !== '' ? (
-                <Typography variant='caption'>{instructionText}</Typography>
-              ) : null}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
                   {arNewChildrenAsReact}
