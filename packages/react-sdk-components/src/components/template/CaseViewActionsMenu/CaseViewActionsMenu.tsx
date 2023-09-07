@@ -4,10 +4,6 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 export default function CaseViewActionsMenu(props) {
   const { getPConnect, availableActions, availableProcesses, caseTypeID, caseTypeName } = props;

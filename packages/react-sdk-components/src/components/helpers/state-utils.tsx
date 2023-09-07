@@ -1,9 +1,6 @@
 import React, { useContext } from 'react';
 import { connect, Provider, shallowEqual } from 'react-redux';
 import ReactReduxContext from '../../bridge/Context/StoreContext';
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
 
 
 const connectToState = (mapStateToProps = () => {}) => {

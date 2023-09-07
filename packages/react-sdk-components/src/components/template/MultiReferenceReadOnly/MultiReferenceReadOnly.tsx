@@ -1,10 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 export default function MultiReferenceReadOnly(props) {
   const { getPConnect, label, hideLabel, config } = props;

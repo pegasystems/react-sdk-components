@@ -9,10 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Utils from '../../helpers/utils';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 const useStyles = makeStyles((theme) => ({
   root: {

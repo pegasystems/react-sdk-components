@@ -2,10 +2,6 @@ import React from "react";
 import WssQuickCreate from '../../designSystemExtension/WssQuickCreate';
 import { Utils } from '../../helpers/utils';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 export default function QuickCreate(props) {
   const { getPConnect, heading, showCaseIcons, classFilter } = props;

@@ -26,11 +26,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
 import './ToDo.css';
-
-declare const PCore: typeof PCoreType;
 
 const isChildCase = assignment => {
   return assignment.isChild;

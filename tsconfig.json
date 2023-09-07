@@ -31,10 +31,6 @@
     // Declare all ambient type declarations here for VSCode.
     // Override with only specific types for other configurations.
 
-    // Values in types help get jest tests working - JEA
-    "types": [
-      "jest", "@testing-library/jest-dom"
-    ],
     "typeRoots": ["node_modules/@types", "typings"],
 
     "noEmit": false,    // JEA - was false

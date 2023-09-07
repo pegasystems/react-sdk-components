@@ -7,10 +7,6 @@ import ListView from '../ListView';
 import { isEmptyObject } from '../../helpers/common-utils';
 import './PromotedFilters.css';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 const localeCategory = 'SimpleTable';
 const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [

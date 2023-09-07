@@ -1,7 +1,3 @@
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 export const getDeferFriendlyTabs = allTabs => {
   return allTabs.map(tab => {

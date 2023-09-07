@@ -13,10 +13,6 @@ import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 export default function DashboardFilter(props) {
   const { children, name, filterProp, type, metadata, getPConnect } = props;

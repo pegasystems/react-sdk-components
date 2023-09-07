@@ -35,10 +35,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useNavBar } from '../../helpers/reactContextHelpers';
 import { logout } from '../../helpers/authManager';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 const iconMap = {
   'pi pi-headline': <HomeOutlinedIcon fontSize='large' />,

@@ -2,10 +2,6 @@ import React from 'react';
 import FieldGroupTemplate from '../../FieldGroupTemplate';
 import SimpleTableManual from '../SimpleTableManual';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 export default function SimpleTable(props) {
   const { getPConnect, multiRecordDisplayAs, allowTableEdit } = props;

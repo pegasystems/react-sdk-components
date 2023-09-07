@@ -9,10 +9,6 @@ import ToDo from '../../widget/ToDo';
 import Details from '../Details/Details';
 import { Button, Card, makeStyles } from '@material-ui/core';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 const useStyles = makeStyles(theme => ({
   root: {

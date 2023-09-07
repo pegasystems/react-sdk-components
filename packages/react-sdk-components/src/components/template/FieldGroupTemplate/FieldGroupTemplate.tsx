@@ -6,10 +6,6 @@ import FieldGroup from '../../designSystemExtension/FieldGroup';
 import FieldGroupList from '../../designSystemExtension/FieldGroupList';
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 export default function FieldGroupTemplate(props) {
   const {
