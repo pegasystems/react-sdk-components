@@ -5,7 +5,6 @@
     "composite": true,
     "rootDir": ".",
     "outDir": ".",
-    "types": [],
     "noEmit": false
   }
 }

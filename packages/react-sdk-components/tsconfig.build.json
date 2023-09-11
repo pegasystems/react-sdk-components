@@ -23,7 +23,6 @@
     "composite": true,
     "rootDir": "./src",
     "outDir": "./lib",
-    "types": [],
     "noEmit": false
   },
   "references": [
