@@ -5,8 +5,14 @@ import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo} from '../../helpers/date-format-utils';
+import type { BaseProps } from '../../../types/BaseProps';
 
-export default function DateTime(props) {
+interface DateTimeProps extends BaseProps {
+  // If any, enter additional props that only exist on DateTime here
+}
+
+
+export default function DateTime(props: DateTimeProps) {
   const {
     getPConnect,
     label,

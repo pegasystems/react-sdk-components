@@ -4,8 +4,15 @@ import TextInput from '../TextInput';
 import dayjs from 'dayjs';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { BaseProps } from '../../../types/BaseProps';
 
-export default function Time(props) {
+
+interface TimeProps extends BaseProps {
+  // If any, enter additional props that only exist on Time here
+}
+
+
+export default function Time(props: TimeProps) {
   const {
     label,
     required,

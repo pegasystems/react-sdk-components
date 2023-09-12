@@ -3,8 +3,16 @@ import { TextField, InputAdornment } from '@material-ui/core';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import TextInput from '../TextInput';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { BaseProps } from '../../../types/BaseProps';
 
-export default function Email(props) {
+
+interface EmailProps extends BaseProps {
+  // If any, enter additional props that only exist on Date here
+}
+
+
+
+export default function Email(props: EmailProps) {
   const {
     label,
     required,

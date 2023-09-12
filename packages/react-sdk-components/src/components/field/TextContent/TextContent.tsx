@@ -1,7 +1,16 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
+import type { BaseProps } from '../../../types/BaseProps';
 
-export default function TextContent(props) {
+interface TextContentProps extends BaseProps {
+  // If any, enter additional props that only exist on TextContent here
+  content: string,
+  displayAs: 'Paragraph' | 'Heading 1' | 'Heading 2' | 'Heading 3' | 'Heading 4'
+}
+
+
+
+export default function TextContent(props: TextContentProps) {
   type ExpectedDisplayAs = 'Paragraph' | 'Heading 1' | 'Heading 2' | 'Heading 3' | 'Heading 4';
   type ExpectedVariants = 'body1' | 'h1' | 'h2' | 'h3' | 'h4';
 
