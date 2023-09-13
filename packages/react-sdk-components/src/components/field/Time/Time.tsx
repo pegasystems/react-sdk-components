@@ -4,10 +4,10 @@ import TextInput from '../TextInput';
 import dayjs from 'dayjs';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 
-interface TimeProps extends BaseProps {
+interface TimeProps extends PConnProps {
   // If any, enter additional props that only exist on Time here
 }
 

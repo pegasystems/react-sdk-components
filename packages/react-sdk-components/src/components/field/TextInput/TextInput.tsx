@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import handleEvent from '../../helpers/event-utils';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
-interface TextInputProps extends BaseProps {
+interface TextInputProps extends PConnProps {
   // If any, enter additional props that only exist on TextInput here
 }
 

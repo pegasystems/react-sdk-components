@@ -1,9 +1,9 @@
 import React from 'react';
 import MuiPhoneNumber from 'material-ui-phone-number';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
-interface PhoneProps extends BaseProps {
+interface PhoneProps extends PConnProps {
   // If any, enter additional props that only exist on Phone here
 }
 

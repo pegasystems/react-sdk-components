@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
-interface TextContentProps extends BaseProps {
+interface TextContentProps extends PConnProps {
   // If any, enter additional props that only exist on TextContent here
   content: string,
   displayAs: 'Paragraph' | 'Heading 1' | 'Heading 2' | 'Heading 3' | 'Heading 4'

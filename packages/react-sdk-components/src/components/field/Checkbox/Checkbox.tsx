@@ -8,9 +8,9 @@ import {
 } from '@material-ui/core';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
-interface CheckboxProps extends BaseProps {
+interface CheckboxProps extends PConnProps {
   // If any, enter additional props that only exist on Checkbox here
 }
 

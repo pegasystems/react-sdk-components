@@ -5,11 +5,11 @@ import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { format } from "../../helpers/formatters";
 import { getCurrencyCharacters, getCurrencyOptions } from './currency-utils';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 // Using control from: https://github.com/unicef/material-ui-currency-textfield
 
-interface CurrrencyProps extends BaseProps {
+interface CurrrencyProps extends PConnProps {
   // If any, enter additional props that only exist on Currency here
 }
 

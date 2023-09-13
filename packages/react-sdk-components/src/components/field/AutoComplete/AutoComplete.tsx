@@ -7,7 +7,7 @@ import isDeepEqual from 'fast-deep-equal/react';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
@@ -37,7 +37,7 @@ const getDisplayFieldsMetaData = columnList => {
   return metaDataObj;
 };
 
-interface AutoCompleteProps extends BaseProps {
+interface AutoCompleteProps extends PConnProps {
   // If any, enter additional props that only exist on AutoComplete here'
 }
 

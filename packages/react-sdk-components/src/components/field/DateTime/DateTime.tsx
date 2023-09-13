@@ -5,9 +5,9 @@ import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo} from '../../helpers/date-format-utils';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
-interface DateTimeProps extends BaseProps {
+interface DateTimeProps extends PConnProps {
   // If any, enter additional props that only exist on DateTime here
 }
 

@@ -4,14 +4,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { BaseProps } from '../../../types/BaseProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
   value: string;
 }
 
-interface DropdownProps extends BaseProps {
+interface DropdownProps extends PConnProps {
   // If any, enter additional props that only exist on Dropdown here
 }
 
