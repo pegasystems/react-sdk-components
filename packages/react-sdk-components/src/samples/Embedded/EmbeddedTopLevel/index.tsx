@@ -8,7 +8,7 @@ import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles
 import StoreContext from "../../../bridge/Context/StoreContext";
 import createPConnectComponent from "../../../bridge/react_pconnect";
 
-import { gbLoggedIn, loginIfNecessary, sdkSetAuthHeader } from '../../../components/helpers/authManager';
+import { sdkIsLoggedIn, loginIfNecessary, sdkSetAuthHeader } from '../../../components/helpers/authManager';
 
 import EmbeddedSwatch from '../EmbeddedSwatch';
 import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelpers';
@@ -176,7 +176,7 @@ export default function EmbeddedTopLevel() {
     const theTopLevelRibbon = document.getElementById("embedded-top-level-ribbon");
 
     if (theTopLevelEl) {
-      if (bShowTriplePlayOptions && gbLoggedIn) {
+      if (bShowTriplePlayOptions && sdkIsLoggedIn()) {
         // Only show when user is logged in and we're supposed to show it
         theTopLevelEl.style.display = "block";
         if (theTopLevelRibbon) { theTopLevelRibbon.style.display = "flex"; }
@@ -213,7 +213,7 @@ export default function EmbeddedTopLevel() {
     const theTopLevelEl = document.getElementById("embedded-top-level-resolution");
     const theTopLevelRibbon = document.getElementById("embedded-top-level-ribbon");
 
-    if (bShowResolutionScreen && gbLoggedIn) {
+    if (bShowResolutionScreen && sdkIsLoggedIn()) {
         // Only show when user is logged in and we're supposed to show it
         if (theTopLevelEl) { theTopLevelEl.style.display = "block" };
         if (theTopLevelRibbon) { theTopLevelRibbon.style.display = "flex"; }
@@ -229,7 +229,7 @@ export default function EmbeddedTopLevel() {
     // If not logged in, we used to prompt for login. Now moved up to TopLevelApp
     // If logged in, make the Triple Play Options visible
 
-    if (!gbLoggedIn) {
+    if (!sdkIsLoggedIn()) {
       // login();     // Login now handled at TopLevelApp
     } else {
       setShowTriplePlayOptions(true);
