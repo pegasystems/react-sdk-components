@@ -26,6 +26,7 @@ class AuthManager {
   #ssKeyState:string = `${this.#ssKeyPrefix}State`;
   #authConfig:any = {};
   #authHeader:string|null = null;
+  #SIStateProps = ['codeVerifier', 'state', 'sessionIndex', 'sessionIndexAttempts', 'acRedirectUri'];
 
   // state that should be persisted across loads
   state:any = {usePopup:false, noInitialRedirect:false};
@@ -208,6 +209,23 @@ class AuthManager {
    */
   clear(bFullReauth=false){
     // Should any session info be cleared as well (not clearing this for now)
+    if( !bFullReauth ) {
+      if( this.#usePASS ) {
+        const oSI = this.#getStorage(this.#ssKeySessionInfo);
+        // Remove known transient items
+        for( let i = 0; i < this.#SIStateProps.length; i += 1 ) {
+          const prop:string = this.#SIStateProps[i];
+          // eslint-disable-next-line no-prototype-builtins
+          if( oSI.hasOwnProperty(prop) ) {
+            delete oSI[prop];
+          }
+        }
+        sessionStorage.removeItem(this.#ssKeySessionInfo);
+      } else {
+        this.#authConfig={};
+      }
+      sessionStorage.removeItem(this.#ssKeySessionInfo);
+    }
     // Clear any established auth tokens
     this.#tokenInfo = null;
     sessionStorage.removeItem(this.#ssKeyTokenInfo);
@@ -221,9 +239,8 @@ class AuthManager {
     this.#setStorage(this.#ssKeyState, this.state);
     if( !this.#usePASS ) {
       const oSI = {};
-      const aProps = ['codeVerifier', 'state', 'sessionIndex', 'sessionIndexAttempts', 'acRedirectUri'];
-      for( let i = 0; i < aProps.length; i += 1 ) {
-        const prop:string = aProps[i];
+      for( let i = 0; i < this.#SIStateProps.length; i += 1 ) {
+        const prop:string = this.#SIStateProps[i];
         // eslint-disable-next-line no-prototype-builtins
         if( this.#authConfig.hasOwnProperty(prop) ) {
           oSI[prop] = this.#authConfig[prop];
@@ -232,7 +249,7 @@ class AuthManager {
       this.#setStorage(this.#ssKeySessionInfo, oSI);
     } else {
       // Don't update the auth session storage as it is already created and in use and may
-      //  have been updated by auth code
+      //  have been updated by PegaAuth library as part of an auth code grant flow
     }
     if( this.#tokenStorage === 'temp' ) {
       this.#setStorage(this.#ssKeyTokenInfo, this.#tokenInfo);
