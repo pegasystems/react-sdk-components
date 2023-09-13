@@ -524,7 +524,7 @@ class AuthManager {
 
   }
 
-  customConstellationInit( fnReauth ) {
+  #customConstellationInit( fnReauth ) {
     this.#constellationInit( null, null, null, fnReauth);
   }
 
@@ -549,7 +549,7 @@ class AuthManager {
     this.usePopupForRestOfSession = true;
 
     if( !window.PCore && bLoadC11N ) {
-      this.#constellationInit( this.#authConfig, token, this.#authTokenUpdated.bind(this), this.authFullReauth.bind(this) );
+      this.#constellationInit( this.#authConfig, token, this.#authTokenUpdated.bind(this), this.#authFullReauth.bind(this) );
     }
 
     /*
@@ -658,7 +658,7 @@ class AuthManager {
   }
 
   // Initiate a full OAuth re-authorization (any refresh token has also expired).
-  authFullReauth() {
+  #authFullReauth() {
     const bHandleHere = true; // Other alternative is to raise an event and have someone else handle it
 
     if( this.reauthStart ) {
@@ -790,8 +790,13 @@ class AuthManager {
     // If custom auth no need to do any OAuth logic
     if( this.bCustomAuth ) {
       if( !window.PCore ) {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        this.customConstellationInit( authCustomReauth );
+        this.#customConstellationInit( () => {
+          // Fire the SdkCustomReauth event to indicate a new authHeader is needed. Event listener should invoke sdkSetAuthHeader
+          //  to communicate the new token to sdk (and Constellation JS Engine)
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          const event = new CustomEvent('SdkCustomReauth', { detail: sdkSetAuthHeader });
+          document.dispatchEvent(event);
+        } );
       }
       return;
     }
@@ -916,14 +921,6 @@ export const sdkSetAuthHeader = (authHeader) => {
   gAuthMgr.bCustomAuth = !!authHeader;
   // Use setter to set this securely
   gAuthMgr.authHeader = authHeader;
-};
-
-// Initiate a custom re-authorization.
-export const authCustomReauth = () => {
-  // Fire the SdkCustomReauth event to indicate a new authHeader is needed. Event listener should invoke sdkSetAuthHeader
-  //  to communicate the new token to sdk (and Constellation JS Engine)
-  const event = new CustomEvent('SdkCustomReauth', { detail: sdkSetAuthHeader });
-  document.dispatchEvent(event);
 };
 
 export const getAvailablePortals = async () => {
