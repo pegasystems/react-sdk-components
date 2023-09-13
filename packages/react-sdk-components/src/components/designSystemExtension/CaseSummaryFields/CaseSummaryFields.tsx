@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import isDeepEqual from 'fast-deep-equal/react';
 
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +11,17 @@ import './CaseSummaryFields.css';
 
 import { format } from '../../helpers/formatters';
 
-export default function CaseSummaryFields(props) {
+// CaseSummaryFields is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface CaseSummaryFieldsProps{
+  // If any, enter additional props that only exist on this component
+  status?: string,
+  showStatus?: boolean,
+  theFields: Array<any> | any | never
+}
+
+
+export default function CaseSummaryFields(props:CaseSummaryFieldsProps) {
   const { status, showStatus, theFields } = props;
 
   const [theFieldsToRender, setFieldsToRender] = useState([]);
@@ -227,9 +236,3 @@ export default function CaseSummaryFields(props) {
     </React.Fragment>
   );
 }
-
-CaseSummaryFields.propTypes = {
-  status: PropTypes.string,
-  showStatus: PropTypes.bool,
-  theFields: PropTypes.arrayOf(PropTypes.object)
-};

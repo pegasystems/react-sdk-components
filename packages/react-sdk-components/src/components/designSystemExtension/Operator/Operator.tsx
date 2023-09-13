@@ -9,6 +9,22 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Utils from '../../helpers/utils';
 
+// Operator is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface OperatorProps{
+  // If any, enter additional props that only exist on this component
+  caseOpConfig: {
+    label: string,
+    createDateTime: string,
+    createLabel: string,
+    createOperator: { userName: string, userId: string },
+    updateDateTime: string,
+    updateLabel: string,
+    updateOperator: { userName: string, userId: string }
+  }
+}
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Operator(props) {
+export default function Operator(props: OperatorProps) {
   // const componentName = "Operator";
   const { caseOpConfig } = props;
   const classes = useStyles();
@@ -30,7 +46,7 @@ export default function Operator(props) {
   let caseOpLabel = "---";
   let caseOpName = "---";
   let caseOpId = "";
-  let caseTime = null;
+  let caseTime = "";
 
   if (fieldLabel === "create operator") {
     caseOpLabel = caseOpConfig.createLabel;

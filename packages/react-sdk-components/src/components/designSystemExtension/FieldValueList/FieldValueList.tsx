@@ -4,6 +4,16 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
+// FieldValueList is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface FieldValueListProps{
+  // If any, enter additional props that only exist on this component
+  name?: string,
+  value: string,
+  variant?: string
+}
+
+
 const useStyles = makeStyles(theme => ({
   root: {
     marginRight: theme.spacing(1),
@@ -37,7 +47,7 @@ function formatItemValue(value) {
   return formattedVal;
 }
 
-const FieldValueList = props => {
+export default function FieldValueList(props: FieldValueListProps) {
   const { name, value, variant = 'inline' } = props;
   const classes = useStyles();
 
@@ -84,5 +94,3 @@ const FieldValueList = props => {
     </React.Fragment>
   );
 };
-
-export default FieldValueList;
