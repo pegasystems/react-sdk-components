@@ -208,7 +208,9 @@ class AuthManager {
    * Clean up any session storage allocated for the user session.
    */
   clear(bFullReauth=false){
-    // Should any session info be cleared as well (not clearing this for now)
+    if (!this.bCustomAuth) {
+      this.#authHeader = null;
+    }
     if( !bFullReauth ) {
       if( this.#usePASS ) {
         const oSI = this.#getStorage(this.#ssKeySessionInfo);
@@ -262,6 +264,7 @@ class AuthManager {
     if( oState ) {
       Object.assign(this.state, oState);
       if( this.state.clientId ) {
+        // Setter sets up the ssKey values as well
         this.clientId = this.state.clientId;
       }
     }
@@ -353,7 +356,6 @@ class AuthManager {
           };
           // Invoke clientId setter
           this.clientId = pegaAuthConfig.clientId;
-          // this.#setStorage(this.#ssKeyState, this.state);
           this.#authConfig.transform = sdkConfigAuth.transform !== undefined ? sdkConfigAuth.transform : true;
           if( sdkConfigAuth.tokenStorage !== undefined ) {
             this.#tokenStorage = sdkConfigAuth.tokenStorage;
@@ -776,12 +778,12 @@ class AuthManager {
   }
 
   loginIfNecessary(appName:string, noMainRedirect:boolean=false, deferLogin:boolean=false){
+    // We need to load state before making any decisions
+    this.#loadState();
     // If no initial redirect status of page changed...clear AuthMgr
     const currNoMainRedirect = this.noInitialRedirect;
     if( appName !== this.state.appName || noMainRedirect !== currNoMainRedirect) {
-      this.clear();
-      this.#authConfig = {};
-      sessionStorage.removeItem(this.#ssKeySessionInfo);
+      this.clear(false);
       this.state.appName = appName;
       this.#setStorage(this.#ssKeyState, this.state);
     }
