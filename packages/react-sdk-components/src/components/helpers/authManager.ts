@@ -645,8 +645,9 @@ class AuthManager {
     const bHandleHere = true; // Other alternative is to raise an event and have someone else handle it
 
     if( this.reauthStart ) {
+      const reauthIgnoreInterval = 300000; // 5 minutes
       const currTime = Date.now();
-      const bReauthInProgress = currTime - this.reauthStart < 60000;
+      const bReauthInProgress = currTime - this.reauthStart <= reauthIgnoreInterval;
       if( bReauthInProgress ) {
         return;
       }
