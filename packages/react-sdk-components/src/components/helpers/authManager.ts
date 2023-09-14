@@ -17,7 +17,7 @@ declare const PCore: any;
 
 // Meant to be a singleton...only one instance per page
 class AuthManager {
-  #ssKeyPrefix = 'rs';
+  #ssKeyPrefix:string = 'rs';
   // will store the PegaAuth (OAuth 2.0 client library) instance
   #pegaAuth:any = null;
 
@@ -42,6 +42,7 @@ class AuthManager {
   #usePASS: boolean = false;
   #beforeUnloadAdded: boolean = false;
   #tokenStorage: string = 'temp';
+  #transform:boolean = true;
   #foldSpot: number = 2;
 
   constructor () {
@@ -49,10 +50,10 @@ class AuthManager {
     this.#loadState();
   }
 
-  #transformAndParse(ssKey, ssItem) {
+  #transformAndParse(ssKey, ssItem, bForce=false) {
     let obj = {};
     try {
-      obj = JSON.parse(this.#transform(ssKey, ssItem, false));
+      obj = JSON.parse(this.#transformer(ssKey, ssItem, false, bForce));
     } catch (e) {
       // fall thru and return empty object
     }
@@ -68,7 +69,7 @@ class AuthManager {
       try {
         obj = JSON.parse(ssItem);
       } catch (e) {
-        obj = this.#transformAndParse(ssKey, ssItem);
+        obj = this.#transformAndParse(ssKey, ssItem, true);
       }
     }
     return sAttrib ? obj[sAttrib] : obj;
@@ -82,7 +83,7 @@ class AuthManager {
     } else {
       // const bClear = (ssKey === this.#ssKeyState || ssKey === this.#ssKeySessionInfo);
       const bClear = false;
-      window.sessionStorage.setItem(ssKey, bClear ? JSON.stringify(obj) : this.#transform(ssKey, JSON.stringify(obj), true));
+      window.sessionStorage.setItem(ssKey, bClear ? JSON.stringify(obj) : this.#transformer(ssKey, JSON.stringify(obj), true));
     }
   }
 
@@ -104,7 +105,8 @@ class AuthManager {
   }
 
   // helper function to encode storage
-  #transform(ssKey:string, s:string, bIn:boolean) {
+  #transformer(ssKey:string, s:string, bIn:boolean, bForce:boolean=false) {
+    const bTransform = bForce || this.#transform;
     const fnFold = (x:string) => {
       const nLen = x.length;
       const nExtra = nLen % this.#foldSpot;
@@ -113,12 +115,12 @@ class AuthManager {
       return x.substring(bIn ? nOffset : nRem) + x.substring(0, bIn ? nOffset : nRem);
     };
     const bTknInfo = ssKey === this.#ssKeyTokenInfo;
-    if (bTknInfo && !bIn && this.#authConfig.transform) {
+    if (bTknInfo && !bIn && bTransform) {
       s = window.atob(fnFold(s));
     }
     // eslint-disable-next-line no-nested-ternary
-    let result = this.#authConfig.transform ? (bIn ? window.btoa(s) : window.atob(s)) : s;
-    if (bTknInfo && bIn && this.#authConfig.transform) {
+    let result = bTransform ? (bIn ? window.btoa(s) : window.atob(s)) : s;
+    if (bTknInfo && bIn && bTransform) {
       result = fnFold(window.btoa(result));
     }
     return result;
@@ -261,6 +263,9 @@ class AuthManager {
   #loadState() {
     // Note: State storage key doesn't have a client id associated with it
     const oState = this.#getStorage(this.#ssKeyState);
+    const sKey:string = this.#ssKeyState;
+    // eslint-disable-next-line no-console
+    console.log(`ssKeyState: ${sKey}`);
     if( oState ) {
       Object.assign(this.state, oState);
       if( this.state.clientId ) {
@@ -357,6 +362,8 @@ class AuthManager {
           // Invoke clientId setter
           this.clientId = pegaAuthConfig.clientId;
           this.#authConfig.transform = sdkConfigAuth.transform !== undefined ? sdkConfigAuth.transform : true;
+          // Using property in class as authConfig may be empty at times
+          this.#transform = this.#authConfig.transform;
           if( sdkConfigAuth.tokenStorage !== undefined ) {
             this.#tokenStorage = sdkConfigAuth.tokenStorage;
           }
