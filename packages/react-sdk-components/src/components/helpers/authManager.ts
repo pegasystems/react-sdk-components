@@ -361,7 +361,7 @@ class AuthManager {
           };
           // Invoke clientId setter
           this.clientId = pegaAuthConfig.clientId;
-          this.#authConfig.transform = sdkConfigAuth.transform !== undefined ? sdkConfigAuth.transform : true;
+          this.#authConfig.transform = sdkConfigAuth.transform !== undefined ? sdkConfigAuth.transform : this.#transform;
           // Using property in class as authConfig may be empty at times
           this.#transform = this.#authConfig.transform;
           if( sdkConfigAuth.tokenStorage !== undefined ) {
@@ -876,7 +876,6 @@ class AuthManager {
 }
 
 const gAuthMgr = new AuthManager();
-
 
 
 // TODO: Cope with 401 and refresh token if possible (or just hope that it succeeds during login)
