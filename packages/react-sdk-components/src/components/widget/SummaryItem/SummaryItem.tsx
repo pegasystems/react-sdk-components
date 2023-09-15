@@ -4,7 +4,17 @@ import './SummaryItem.css'
 import  { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-export default function SummaryItem(props) {
+// SummaryItem does NOT have getPConnect. So, no need to extend from PConnProps
+
+interface SummaryItemProps {
+  // If any, enter additional props that only exist on this component
+  menuIconOverride$: string,
+  menuIconOverrideAction$: any,
+  arItems$: Array<any> | any
+}
+
+
+export default function SummaryItem(props:SummaryItemProps) {
   let imagePath$ = "";
   let menuIconOverride$;
   menuIconOverride$ = props.menuIconOverride$

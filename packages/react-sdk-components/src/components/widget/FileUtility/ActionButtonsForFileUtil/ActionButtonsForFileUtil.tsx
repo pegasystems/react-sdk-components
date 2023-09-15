@@ -2,7 +2,19 @@ import React from "react";
 import { Button } from '@material-ui/core';
 import './ActionButtonsForFileUtil.css';
 
-export default function ActionButtonsForFileUtil(props) {
+// ActionButtonsForFileUtil does NOT have getPConnect.
+//  So, no need to extend PConnProps
+
+interface ActionButtonsForFileUtilProps {
+  // If any, enter additional props that only exist on this component
+  arMainButtons: Array<any>,
+  arSecondaryButtons: Array<any>,
+  primaryAction: any,
+  secondaryAction: any
+}
+
+
+export default function ActionButtonsForFileUtil(props: ActionButtonsForFileUtilProps) {
 
   return (
     <div className="psdk-actions">

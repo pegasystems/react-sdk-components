@@ -28,6 +28,13 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import './ToDo.css';
 
+import type { PConnProps } from '../../../types/PConnProps';
+
+interface ToDoProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+}
+
+
 const isChildCase = assignment => {
   return assignment.isChild;
 };
@@ -67,7 +74,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ToDo(props) {
+export default function ToDo(props: ToDoProps) {
   const { datasource, getPConnect, headerText, showTodoList, myWorkList, type, isConfirm } = props;
 
   const CONSTS = PCore.getConstants();
@@ -147,7 +154,7 @@ export default function ToDo(props) {
     const sTarget = thePConn.getContainerName();
     const sTargetContainerName = sTarget;
 
-    const options = { containerName: sTargetContainerName };
+    const options = { containerName: sTargetContainerName, channelName: "" };
 
     if (classname === null || classname === '') {
       classname = thePConn.getCaseInfo().getClassName();
