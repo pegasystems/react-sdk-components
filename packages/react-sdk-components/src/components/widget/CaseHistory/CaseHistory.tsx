@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -170,7 +169,3 @@ export default function CaseHistory(props:CaseHistoryProps) {
     </div>
   )
 }
-
-CaseHistory.propTypes = {
-  getPConnect: PropTypes.func.isRequired
-};

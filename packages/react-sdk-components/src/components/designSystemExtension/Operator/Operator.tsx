@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import PropTypes from "prop-types";
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
@@ -204,10 +203,3 @@ export default function Operator(props: OperatorProps) {
     </React.Fragment>;
 
 }
-
-Operator.defaultProps = {
-}
-
-Operator.propTypes = {
-  caseOpConfig: PropTypes.object.isRequired,
-};

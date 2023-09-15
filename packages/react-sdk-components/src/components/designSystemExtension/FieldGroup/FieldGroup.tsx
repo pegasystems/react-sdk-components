@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
   children: Array<any> | any,
-  name: string,
+  name: string | object,
 }
 
 

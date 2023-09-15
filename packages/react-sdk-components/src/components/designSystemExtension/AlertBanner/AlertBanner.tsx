@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { Alert } from '@material-ui/lab';
 
 
@@ -46,10 +45,3 @@ export default function AlertBanner(props:AlertBannerProps) {
     </div>
   );
 }
-
-// AlertBanner.propTypes = {
-//   id: PropTypes.string,
-//   variant: PropTypes.string,
-//   messages: PropTypes.arrayOf(PropTypes.string),
-//   onDismiss: PropTypes.any
-// };

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Card, CardContent, CardHeader, Typography, CardActions, Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -7,10 +6,10 @@ import { makeStyles } from '@material-ui/core/styles';
 //  So, no need to extend PConnProps
 interface AppAnnouncementProps {
   // If any, enter additional props that only exist on this component
-  header: string,
-  description: string,
-  datasource: { source: any },
-  whatsnewlink: string
+  header?: string,
+  description?: string,
+  datasource?: any,
+  whatsnewlink?: string
 }
 
 
@@ -24,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AppAnnouncement(props: AppAnnouncementProps) {
-  const { header, description, datasource, whatsnewlink } = props;
+  const { header = '', description = '', datasource = [], whatsnewlink = '' } = props;
   let details = [];
   if (datasource && datasource.source) {
     details = datasource.source.map((item) => {
@@ -57,20 +56,4 @@ export default function AppAnnouncement(props: AppAnnouncementProps) {
       </CardActions>
     </Card>
   );
-};
-
-AppAnnouncement.propTypes = {
-  header: PropTypes.string,
-  description: PropTypes.string,
-  datasource: PropTypes.instanceOf(Object),
-  whatsnewlink: PropTypes.string,
-  // image: PropTypes.string
-};
-
-AppAnnouncement.defaultProps = {
-  header: "",
-  description: "",
-  // image: "",
-  datasource: [],
-  whatsnewlink: ""
 };
