@@ -1,11 +1,21 @@
 import React, { useCallback, useMemo, useState, createElement, Fragment } from 'react';
-import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import ListView from '../ListView';
 import { isEmptyObject } from '../../helpers/common-utils';
 import './PromotedFilters.css';
+
+import type { PConnProps } from '../../../types/PConnProps';
+
+interface PromotedFilterProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  viewName: string,
+  filters: Array<any>,
+  listViewProps: any,
+  pageClass: string,
+  parameters?: object
+}
 
 
 const localeCategory = 'SimpleTable';
@@ -55,7 +65,7 @@ function isValidInput(input) {
   return Object.values(input).findIndex((v) => v) >= 0;
 }
 
-export default function PromotedFilters(props) {
+export default function PromotedFilters(props: PromotedFilterProps) {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const { getPConnect, viewName, filters, listViewProps, pageClass, parameters } = props;
   const [initTable, setInitTable] = useState(false);
@@ -150,12 +160,3 @@ export default function PromotedFilters(props) {
     </Fragment>
   );
 }
-
-PromotedFilters.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  viewName: PropTypes.string.isRequired,
-  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  listViewProps: PropTypes.objectOf(PropTypes.any).isRequired,
-  pageClass: PropTypes.string.isRequired,
-  parameters: PropTypes.object
-};

@@ -1,7 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Grid, GridSize } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+
+// TwoColumn does NOT have getPConnect. So, no need to extend from PConnProps
+interface TwoColumnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  templateCol?: string
+}
+
 
 const useStyles = makeStyles(() => ({
   colStyles: {
@@ -11,10 +18,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function TwoColumn(props) {
+export default function TwoColumn(props: TwoColumnProps) {
   const classes = useStyles();
 
- const {children, templateCol} = props;
+ const {children, templateCol = '1fr 1fr' } = props;
 
  if (children.length !== 2) {
   // eslint-disable-next-line no-console
@@ -44,15 +51,3 @@ export default function TwoColumn(props) {
    </Grid>
  )
 }
-
-TwoColumn.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
-  // title: PropTypes.string,
-  templateCol: PropTypes.string,
-  // icon: PropTypes.string
-};
-
-TwoColumn.defaultProps = {
-  templateCol: "1fr 1fr",
-  // icon: ""
-};

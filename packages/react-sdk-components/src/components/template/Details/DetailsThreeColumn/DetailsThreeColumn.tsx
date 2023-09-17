@@ -1,11 +1,21 @@
 import React, { createElement } from 'react';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import FieldGroup from '../../../designSystemExtension/FieldGroup';
+// import type { PConnProps } from '../../../../types/PConnProps';
 
-export default function DetailsThreeColumn(props) {
-  const { label, showLabel, getPConnect, showHighlightedData } = props;
+// Can't use PConnProps until getPConnect().getChildren() types are ok
+//  and createComponent types are ok
+// interface DetailsThreeColumnProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   showLabel: boolean,
+//   label: string,
+//   showHighlightedData: boolean
+// }
+
+
+export default function DetailsThreeColumn(props /* : DetailsThreeColumnProps */) {
+  const { label, showLabel = true, getPConnect, showHighlightedData = false } = props;
 
   // Get the inherited props from the parent to determine label settings
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
@@ -62,16 +72,3 @@ export default function DetailsThreeColumn(props) {
     </FieldGroup>
   );
 }
-
-DetailsThreeColumn.defaultProps = {
-  label: undefined,
-  showLabel: true,
-  showHighlightedData: false
-};
-
-DetailsThreeColumn.propTypes = {
-  showLabel: PropTypes.bool,
-  label: PropTypes.string,
-  getPConnect: PropTypes.func.isRequired,
-  showHighlightedData: PropTypes.bool
-};

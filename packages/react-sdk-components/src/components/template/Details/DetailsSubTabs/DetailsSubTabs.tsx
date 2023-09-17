@@ -1,12 +1,22 @@
 import { useState, useEffect, Fragment } from 'react';
-import PropTypes from 'prop-types';
 import { getTransientTabs, getVisibleTabs, tabClick } from '../../SubTabs/tabUtils';
 import React from 'react';
 import { Tab, Tabs, TextField } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
+import type { PConnProps } from '../../../../types/PConnProps';
 
-export default function DetailsSubTabs(props) {
-  const { children, label, showLabel, getPConnect } = props;
+
+interface DetailsSubTabsProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  showLabel: boolean,
+  label: string
+
+}
+
+
+export default function DetailsSubTabs(props: DetailsSubTabsProps) {
+  const { children = [], label, showLabel = true, getPConnect } = props;
   // Get the inherited props from the parent to determine label settings
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
 
@@ -50,16 +60,3 @@ export default function DetailsSubTabs(props) {
     </Fragment>
   );
 }
-
-DetailsSubTabs.defaultProps = {
-  children: [],
-  label: undefined,
-  showLabel: true
-};
-
-DetailsSubTabs.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node),
-  showLabel: PropTypes.bool,
-  label: PropTypes.string,
-  getPConnect: PropTypes.func.isRequired
-};

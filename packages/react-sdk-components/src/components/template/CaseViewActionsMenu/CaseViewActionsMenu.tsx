@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import type { PConnProps } from '../../../types/PConnProps';
+
+interface CaseViewActionsMenuProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  availableActions: Array<any>,
+  availableProcesses: Array<any>,
+  caseTypeID: string,
+  caseTypeName: string
+
+}
 
 
-export default function CaseViewActionsMenu(props) {
+export default function CaseViewActionsMenu(props:CaseViewActionsMenuProps) {
   const { getPConnect, availableActions, availableProcesses, caseTypeID, caseTypeName } = props;
   const thePConn = getPConnect();
 
@@ -63,16 +72,3 @@ export default function CaseViewActionsMenu(props) {
     </React.Fragment>
   );
 }
-
-CaseViewActionsMenu.defaultProps = {
-  availableActions: [],
-  availableProcesses: []
-};
-
-CaseViewActionsMenu.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  availableActions: PropTypes.arrayOf(PropTypes.object),
-  availableProcesses: PropTypes.arrayOf(PropTypes.any),
-  caseTypeID: PropTypes.string,
-  caseTypeName: PropTypes.string
-};

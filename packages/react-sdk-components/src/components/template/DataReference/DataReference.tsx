@@ -1,7 +1,24 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import SingleReferenceReadonly from '../SingleReferenceReadOnly';
 import MultiReferenceReadonly from '../MultiReferenceReadOnly';
+// import type { PConnProps } from '../../../types/PConnProps';
+
+// Can't use PConn props until proper props for getPConnect().getChildren()[0].getPConnect;
+// interface DataReferenceProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   children: Array<any>,
+//   label: string,
+//   showLabel: any,
+//   displayMode: string,
+//   allowAndPersistChangesInReviewMode: boolean,
+//   referenceType: string,
+//   selectionMode: string,
+//   displayAs: string,
+//   ruleClass: string,
+//   parameters: Array<string>, // need to fix
+//   hideLabel: boolean
+// }
+
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
@@ -9,7 +26,7 @@ const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 declare const PCore: any;
 
 
-export default function DataReference(props) {
+export default function DataReference(props /* : DataReferenceProps */) {
   const {
     children,
     getPConnect,
@@ -27,7 +44,7 @@ export default function DataReference(props) {
   let childrenToRender = children;
   const pConn = getPConnect();
   const [dropDownDataSource, setDropDownDataSource] = useState(null);
-  const propsToUse = { label, showLabel, ...pConn.getInheritedProps() };
+  const propsToUse: any = { label, showLabel, ...pConn.getInheritedProps() };
   if (propsToUse.showLabel === false) {
     propsToUse.label = '';
   }
@@ -109,10 +126,10 @@ export default function DataReference(props) {
   const handleSelection = event => {
     const caseKey = pConn.getCaseInfo().getKey();
     const refreshOptions = { autoDetectRefresh: true };
-    if (canBeChangedInReviewMode && pConn.getValue('__currentPageTabViewName')) {
+    if (canBeChangedInReviewMode && pConn.getValue('__currentPageTabViewName', '')) {  // 2nd arg empty string until typedef marked correctly
       getPConnect()
         .getActionsApi()
-        .refreshCaseView(caseKey, pConn.getValue('__currentPageTabViewName'), null, refreshOptions);
+        .refreshCaseView(caseKey, pConn.getValue('__currentPageTabViewName', ''), null, refreshOptions);  // 2nd arg empty string until typedef marked correctly
       PCore.getDeferLoadManager().refreshActiveComponents(pConn.getContextName());
     } else {
       const pgRef = pConn.getPageReference().replace('caseInfo.content', '');
@@ -263,30 +280,30 @@ export default function DataReference(props) {
   );
 }
 
-DataReference.defaultProps = {
-  label: undefined,
-  showLabel: undefined,
-  displayMode: undefined,
-  allowAndPersistChangesInReviewMode: false,
-  referenceType: '',
-  selectionMode: '',
-  displayAs: '',
-  ruleClass: '',
-  parameters: undefined,
-  hideLabel: false
-};
+// DataReference.defaultProps = {
+//   label: undefined,
+//   showLabel: undefined,
+//   displayMode: undefined,
+//   allowAndPersistChangesInReviewMode: false,
+//   referenceType: '',
+//   selectionMode: '',
+//   displayAs: '',
+//   ruleClass: '',
+//   parameters: undefined,
+//   hideLabel: false
+// };
 
-DataReference.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
-  getPConnect: PropTypes.func.isRequired,
-  label: PropTypes.string,
-  showLabel: PropTypes.func,
-  displayMode: PropTypes.string,
-  allowAndPersistChangesInReviewMode: PropTypes.bool,
-  referenceType: PropTypes.string,
-  selectionMode: PropTypes.string,
-  displayAs: PropTypes.string,
-  ruleClass: PropTypes.string,
-  parameters: PropTypes.arrayOf(PropTypes.string), // need to fix
-  hideLabel: PropTypes.bool
-};
+// DataReference.propTypes = {
+//   children: PropTypes.arrayOf(PropTypes.node).isRequired,
+//   getPConnect: PropTypes.func.isRequired,
+//   label: PropTypes.string,
+//   showLabel: PropTypes.func,
+//   displayMode: PropTypes.string,
+//   allowAndPersistChangesInReviewMode: PropTypes.bool,
+//   referenceType: PropTypes.string,
+//   selectionMode: PropTypes.string,
+//   displayAs: PropTypes.string,
+//   ruleClass: PropTypes.string,
+//   parameters: PropTypes.arrayOf(PropTypes.string), // need to fix
+//   hideLabel: PropTypes.bool
+// };

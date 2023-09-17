@@ -1,20 +1,18 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import ListView from '../ListView';
 
-export default function ListPage(props) {
+import type { PConnProps } from '../../../types/PConnProps';
+
+interface ListPageProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  parameters: object
+}
+
+
+export default function ListPage(props: ListPageProps) {
 
   return (
     <ListView  {...props}></ListView>
   )
 }
-
-ListPage.defaultProps = {
-  parameters: undefined
-};
-
-ListPage.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  parameters: PropTypes.objectOf(PropTypes.any)
-};
