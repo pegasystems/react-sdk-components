@@ -134,6 +134,7 @@ class AuthManager {
       const authHdr:string = value===null ? '' : value;
       window.PCore.getAuthUtils().setAuthorizationHeader(authHdr);
     }
+    this.#updateLoginStatus();
   }
 
   // Setter/getter for usePopupForRestOfSession
@@ -798,6 +799,7 @@ class AuthManager {
     // setNoInitialRedirect(noMainRedirect);
     // If custom auth no need to do any OAuth logic
     if( this.bCustomAuth ) {
+      this.#updateLoginStatus();
       if( !window.PCore ) {
         this.#customConstellationInit( () => {
           // Fire the SdkCustomReauth event to indicate a new authHeader is needed. Event listener should invoke sdkSetAuthHeader
