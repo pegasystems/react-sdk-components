@@ -8,7 +8,7 @@ export interface PConnProps {
   // getPConnect should exist for every C11n component. (add @ts-ignore in special cases where it isn't)
   getPConnect: () => typeof PConnect;
 
-  // Allow any/all other key/vlaue pairs in the BaseProps for now
+  // Allow any/all other key/value pairs in the BaseProps for now
   //  TODO: refine which other props are always expected for various component
   //    types and consider further interface "subclassing". For example, we may
   //    want to create a "BasePropsForm" that gives guidance on required, readonly, etc.

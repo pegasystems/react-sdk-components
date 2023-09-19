@@ -1,9 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import { Grid, Divider } from "@material-ui/core";
+
+// ActionButtons does NOT have getPConnect. So, no need to extend from PConnProps
+interface ActionButtonsProps {
+  // If any, enter additional props that only exist on this component
+  arMainButtons?: Array<any>,
+  arSecondaryButtons?: Array<any>,
+  onButtonPress: any
+}
 
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -17,8 +24,8 @@ const useStyles = makeStyles((/* theme */) => ({
 }));
 
 
-export default function ActionButtons(props) {
-  const { arMainButtons, arSecondaryButtons, onButtonPress } = props;
+export default function ActionButtons(props: ActionButtonsProps) {
+  const { arMainButtons = [], arSecondaryButtons = [], onButtonPress } = props;
   const classes = useStyles();
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Assignment';
@@ -56,16 +63,3 @@ export default function ActionButtons(props) {
 
   )
 }
-
-ActionButtons.propTypes = {
-  arMainButtons: PropTypes.array,
-  arSecondaryButtons: PropTypes.array,
-  onButtonPress: PropTypes.func
-  // buildName: PropTypes.string
-};
-
-ActionButtons.defaultProps = {
-  arMainButtons: [],
-  arSecondaryButtons: []
-  // buildName: null
-};

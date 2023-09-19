@@ -1,9 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Breadcrumbs, Card, Typography } from "@material-ui/core";
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import DoneIcon from '@material-ui/icons/Done';
 import { makeStyles } from '@material-ui/core/styles';
+import type { PConnProps } from '../../../types/PConnProps';
+
+
+interface StagesProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  stages: Array<any>
+}
+
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
 declare const PCore: any;
@@ -57,7 +64,7 @@ function getFilteredStages(stages) {
 
 /* TODO - this component should be refactored and not exposed as top level DX Component -
   the stages should be created as part of the CaseView */
-export default function Stages(props) {
+export default function Stages(props: StagesProps) {
   const classes = useStyles();
 
   const { getPConnect, stages } = props;
@@ -66,7 +73,7 @@ export default function Stages(props) {
 
 
   const filteredStages = getFilteredStages(stages);
-  const currentStageID = pConn.getValue(PCore.getConstants().CASE_INFO.STAGEID);
+  const currentStageID = pConn.getValue(PCore.getConstants().CASE_INFO.STAGEID, '');  // 2nd arg empty string until typedef allows optional
   const stagesObj = filteredStages.map((stage, index, arr) => {
     const theID = stage.ID || stage.id;
     return {
@@ -116,8 +123,3 @@ export default function Stages(props) {
     </Card>
   )
 }
-
-Stages.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  stages: PropTypes.arrayOf(PropTypes.object).isRequired
-};

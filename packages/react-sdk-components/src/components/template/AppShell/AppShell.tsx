@@ -223,6 +223,7 @@ export default function AppShell(props:AppShellProps) {
     <NavContext.Provider value={{ open, setOpen }}>
       <div id='AppShell' className={classes.root}>
         <NavBar
+          getPConnect={getPConnect}
           pConn={getPConnect()}
           appName={localizedVal(
             appNameToDisplay,

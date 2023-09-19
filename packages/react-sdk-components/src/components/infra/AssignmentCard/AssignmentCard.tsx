@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import type { PConnProps } from '../../../types/PConnProps';
 
 import ActionButtons from "../ActionButtons";
 
-export default function AssignmentCard(props) {
+interface AssignmentCardProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  actionButtons: any,
+  onButtonPress: any
+}
+
+
+export default function AssignmentCard(props: AssignmentCardProps) {
   const { children, actionButtons, onButtonPress} = props;
 
   const [arMainButtons, setArMainButtons] = useState([]);
@@ -29,19 +37,3 @@ export default function AssignmentCard(props) {
     </>
   )
 }
-
-AssignmentCard.propTypes = {
-  children: PropTypes.node.isRequired,
-  // eslint-disable-next-line react/no-unused-prop-types
-  getPConnect: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/no-unused-prop-types
-  itemKey: PropTypes.string,
-  actionButtons: PropTypes.object,
-  onButtonPress: PropTypes.func
-  // buildName: PropTypes.string
-};
-
-AssignmentCard.defaultProps = {
-  itemKey: null,
-  // buildName: null
-};

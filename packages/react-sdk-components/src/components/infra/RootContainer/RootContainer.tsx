@@ -1,6 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect, useContext, createElement } from "react";
 // import { Banner, ModalManager } from "@pega/cosmos-react-core";
-import PropTypes, { object } from "prop-types";
 import isEqual from 'lodash.isequal';
 // import ReAuthMessageModal from "../ReAuthenticationModal";
 import { Box, CircularProgress } from "@material-ui/core";
@@ -8,6 +7,18 @@ import createPConnectComponent from "../../../bridge/react_pconnect";
 import { LazyMap as LazyComponentMap } from "../../../components_map";
 import StoreContext from "../../../bridge/Context/StoreContext";
 import { isEmptyObject } from '../../helpers/common-utils';
+
+// import type { PConnProps } from '../../../types/PConnProps';
+
+// Can't use RootContainerProps until getChildren() typedef is fixes to not return an array of 'never'
+// interface RootContainerProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   renderingMode?: string,
+//   routingInfo: { type: string, accessedOrder: Array<any>, items: any },
+//   children: Array<any>,
+//   skeleton: any,
+//   httpMessages: Array<any>
+// }
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
 declare const PCore: any;
@@ -48,13 +59,13 @@ function getItemView(routingInfo, renderingMode) {
   return viewConfigs;
 }
 
-const RootContainer = (props) => {
+export default function RootContainer(props /* : RootContainerProps */) {
   const {
     getPConnect,
-    renderingMode,
-    children,
+    renderingMode = '',
+    children = [],
     skeleton,
-    httpMessages,
+    httpMessages = [],
     routingInfo
   } = props;
 
@@ -264,23 +275,3 @@ const RootContainer = (props) => {
     );
   }
 };
-
-RootContainer.defaultProps = {
-  getPConnect: null,
-  renderingMode: null,
-  children: null,
-  routingInfo: object
-};
-
-RootContainer.propTypes = {
-  getPConnect: PropTypes.func,
-  renderingMode: PropTypes.string,
-  routingInfo: PropTypes.shape({
-    type: PropTypes.string,
-    accessedOrder: PropTypes.array,
-    items: PropTypes.object
-  }),
-  children: PropTypes.arrayOf(PropTypes.oneOfType( [PropTypes.object, PropTypes.string ]))
-};
-
-export default RootContainer;
