@@ -10,7 +10,6 @@ interface CaseViewActionsMenuProps extends PConnProps {
   availableProcesses: Array<any>,
   caseTypeID: string,
   caseTypeName: string
-
 }
 
 
