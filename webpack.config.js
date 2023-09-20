@@ -191,6 +191,14 @@ module.exports = (env, argv) => {
               /node_modules/,
               /(ngfactory|ngstyle)\.js/
             ]
+        },
+        {
+          test: /\.(d.ts)$/,    /* latest react-sdk-components needs to ignore compiling .d.ts and .map files */
+          loader: 'null-loader',
+        },
+        {
+          test: /\.(map)$/,    /* latest react-sdk-components needs to ignore compiling .d.ts and .map files */
+          loader: 'null-loader',
         }
       ]
     },
