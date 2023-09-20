@@ -416,7 +416,7 @@ class AuthManager {
           resolve(this.#pegaAuth);
         });
       } else {
-        let idNextCheck:number|null = null;
+        let idNextCheck: ReturnType<typeof setInterval>;
         const fnCheckForAuthMgr = () => {
           if( !this.initInProgress ) {
             if( idNextCheck ) {
@@ -601,7 +601,8 @@ class AuthManager {
       const appAlias = serverConfig.appAlias;
       const appAliasPath = appAlias ? `/app/${appAlias}` : '';
       const arExcludedPortals = serverConfig['excludePortals'];
-      const headers:HeadersInit = {
+      // eslint-disable-next-line no-undef
+      const headers: HeadersInit = {
         Authorization: this.#authHeader===null ? '': this.#authHeader,
         'Content-Type': 'application/json'
       };
