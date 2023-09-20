@@ -7,7 +7,7 @@ import StoreContext from '../../bridge/Context/StoreContext';
 import createPConnectComponent from '../../bridge/react_pconnect';
 import { SdkConfigAccess } from '../../components/helpers/config_access';
 import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers';
-import { loginIfNecessary } from '../../components/helpers/authManager';
+import { loginIfNecessary, getAvailablePortals } from '../../components/helpers/authManager';
 import InvalidPortal from './InvalidPortal';
 
 import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
@@ -165,9 +165,9 @@ export default function FullPortal() {
       console.log('Loading portal selection screen');
       setPortalSelectionScreen(true);
       setDefaultPortalName(defaultPortal);
-      // Getting current user's access group's available portals list other than exluded portals (relies on Traditional DX APIs)
-      SdkConfigAccess.getAvailablePortals().then((portals: Array<string>) => {
-        setAvailablePortals(portals);
+      // Getting current user's access group's available portals list other than excluded portals (relies on Traditional DX APIs)
+      getAvailablePortals().then((portals) => {
+        setAvailablePortals(portals as Array<string>);
       });
     }
   }
