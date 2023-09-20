@@ -1,8 +1,14 @@
 import React from "react";
-// import PropTypes from "prop-types";
 import { Card, CardContent, CardHeader, Typography } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 // import { green } from "@material-ui/core/colors";
+
+// Followers does NOT have getPConnect. So, no need to extend from PConnProps
+interface FollowersProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>
+}
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,9 +25,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Followers(/* props */) {
+export default function Followers(props: FollowersProps) {
   const componentName = "Followers";
-  // const { children } = props;
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const { children } = props;
   const classes = useStyles();
 
   return (
@@ -33,11 +40,3 @@ export default function Followers(/* props */) {
       </Card>
     );
 }
-
-Followers.defaultProps = {
-  // children: []
-}
-
-Followers.propTypes = {
-  // children: PropTypes.arrayOf(PropTypes.node)
-};

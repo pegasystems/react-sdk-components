@@ -2,7 +2,16 @@ import React from 'react';
 import { Button } from '@material-ui/core';
 import './WssQuickCreate.css';
 
-export default function WssQuickCreate(props) {
+// WssQuickCreate is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface WssQuickCreateProps {
+  // If any, enter additional props that only exist on this component
+  heading: string,
+  actions?: Array<any>
+}
+
+
+export default function WssQuickCreate(props: WssQuickCreateProps) {
   const { heading, actions } = props;
 
   return (

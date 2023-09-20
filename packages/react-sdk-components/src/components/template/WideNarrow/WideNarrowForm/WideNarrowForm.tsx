@@ -2,7 +2,13 @@ import React from "react";
 
 import './WideNarrowForm.css';
 
-export default function WideNarrowForm(props) {
+// WideNarrowForm does NOT have getPConnect. So, no need to extend from PConnProps
+interface WideNarrowFormProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>
+}
+
+export default function WideNarrowForm(props: WideNarrowFormProps) {
   const {children} = props;
 
   return (

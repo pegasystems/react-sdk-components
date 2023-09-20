@@ -197,8 +197,14 @@ const processRelativeRef = function(inMatch, splitSep, arrTerms) {
           break;
 
         case overrideConstants.SDK_TOP_LEVEL_CONTENT:
-          //  concatenate rtString and frag (the frag will already start
+          //  concatenate retString and frag (the frag will already start
           //     with the top-level content - ex: components_map)
+          retString = `${retString}${relativePathReplacementPrefix}${frag}`;
+          break;
+
+        case overrideConstants.SDK_TYPES_DIR:
+          // if this fragment not empty and starts with one of our dir names,
+          //  concatenate retString and frag (the frag will already start with 'bridge')
           retString = `${retString}${relativePathReplacementPrefix}${frag}`;
           break;
 
@@ -325,6 +331,14 @@ const processImportLine = function (inMatch) {
     // console.log(` ----> hasTopLevelContent: ${inMatch}`);
 
     const replacementString = processRelativeRef(inMatch, splitWith, overrideConstants.SDK_TOP_LEVEL_CONTENT);
+    console.log(`  --> replacing with: ${replacementString}`);
+    iPathReplacements = iPathReplacements + 1;
+    return replacementString;
+  }
+
+  //  6. If inMatch does contain '../' followed by one of our typesDirs, then process as relative reference to types dir
+  if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_TYPES_DIR)) {
+    const replacementString = processRelativeRef(inMatch, splitWith, overrideConstants.SDK_TYPES_DIR);
     console.log(`  --> replacing with: ${replacementString}`);
     iPathReplacements = iPathReplacements + 1;
     return replacementString;

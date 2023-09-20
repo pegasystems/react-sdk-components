@@ -1,9 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import CaseSummaryFields from '../../designSystemExtension/CaseSummaryFields';
+import type { PConnProps } from '../../../types/PConnProps';
 
-export default function CaseSummary(props) {
+interface CaseSummaryProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+}
+
+
+export default function CaseSummary(props: CaseSummaryProps) {
   const { getPConnect, children } = props;
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
@@ -44,7 +49,3 @@ export default function CaseSummary(props) {
     </div>
   )
 }
-
-CaseSummary.propTypes = {
-  getPConnect: PropTypes.func.isRequired
-};

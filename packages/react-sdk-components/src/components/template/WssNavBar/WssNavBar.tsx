@@ -11,6 +11,23 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { logout } from '../../helpers/authManager';
 import './WssNavBar.css';
 
+// WssNavBar does NOT have getPConnect. So, no need to extend from PConnProps
+
+interface WssNavBarProps {
+  // If any, enter additional props that only exist on this component
+  appInfo: any,
+  navLinks: Array<any>
+  operator: { currentUserInitials: string },
+  navDisplayOptions: { alignment: string, position: string},
+  // eslint-disable-next-line react/no-unused-prop-types
+  portalName: string,
+  imageSrc: string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  fullImageSrc: string,
+   appName: any
+}
+
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex'
@@ -32,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function WssNavBar(props) {
+export default function WssNavBar(props: WssNavBarProps) {
   const { appInfo, navLinks, operator, navDisplayOptions } = props;
   const { alignment, position } = navDisplayOptions;
   const classes = useStyles();

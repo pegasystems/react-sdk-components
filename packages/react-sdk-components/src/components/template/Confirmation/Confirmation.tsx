@@ -2,16 +2,24 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-nested-ternary */
 import { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers';
 import ToDo from '../../widget/ToDo';
 import Details from '../Details/Details';
 import { Button, Card, makeStyles } from '@material-ui/core';
+import type { PConnProps } from '../../../types/PConnProps';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+// XX does NOT have getPConnect. So, no need to extend from PConnProps
 
-declare const PCore: typeof PCoreType;
+interface ConfirmationProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  datasource: { source: any },
+  label: string,
+  showLabel: boolean
+
+}
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -27,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Confirmation(props) {
+export default function Confirmation(props: ConfirmationProps) {
   const classes = useStyles();
   const CONSTS = PCore.getConstants();
   const [showConfirmView, setShowConfirmView] = useState(true);
@@ -89,16 +97,3 @@ export default function Confirmation(props) {
     </Card>
   ) : null;
 }
-
-Confirmation.defaultProps = {
-  datasource: undefined,
-  label: '',
-  showLabel: true
-};
-
-Confirmation.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  datasource: PropTypes.objectOf(PropTypes.any),
-  label: PropTypes.string,
-  showLabel: PropTypes.bool
-};

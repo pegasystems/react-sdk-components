@@ -7,6 +7,7 @@ import isDeepEqual from 'fast-deep-equal/react';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
@@ -36,7 +37,12 @@ const getDisplayFieldsMetaData = columnList => {
   return metaDataObj;
 };
 
-export default function AutoComplete(props) {
+interface AutoCompleteProps extends PConnProps {
+  // If any, enter additional props that only exist on AutoComplete here'
+}
+
+
+export default function AutoComplete(props:AutoCompleteProps) {
   const {
     getPConnect,
     label,
@@ -54,6 +60,7 @@ export default function AutoComplete(props) {
     hideLabel,
     onRecordChange
   } = props;
+
   const context = getPConnect().getContextName();
   let { listType, parameters, datasource = [], columns = [] } = props;
   const [inputValue, setInputValue] = useState('');
@@ -111,7 +118,7 @@ export default function AutoComplete(props) {
 
   useEffect(() => {
     if (listType === 'associated') {
-      setOptions(Utils.getOptionList(props, getPConnect().getDataObject()));
+      setOptions(Utils.getOptionList(props, getPConnect().getDataObject('')));
     }
   }, [theDatasource]);
 

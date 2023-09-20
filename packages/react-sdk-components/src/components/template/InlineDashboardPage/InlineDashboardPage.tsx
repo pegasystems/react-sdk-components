@@ -1,12 +1,23 @@
 import React from 'react';
 import { useMemo, Children, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import { buildFilterComponents } from '../../infra/DashboardFilter/filterUtils';
 import InlineDashboard from '../InlineDashboard';
+import type { PConnProps } from '../../../types/PConnProps';
 
-export default function InlineDashboardPage(props) {
-  const { children, getPConnect } = props;
+
+interface InlineDashboardPageProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  title: string,
+  icon?: string,
+  filterPosition?: string
+}
+
+
+export default function InlineDashboardPage(props: InlineDashboardPageProps) {
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const { children, getPConnect, icon = '', filterPosition = 'block-start'  } = props;
   const [filterComponents, setFilterComponents] = useState([]);
   const childArray = useMemo(() => {
     return Children.toArray(children);
@@ -26,16 +37,3 @@ export default function InlineDashboardPage(props) {
 
   return <InlineDashboard {...inlineProps} />;
 }
-
-InlineDashboardPage.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
-  getPConnect: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  icon: PropTypes.string,
-  filterPosition: PropTypes.string
-};
-
-InlineDashboardPage.defaultProps = {
-  icon: '',
-  filterPosition: 'block-start'
-};

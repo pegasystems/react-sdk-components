@@ -8,8 +8,13 @@ import {
 } from '@material-ui/core';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { PConnProps } from '../../../types/PConnProps';
 
-export default function CheckboxComponent(props) {
+interface CheckboxProps extends PConnProps {
+  // If any, enter additional props that only exist on Checkbox here
+}
+
+export default function CheckboxComponent(props: CheckboxProps) {
   const {
     getPConnect,
     label,
@@ -51,7 +56,7 @@ export default function CheckboxComponent(props) {
   };
 
   const handleBlur = event => {
-    thePConn.getValidationApi().validate(event.target.checked);
+    thePConn.getValidationApi().validate(event.target.checked, "");   // 2nd arg empty string until typedef marked correctly as optional
   };
 
   let theCheckbox = <Checkbox color='primary' disabled={disabled} />;

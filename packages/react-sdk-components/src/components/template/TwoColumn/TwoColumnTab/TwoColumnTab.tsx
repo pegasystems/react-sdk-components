@@ -1,7 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Grid, GridSize } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+
+// TwoColumnTab does NOT have getPConnect. So, no need to extend from PConnProps
+interface TwoColumnTabProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  templateCol?: string
+}
+
 
 const useStyles = makeStyles(() => ({
   colStyles: {
@@ -11,10 +18,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function TwoColumnTab(props) {
+export default function TwoColumnTab(props:TwoColumnTabProps) {
   const classes = useStyles();
 
- const {children, templateCol} = props;
+ const {children, templateCol = '1fr 1fr'} = props;
 
  if (children.length !== 2) {
   // eslint-disable-next-line no-console
@@ -44,12 +51,3 @@ export default function TwoColumnTab(props) {
    </Grid>
  )
 }
-
-TwoColumnTab.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
-  templateCol: PropTypes.string,
-};
-
-TwoColumnTab.defaultProps = {
-  templateCol: "1fr 1fr",
-};

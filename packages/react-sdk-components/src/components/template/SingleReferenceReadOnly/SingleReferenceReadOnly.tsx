@@ -1,18 +1,34 @@
-import PropTypes from "prop-types";
+// import type { PConnProps } from '../../../types/PConnProps';
 
-export default function SingleReferenceReadOnly(props) {
+// Need to fix an error noted in comment below before typedefs will work correctly
+// interface SingleReferenceReadOnlyProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   config: any,
+//   displayAs?: string,
+//   ruleClass?: string,
+//   label?: string,
+//   displayMode?: string,
+//   type: string,
+//   referenceType?: string,
+//   hideLabel?: boolean,
+//   dataRelationshipContext?: string
+// }
+
+
+export default function SingleReferenceReadOnly(props /*: SingleReferenceReadOnlyProps */) {
   const {
     getPConnect,
-    displayAs,
-    ruleClass,
-    label,
-    type,
-    displayMode,
-    referenceType,
-    hideLabel,
-    dataRelationshipContext,
+    displayAs = '',
+    ruleClass = '',
+    label = '',
+    type = '',
+    displayMode = '',
+    referenceType = '',
+    hideLabel = false,
+    dataRelationshipContext = null,
     config
   } = props;
+
   const editableComponents = ["AutoComplete", "SimpleTableSelect", "Dropdown"];
 
   if (editableComponents.includes(type)) {
@@ -28,6 +44,7 @@ export default function SingleReferenceReadOnly(props) {
     };
   }
 
+  // Need to correct typedefs for createComponent for typedefs to work in this file
   return getPConnect().createComponent({
     type: 'SemanticLink',
     config: {
@@ -40,27 +57,3 @@ export default function SingleReferenceReadOnly(props) {
     }
   });
 }
-
-SingleReferenceReadOnly.defaultProps = {
-  displayAs: "",
-  ruleClass: "",
-  label: "",
-  displayMode: "",
-  type: "",
-  referenceType: "",
-  hideLabel: false,
-  dataRelationshipContext: null
-};
-
-SingleReferenceReadOnly.propTypes = {
-  config: PropTypes.object,
-  getPConnect: PropTypes.func.isRequired,
-  displayAs: PropTypes.string,
-  ruleClass: PropTypes.string,
-  label: PropTypes.string,
-  displayMode: PropTypes.string,
-  type: PropTypes.string,
-  referenceType: PropTypes.string,
-  hideLabel: PropTypes.bool,
-  dataRelationshipContext: PropTypes.string
-};

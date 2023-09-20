@@ -4,13 +4,19 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
   value: string;
 }
 
-export default function Dropdown(props) {
+interface DropdownProps extends PConnProps {
+  // If any, enter additional props that only exist on Dropdown here
+}
+
+
+export default function Dropdown(props: DropdownProps) {
   const {
     getPConnect,
     label,
@@ -40,9 +46,9 @@ export default function Dropdown(props) {
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
   useEffect(() => {
-    const list = Utils.getOptionList(props, getPConnect().getDataObject());
+    const list = Utils.getOptionList(props, getPConnect().getDataObject(''));   // 1st arg empty string until typedef marked correctly
     const optionsList = [...list];
-    optionsList.unshift({ key: placeholder, value: thePConn.getLocalizedValue(placeholder) });
+    optionsList.unshift({ key: placeholder, value: thePConn.getLocalizedValue(placeholder, '', '') });   // 2nd and 3rd args empty string until typedef marked correctly
     setOptions(optionsList);
   }, [datasource]);
 
@@ -111,7 +117,7 @@ export default function Dropdown(props) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder={thePConn.getLocalizedValue(placeholder)}
+      placeholder={thePConn.getLocalizedValue(placeholder, "", "")}      // 2nd and 3rd args empty string until typedef marked correctly
       size='small'
       required={required}
       disabled={disabled}

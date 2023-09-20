@@ -2,8 +2,14 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import TextInput from '../TextInput';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { PConnProps } from '../../../types/PConnProps';
 
-export default function Integer(props) {
+interface IntegerProps extends PConnProps {
+  // If any, enter additional props that only exist on Integer here
+}
+
+
+export default function Integer(props: IntegerProps) {
   const {
     label,
     required,

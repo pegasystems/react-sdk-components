@@ -2,8 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import handleEvent from '../../helpers/event-utils';
+import type { PConnProps } from '../../../types/PConnProps';
 
-export default function TextInput(props) {
+interface TextInputProps extends PConnProps {
+  // If any, enter additional props that only exist on TextInput here
+}
+
+
+
+export default function TextInput(props: TextInputProps) {
   const {
     getPConnect,
     label,

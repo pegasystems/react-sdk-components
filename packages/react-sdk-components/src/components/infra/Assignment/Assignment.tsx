@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-
 import AssignmentCard from '../AssignmentCard';
 import MultiStep from '../MultiStep';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+import type { PConnProps } from '../../../types/PConnProps';
 
-declare const PCore: typeof PCoreType;
+interface AssignmentProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  itemKey: string,
+  isInModal: boolean,
+  banners: Array<any>
+  // eslint-disable-next-line react/no-unused-prop-types
+  actionButtons: Array<any>,
+}
 
 
-export default function Assignment(props) {
-  const { getPConnect, children, itemKey, isInModal, banners } = props;
+export default function Assignment(props: AssignmentProps) {
+  const { getPConnect, children, itemKey = '', isInModal = false, banners = [] } = props;
   const thePConn = getPConnect();
 
   const [bHasNavigation, setHasNavigation] = useState(false);
-  const [actionButtons, setActionButtons] = useState({});
+  const [actionButtons, setActionButtons] = useState([]);
   const [bIsVertical, setIsVertical] = useState(false);
   const [arCurrentStepIndicies, setArCurrentStepIndicies] = useState<Array<any>>([]);
   const [arNavigationSteps, setArNavigationSteps] = useState<Array<any>>([]);
@@ -72,7 +78,7 @@ export default function Assignment(props) {
 
       const oWorkItem = children[0].props.getPConnect();
       const oWorkData = oWorkItem.getDataObject();
-      const oData = thePConn.getDataObject();
+      const oData = thePConn.getDataObject('');  // 1st arg empty string until typedefs allow it to be optional
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
         const oCaseInfo = oData.caseInfo;
@@ -178,7 +184,7 @@ export default function Assignment(props) {
           const isLocalAction =
             thePConn.getCaseInfo().isLocalAction() ||
             (PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION &&
-              getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION));
+              getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION, ''));// 2nd arg empty string until typedefs allow it to be optional
           if (isAssignmentInCreateStage && isInModal && !isLocalAction) {
             const cancelPromise = cancelCreateStageAssignment(itemKey);
 
@@ -315,19 +321,3 @@ export default function Assignment(props) {
 //         <lit-toast></lit-toast>
 //     </div>`}
 // `;
-
-Assignment.propTypes = {
-  children: PropTypes.node.isRequired,
-  getPConnect: PropTypes.func.isRequired,
-  itemKey: PropTypes.string,
-  isInModal: PropTypes.bool,
-  banners: PropTypes.any
-  // actionButtons: PropTypes.object
-  // buildName: PropTypes.string
-};
-
-Assignment.defaultProps = {
-  itemKey: null,
-  isInModal: false
-  // buildName: null
-};

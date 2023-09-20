@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import './MultiStep.css';
 
@@ -7,8 +6,22 @@ import AssignmentCard from '../AssignmentCard';
 
 // import { useConstellationContext } from "../../bridge/Context/StoreContext";
 
-export default function MultiStep(props) {
-    const { getPConnect, children, itemKey, actionButtons, onButtonPress} = props;
+import type { PConnProps } from '../../../types/PConnProps';
+
+
+interface MultiStepProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  itemKey: string,
+  actionButtons: Array<any>,
+  onButtonPress: any,
+  bIsVertical: boolean,
+  arNavigationSteps: Array<any>
+}
+
+
+export default function MultiStep(props: MultiStepProps) {
+    const { getPConnect, children, itemKey = '', actionButtons, onButtonPress} = props;
     const { bIsVertical, arNavigationSteps } = props;
 
     // const svgCurrent = Utils.getImageSrc("circle-solid", Utils.getSDKStaticConentUrl());
@@ -207,19 +220,3 @@ export default function MultiStep(props) {
 
     )
   }
-
-  MultiStep.propTypes = {
-    children: PropTypes.node.isRequired,
-    getPConnect: PropTypes.func.isRequired,
-    itemKey: PropTypes.string,
-    actionButtons: PropTypes.object,
-    onButtonPress: PropTypes.func,
-    bIsVertical: PropTypes.bool,
-    // eslint-disable-next-line react/no-unused-prop-types
-    arCurrentStepIndicies: PropTypes.array,
-    arNavigationSteps: PropTypes.array
-  };
-
-  MultiStep.defaultProps = {
-    itemKey: null
-  };

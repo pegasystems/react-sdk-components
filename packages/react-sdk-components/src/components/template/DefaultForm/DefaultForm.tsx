@@ -1,11 +1,22 @@
 import React, { createElement } from 'react';
-import PropTypes from 'prop-types';
 import { getInstructions } from '../../helpers/template-utils';
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import connectToState from '../../helpers/state-utils';
 import { getKeyForMappedField, mapStateToProps } from './utils';
+// import type { PConnProps } from '../../../types/PConnProps';
+
 
 import './DefaultForm.css';
+
+
+// Can't use PConn props until proper props for getPConnect().getChildren()[0].getPConnect;
+// extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   children: Array<any>,
+//   NumCols: string
+
+// }
+
 
 const Child = connectToState(mapStateToProps)(props => {
   const { key, visibility, ...rest } = props;
@@ -13,8 +24,8 @@ const Child = connectToState(mapStateToProps)(props => {
   return createElement(createPConnectComponent(), { ...rest, key, visibility });
 });
 
-export default function DefaultForm(props) {
-  const { getPConnect, NumCols } = props;
+export default function DefaultForm(props /* : DefaultFormProps */) {
+  const { getPConnect, NumCols = '1' } = props;
   const instructions = getInstructions(getPConnect(), props.instructions);
 
   let divClass: string;
@@ -56,12 +67,3 @@ export default function DefaultForm(props) {
     </>
   );
 }
-
-DefaultForm.propTypes = {
-  // children: PropTypes.arrayOf(PropTypes.node).isRequired,
-  NumCols: PropTypes.string
-};
-
-DefaultForm.defaultProps = {
-  NumCols: '1'
-};

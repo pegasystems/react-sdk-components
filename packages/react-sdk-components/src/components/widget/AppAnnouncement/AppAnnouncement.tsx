@@ -1,7 +1,17 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Card, CardContent, CardHeader, Typography, CardActions, Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+
+// AppAnnouncement is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface AppAnnouncementProps {
+  // If any, enter additional props that only exist on this component
+  header?: string,
+  description?: string,
+  datasource?: any,
+  whatsnewlink?: string
+}
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AppAnnouncement = (props) => {
-  const { header, description, datasource, whatsnewlink } = props;
+export default function AppAnnouncement(props: AppAnnouncementProps) {
+  const { header = '', description = '', datasource = [], whatsnewlink = '' } = props;
   let details = [];
   if (datasource && datasource.source) {
     details = datasource.source.map((item) => {
@@ -47,21 +57,3 @@ const AppAnnouncement = (props) => {
     </Card>
   );
 };
-
-AppAnnouncement.propTypes = {
-  header: PropTypes.string,
-  description: PropTypes.string,
-  datasource: PropTypes.instanceOf(Object),
-  whatsnewlink: PropTypes.string,
-  // image: PropTypes.string
-};
-
-AppAnnouncement.defaultProps = {
-  header: "",
-  description: "",
-  // image: "",
-  datasource: [],
-  whatsnewlink: ""
-};
-
-export default AppAnnouncement;

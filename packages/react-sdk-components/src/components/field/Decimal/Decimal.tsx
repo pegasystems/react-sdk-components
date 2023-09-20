@@ -4,10 +4,16 @@ import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
 import { format } from "../../helpers/formatters";
+import type { PConnProps } from '../../../types/PConnProps';
 
 // Using control from: https://github.com/unicef/material-ui-currency-textfield
 
-export default function Decimal(props) {
+interface DecimalProps extends PConnProps {
+  // If any, enter additional props that only exist on Decimal here
+}
+
+
+export default function Decimal(props: DecimalProps) {
   const {
     getPConnect,
     label,

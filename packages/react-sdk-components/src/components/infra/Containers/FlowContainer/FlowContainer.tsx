@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
 import React, { useState, useEffect, useContext, createElement } from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
 import { Utils } from '../../../helpers/utils';
@@ -16,6 +15,20 @@ import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
 import { isEmptyObject } from '../../../helpers/common-utils';
 // Need to get correct implementation from component map for Assignment and ToDo
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+
+// import type { PConnProps } from '../../../../types/PConnProps';
+
+// Can't use PConnProps until getPConnect().getChildren() types are ok
+// interface FlowContainerProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   children?: Array<any>,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   name?: string,
+//   routingInfo?: any,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   pageMessages: Array<any>
+// }
 
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 3 errors)
@@ -49,7 +62,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function FlowContainer(props) {
+export default function FlowContainer(props /* : FlowContainerProps */) {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap("Assignment");
   const ToDo = getComponentFromMap("Todo");   // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
@@ -59,7 +72,7 @@ export default function FlowContainer(props) {
   const { TODO } = pCoreConstants;
   const todo_headerText = 'To do';
 
-  const { getPConnect, routingInfo } = props;
+  const { getPConnect, routingInfo,  } = props;
 
   const { displayOnlyFA } = useContext<any>(StoreContext);
 
@@ -129,7 +142,7 @@ export default function FlowContainer(props) {
   }
 
   function getTodoVisibility() {
-    const caseViewMode = getPConnect().getValue('context_data.caseViewMode');
+    const caseViewMode = getPConnect().getValue('context_data.caseViewMode', '');  // 2nd arg empty string until typedefs properly allow optional
     if (caseViewMode && caseViewMode === 'review') {
       return true;
     }
@@ -200,8 +213,8 @@ export default function FlowContainer(props) {
   function isCaseWideLocalAction() {
     const ourPConn = getPConnect();
 
-    const actionID = ourPConn.getValue(pCoreConstants.CASE_INFO.ACTIVE_ACTION_ID);
-    const caseActions = ourPConn.getValue(pCoreConstants.CASE_INFO.AVAILABLEACTIONS);
+    const actionID = ourPConn.getValue(pCoreConstants.CASE_INFO.ACTIVE_ACTION_ID, '');  // 2nd arg empty string until typedefs properly allow optional
+    const caseActions = ourPConn.getValue(pCoreConstants.CASE_INFO.AVAILABLEACTIONS, '');  // 2nd arg empty string until typedefs properly allow optional
     let bCaseWideAction = false;
     if (caseActions && actionID) {
       const actionObj = caseActions.find(caseAction => caseAction.ID === actionID);
@@ -215,7 +228,7 @@ export default function FlowContainer(props) {
   function hasChildCaseAssignments() {
     const ourPConn = getPConnect();
 
-    const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS);
+    const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS, '');  // 2nd arg empty string until typedefs properly allow optional
     // const allAssignments = [];
     // eslint-disable-next-line sonarjs/prefer-single-boolean-return
     if (childCases && childCases.length > 0) {
@@ -229,8 +242,8 @@ export default function FlowContainer(props) {
 
     let bHasAssignments = false;
     const assignmentsList: Array<any> = ourPConn.getValue(
-      pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS
-    );
+      pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''
+    );  // 2nd arg empty string until typedefs properly allow optional
     const isEmbedded = window.location.href.includes('embedded');
     let bAssignmentsForThisOperator = false;
     // 8.7 includes assignments in Assignments List that may be assigned to
@@ -267,8 +280,8 @@ export default function FlowContainer(props) {
 
     const { CASE_INFO: CASE_CONSTS } = pCoreConstants;
 
-    const caseActions = ourPConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS);
-    const activeActionID = ourPConn.getValue(CASE_CONSTS.ACTIVE_ACTION_ID);
+    const caseActions = ourPConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS, '');  // 2nd arg empty string until typedefs properly allow optionalv
+    const activeActionID = ourPConn.getValue(CASE_CONSTS.ACTIVE_ACTION_ID, '');  // 2nd arg empty string until typedefs properly allow optional
     const activeAction = caseActions?.find(action => action.ID === activeActionID);
     if (activeAction) {
       activeActionLabel = activeAction.name;
@@ -287,7 +300,7 @@ export default function FlowContainer(props) {
 
     let loadingInfo: any;
     try {
-      loadingInfo = thePConn.getLoadingStatus();
+      loadingInfo = thePConn.getLoadingStatus('');  // 1st arg empty string until typedefs properly allow optional
     } catch (ex) {
       // eslint-disable-next-line no-console
       console.error(`${thePConn.getComponentName()}: loadingInfo catch block`);
@@ -300,14 +313,14 @@ export default function FlowContainer(props) {
       // this.psService.sendMessage(false);
     }
 
-    const caseViewMode = thePConn.getValue('context_data.caseViewMode');
+    const caseViewMode = thePConn.getValue('context_data.caseViewMode', '');  // 2nd arg empty string until typedefs properly allow optional
     const { CASE_INFO: CASE_CONSTS } = pCoreConstants;
     if (caseViewMode && caseViewMode === 'review') {
       setTimeout(() => {
         // updated for 8.7 - 30-Mar-2022
         const todoAssignments = getToDoAssignments(thePConn);
         if (todoAssignments && todoAssignments.length > 0) {
-          setCaseInfoID(thePConn.getValue(CASE_CONSTS.CASE_INFO_ID));
+          setCaseInfoID(thePConn.getValue(CASE_CONSTS.CASE_INFO_ID, ''));  // 2nd arg empty string until typedefs properly allow optional
           setTodoDatasource({ source: todoAssignments });
         }
         setShowTodo(true);
@@ -329,7 +342,7 @@ export default function FlowContainer(props) {
     }
 
     // if have caseMessage show message and end
-    const theCaseMessages = localizedVal(thePConn.getValue('caseMessages'), localeCategory);
+    const theCaseMessages = localizedVal(thePConn.getValue('caseMessages', ''), localeCategory);  // 2nd arg empty string until typedefs properly allow optional
 
     if (theCaseMessages || !hasAssignments()) {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
@@ -478,22 +491,3 @@ export default function FlowContainer(props) {
     </div>
   );
 }
-
-FlowContainer.defaultProps = {
-  children: null,
-  getPConnect: null,
-  name: '',
-  routingInfo: null,
-  pageMessages: null
-};
-
-FlowContainer.propTypes = {
-  // eslint-disable-next-line react/no-unused-prop-types
-  children: PropTypes.node,
-  getPConnect: PropTypes.func,
-  // eslint-disable-next-line react/no-unused-prop-types
-  name: PropTypes.string,
-  routingInfo: PropTypes.objectOf(PropTypes.any),
-  // eslint-disable-next-line react/no-unused-prop-types
-  pageMessages: PropTypes.arrayOf(PropTypes.any)
-};

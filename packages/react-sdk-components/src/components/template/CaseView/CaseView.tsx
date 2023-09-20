@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 
 import React, { useState, useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
 import { Utils } from '../../helpers/utils';
 import { Card, CardHeader, Avatar, Typography, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +12,19 @@ import StoreContext from '../../../bridge/Context/StoreContext';
 import CaseViewActionsMenu from '../CaseViewActionsMenu';
 import VerticalTabs from '../../infra/VerticalTabs/VerticalTabs';
 import DeferLoad from '../../infra/DeferLoad';
+
+import type { PConnProps } from '../../../types/PConnProps';
+
+interface CaseViewProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  icon: string,
+  children: Array<any>,
+  subheader: string,
+  header: string,
+  showIconInHeader: boolean,
+  caseInfo: any,
+}
+
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
@@ -45,7 +57,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CaseView(props) {
+export default function CaseView(props: CaseViewProps) {
   const {
     getPConnect,
     icon,
@@ -283,14 +295,4 @@ CaseView.defaultProps = {
   caseInfo: {},
   showIconInHeader: true,
   getPConnect: null
-};
-
-CaseView.propTypes = {
-  icon: PropTypes.string,
-  children: PropTypes.arrayOf(PropTypes.node),
-  subheader: PropTypes.string.isRequired,
-  header: PropTypes.string.isRequired,
-  showIconInHeader: PropTypes.bool,
-  caseInfo: PropTypes.objectOf(PropTypes.any),
-  getPConnect: PropTypes.func
 };

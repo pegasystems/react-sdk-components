@@ -4,7 +4,10 @@
 const sdkCompSubDirs = ['designSystemExtension', 'field', 'helpers', 'infra', 'template', 'widget' ];
 
 // array of bridge dir (just an array for symmetry with sdkCompSubDirs)
-const sdkBridgeDir = [ 'bridge'];
+const sdkBridgeDir = [ 'bridge' ];
+
+// array of types dir (just an array for symmetry with sdkCompSubDirs)
+const sdkTypesDir = [ 'types' ];
 
 // array of top level content (@pega/react-sdk-components/lib) that we needs to be exposed
 const sdkTopLevelContent = [ 'components_map' ];
@@ -112,6 +115,7 @@ const sdkComponentLocationMap = {
 module.exports = {
   SDK_COMP_SUBDIRS: sdkCompSubDirs,
   SDK_BRIDGE_DIR: sdkBridgeDir,
+  SDK_TYPES_DIR: sdkTypesDir,
   SDK_TOP_LEVEL_CONTENT: sdkTopLevelContent,
   SDK_COMP_LOCATION_MAP: sdkComponentLocationMap
 }

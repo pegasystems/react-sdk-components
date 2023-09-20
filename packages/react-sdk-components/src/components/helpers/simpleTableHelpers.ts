@@ -1,7 +1,4 @@
 import { Utils } from './utils';
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
 
 
 export const TABLE_CELL = "SdkRenderer";
@@ -209,7 +206,7 @@ export const createMetaForTable = (fields, renderMode) => {
  * @param {number} index - index of the page list to add
  */
 export const getAddRowCallback = (pConnect, index) => {
-  return () => pConnect.getListActions().insert({}, index);
+  return () => pConnect.getListActions().insert({}, index, '');  // 3rd arg null until typedef marked correctly as optional
 };
 
 /**

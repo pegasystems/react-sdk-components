@@ -1,13 +1,16 @@
-import PropTypes from "prop-types";
 import React from "react";
+// import type { PConnProps } from '../../../types/PConnProps';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+// Can't use PConn props until proper props for createComponent in typedefs
+// interface MultiReferenceReadOnlyProps extends PConnProps {
+//   config: { referenceList: any, readonlyContextList: any },
+//   label: string,
+//   hideLabel: boolean
+// }
 
-declare const PCore: typeof PCoreType;
 
-
-export default function MultiReferenceReadOnly(props) {
-  const { getPConnect, label, hideLabel, config } = props;
+export default function MultiReferenceReadOnly(props /*: MultiReferenceReadOnlyProps */) {
+  const { getPConnect, label = '', hideLabel = false, config } = props;
   const { referenceList, readonlyContextList } = config;
 
   // When referenceList does not contain selected values, it should be replaced with readonlyContextList while calling SimpleTableManual
@@ -32,15 +35,3 @@ export default function MultiReferenceReadOnly(props) {
     <React.Fragment>{component}</React.Fragment>
   )
 }
-
-MultiReferenceReadOnly.defaultProps = {
-  label: "",
-  hideLabel: false
-};
-
-MultiReferenceReadOnly.propTypes = {
-  config: PropTypes.object.isRequired,
-  getPConnect: PropTypes.func.isRequired,
-  label: PropTypes.string,
-  hideLabel: PropTypes.bool
-};

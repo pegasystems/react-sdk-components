@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 // import { FieldGroup } from "@pega/cosmos-react-core";
 // import { LazyMap as LazyComponentMap } from "../../components_map";
 
@@ -10,6 +9,21 @@ import { getAllFields } from '../../helpers/template-utils';
 // Need to import any templates that we might render
 
 import './View.css';
+
+import type { PConnProps } from '../../../types/PConnProps';
+
+
+interface ViewProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  template?: string,
+  label?: string,
+  showLabel: boolean,
+  mode?: string,
+  title?: string
+}
+
+
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
@@ -28,14 +42,14 @@ const NO_HEADER_TEMPLATES = [
   'Confirmation'
 ];
 
-export default function View(props) {
+export default function View(props: ViewProps) {
   const { children, template, getPConnect, mode, visibility, name: pageName } = props;
-  let { label, showLabel = false } = props;
+  let { label = '', showLabel = false } = props;
 
   // Get the inherited props from the parent to determine label settings. For 8.6, this is only for embedded data form views
   // Putting this logic here instead of copy/paste in every Form template index.js
 
-  const inheritedProps = getPConnect().getInheritedProps();
+  const inheritedProps: any = getPConnect().getInheritedProps();  // try to remove any when getInheritedProps typedefs are fixed
   label = inheritedProps.label || label;
   showLabel = inheritedProps.showLabel || showLabel;
 
@@ -112,24 +126,6 @@ export default function View(props) {
   return null;
 }
 
-View.defaultProps = {
-  label: undefined,
-  showLabel: undefined,
-  mode: undefined
-};
-
-View.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.array
-  ]) /* array might be empty */,
-  template: PropTypes.string /* .isRequired */,
-  getPConnect: PropTypes.func.isRequired,
-  label: PropTypes.string,
-  showLabel: PropTypes.bool,
-  mode: PropTypes.string,
-  title: PropTypes.string
-};
 
 // Adapted from Constellation DX Component to add in additional props for some templates
 View.additionalProps = (state, getPConnect) => {

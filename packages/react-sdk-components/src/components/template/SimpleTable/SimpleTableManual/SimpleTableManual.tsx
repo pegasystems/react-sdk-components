@@ -31,9 +31,16 @@ import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+import type { PConnProps } from '../../../../types/PConnProps';
 
-declare const PCore: typeof PCoreType;
+interface SimpleTableManualProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  hideAddRow?: boolean,
+  hideDeleteRow?: boolean,
+  // eslint-disable-next-line react/no-unused-prop-types
+  disableDragDrop?: boolean
+}
+
 
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -70,7 +77,9 @@ let menuColumnLabel = '';
 
 const filterByColumns: Array<any> = [];
 let myRows: Array<any>;
-export default function SimpleTableManual(props) {
+
+
+export default function SimpleTableManual(props: SimpleTableManualProps) {
   const classes = useStyles();
   const {
     getPConnect,
@@ -235,7 +244,7 @@ export default function SimpleTableManual(props) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
     } else {
-      pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
+      pConn.getListActions().insert({ classID: contextClass }, referenceList.length, '');  // 3rd arg null until typedef marked correctly as optional
     }
   };
 
@@ -243,7 +252,7 @@ export default function SimpleTableManual(props) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().deleteEntry(index, pageReference);
     } else {
-      pConn.getListActions().deleteEntry(index);
+      pConn.getListActions().deleteEntry(index, '');  // 2nd arg empty string until typedef marked correctly as optional
     }
   };
 

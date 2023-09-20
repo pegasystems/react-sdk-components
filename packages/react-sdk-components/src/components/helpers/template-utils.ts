@@ -1,7 +1,4 @@
 //  This file is adapted from React DX components/template/utils.js
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
 
 
 export function getAllFields(pConnect: any) {

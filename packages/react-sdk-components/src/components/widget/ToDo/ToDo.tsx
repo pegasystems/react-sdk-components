@@ -1,7 +1,6 @@
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Utils } from '../../helpers/utils';
 import {
   Box,
@@ -26,11 +25,26 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
 import './ToDo.css';
 
-declare const PCore: typeof PCoreType;
+import type { PConnProps } from '../../../types/PConnProps';
+
+interface ToDoProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  datasource?: any,
+  myWorkList?: any,
+  // eslint-disable-next-line react/no-unused-prop-types
+  caseInfoID?: string,
+  headerText?: string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  itemKey?: string,
+  showTodoList?: boolean,
+  type?: string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  context?: string,
+  isConfirm?: boolean
+}
+
 
 const isChildCase = assignment => {
   return assignment.isChild;
@@ -71,8 +85,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ToDo(props) {
-  const { datasource, getPConnect, headerText, showTodoList, myWorkList, type, isConfirm } = props;
+export default function ToDo(props: ToDoProps) {
+  const {
+    getPConnect,
+    datasource = [],
+    headerText = 'To do',
+    showTodoList = true,
+    myWorkList = {},
+    type = 'worklist',
+    isConfirm = false
+  } = props;
 
   const CONSTS = PCore.getConstants();
 
@@ -151,7 +173,7 @@ export default function ToDo(props) {
     const sTarget = thePConn.getContainerName();
     const sTargetContainerName = sTarget;
 
-    const options = { containerName: sTargetContainerName };
+    const options = { containerName: sTargetContainerName, channelName: "" };
 
     if (classname === null || classname === '') {
       classname = thePConn.getCaseInfo().getClassName();
@@ -328,39 +350,3 @@ export default function ToDo(props) {
     </React.Fragment>
   );
 }
-
-ToDo.propTypes = {
-  datasource: PropTypes.instanceOf(Object),
-  myWorkList: PropTypes.instanceOf(Object),
-  // eslint-disable-next-line react/no-unused-prop-types
-  caseInfoID: PropTypes.string,
-  // buildName: PropTypes.string,
-  getPConnect: PropTypes.func.isRequired,
-  headerText: PropTypes.string,
-  // eslint-disable-next-line react/no-unused-prop-types
-  itemKey: PropTypes.string,
-  showTodoList: PropTypes.bool,
-  // target: PropTypes.string,
-  type: PropTypes.string,
-  // pageMessages: PropTypes.arrayOf(PropTypes.any),
-  // eslint-disable-next-line react/no-unused-prop-types
-  context: PropTypes.string,
-  // hideActionButtons: PropTypes.bool
-  isConfirm: PropTypes.bool
-};
-
-ToDo.defaultProps = {
-  caseInfoID: '',
-  datasource: [],
-  myWorkList: {},
-  // buildName: "",
-  headerText: 'To do',
-  itemKey: '',
-  showTodoList: true,
-  // target: "",
-  type: 'worklist',
-  // pageMessages: null,
-  context: '',
-  // hideActionButtons: false
-  isConfirm: false
-};

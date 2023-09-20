@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-shadow */
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Utils } from '../../helpers/utils';
 import Table from '@material-ui/core/Table';
@@ -40,6 +39,12 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { filterData } from '../../helpers/simpleTableHelpers';
 import './ListView.css';
 import useInit from './hooks'
+import type { PConnProps } from '../../../types/PConnProps';
+
+interface ListViewProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+}
+
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
@@ -57,7 +62,7 @@ let sortColumnId: any;
 
 const filterByColumns: Array<any> = [];
 
-export default function ListView(props) {
+export default function ListView(props: ListViewProps) {
   const { getPConnect, bInForm } = props;
   const { globalSearch, referenceList, rowClickAction, selectionMode, referenceType, payload, parameters, compositeKeys, showDynamicFields, presets } = props;
   const ref = useRef({}).current;
@@ -669,7 +674,7 @@ export default function ListView(props) {
     const { pxRefObjectClass, pzInsKey } = row;
     const sTarget = thePConn.getContainerName();
 
-    const options = { containerName: sTarget };
+    const options = { containerName: sTarget, channelName: '' };
 
     thePConn
       .getActionsApi()
@@ -911,7 +916,8 @@ export default function ListView(props) {
       }
       if (column.isAssignmentLink) {
         thePConn.getActionsApi().openAssignment(pzInsKey, pxObjClass, {
-          containerName: 'primary'
+          containerName: 'primary',
+          channelName: ''
         });
       } else {
         thePConn.getActionsApi().openWorkByHandle(pzInsKey, pxObjClass);
@@ -1308,10 +1314,3 @@ export default function ListView(props) {
     </>
   );
 }
-
-ListView.defaultProps = {
-};
-
-ListView.propTypes = {
-  getPConnect: PropTypes.func.isRequired
-};

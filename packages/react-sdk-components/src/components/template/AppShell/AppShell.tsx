@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Utils } from '../../helpers/utils';
 import Avatar from '@material-ui/core/Avatar';
@@ -9,6 +8,25 @@ import './AppShell.css';
 // AppShell can emit NavBar or WssNavBar
 import NavBar from '../../infra/NavBar';
 import WssNavBar from '../../template/WssNavBar';
+
+import type { PConnProps } from '../../../types/PConnProps';
+
+interface AppShellProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  showAppName: boolean,
+  pages: Array<{
+    pxPageViewIcon: string,
+    pyClassName: string,
+    pyLabel: string,
+    pyRuleName: string,
+    pyURLContent: string,
+
+  }>,
+  caseTypes?:Array<object>,
+  children?: Array<any>
+
+}
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,12 +51,12 @@ const useStyles = makeStyles(theme => ({
 declare const PCore: any;
 
 
-export default function AppShell(props) {
+export default function AppShell(props:AppShellProps) {
   const {
-    pages,
-    caseTypes,
+    pages = [],
+    caseTypes = [],
     showAppName,
-    children,
+    children = [],
     getPConnect,
     portalTemplate,
     portalName,
@@ -54,13 +72,13 @@ export default function AppShell(props) {
   const userName = envInfo.getOperatorName();
   const currentUserInitials = Utils.getInitials(userName);
   const appNameToDisplay = showAppName ? envInfo.getApplicationLabel() : '';
-  const portalClass = pConn.getValue('.classID');
+  const portalClass = pConn.getValue('.classID', '');  // 2nd arg empty string until typedef marked correctly
   const envPortalName = envInfo.getPortalName();
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
 
   const classes = useStyles();
   const actionsAPI = pConn.getActionsApi();
-  const localeReference = pConn.getValue('.pyLocaleReference');
+  const localeReference = pConn.getValue('.pyLocaleReference', '');  // 2nd arg empty string until typedef marked correctly
   const [imageBlobUrl, setImageBlobUrl] = useState(null);
   // useState for appName and mapChildren - note these are ONLY updated once (on component mount!)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
@@ -72,7 +90,7 @@ export default function AppShell(props) {
   useEffect(() => {
     setAppName(PCore.getEnvironmentInfo().getApplicationName());
 
-    const tempMap = pConn.getChildren().map((child, index) => {
+    const tempMap: any = pConn.getChildren()?.map((child: any, index) => {
       const theChildComp = child.getPConnect().getComponentName();
       const theKey = `.${index}`;
       return (
@@ -187,7 +205,7 @@ export default function AppShell(props) {
               '',
               `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()
             ),
-            onClick: links[0] && links[0].onClick ? links[0].onClick : undefined
+            onClick: links[0] && /* links[0].onClick ? */ links[0].onClick /* : undefined */
           }}
           navLinks={links.filter((link, index) => {
             return index !== 0;
@@ -205,6 +223,7 @@ export default function AppShell(props) {
     <NavContext.Provider value={{ open, setOpen }}>
       <div id='AppShell' className={classes.root}>
         <NavBar
+          getPConnect={getPConnect}
           pConn={getPConnect()}
           appName={localizedVal(
             appNameToDisplay,
@@ -219,16 +238,3 @@ export default function AppShell(props) {
     </NavContext.Provider>
   );
 }
-
-AppShell.defaultProps = {
-  pages: [],
-  caseTypes: [],
-  children: []
-};
-AppShell.propTypes = {
-  showAppName: PropTypes.bool /* .isRequired */,
-  pages: PropTypes.arrayOf(PropTypes.object),
-  caseTypes: PropTypes.arrayOf(PropTypes.object),
-  children: PropTypes.arrayOf(PropTypes.node),
-  getPConnect: PropTypes.func.isRequired
-};
