@@ -74,7 +74,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     let index = 0;
     const maxAttachmentSize = 5;
     for (const item of arFiles) {
-      if (!validateMaxSize(item, maxAttachmentSize)) {
+      if (!validateMaxSize(item, maxAttachmentSize.toString())) {
         item.error = true;
         item.meta = pConn.getLocalizedValue(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`, '', '');     // 2nd and 3rd args empty string until typedef marked correctly
       }

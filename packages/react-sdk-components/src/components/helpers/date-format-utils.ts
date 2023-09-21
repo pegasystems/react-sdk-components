@@ -7,7 +7,7 @@ export const dateFormatInfoDefault = {
   dateFormatMask: '__/__/____'
 };
 
-export const getDateFormatInfo = () => {
+export const getDateFormatInfo = (): typeof dateFormatInfoDefault => {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'CosmosFields';
   const theDateFormatInfo = dateFormatInfoDefault;

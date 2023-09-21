@@ -253,7 +253,7 @@ export default function FileUtility(props:FileUtilityProps) {
   function setNewFiles(arFiles) {
     let index = 0;
     for (const file of arFiles) {
-      if (!validateMaxSize(file, 5)) {
+      if (!validateMaxSize(file, '5')) {
         file.error = true;
         file.meta = "File is too big. Max allowed size is 5MB.";
       }
