@@ -43,6 +43,17 @@ import type { PConnProps } from '../../../types/PConnProps';
 
 interface ListViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
+  bInForm?: boolean,
+  globalSearch?: boolean,
+  referenceList?: Array<any>,
+  rowClickAction?: any,
+  selectionMode?: string,
+  referenceType?: string,
+  payload?: any,
+  parameters?: any,
+  compositeKeys?: any,
+  showDynamicFields?: boolean,
+  presets?: any
 }
 
 

@@ -16,8 +16,8 @@ interface ConfirmationProps extends PConnProps {
   children: Array<any>,
   datasource: { source: any },
   label: string,
-  showLabel: boolean
-
+  showLabel: boolean,
+  showTasks: boolean
 }
 
 

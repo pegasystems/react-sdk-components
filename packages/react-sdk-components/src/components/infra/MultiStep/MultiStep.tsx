@@ -16,7 +16,9 @@ interface MultiStepProps extends PConnProps {
   actionButtons: Array<any>,
   onButtonPress: any,
   bIsVertical: boolean,
-  arNavigationSteps: Array<any>
+  arNavigationSteps: Array<any>,
+  // eslint-disable-next-line react/no-unused-prop-types
+  arCurrentStepIndicies?: Array<any>
 }
 
 

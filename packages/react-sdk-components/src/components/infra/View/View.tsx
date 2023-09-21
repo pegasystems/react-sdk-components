@@ -20,7 +20,10 @@ interface ViewProps extends PConnProps {
   label?: string,
   showLabel: boolean,
   mode?: string,
-  title?: string
+  title?: string,
+  visibility?: boolean,
+  name?: string,
+  bInForm?: boolean
 }
 
 

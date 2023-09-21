@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import TextInput from '../TextInput';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 
 // Inspired by https://stackoverflow.com/questions/50823182/material-ui-remove-up-down-arrow-dials-from-textview
@@ -25,7 +25,7 @@ const useStyles = makeStyles((/* theme */) => ({
 }));
 
 
-interface PercentageProps extends PConnProps {
+interface PercentageProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Percentage here
 }
 

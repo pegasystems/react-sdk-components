@@ -11,10 +11,12 @@ import {
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-interface RadioButtonsProps extends PConnProps {
+interface RadioButtonsProps extends PConnFieldProps {
   // If any, enter additional props that only exist on RadioButtons here
+  inline: boolean,
+  fieldMetadata?: any
 }
 
 

@@ -42,7 +42,8 @@ interface NavBarProps extends PConnProps {
   // eslint-disable-next-line react/no-unused-prop-types
   appName?: string,
   pages?: Array<any>,
-  caseTypes: Array<any>
+  caseTypes: Array<any>,
+  pConn?: any
 }
 
 

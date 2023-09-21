@@ -4,10 +4,10 @@ import TextInput from '../TextInput';
 import dayjs from 'dayjs';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 
-interface TimeProps extends PConnProps {
+interface TimeProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Time here
 }
 
@@ -17,7 +17,7 @@ export default function Time(props: TimeProps) {
     label,
     required,
     disabled,
-    value,
+    value = '',
     validatemessage,
     status,
     onChange,

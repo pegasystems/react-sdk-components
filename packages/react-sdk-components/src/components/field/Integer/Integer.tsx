@@ -2,9 +2,9 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import TextInput from '../TextInput';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-interface IntegerProps extends PConnProps {
+interface IntegerProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Integer here
 }
 

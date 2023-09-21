@@ -3,10 +3,10 @@ import { TextField, InputAdornment } from '@material-ui/core';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import TextInput from '../TextInput';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 
-interface EmailProps extends PConnProps {
+interface EmailProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Date here
 }
 

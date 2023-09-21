@@ -39,9 +39,17 @@ interface SimpleTableManualProps extends PConnProps {
   hideDeleteRow?: boolean,
   // eslint-disable-next-line react/no-unused-prop-types
   disableDragDrop?: boolean
+  referenceList?: Array<any>,
+  children?: Array<any>,
+  renderMode?: string,
+  presets?: Array<any>,
+  label?: string,
+  showLabel?: boolean,
+  dataPageName?: string,
+  contextClass?: string,
+  propertyLabel?: string,
+  fieldMetadata?: any
 }
-
-
 
 const useStyles = makeStyles((/* theme */) => ({
   label: {
