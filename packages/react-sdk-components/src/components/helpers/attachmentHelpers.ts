@@ -1,6 +1,6 @@
 import download from 'downloadjs';
 
-export const validateMaxSize = (fileObj, maxSizeInMB) => {
+export const validateMaxSize = (fileObj: any, maxSizeInMB: string): boolean => {
   const fileSize = (fileObj.size / 1048576).toFixed(2);
   return parseFloat(fileSize) < parseFloat(maxSizeInMB);
 };
@@ -15,7 +15,7 @@ export const fileDownload = (data, fileName, ext) => {
   }
 };
 
-export const getIconFromFileType = (fileType) => {
+export const getIconFromFileType = (fileType): string => {
   let icon = 'document-doc';
   if (!fileType) return icon;
   if (fileType.startsWith('audio')) {
@@ -42,7 +42,7 @@ export const getIconFromFileType = (fileType) => {
   return icon;
 };
 
-export const getIconForAttachment = (inThis:any , attachment:any) => {
+export const getIconForAttachment = (inThis:any , attachment:any): string => {
   let icon;
   switch (attachment.type) {
     case "FILE":
@@ -57,7 +57,7 @@ export const getIconForAttachment = (inThis:any , attachment:any) => {
   return icon;
 };
 
-export const buildFilePropsFromResponse = (respObj) => {
+export const buildFilePropsFromResponse = (respObj): { props: { meta: string, name: string, icon: string}, responseProps: any} => {
   return {
     props: {
       meta: `${respObj.pyCategoryName}, ${respObj.pxCreateOperator}`,

@@ -7,7 +7,9 @@ interface AssignmentCardProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   children: Array<any>,
   actionButtons: any,
-  onButtonPress: any
+  onButtonPress: any,
+  // eslint-disable-next-line react/no-unused-prop-types
+  itemKey?: string
 }
 
 

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import handleEvent from '../../helpers/event-utils';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-interface TextInputProps extends PConnProps {
+interface TextInputProps extends PConnFieldProps {
   // If any, enter additional props that only exist on TextInput here
+  fieldMetadata?: any
 }
 
 
@@ -34,7 +35,7 @@ export default function TextInput(props: TextInputProps) {
 
   const helperTextToDisplay = validatemessage || helperText;
 
-  const [inputValue, setInputValue] = useState();
+  const [inputValue, setInputValue] = useState('');
   const maxLength = fieldMetadata?.maxLength;
 
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly

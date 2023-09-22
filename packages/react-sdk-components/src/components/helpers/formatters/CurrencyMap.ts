@@ -1,29 +1,32 @@
 /* eslint-disable no-template-curly-in-string */
-const EURO = {
+
+type CurrencyMapType = { name: string, symbolFormat: string, currencyCode: string}
+
+const EURO: CurrencyMapType = {
   name: "Euro (EUR)",
   symbolFormat: "\u20AC{#}",
   currencyCode: "EUR {#}"
 };
 
-const USD = {
+const USD: CurrencyMapType = {
   name: "U.S. Dollar (USD)",
   symbolFormat: "${#}",
   currencyCode: "USD {#}"
 };
 
-const XAF = {
+const XAF: CurrencyMapType = {
   name: "CFA Franc (BEAC) (XAF)",
   symbolFormat: "XAF {#}",
   currencyCode: "XAF {#}"
 };
 
-const XCD = {
+const XCD: CurrencyMapType = {
   name: "East Caribbean Dollar (XCD)",
   symbolFormat: "${#}",
   currencyCode: "XCD {#}"
 };
 
-const XPF = {
+const XPF: CurrencyMapType = {
   name: "Pacific Franc (XPF)",
   symbolFormat: "₣{#}",
   currencyCode: "XPF {#}"

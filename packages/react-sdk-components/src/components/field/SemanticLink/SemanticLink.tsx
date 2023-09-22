@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 
 /* although this is called the SemanticLink component, we are not yet displaying as a
@@ -40,12 +40,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-interface SemanticLinkProps extends PConnProps {
+interface SemanticLinkProps extends PConnFieldProps {
   // If any, enter additional props that only exist on SemanticLink here
   // from previous PropTypes
   text: string,
-  displayMode?: string,
-  label?: string,
 }
 
 export default function SemanticLink(props: SemanticLinkProps) {

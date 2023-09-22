@@ -12,7 +12,9 @@ interface FieldGroupTemplateProps extends PConnProps {
   renderMode?: string,
   heading?: string,
   lookForChildInConfig?: boolean,
-  displayMode?: string
+  displayMode?: string,
+  fieldHeader?: string,
+  allowTableEdit: boolean
 }
 
 

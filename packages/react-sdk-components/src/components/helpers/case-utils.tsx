@@ -1,7 +1,8 @@
 import React from 'react';
 import AlertBanner from '../designSystemExtension/AlertBanner';
 
-declare let PCore: any;
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
+declare const PCore: any;
 
 /**
  * Function that accepts array of messages as input and group them by their type and returns the resulting object

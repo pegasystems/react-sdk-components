@@ -7,7 +7,7 @@ export const DELETE_ICON = "DeleteIcon";
 // BUG-615253: Workaround for autosize in table with lazy loading components
 /* istanbul ignore next */
 function getFieldWidth(field, label) {
-  let width;
+  let width: number;
   switch (field.type) {
     case "Time":
       width = 150;
@@ -64,7 +64,7 @@ export const getContext = (thePConn) => {
 };
 
 export const populateRowKey = (rawData) => {
-  return rawData.map((row, index) => {
+  return rawData.map((row: any, index: number) => {
     return { ...row, index };
   });
 };

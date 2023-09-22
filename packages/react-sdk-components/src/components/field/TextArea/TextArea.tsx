@@ -1,10 +1,11 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-interface TextAreaProps extends PConnProps {
+interface TextAreaProps extends PConnFieldProps {
   // If any, enter additional props that only exist on TextArea here
+  fieldMetadata?: any
 }
 
 

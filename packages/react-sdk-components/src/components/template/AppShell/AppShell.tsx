@@ -23,8 +23,11 @@ interface AppShellProps extends PConnProps {
 
   }>,
   caseTypes?:Array<object>,
-  children?: Array<any>
-
+  children?: Array<any>,
+  portalTemplate: string,
+  portalName: string,
+  portalLogo : string,
+  navDisplayOptions: { alignment: string, position: string }
 }
 
 

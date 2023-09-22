@@ -20,28 +20,28 @@ interface UserReferenceProps extends PConnProps {
   testId?: string,
   placeholder?: string,
   helperText?: string,
-  disabled?: boolean | string,
-  readOnly?: boolean | string,
-  required?: boolean | string,
+  disabled?: boolean,
+  readOnly?: boolean,
+  required?: boolean,
   validatemessage?: string,
   showAsFormattedText?: boolean,
   additionalProps?: object,
   hideLabel?: boolean,
   variant?: string
-
+  onChange?: any
 }
 
 
 const UserReference = (props: UserReferenceProps) => {
   const {
-    label = null,
-    displayAs = null,
+    label = '',
+    displayAs = '',
     getPConnect,
-    value = null,
-    testId = null,
-    helperText=null,
-    validatemessage = null,
-    placeholder = null,
+    value = '',
+    testId = '',
+    helperText= '',
+    validatemessage = '',
+    placeholder = '',
     showAsFormattedText = false,
     additionalProps = {},
     hideLabel = false,

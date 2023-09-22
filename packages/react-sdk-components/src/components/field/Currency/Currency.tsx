@@ -5,12 +5,13 @@ import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { format } from "../../helpers/formatters";
 import { getCurrencyCharacters, getCurrencyOptions } from './currency-utils';
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 // Using control from: https://github.com/unicef/material-ui-currency-textfield
 
-interface CurrrencyProps extends PConnProps {
+interface CurrrencyProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Currency here
+  currencyISOCode?: string
 }
 
 
@@ -51,7 +52,7 @@ export default function Currency(props:CurrrencyProps) {
     'data-test-id': testId
   };
 
-  const [currValue, setCurrValue] = useState();
+  const [currValue, setCurrValue] = useState('');
   const [theCurrSym, setCurrSym] = useState("$");
   const [theCurrDec, setCurrDec] = useState(".");
   const [theCurrSep, setCurrSep] = useState(",");

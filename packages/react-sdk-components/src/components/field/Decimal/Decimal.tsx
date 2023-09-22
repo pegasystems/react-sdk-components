@@ -4,12 +4,15 @@ import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
 import { format } from "../../helpers/formatters";
-import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 // Using control from: https://github.com/unicef/material-ui-currency-textfield
 
-interface DecimalProps extends PConnProps {
+interface DecimalProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Decimal here
+  currencyISOCode?: string,
+  decimalPrecision?: number,
+  showGroupSeparators?: string
 }
 
 
@@ -38,7 +41,7 @@ export default function Decimal(props: DecimalProps) {
   const propName = pConn.getStateProps().value;
   const helperTextToDisplay = validatemessage || helperText;
 
-  const [decValue, setDecimalvalue] = useState();
+  const [decValue, setDecimalvalue] = useState('');
   const [theCurrDec, setCurrDec] = useState(".");
   const [theCurrSep, setCurrSep] = useState(",");
 
