@@ -17,8 +17,12 @@ class PegaAuth {
         this.crypto = window.crypto;
         this.subtle = window.crypto.subtle;
       }
-      if (Object.keys(this.#config).length > 0 && !this.#config.serverType) {
-        this.#config.serverType = 'infinity';
+      if (Object.keys(this.#config).length > 0) {
+        if (!this.#config.serverType) {
+          this.#config.serverType = 'infinity';
+        }
+      } else {
+        throw new Error('invalid config settings');
       }
     }
 
@@ -73,21 +77,24 @@ class PegaAuth {
 
     async #importNodeLibs() {
       // Also current assumption is using Node 18 or better
-      return Promise.all([
-        this.#importSingleLib('node-fetch', 'fetch'),
-        this.#importSingleLib('open', 'open'),
-        this.#importSingleLib('node:crypto', 'crypto', true),
-        this.#importSingleLib('node:https', 'https'),
-        this.#importSingleLib('node:http', 'http'),
-        this.#importSingleLib('node:fs', 'fs')
-      ]).then(() => {
-        this.subtle = this.crypto?.subtle || this.crypto.webcrypto.subtle;
-        if (typeof fetch === 'undefined' && this.fetch) {
-          /* eslint-disable-next-line no-global-assign */
-          fetch = this.fetch;
-        }
-      });
-    }
+    // With 18.3 there is now a native fetch (but may want to force use of node-fetch)
+    const useNodeFetch = !!this.#config.useNodeFetch;
+
+    return Promise.all([
+      this.#importSingleLib('node-fetch', 'fetch', useNodeFetch),
+      this.#importSingleLib('open', 'open'),
+      this.#importSingleLib('node:crypto', 'crypto', true),
+      this.#importSingleLib('node:https', 'https'),
+      this.#importSingleLib('node:http', 'http'),
+      this.#importSingleLib('node:fs', 'fs')
+    ]).then(() => {
+      this.subtle = this.crypto?.subtle || this.crypto.webcrypto.subtle;
+      if ((typeof fetch === 'undefined' || useNodeFetch) && this.fetch) {
+        /* eslint-disable-next-line no-global-assign */
+        fetch = this.fetch;
+      }
+    });
+  }
 
     // For PKCE the authorize includes a code_challenge & code_challenge_method as well
     async #buildAuthorizeUrl(state) {
@@ -149,7 +156,9 @@ class PegaAuth {
         const cc = await this.#getCodeChallenge(this.#config.codeVerifier);
         pkceArgs = `&code_challenge=${cc}&code_challenge_method=S256`;
       }
-      return `${authorizeUri}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&state=${this.#config.state}${pkceArgs}${moreAuthArgs}`;
+      return `${authorizeUri}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&state=${
+        this.#config.state
+      }${pkceArgs}${moreAuthArgs}`;
     }
 
     async login() {
@@ -773,9 +782,14 @@ class PegaAuth {
      * Return agent value for POST commands
      */
     #getAgent() {
-      return this.isNode && this.#config.ignoreInvalidCerts
-        ? new this.https.Agent({ rejectUnauthorized: false })
-        : undefined;
+      if (this.isNode && this.#config.ignoreInvalidCerts) {
+        const options = { rejectUnauthorized: false };
+        if (this.#config.legacyTLS) {
+          options.secureOptions = this.crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT;
+        }
+        return new this.https.Agent(options);
+      }
+      return undefined;
     }
   }
 
