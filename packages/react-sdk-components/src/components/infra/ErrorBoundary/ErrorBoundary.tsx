@@ -38,7 +38,7 @@ export default function ErrorBoundary(props: ErrorBoundaryProps) {
     Raw meta data for the component:`, localeCategory)} ${JSON.stringify(pConn.getRawMetadata())}`);
   }
 
-  if (pConn.getConfigProps().type === "page") {
+  if (pConn.getConfigProps()["type"] === "page") {
     return (
       theErrorDiv
     );

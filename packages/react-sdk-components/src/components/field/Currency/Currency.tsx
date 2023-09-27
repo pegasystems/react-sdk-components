@@ -35,7 +35,7 @@ export default function Currency(props:CurrrencyProps) {
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps().value;
+  const propName = pConn.getStateProps()["value"];
   const helperTextToDisplay = validatemessage || helperText;
 
   // console.log(`Currency: label: ${label} value: ${value}`);

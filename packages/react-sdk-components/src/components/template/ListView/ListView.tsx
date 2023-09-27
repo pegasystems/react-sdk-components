@@ -39,22 +39,23 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { filterData } from '../../helpers/simpleTableHelpers';
 import './ListView.css';
 import useInit from './hooks'
-import type { PConnProps } from '../../../types/PConnProps';
+// import type { PConnProps } from '../../../types/PConnProps';
 
-interface ListViewProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  bInForm?: boolean,
-  globalSearch?: boolean,
-  referenceList?: Array<any>,
-  rowClickAction?: any,
-  selectionMode?: string,
-  referenceType?: string,
-  payload?: any,
-  parameters?: any,
-  compositeKeys?: any,
-  showDynamicFields?: boolean,
-  presets?: any
-}
+// ListViewProps can't be used until getComponentConfig is NOT private
+// interface ListViewProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   bInForm?: boolean,
+//   globalSearch?: boolean,
+//   referenceList?: Array<any>,
+//   rowClickAction?: any,
+//   selectionMode?: string,
+//   referenceType?: string,
+//   payload?: any,
+//   parameters?: any,
+//   compositeKeys?: any,
+//   showDynamicFields?: boolean,
+//   presets?: any
+// }
 
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -73,7 +74,7 @@ let sortColumnId: any;
 
 const filterByColumns: Array<any> = [];
 
-export default function ListView(props: ListViewProps) {
+export default function ListView(props /* : ListViewProps */) {
   const { getPConnect, bInForm } = props;
   const { globalSearch, referenceList, rowClickAction, selectionMode, referenceType, payload, parameters, compositeKeys, showDynamicFields, presets } = props;
   const ref = useRef({}).current;
@@ -952,8 +953,8 @@ export default function ListView(props: ListViewProps) {
 
   function _listTitle() {
     const defaultTitle = 'List';
-    let title = resolvedConfigProps.title ? resolvedConfigProps.title : defaultTitle;
-    const inheritedProps = resolvedConfigProps?.inheritedProps;
+    let title = resolvedConfigProps["title"] ? resolvedConfigProps["title"] : defaultTitle;
+    const inheritedProps = resolvedConfigProps?.["inheritedProps"];
 
     // Let any title in resolvedConfigProps that isn't the default take precedence
     //  but only look in inheritedProps if they exist

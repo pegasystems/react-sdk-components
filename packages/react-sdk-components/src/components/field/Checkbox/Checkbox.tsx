@@ -54,9 +54,9 @@ export default function CheckboxComponent(props: CheckboxProps) {
 
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
-  const { caption } = theConfigProps;
+  const caption = theConfigProps["caption"];
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = thePConn.getStateProps()["value"];
 
   const [checked, setChecked] = useState(false);
   useEffect(() => {

@@ -11,16 +11,17 @@ import {
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+// import type { PConnFieldProps } from '../../../types/PConnProps';
 
-interface RadioButtonsProps extends PConnFieldProps {
-  // If any, enter additional props that only exist on RadioButtons here
-  inline: boolean,
-  fieldMetadata?: any
-}
+// Can't use RadioButtonProps until getLocaleRuleNameFromKeys is NOT private
+// interface RadioButtonsProps extends PConnFieldProps {
+//   // If any, enter additional props that only exist on RadioButtons here
+//   inline: boolean,
+//   fieldMetadata?: any
+// }
 
 
-export default function RadioButtons(props: RadioButtonsProps) {
+export default function RadioButtons(props /* : RadioButtonsProps */ ) {
   const {
     getPConnect,
     label,
@@ -40,7 +41,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = thePConn.getStateProps()["value"];
   const helperTextToDisplay = validatemessage || helperText;
   const className = thePConn.getCaseInfo().getClassName();
 

@@ -1,32 +1,18 @@
 import React from "react";
 
-import type { PConnProps } from '../../../types/PConnProps';
+// import type { PConnProps } from '../../../types/PConnProps';
 
-interface ReferenceProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  visibility?: boolean,
-  context?: string,
-  readOnly?: boolean,
-  displayMode?: string
-}
-
-// Reference.defaultProps = {
-//   visibility: true,
-//   context: null,
-//   readOnly: false,
-//   displayMode: null
-// };
-
-// Reference.propTypes = {
-//   getPConnect: PropTypes.func.isRequired,
-//   visibility: PropTypes.bool,
-//   context: PropTypes.string,
-//   readOnly: PropTypes.bool,
-//   displayMode: PropTypes.string
-// };
+// ReferenceProps can't be used until getComponentConfig() is NOT private
+// interface ReferenceProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   visibility?: boolean,
+//   context?: string,
+//   readOnly?: boolean,
+//   displayMode?: string
+// }
 
 
-export default function Reference(props: ReferenceProps) {
+export default function Reference(props /* : ReferenceProps */) {
   const { visibility = true, context = '', getPConnect, readOnly = false, displayMode = '' } = props;
 
   const pConnect = getPConnect();

@@ -1,18 +1,18 @@
 import React from 'react';
 import FieldGroupTemplate from '../../FieldGroupTemplate';
 import SimpleTableManual from '../SimpleTableManual';
-import type { PConnProps } from '../../../../types/PConnProps';
+// import type { PConnProps } from '../../../../types/PConnProps';
 
-interface SimpleTableProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  multiRecordDisplayAs: string,
-  allowTableEdit: boolean,
-  contextClass: any
-}
+// Can't use SimpleTableProps until getComponentConfig() and getFieldMetadata() are NOT private
+// interface SimpleTableProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   multiRecordDisplayAs: string,
+//   allowTableEdit: boolean,
+//   contextClass: any
+// }
 
 
-
-export default function SimpleTable(props: SimpleTableProps) {
+export default function SimpleTable(props /* : SimpleTableProps */) {
   const { getPConnect, multiRecordDisplayAs, allowTableEdit } = props;
 
   let { contextClass } = props;

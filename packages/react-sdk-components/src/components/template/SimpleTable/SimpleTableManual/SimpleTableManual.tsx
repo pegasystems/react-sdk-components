@@ -150,7 +150,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   //    config.datasource (ex: "@ASSOCIATED .DeclarantChoice")
   //  Neither of these appear in the resolved props
 
-  const rawConfig = rawMetadata?.config;
+  const rawConfig = rawMetadata?.["config"];
   const rawFields =
     rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
 
