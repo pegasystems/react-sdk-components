@@ -1,5 +1,10 @@
 class PegaAuth {
     #config = null;
+    // Properties stored in config structure which need to survive a browser reload
+    // (If passing in a sessionStorage key....library updates the session storage when these are updated
+    //  otherwise, the values are only updated within the passed in config object instance and the
+    //  library consumer should make sure to persist on unload and pass these in on reload construction)
+    #stateProps = ['codeVerifier', 'state', 'sessionIndex', 'sessionIndexAttempts', 'acRedirectUri'];
 
     constructor(ssKeyConfig) {
       if (typeof ssKeyConfig === 'string') {
@@ -55,6 +60,12 @@ class PegaAuth {
       }
     }
 
+    // Used by library consumer to retrieve array of key properties to persist across page transitions/reloads
+    //  by library consumer
+    getStateProps() {
+      return this.#stateProps;
+    }
+
     async #importSingleLib(libName, libProp, bLoadAlways = false) {
       // eslint-disable-next-line no-undef
       if (!bLoadAlways && typeof (this.isNode ? global : window)[libProp] !== 'undefined') {
@@ -77,24 +88,24 @@ class PegaAuth {
 
     async #importNodeLibs() {
       // Also current assumption is using Node 18 or better
-    // With 18.3 there is now a native fetch (but may want to force use of node-fetch)
-    const useNodeFetch = !!this.#config.useNodeFetch;
+      // With 18.3 there is now a native fetch (but may want to force use of node-fetch)
+      const useNodeFetch = !!this.#config.useNodeFetch;
 
-    return Promise.all([
-      this.#importSingleLib('node-fetch', 'fetch', useNodeFetch),
-      this.#importSingleLib('open', 'open'),
-      this.#importSingleLib('node:crypto', 'crypto', true),
-      this.#importSingleLib('node:https', 'https'),
-      this.#importSingleLib('node:http', 'http'),
-      this.#importSingleLib('node:fs', 'fs')
-    ]).then(() => {
-      this.subtle = this.crypto?.subtle || this.crypto.webcrypto.subtle;
-      if ((typeof fetch === 'undefined' || useNodeFetch) && this.fetch) {
-        /* eslint-disable-next-line no-global-assign */
-        fetch = this.fetch;
-      }
-    });
-  }
+      return Promise.all([
+        this.#importSingleLib('node-fetch', 'fetch', useNodeFetch),
+        this.#importSingleLib('open', 'open'),
+        this.#importSingleLib('node:crypto', 'crypto', true),
+        this.#importSingleLib('node:https', 'https'),
+        this.#importSingleLib('node:http', 'http'),
+        this.#importSingleLib('node:fs', 'fs')
+      ]).then(() => {
+        this.subtle = this.crypto?.subtle || this.crypto.webcrypto.subtle;
+        if ((typeof fetch === 'undefined' || useNodeFetch) && this.fetch) {
+          /* eslint-disable-next-line no-global-assign */
+          fetch = this.fetch;
+        }
+      });
+    }
 
     // For PKCE the authorize includes a code_challenge & code_challenge_method as well
     async #buildAuthorizeUrl(state) {
