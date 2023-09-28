@@ -4,10 +4,6 @@
 // It utilizes a JS Class and private members to protect any sensitive tokens
 //  and token obfuscation routines
 
-// Properties stored in config info (only ones needed to survive a browser reload
-// (and not ones which can be recalculated on a reload)
-// codeVerifier, state, sessionIndex, sessionIndexAttempts
-
 import { isEmptyObject } from './common-utils';
 import { getSdkConfig, SdkConfigAccess } from './config_access';
 import PegaAuth from './auth';
@@ -26,7 +22,9 @@ class AuthManager {
   #ssKeyState:string = `${this.#ssKeyPrefix}State`;
   #authConfig:any = {};
   #authHeader:string|null = null;
-  #SIStateProps = ['codeVerifier', 'state', 'sessionIndex', 'sessionIndexAttempts', 'acRedirectUri'];
+  // Will retrieve this from PegaAuth library after instance construction
+  // (authRedirectCallack expects 'state' is one of these)
+  #SIStateProps = [];
 
   // state that should be persisted across loads
   state:any = {usePopup:false, noInitialRedirect:false};
@@ -85,16 +83,6 @@ class AuthManager {
       const bClear = false;
       window.sessionStorage.setItem(ssKey, bClear ? JSON.stringify(obj) : this.#transformer(ssKey, JSON.stringify(obj), true));
     }
-  }
-
-  // helper routine to store/update JSON objects within a session storage key
-  // one stores config (plus sessionIndex) and other stores tokenInfo
-  #updateStorage(ssKey, obj) {
-    const objInKey = this.#getStorage(ssKey);
-    Object.keys(obj).forEach((prop) => {
-      objInKey[prop] = obj[prop];
-    });
-    this.#setStorage(ssKey, objInKey);
   }
 
   #calcFoldSpot(s:string) {
@@ -189,14 +177,17 @@ class AuthManager {
   }
 
   // Setter for clientId
-  set clientId(s:string) {
-    this.state.clientId = s;
+  set keySuffix(s:string) {
+    this.state.sfx = s || undefined;
     this.#setStorage(this.#ssKeyState, this.state);
-    this.#ssKeyTokenInfo = `${this.#ssKeyPrefix}TI_${s}`;
-    this.#ssKeySessionInfo = `${this.#ssKeyPrefix}SI_${s}`;
-    this.#calcFoldSpot(s);
+    if( s ) {
+      // To make it a bit more obtuse reverse the string and use that as the actual suffix
+      const sSfx = s.split("").reverse().join("");
+      this.#ssKeyTokenInfo = `${this.#ssKeyPrefix}TI_${sSfx}`;
+      this.#ssKeySessionInfo = `${this.#ssKeyPrefix}SI_${sSfx}`;
+      this.#calcFoldSpot(sSfx);
+    }
   }
-
 
   isLoginExpired() {
     let bExpired = true;
@@ -225,7 +216,6 @@ class AuthManager {
             delete oSI[prop];
           }
         }
-        sessionStorage.removeItem(this.#ssKeySessionInfo);
       } else {
         this.#authConfig={};
       }
@@ -238,6 +228,7 @@ class AuthManager {
     this.isLoggedIn = false;
     // reset the initial redirect as well by using this setter
     this.usePopupForRestOfSession = bFullReauth;
+    this.keySuffix = '';
   }
 
   #doBeforeUnload() {
@@ -269,9 +260,9 @@ class AuthManager {
     console.log(`ssKeyState: ${sKey}`);
     if( oState ) {
       Object.assign(this.state, oState);
-      if( this.state.clientId ) {
+      if( this.state.sfx ) {
         // Setter sets up the ssKey values as well
-        this.clientId = this.state.clientId;
+        this.keySuffix = this.state.sfx;
       }
     }
   }
@@ -360,8 +351,15 @@ class AuthManager {
             appAlias: sdkConfigServer.appAlias || '',
             useLocking: true
           };
-          // Invoke clientId setter
-          this.clientId = pegaAuthConfig.clientId;
+          // Invoke keySuffix setter
+          // Was using pegaAuthConfig.clientId as key but more secure to just use a random string as getting
+          //  both a clientId and the refresh token could yield a new access token.
+          // Suffix is so we might in future move to an array of suffixes based on the appName, so might store
+          //  both portal and embedded tokens/session info at same time
+          if( !this.state?.sfx ) {
+            // Just using a random number to make the suffix unique on each session
+            this.keySuffix = `${Math.ceil(Math.random()*100000000)}`;
+          }
           this.#authConfig.transform = sdkConfigAuth.transform !== undefined ? sdkConfigAuth.transform : this.#transform;
           // Using property in class as authConfig may be empty at times
           this.#transform = this.#authConfig.transform;
@@ -412,6 +410,7 @@ class AuthManager {
           } else {
             this.#pegaAuth = new PegaAuth(this.#authConfig);
           }
+          this.#SIStateProps = this.#pegaAuth.getStateProps();
           this.initInProgress = false;
           resolve(this.#pegaAuth);
         });
@@ -682,7 +681,7 @@ class AuthManager {
     }
 
     if( bHandleHere ) {
-      // Don't want to do a full clear of authMgr as will loose sessionIndex.  Rather just clear the tokens
+      // Don't want to do a full clear of authMgr as will loose state props (like sessionIndex).  Rather just clear the tokens
       this.clear(true);
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       login(true);

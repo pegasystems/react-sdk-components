@@ -1,5 +1,10 @@
 class PegaAuth {
     #config = null;
+    // Properties stored in config structure which need to survive a browser reload
+    // (If passing in a sessionStorage key....library updates the session storage when these are updated
+    //  otherwise, the values are only updated within the passed in config object instance and the
+    //  library consumer should make sure to persist on unload and pass these in on reload construction)
+    #stateProps = ['codeVerifier', 'state', 'sessionIndex', 'sessionIndexAttempts', 'acRedirectUri'];
 
     constructor(ssKeyConfig) {
       if (typeof ssKeyConfig === 'string') {
@@ -17,8 +22,12 @@ class PegaAuth {
         this.crypto = window.crypto;
         this.subtle = window.crypto.subtle;
       }
-      if (Object.keys(this.#config).length > 0 && !this.#config.serverType) {
-        this.#config.serverType = 'infinity';
+      if (Object.keys(this.#config).length > 0) {
+        if (!this.#config.serverType) {
+          this.#config.serverType = 'infinity';
+        }
+      } else {
+        throw new Error('invalid config settings');
       }
     }
 
@@ -51,6 +60,12 @@ class PegaAuth {
       }
     }
 
+    // Used by library consumer to retrieve array of key properties to persist across page transitions/reloads
+    //  by library consumer
+    getStateProps() {
+      return this.#stateProps;
+    }
+
     async #importSingleLib(libName, libProp, bLoadAlways = false) {
       // eslint-disable-next-line no-undef
       if (!bLoadAlways && typeof (this.isNode ? global : window)[libProp] !== 'undefined') {
@@ -73,8 +88,11 @@ class PegaAuth {
 
     async #importNodeLibs() {
       // Also current assumption is using Node 18 or better
+      // With 18.3 there is now a native fetch (but may want to force use of node-fetch)
+      const useNodeFetch = !!this.#config.useNodeFetch;
+
       return Promise.all([
-        this.#importSingleLib('node-fetch', 'fetch'),
+        this.#importSingleLib('node-fetch', 'fetch', useNodeFetch),
         this.#importSingleLib('open', 'open'),
         this.#importSingleLib('node:crypto', 'crypto', true),
         this.#importSingleLib('node:https', 'https'),
@@ -82,7 +100,7 @@ class PegaAuth {
         this.#importSingleLib('node:fs', 'fs')
       ]).then(() => {
         this.subtle = this.crypto?.subtle || this.crypto.webcrypto.subtle;
-        if (typeof fetch === 'undefined' && this.fetch) {
+        if ((typeof fetch === 'undefined' || useNodeFetch) && this.fetch) {
           /* eslint-disable-next-line no-global-assign */
           fetch = this.fetch;
         }
@@ -149,7 +167,9 @@ class PegaAuth {
         const cc = await this.#getCodeChallenge(this.#config.codeVerifier);
         pkceArgs = `&code_challenge=${cc}&code_challenge_method=S256`;
       }
-      return `${authorizeUri}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&state=${this.#config.state}${pkceArgs}${moreAuthArgs}`;
+      return `${authorizeUri}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&state=${
+        this.#config.state
+      }${pkceArgs}${moreAuthArgs}`;
     }
 
     async login() {
@@ -773,9 +793,14 @@ class PegaAuth {
      * Return agent value for POST commands
      */
     #getAgent() {
-      return this.isNode && this.#config.ignoreInvalidCerts
-        ? new this.https.Agent({ rejectUnauthorized: false })
-        : undefined;
+      if (this.isNode && this.#config.ignoreInvalidCerts) {
+        const options = { rejectUnauthorized: false };
+        if (this.#config.legacyTLS) {
+          options.secureOptions = this.crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT;
+        }
+        return new this.https.Agent(options);
+      }
+      return undefined;
     }
   }
 
