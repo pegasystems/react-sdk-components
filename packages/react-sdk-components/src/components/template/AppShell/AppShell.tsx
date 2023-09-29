@@ -93,7 +93,7 @@ export default function AppShell(props:AppShellProps) {
   useEffect(() => {
     setAppName(PCore.getEnvironmentInfo().getApplicationName());
 
-    const tempMap: any = pConn.getChildren()?.map((child: any, index) => {
+    const tempMap: any = pConn.getChildren()?.["map"]((child: any, index) => {
       const theChildComp = child.getPConnect().getComponentName();
       const theKey = `.${index}`;
       return (

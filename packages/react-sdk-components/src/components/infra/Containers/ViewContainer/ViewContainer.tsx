@@ -15,24 +15,6 @@ interface ViewContainerProps extends PConnProps {
   limit?: number
 }
 
-// ViewContainer.defaultProps = {
-//   getPConnect: null,
-//   name: "",
-//   loadingInfo: false,
-//   routingInfo: null,
-//   mode: "single",
-//   limit: 16
-// };
-
-// ViewContainer.propTypes = {
-//   getPConnect: PropTypes.func,
-//   name: PropTypes.string,
-//   loadingInfo: PropTypes.bool,
-//   routingInfo: PropTypes.objectOf(PropTypes.any),
-//   mode: PropTypes.string,
-//   limit: PropTypes.number
-// };
-
 
 // ViewContainer can emit View
 // import View from '../View';
@@ -73,12 +55,16 @@ export default function ViewContainer(props: ViewContainerProps) {
     const context = thePConn?.getContextName();
     let viewContainerName = name;
     if (!viewContainerName) viewContainerName = "";
-    return `${context.toUpperCase()}/${viewContainerName.toUpperCase()}`;
+    return `${context?.toUpperCase()}/${viewContainerName.toUpperCase()}`;
   }
 
   function prepareDispatchObject() {
     const baseContext = pConn.getContextName();
-    const { acName = "primary" } = pConn.getContainerName();
+    // const { acName = "primary" } = pConn.getContainerName(); // doesn't work with 8.23 typings
+    let acName = pConn.getContainerName();
+    if (!acName) {
+      acName = "primary";
+    }
 
     return {
       semanticURL: "",

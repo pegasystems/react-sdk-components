@@ -13,7 +13,9 @@ export default function CaseSummary(props: CaseSummaryProps) {
   const { getPConnect, children } = props;
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
-  const { status, showStatus } = theConfigProps;
+  // const { status, showStatus } = theConfigProps;
+  const status = theConfigProps["status"];
+  const showStatus = theConfigProps["showStatus"];
 
   // from Constellation DX Components
   // get the primary and secondary fields with the raw data (which has the non-resolved property values)

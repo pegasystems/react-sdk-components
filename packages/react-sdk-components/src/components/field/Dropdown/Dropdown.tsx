@@ -4,26 +4,27 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+// import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
   value: string;
 }
 
-interface DropdownProps extends PConnFieldProps {
-  // If any, enter additional props that only exist on Dropdown here
-  datasource?: Array<any>,
-  onRecordChange?: any,
-  fieldMetadata?: any,
-  // eslint-disable-next-line react/no-unused-prop-types
-  listType: string,
-  // eslint-disable-next-line react/no-unused-prop-types
-  additionalProps?: object
-}
+// Can't use DropdownProps with 8.23 until getLocaleRuleNameFromKeys is NOT private
+// interface DropdownProps extends PConnFieldProps {
+//   // If any, enter additional props that only exist on Dropdown here
+//   datasource?: Array<any>,
+//   onRecordChange?: any,
+//   fieldMetadata?: any,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   listType: string,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   additionalProps?: object
+// }
 
 
-export default function Dropdown(props: DropdownProps) {
+export default function Dropdown(props /* : DropdownProps */) {
   const {
     getPConnect,
     label,
@@ -41,14 +42,14 @@ export default function Dropdown(props: DropdownProps) {
     onRecordChange,
     fieldMetadata
   } = props;
-  let { placeholder } = props;
+  let { placeholder = "" } = props;
   placeholder = placeholder || 'Select...';
   const [options, setOptions] = useState<Array<IOption>>([]);
   const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = thePConn.getStateProps()["value"];
   const className = thePConn.getCaseInfo().getClassName();
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 

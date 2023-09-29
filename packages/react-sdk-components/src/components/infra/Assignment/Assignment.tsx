@@ -5,20 +5,23 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-import type { PConnProps } from '../../../types/PConnProps';
+// import type { PConnProps } from '../../../types/PConnProps';
 
-interface AssignmentProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  children: Array<any>,
-  itemKey: string,
-  isInModal: boolean,
-  banners: Array<any>
-  // eslint-disable-next-line react/no-unused-prop-types
-  actionButtons: Array<any>,
-}
+// Can't use AssignmentProps until the following are NOT private
+//  getCaseInfo().isAssignmentInCreateStage()
+//  getCaseInfo().isLocalAction()
+// interface AssignmentProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   children: Array<any>,
+//   itemKey: string,
+//   isInModal: boolean,
+//   banners: Array<any>
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   actionButtons: Array<any>,
+// }
 
 
-export default function Assignment(props: AssignmentProps) {
+export default function Assignment(props /* : AssignmentProps */) {
   const { getPConnect, children, itemKey = '', isInModal = false, banners = [] } = props;
   const thePConn = getPConnect();
 
@@ -81,7 +84,7 @@ export default function Assignment(props: AssignmentProps) {
       const oData = thePConn.getDataObject('');  // 1st arg empty string until typedefs allow it to be optional
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
-        const oCaseInfo = oData.caseInfo;
+        const oCaseInfo = oData["caseInfo"];
 
         if (oCaseInfo && oCaseInfo.actionButtons) {
           setActionButtons(oCaseInfo.actionButtons);

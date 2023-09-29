@@ -44,7 +44,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     categoryName = value.pyCategoryName;
   }
 
-  let valueRef = pConn.getStateProps().value;
+  let valueRef = pConn.getStateProps()["value"];
   valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
   const [file, setFile] = useState(fileTemp);
 
@@ -254,7 +254,7 @@ export default function Attachment(props /* :AttachmentProps */) {
             }
           );
         }
-        const fieldName = pConn.getStateProps().value;
+        const fieldName = pConn.getStateProps()["value"];
         const context = pConn.getContextName();
 
         PCore.getMessageManager().clearMessages({
