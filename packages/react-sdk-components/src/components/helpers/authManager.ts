@@ -230,11 +230,12 @@ class AuthManager {
     // reliably, so have moved to having PegaAuth manage writing all state props to session storage
 
     // eslint-disable-next-line no-console
-    console.log(`doBeforeUnload: On before unload handler invoked`);
+    // console.log(`doBeforeUnload: On before unload handler invoked`);
 
     this.#setStorage(this.#ssKeyState, this.state);
     this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
 
+    // If tokenStorage was always, token would already be there
     if( this.#tokenStorage === 'temp' ) {
       this.#setStorage(this.#ssKeyTokenInfo, this.#tokenInfo);
     }
@@ -262,6 +263,7 @@ class AuthManager {
       this.#tokenInfo = this.#getStorage(this.#ssKeyTokenInfo);
       if( this.#tokenStorage !== 'always' ) {
         sessionStorage.removeItem(this.#ssKeyTokenInfo);
+        sessionStorage.removeItem(this.#ssKeySessionInfo);
       }
       this.onLoadDone = true;
     }
@@ -270,10 +272,8 @@ class AuthManager {
   // Callback when auth dynamic state has changed. Decide whether to persisting it based on
   //  config settings
   #doAuthDynStateChanged() {
-    const isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-
-    // Decide whether to persist stuff (if on before unload is flakey for some browsers)
-    if( isSafari ) {
+    // If tokenStorage is setup for always then always persist the auth dynamic state as well
+    if( this.#tokenStorage === 'always' ) {
       this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
     }
   }
@@ -359,6 +359,15 @@ class AuthManager {
           if( sdkConfigAuth.tokenStorage !== undefined ) {
             this.#tokenStorage = sdkConfigAuth.tokenStorage;
           }
+          // If tokenStorage is set to "temp", this will not work reliably with mobile browsers...so check
+          //  for browsers which don't support this and for those opt for always.
+          if( this.#tokenStorage === 'temp' ) {
+            const isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
+            if( isSafari ) {
+              this.#tokenStorage = 'always';
+            }
+          }
+
           // Get latest state once client ids, transform and tokenStorage have been established
           this.#doOnLoad();
 
