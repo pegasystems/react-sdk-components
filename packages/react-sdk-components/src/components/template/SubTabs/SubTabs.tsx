@@ -1,11 +1,18 @@
 import React, { Fragment, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { Tab, Tabs } from "@material-ui/core";
 import { TabContext, TabPanel } from '@material-ui/lab';
 import { getTransientTabs, getVisibleTabs, tabClick } from './tabUtils';
 
-export default function SubTabs(props) {
-  const { children } = props;
+// SubTabs does NOT have getPConnect. So, no need to extend from PConnProps
+
+interface SubTabsProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>
+}
+
+
+export default function SubTabs(props: SubTabsProps) {
+  const { children = [] } = props;
 
   const defaultTabIndex = 0;
   const deferLoadedTabs = children[0];
@@ -55,11 +62,3 @@ export default function SubTabs(props) {
     </Fragment>
   );
 }
-
-SubTabs.defaultProps = {
-   children: []
-}
-
-SubTabs.propTypes = {
-   children: PropTypes.arrayOf(PropTypes.node)
-};

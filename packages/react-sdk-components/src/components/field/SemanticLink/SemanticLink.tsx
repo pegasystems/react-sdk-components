@@ -1,9 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { PConnFieldProps } from '../../../types/PConnProps';
+
 
 /* although this is called the SemanticLink component, we are not yet displaying as a
 SemanticLink in SDK and only showing the value as a read only text field. */
@@ -39,7 +40,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SemanticLink(props) {
+interface SemanticLinkProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on SemanticLink here
+  // from previous PropTypes
+  text: string,
+}
+
+export default function SemanticLink(props: SemanticLinkProps) {
   const {
     text,
     displayMode,
@@ -67,9 +74,3 @@ export default function SemanticLink(props) {
     return <FieldValueList name={hideLabel ? '' : label} value={text} variant='stacked' />;
   }
 }
-
-SemanticLink.propTypes = {
-  text: PropTypes.string.isRequired,
-  displayMode: PropTypes.string,
-  label: PropTypes.string,
-};

@@ -5,8 +5,14 @@ import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo} from '../../helpers/date-format-utils';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function DateTime(props) {
+interface DateTimeProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on DateTime here
+}
+
+
+export default function DateTime(props: DateTimeProps) {
   const {
     getPConnect,
     label,
@@ -25,7 +31,7 @@ export default function DateTime(props) {
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps().value;
+  const propName = pConn.getStateProps()["value"];
   const helperTextToDisplay = validatemessage || helperText;
 
   // Start with default dateFormatInfo

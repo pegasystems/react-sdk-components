@@ -1,14 +1,24 @@
 import React, { createElement } from 'react';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { GridSize } from '@material-ui/core/Grid';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import FieldGroup from '../../../designSystemExtension/FieldGroup';
+// import type { PConnProps } from '../../../../types/PConnProps';
+
+// Can't use PConnProps until getPConnect().getChildren() types are ok
+//  and createComponent types are ok
+// interface NarrowWideDetailsProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   showLabel?: boolean,
+//   label: string,
+//   showHighlightedData?: boolean
+// }
+
 
 const COLUMN_WIDTHS = [4, 8];
 
-export default function NarrowWideDetails(props) {
-  const { label, showLabel, getPConnect, showHighlightedData } = props;
+export default function NarrowWideDetails(props /* : NarrowWideDetailsProps */) {
+  const { label, showLabel = true, getPConnect, showHighlightedData = false } = props;
 
   // Get the inherited props from the parent to determine label settings
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
@@ -65,16 +75,3 @@ export default function NarrowWideDetails(props) {
     </FieldGroup>
   );
 }
-
-NarrowWideDetails.defaultProps = {
-  label: undefined,
-  showLabel: true,
-  showHighlightedData: false
-};
-
-NarrowWideDetails.propTypes = {
-  showLabel: PropTypes.bool,
-  label: PropTypes.string,
-  getPConnect: PropTypes.func.isRequired,
-  showHighlightedData: PropTypes.bool
-};

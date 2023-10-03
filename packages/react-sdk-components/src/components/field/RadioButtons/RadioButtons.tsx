@@ -11,8 +11,17 @@ import {
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+// import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function RadioButtons(props) {
+// Can't use RadioButtonProps until getLocaleRuleNameFromKeys is NOT private
+// interface RadioButtonsProps extends PConnFieldProps {
+//   // If any, enter additional props that only exist on RadioButtons here
+//   inline: boolean,
+//   fieldMetadata?: any
+// }
+
+
+export default function RadioButtons(props /* : RadioButtonsProps */ ) {
   const {
     getPConnect,
     label,
@@ -32,7 +41,7 @@ export default function RadioButtons(props) {
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = thePConn.getStateProps()["value"];
   const helperTextToDisplay = validatemessage || helperText;
   const className = thePConn.getCaseInfo().getClassName();
 
@@ -52,7 +61,7 @@ export default function RadioButtons(props) {
 
   // theOptions will be an array of JSON objects that are literally key/value pairs.
   //  Ex: [ {key: "Basic", value: "Basic"} ]
-  const theOptions = Utils.getOptionList(theConfigProps, thePConn.getDataObject());
+  const theOptions = Utils.getOptionList(theConfigProps, thePConn.getDataObject(''));
 
   useEffect(() => {
     // This update theSelectedButton which will update the UI to show the selected button correctly
@@ -91,7 +100,7 @@ export default function RadioButtons(props) {
   };
 
   const handleBlur = event => {
-    thePConn.getValidationApi().validate(event.target.value);
+    thePConn.getValidationApi().validate(event.target.value, "");   // 2nd arg empty string until typedef marked correctly as optional
   };
 
   return (

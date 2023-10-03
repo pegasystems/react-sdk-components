@@ -1,7 +1,13 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Grid } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+
+// OneColumn does NOT have getPConnect. So, no need to extend from PConnProps
+interface OneColumnProps{
+  // If any, enter additional props that only exist on this component
+  children: Array<any>
+}
+
 
 const useStyles = makeStyles((/* theme */) => ({
   colStyles: {
@@ -12,7 +18,7 @@ const useStyles = makeStyles((/* theme */) => ({
 }));
 
 
-export default function OneColumn(props) {
+export default function OneColumn(props: OneColumnProps) {
   const classes = useStyles();
 
   const { children} = props;
@@ -25,8 +31,3 @@ export default function OneColumn(props) {
     </Grid>
   )
 }
-
-OneColumn.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
-  // template: PropTypes.string.isRequired
-};

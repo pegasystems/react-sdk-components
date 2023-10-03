@@ -1,12 +1,19 @@
 import React, { useEffect, useState, useContext, createElement } from "react";
-import PropTypes from "prop-types";
 import { Box, CircularProgress } from "@material-ui/core";
 import createPConnectComponent from "../../../../bridge/react_pconnect";
 import StoreContext from "../../../../bridge/Context/StoreContext";
 import { isEmptyObject } from '../../../helpers/common-utils';
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
 
-declare const PCore: typeof PCoreType;
+import type { PConnProps } from '../../../../types/PConnProps';
+
+interface ViewContainerProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  name?: string,
+  loadingInfo?: any,    // can't be boolean until setDispatchObjState expects loadingInfo to be type null
+  routingInfo?: any,
+  mode?: string,
+  limit?: number
+}
 
 
 // ViewContainer can emit View
@@ -19,9 +26,9 @@ declare const PCore: typeof PCoreType;
 //
 
 
-export default function ViewContainer(props) {
+export default function ViewContainer(props: ViewContainerProps) {
   // const { getPConnect, children, routingInfo, name } = props;
-  const { getPConnect, name, mode, limit, loadingInfo, routingInfo } = props;
+  const { getPConnect, name = '', mode = 'single', limit = 16, loadingInfo = false, routingInfo = null} = props;
 
   const { displayOnlyFA } = useContext<any>(StoreContext);
 
@@ -45,15 +52,19 @@ export default function ViewContainer(props) {
   // beginning of functions for use by ViewContainer
 
   function buildName() {
-    const context = thePConn.getContextName();
+    const context = thePConn?.getContextName();
     let viewContainerName = name;
     if (!viewContainerName) viewContainerName = "";
-    return `${context.toUpperCase()}/${viewContainerName.toUpperCase()}`;
+    return `${context?.toUpperCase()}/${viewContainerName.toUpperCase()}`;
   }
 
   function prepareDispatchObject() {
     const baseContext = pConn.getContextName();
-    const { acName = "primary" } = pConn.getContainerName();
+    // const { acName = "primary" } = pConn.getContainerName(); // doesn't work with 8.23 typings
+    let acName = pConn.getContainerName();
+    if (!acName) {
+      acName = "primary";
+    }
 
     return {
       semanticURL: "",
@@ -121,7 +132,7 @@ export default function ViewContainer(props) {
     }
 
     // Getting default view label
-    const navPages = pConn.getValue("pyPortal.pyPrimaryNavPages");
+    const navPages = pConn.getValue("pyPortal.pyPrimaryNavPages", '');  // 2nd arg empty string until typedefs allow optional
     const defaultViewLabel =
       Array.isArray(navPages) && navPages[0] ? navPages[0].pyLabel : "";
     // TODO: Plan is to rename window.constellationCore to window.pega (or similar)
@@ -198,21 +209,3 @@ export default function ViewContainer(props) {
   );
 
 }
-
-ViewContainer.defaultProps = {
-  getPConnect: null,
-  name: "",
-  loadingInfo: false,
-  routingInfo: null,
-  mode: "single",
-  limit: 16
-};
-
-ViewContainer.propTypes = {
-  getPConnect: PropTypes.func,
-  name: PropTypes.string,
-  loadingInfo: PropTypes.bool,
-  routingInfo: PropTypes.objectOf(PropTypes.any),
-  mode: PropTypes.string,
-  limit: PropTypes.number
-};

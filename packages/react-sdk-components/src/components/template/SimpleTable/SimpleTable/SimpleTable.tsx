@@ -1,26 +1,37 @@
 import React from 'react';
 import FieldGroupTemplate from '../../FieldGroupTemplate';
 import SimpleTableManual from '../SimpleTableManual';
+// import type { PConnProps } from '../../../../types/PConnProps';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+// Can't use SimpleTableProps until getComponentConfig() and getFieldMetadata() are NOT private
+// interface SimpleTableProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   multiRecordDisplayAs: string,
+//   allowTableEdit: boolean,
+//   contextClass: any
+// }
 
-declare const PCore: typeof PCoreType;
 
-
-export default function SimpleTable(props) {
+export default function SimpleTable(props /* : SimpleTableProps */) {
   const { getPConnect, multiRecordDisplayAs, allowTableEdit } = props;
 
   let { contextClass } = props;
   if (!contextClass) {
     let listName = getPConnect().getComponentConfig().referenceList;
     listName = PCore.getAnnotationUtils().getPropertyName(listName);
-    contextClass = getPConnect().getFieldMetadata(listName)?.pageClass;
+    // was... contextClass = getPConnect().getFieldMetadata(listName)?.pageClass;
+    const theFieldMetadata = getPConnect().getFieldMetadata(listName);
+    if (theFieldMetadata) {
+      contextClass = theFieldMetadata['pageClass'];
+    } else {
+      contextClass = undefined;
+    }
   }
   if (multiRecordDisplayAs === 'fieldGroup') {
     const fieldGroupProps = { ...props, contextClass };
     return <FieldGroupTemplate {...fieldGroupProps} />;
   } else {
-    const simpleTableManualProps = {...props, contextClass};
+    const simpleTableManualProps = {...props, contextClass, hideAddRow: false, hideDeleteRow: false, disableDragDrop: false};
     if (allowTableEdit === false) {
       simpleTableManualProps.hideAddRow = true;
       simpleTableManualProps.hideDeleteRow = true;

@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import PropTypes from "prop-types";
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
@@ -9,9 +8,21 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Utils from '../../helpers/utils';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+// Operator is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface OperatorProps{
+  // If any, enter additional props that only exist on this component
+  caseOpConfig: {
+    label: string,
+    createDateTime: string,
+    createLabel: string,
+    createOperator: { userName: string, userId: string },
+    updateDateTime: string,
+    updateLabel: string,
+    updateOperator: { userName: string, userId: string }
+  }
+}
 
-declare const PCore: typeof PCoreType;
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Operator(props) {
+export default function Operator(props: OperatorProps) {
   // const componentName = "Operator";
   const { caseOpConfig } = props;
   const classes = useStyles();
@@ -34,7 +45,7 @@ export default function Operator(props) {
   let caseOpLabel = "---";
   let caseOpName = "---";
   let caseOpId = "";
-  let caseTime = null;
+  let caseTime = "";
 
   if (fieldLabel === "create operator") {
     caseOpLabel = caseOpConfig.createLabel;
@@ -192,10 +203,3 @@ export default function Operator(props) {
     </React.Fragment>;
 
 }
-
-Operator.defaultProps = {
-}
-
-Operator.propTypes = {
-  caseOpConfig: PropTypes.object.isRequired,
-};

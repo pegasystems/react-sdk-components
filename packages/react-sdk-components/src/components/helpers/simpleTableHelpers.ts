@@ -1,7 +1,4 @@
 import { Utils } from './utils';
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
 
 
 export const TABLE_CELL = "SdkRenderer";
@@ -10,7 +7,7 @@ export const DELETE_ICON = "DeleteIcon";
 // BUG-615253: Workaround for autosize in table with lazy loading components
 /* istanbul ignore next */
 function getFieldWidth(field, label) {
-  let width;
+  let width: number;
   switch (field.type) {
     case "Time":
       width = 150;
@@ -67,7 +64,7 @@ export const getContext = (thePConn) => {
 };
 
 export const populateRowKey = (rawData) => {
-  return rawData.map((row, index) => {
+  return rawData.map((row: any, index: number) => {
     return { ...row, index };
   });
 };
@@ -209,7 +206,7 @@ export const createMetaForTable = (fields, renderMode) => {
  * @param {number} index - index of the page list to add
  */
 export const getAddRowCallback = (pConnect, index) => {
-  return () => pConnect.getListActions().insert({}, index);
+  return () => pConnect.getListActions().insert({}, index, '');  // 3rd arg null until typedef marked correctly as optional
 };
 
 /**

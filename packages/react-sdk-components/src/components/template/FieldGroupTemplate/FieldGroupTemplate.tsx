@@ -1,24 +1,31 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
-
 import FieldGroup from '../../designSystemExtension/FieldGroup';
 import FieldGroupList from '../../designSystemExtension/FieldGroupList';
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
+import type { PConnProps } from '../../../types/PConnProps';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+interface FieldGroupTemplateProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  referenceList?: Array<any>,
+  contextClass: string,
+  renderMode?: string,
+  heading?: string,
+  lookForChildInConfig?: boolean,
+  displayMode?: string,
+  fieldHeader?: string,
+  allowTableEdit: boolean
+}
 
-declare const PCore: typeof PCoreType;
 
-
-export default function FieldGroupTemplate(props) {
+export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   const {
-    referenceList,
+    referenceList = [],
     renderMode,
     contextClass,
     getPConnect,
     lookForChildInConfig,
-    heading,
+    heading = '',
     displayMode,
     fieldHeader,
     allowTableEdit: allowAddEdit
@@ -41,7 +48,7 @@ export default function FieldGroupTemplate(props) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
     } else {
-      pConn.getListActions().insert({}, referenceList.length);
+      pConn.getListActions().insert({}, referenceList.length, null);  // 3rd arg null until typedef marked correctly as optional
     }
   };
 
@@ -53,7 +60,7 @@ export default function FieldGroupTemplate(props) {
       if (PCore.getPCoreVersion()?.includes('8.7')) {
         pConn.getListActions().deleteEntry(index, pageReference);
       } else {
-        pConn.getListActions().deleteEntry(index);
+        pConn.getListActions().deleteEntry(index, null);  // 2nd arg null until typedef marked correctly as optional
       }
     };
     if (referenceList.length === 0 && allowAddEdit !== false) {
@@ -97,20 +104,3 @@ export default function FieldGroupTemplate(props) {
 
   return <div>{memoisedReadOnlyList}</div>;
 }
-
-FieldGroupTemplate.defaultProps = {
-  referenceList: [],
-  heading: undefined,
-  contextClass: null,
-  displayMode: undefined
-};
-
-FieldGroupTemplate.propTypes = {
-  referenceList: PropTypes.arrayOf(Object),
-  contextClass: PropTypes.string,
-  getPConnect: PropTypes.func.isRequired,
-  renderMode: PropTypes.string.isRequired,
-  heading: PropTypes.string,
-  lookForChildInConfig: PropTypes.bool,
-  displayMode: PropTypes.string
-};

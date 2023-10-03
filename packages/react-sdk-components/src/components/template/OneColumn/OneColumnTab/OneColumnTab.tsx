@@ -1,7 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-export default function OneColumnTab(props) {
+interface OneColumnTabProps{
+  // If any, enter additional props that only exist on this component
+  children: Array<any>
+}
+export default function OneColumnTab(props: OneColumnTabProps) {
   const { children} = props;
 
   return (
@@ -10,8 +13,3 @@ export default function OneColumnTab(props) {
     </div>
   )
 }
-
-OneColumnTab.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
-  // template: PropTypes.string.isRequired
-};

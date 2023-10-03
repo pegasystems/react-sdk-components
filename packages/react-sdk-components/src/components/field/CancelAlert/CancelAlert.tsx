@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { Button, Grid, IconButton, Snackbar } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-
+import type { PConnFieldProps } from '../../../types/PConnProps';
 import './CancelAlert.css';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
 
 
-const CancelAlert = props => {
+interface CancelAlertProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on CancelAlert here
+  pConn: any,
+  updateAlertState: any
+}
+
+
+export default function CancelAlert(props: CancelAlertProps) {
   const { pConn, updateAlertState } = props;
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -126,5 +133,3 @@ const CancelAlert = props => {
     </>
   );
 };
-
-export default CancelAlert;

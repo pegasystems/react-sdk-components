@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { Utils } from '../../helpers/utils';
 import './NavBar.css';
 import {
@@ -35,9 +34,17 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useNavBar } from '../../helpers/reactContextHelpers';
 import { logout } from '../../helpers/authManager';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
+import type { PConnProps } from '../../../types/PConnProps';
 
-declare const PCore: typeof PCoreType;
+
+interface NavBarProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  // eslint-disable-next-line react/no-unused-prop-types
+  appName?: string,
+  pages?: Array<any>,
+  caseTypes: Array<any>,
+  pConn?: any
+}
 
 
 const iconMap = {
@@ -98,8 +105,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function NavBar(props) {
-  const { pConn, pages, caseTypes } = props;
+export default function NavBar(props: NavBarProps) {
+  const { pConn, pages = [], caseTypes = [] } = props;
 
   const classes = useStyles();
   const theme = useTheme();
@@ -292,18 +299,3 @@ export default function NavBar(props) {
     </Drawer>
   );
 }
-
-NavBar.defaultProps = {
-  pConn: null,
-  appName: '',
-  pages: [],
-  caseTypes: []
-};
-
-NavBar.propTypes = {
-  pConn: PropTypes.object,
-  // eslint-disable-next-line react/no-unused-prop-types
-  appName: PropTypes.string,
-  pages: PropTypes.arrayOf(PropTypes.object),
-  caseTypes: PropTypes.arrayOf(PropTypes.object)
-};

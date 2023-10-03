@@ -7,9 +7,17 @@ import './Attachment.css';
 import SummaryList from '../SummaryList'
 import { CircularProgress } from "@material-ui/core";
 import download from "downloadjs";
+// import type { PConnProps } from '../../../types/PConnProps';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
+
+// NOTE: we can't use PConnProps in this file because the
+//  PConnect type is missing a number of expected properties
+//  such as attachmentsInfo and incorrect type for our use of clearMessages,
+// interface AttachmentProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+// }
 
 
 const getAttachmentKey = (name='') => name ? `attachmentsList.${name}` : 'attachmentsList';
@@ -18,7 +26,7 @@ function getCurrentAttachmentsList(key, context) {
   return PCore.getStoreValue(`.${key}`, 'context_data', context) || [];
 }
 
-export default function Attachment(props) {
+export default function Attachment(props /* :AttachmentProps */) {
   const PCoreVersion = PCore.getPCoreVersion();
   const {value, getPConnect, label, validatemessage} = props;
   /* this is a temporary fix because required is supposed to be passed as a boolean and NOT as a string */
@@ -36,7 +44,7 @@ export default function Attachment(props) {
     categoryName = value.pyCategoryName;
   }
 
-  let valueRef = pConn.getStateProps().value;
+  let valueRef = pConn.getStateProps()["value"];
   valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
   const [file, setFile] = useState(fileTemp);
 
@@ -66,9 +74,9 @@ export default function Attachment(props) {
     let index = 0;
     const maxAttachmentSize = 5;
     for (const item of arFiles) {
-      if (!validateMaxSize(item, maxAttachmentSize)) {
+      if (!validateMaxSize(item, maxAttachmentSize.toString())) {
         item.error = true;
-        item.meta = pConn.getLocalizedValue(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`);
+        item.meta = pConn.getLocalizedValue(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`, '', '');     // 2nd and 3rd args empty string until typedef marked correctly
       }
       item.mimeType = item.type;
       item.icon = getIconFromFileType(item.type);
@@ -94,7 +102,7 @@ export default function Attachment(props) {
       actions = [
         {
           id: `Cancel-${att.ID}`,
-          text: pConn.getLocalizedValue('Cancel'),
+          text: pConn.getLocalizedValue('Cancel', '', ''),     // 2nd and 3rd args empty string until typedef marked correctly
           icon: "times",
           onClick: cancelFile
         }
@@ -107,7 +115,7 @@ export default function Attachment(props) {
           "download",
           {
             id: `download-${ID}`,
-            text: isFile ? pConn.getLocalizedValue('Download') : pConn.getLocalizedValue('Open'),
+            text: isFile ? pConn.getLocalizedValue('Download', '', '') : pConn.getLocalizedValue('Open', '', ''),
             icon: isFile ? "download" : "open",
             onClick: downloadFile
           }
@@ -116,7 +124,7 @@ export default function Attachment(props) {
           "delete",
           {
             id: `Delete-${ID}`,
-            text: pConn.getLocalizedValue('Delete'),
+            text: pConn.getLocalizedValue('Delete', '', ''),
             icon: "trash",
             onClick: deleteFile
           }
@@ -132,7 +140,7 @@ export default function Attachment(props) {
       actions = [
         {
           id: `Remove-${att.ID}`,
-          text: pConn.getLocalizedValue('Remove'),
+          text: pConn.getLocalizedValue('Remove', '', ''),
           icon: "trash",
           onClick: removeFile
         }
@@ -175,13 +183,13 @@ export default function Attachment(props) {
     const errorHandler = (isFetchCanceled) => {
       return (error) => {
         if (!isFetchCanceled(error)) {
-          let uploadFailMsg = pConn.getLocalizedValue('Something went wrong');
+          let uploadFailMsg = pConn.getLocalizedValue('Something went wrong', '', '');     // 2nd and 3rd args empty string until typedef marked correctly
           if (error.response && error.response.data && error.response.data.errorDetails) {
-            uploadFailMsg = pConn.getLocalizedValue(error.response.data.errorDetails[0].localizedValue);
+            uploadFailMsg = pConn.getLocalizedValue(error.response.data.errorDetails[0].localizedValue, '', '');     // 2nd and 3rd args empty string until typedef marked correctly
           }
           myFiles[0].meta = uploadFailMsg;
           myFiles[0].error = true;
-          myFiles[0].fileName = pConn.getLocalizedValue('Unable to upload file');
+          myFiles[0].fileName = pConn.getLocalizedValue('Unable to upload file', '', '');     // 2nd and 3rd args empty string until typedef marked correctly
           arFileList$ = myFiles.map((att) => {
             return getNewListUtilityItemProps({
               att,
@@ -246,7 +254,7 @@ export default function Attachment(props) {
             }
           );
         }
-        const fieldName = pConn.getStateProps().value;
+        const fieldName = pConn.getStateProps()["value"];
         const context = pConn.getContextName();
 
         PCore.getMessageManager().clearMessages({
@@ -255,7 +263,7 @@ export default function Attachment(props) {
           pageReference: pConn.getPageReference(),
           context
         });
-        myFiles[0].meta = pConn.getLocalizedValue('Uploaded successfully');
+        myFiles[0].meta = pConn.getLocalizedValue('Uploaded successfully', '', '');     // 2nd and 3rd args empty string until typedef marked correctly
 
         arFileList$ = myFiles.map((att) => {
           return getNewListUtilityItemProps({
@@ -378,12 +386,12 @@ export default function Attachment(props) {
         let oMenu: any = {};
 
         oMenu.icon = "download";
-        oMenu.text = pConn.getLocalizedValue('Download');
+        oMenu.text = pConn.getLocalizedValue('Download', '', '');     // 2nd and 3rd args empty string until typedef marked correctly
         oMenu.onClick = () => { _downloadFileFromList(value.pxResults[0])}
         arMenuList.push(oMenu);
         oMenu = {};
         oMenu.icon = "trash";
-        oMenu.text = pConn.getLocalizedValue('Delete');
+        oMenu.text = pConn.getLocalizedValue('Delete', '', '');     // 2nd and 3rd args empty string until typedef marked correctly
         oMenu.onClick = () => { _removeFileFromList(arFileList$[0], arFileList$)}
         arMenuList.push(oMenu);
 

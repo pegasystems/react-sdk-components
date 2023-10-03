@@ -1,6 +1,5 @@
 // Helper singleton class to assist with loading and accessing
 //  the SDK Config JSON
-import { sdkGetAuthHeader } from './authManager';
 import { isEmptyObject } from './common-utils';
 
 // Create a singleton for this class (with async loading of config file) and export it
@@ -121,78 +120,6 @@ class ConfigAccess {
   setSdkConfigServer = (key, value) => {
     this.sdkConfig.serverConfig[key] = value;
   };
-
-  /**
-   * Get available portals which supports SDK
-   * @returns list of available portals (portals other than excludingPortals list)
-   */
-  async getAvailablePortals() {
-    return new Promise(async (resolve, reject) => {
-      if (isEmptyObject(this.sdkConfig)) {
-        await getSdkConfig();
-      }
-
-      const serverConfig = this.sdkConfig.serverConfig;
-
-      const userAccessGroup = PCore.getEnvironmentInfo().getAccessGroup();
-      const dataPageName = 'D_OperatorAccessGroups';
-      const serverUrl = serverConfig.infinityRestServerUrl;
-      const appAlias = serverConfig.appAlias;
-      const appAliasPath = appAlias ? `/app/${appAlias}` : '';
-      const arExcludedPortals = serverConfig['excludePortals'];
-      let headers = {
-        Authorization: sdkGetAuthHeader(),
-        'Content-Type': 'application/json'
-      };
-
-      // Using v1 API here as v2 data_views is not able to access same data page currently.  Should move to avoid having this logic to find
-      //  a default portal or constellation portal and rather have Constellation JS Engine API just load the default portal
-      fetch(`${serverUrl}${appAliasPath}/api/v1/data/${dataPageName}`, {
-        method: 'GET',
-        headers
-      })
-        .then(response => {
-          if (response.ok && response.status === 200) {
-            return response.json();
-          } else {
-            if (response.status === 401) {
-              // Might be either a real token expiration or revoke, but more likely that the "api" service package is misconfigured
-              throw new Error(
-                `Attempt to access ${dataPageName} failed.  The "api" service package is likely not configured to use "OAuth 2.0"`
-              );
-            }
-            throw new Error(`HTTP Error: ${response.status}`);
-          }
-        })
-        .then(async agData => {
-          const arAccessGroups = agData.pxResults;
-          const availablePortals = [];
-
-          for (let ag of arAccessGroups) {
-            if (ag.pyAccessGroup === userAccessGroup) {
-              console.error(
-                `Default portal for current operator (${ag.pyPortal}) is not compatible with SDK.\nConsider using a different operator, adjusting the default portal for this operator, or using "appPortal" setting within sdk-config.json to specify a specific portal to load.`
-              );
-              for (let portal of ag.pyUserPortals) {
-                if (!arExcludedPortals.includes(portal.pyPortalLayout)) {
-                  availablePortals.push(portal.pyPortalLayout);
-                }
-              }
-              break;
-            }
-          }
-
-          // Found operator's current access group. Use its portal
-          console.log(`Available portals: ${availablePortals}`);
-
-          resolve(availablePortals);
-        })
-        .catch(e => {
-          console.error(e.message);
-          // check specific error if 401, and wiped out if so stored token is stale.  Fetch new tokens.
-        });
-    });
-  }
 
   /**
    * Path to the BootstrapCSS

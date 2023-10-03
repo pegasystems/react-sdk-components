@@ -4,13 +4,27 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+// import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
   value: string;
 }
 
-export default function Dropdown(props) {
+// Can't use DropdownProps with 8.23 until getLocaleRuleNameFromKeys is NOT private
+// interface DropdownProps extends PConnFieldProps {
+//   // If any, enter additional props that only exist on Dropdown here
+//   datasource?: Array<any>,
+//   onRecordChange?: any,
+//   fieldMetadata?: any,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   listType: string,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   additionalProps?: object
+// }
+
+
+export default function Dropdown(props /* : DropdownProps */) {
   const {
     getPConnect,
     label,
@@ -28,21 +42,21 @@ export default function Dropdown(props) {
     onRecordChange,
     fieldMetadata
   } = props;
-  let { placeholder } = props;
+  let { placeholder = "" } = props;
   placeholder = placeholder || 'Select...';
   const [options, setOptions] = useState<Array<IOption>>([]);
   const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = thePConn.getStateProps()["value"];
   const className = thePConn.getCaseInfo().getClassName();
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
   useEffect(() => {
-    const list = Utils.getOptionList(props, getPConnect().getDataObject());
+    const list = Utils.getOptionList(props, getPConnect().getDataObject(''));   // 1st arg empty string until typedef marked correctly
     const optionsList = [...list];
-    optionsList.unshift({ key: placeholder, value: thePConn.getLocalizedValue(placeholder) });
+    optionsList.unshift({ key: placeholder, value: thePConn.getLocalizedValue(placeholder, '', '') });   // 2nd and 3rd args empty string until typedef marked correctly
     setOptions(optionsList);
   }, [datasource]);
 
@@ -111,7 +125,7 @@ export default function Dropdown(props) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder={thePConn.getLocalizedValue(placeholder)}
+      placeholder={thePConn.getLocalizedValue(placeholder, "", "")}      // 2nd and 3rd args empty string until typedef marked correctly
       size='small'
       required={required}
       disabled={disabled}

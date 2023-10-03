@@ -3,10 +3,6 @@ import { default as CurrencyAlias} from '../../helpers/formatters/Currency';
 // eslint-disable-next-line import/no-named-default
 import { default as CurrencyMapAlias } from '../../helpers/formatters/CurrencyMap';
 
-import PCoreType from '@pega/pcore-pconnect-typedefs/types/pcore';
-
-declare const PCore: typeof PCoreType;
-
 
 export const getCurrencyOptions = (inISOCode: string) => {
 

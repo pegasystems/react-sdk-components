@@ -2,8 +2,8 @@ import { getLocale } from "./common";
 import CurrencyMap from "./CurrencyMap";
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-function NumberFormatter(value, { locale = "en-US", decPlaces = 2, style="", currency="USD" } = {}) {
-  const currentLocale = getLocale(locale);
+function NumberFormatter(value, { locale = "en-US", decPlaces = 2, style="", currency="USD" } = {}): string {
+  const currentLocale: string | undefined = getLocale(locale);
   if (value !== null && value !== undefined) {
     return Number(value).toLocaleString(currentLocale, {
       minimumFractionDigits: decPlaces,
@@ -14,11 +14,11 @@ function NumberFormatter(value, { locale = "en-US", decPlaces = 2, style="", cur
 }
 
 function CurrencyFormatter(
-  value,
+  value: string,
   { symbol = true, position="before", locale="en-US", decPlaces = 2, style = "currency", currency = "USD" } = {}
-) {
-  const currentLocale = getLocale(locale);
-  let formattedValue = value;
+): string {
+  const currentLocale: string | undefined = getLocale(locale);
+  let formattedValue: string = value;
   if (value !== null && value !== undefined && value !== '') {
     formattedValue = NumberFormatter(value, {
       locale: currentLocale,
@@ -27,14 +27,14 @@ function CurrencyFormatter(
       currency
     });
 
-    let countryCode =  currentLocale.split("-")[1].toUpperCase();
+    let countryCode: string | undefined =  currentLocale?.split("-")[1].toUpperCase();
 
     // If countryCode is still undefined, setting it as US
     if( !countryCode ){
       countryCode = 'US';
     }
 
-    let code;
+    let code: string;
     if (symbol) {
       code = CurrencyMap[countryCode]?.symbolFormat;
     } else {
@@ -43,7 +43,7 @@ function CurrencyFormatter(
 
     // if position is provided, change placeholder accordingly.
     if (position && code) {
-      if (position.toLowerCase() === "before" && code.indexOf("{#}") === 0) {
+      if (position.toLowerCase() === "before" && code.startsWith("{#}")) {
         code = code.slice(3) + code.slice(0, 3);
       } else if (
         position.toLowerCase() === "after" &&
@@ -57,8 +57,8 @@ function CurrencyFormatter(
   return formattedValue;
 }
 
-function SymbolFormatter(value, { symbol="$", suffix = true, locale="en-US" } = {}) {
-  let formattedValue = value;
+function SymbolFormatter(value, { symbol="$", suffix = true, locale="en-US" } = {}): string {
+  let formattedValue: string = value;
   if (value !== null && value !== undefined) {
     formattedValue = NumberFormatter(value, { locale });
     return suffix ? `${formattedValue}${symbol}` : `${symbol}${formattedValue}`;

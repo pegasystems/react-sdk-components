@@ -7,6 +7,7 @@ import isDeepEqual from 'fast-deep-equal/react';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
@@ -36,7 +37,22 @@ const getDisplayFieldsMetaData = columnList => {
   return metaDataObj;
 };
 
-export default function AutoComplete(props) {
+interface AutoCompleteProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on AutoComplete here'
+  displayMode?: string,
+  deferDatasource?: boolean,
+  datasourceMetadata?: any,
+  status?: string,
+  onRecordChange?: any,
+  additionalProps?: object,
+  listType: string,
+  parameters?: any,
+  datasource: any,
+  columns: Array<any>
+}
+
+
+export default function AutoComplete(props:AutoCompleteProps) {
   const {
     getPConnect,
     label,
@@ -54,6 +70,7 @@ export default function AutoComplete(props) {
     hideLabel,
     onRecordChange
   } = props;
+
   const context = getPConnect().getContextName();
   let { listType, parameters, datasource = [], columns = [] } = props;
   const [inputValue, setInputValue] = useState('');
@@ -64,7 +81,7 @@ export default function AutoComplete(props) {
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = thePConn.getStateProps()["value"];
 
   if (!isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)
@@ -111,7 +128,7 @@ export default function AutoComplete(props) {
 
   useEffect(() => {
     if (listType === 'associated') {
-      setOptions(Utils.getOptionList(props, getPConnect().getDataObject()));
+      setOptions(Utils.getOptionList(props, getPConnect().getDataObject('')));
     }
   }, [theDatasource]);
 

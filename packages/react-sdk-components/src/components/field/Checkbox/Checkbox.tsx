@@ -8,8 +8,34 @@ import {
 } from '@material-ui/core';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { PConnProps } from '../../../types/PConnProps';
 
-export default function CheckboxComponent(props) {
+// Checkbox passes in 'value' as a boolean. So can't use the default
+//  PConnFieldProps since it expects value to be a string.
+interface CheckboxProps extends PConnProps {
+  // If any, enter additional props that only exist on Checkbox here
+  // Everything from PConnFieldProps except value and change type of value to boolean
+
+  value?: boolean,
+  label: string,
+  required: boolean,
+  disabled: boolean,
+  validatemessage: string,
+  status?: string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  onChange: any,
+  // eslint-disable-next-line react/no-unused-prop-types
+  onBlur?: any,
+  readOnly: boolean,
+  testId: string,
+  helperText: string,
+  displayMode?: string,
+  hideLabel: boolean,
+  // eslint-disable-next-line react/no-unused-prop-types
+  placeholder?: string
+}
+
+export default function CheckboxComponent(props: CheckboxProps) {
   const {
     getPConnect,
     label,
@@ -28,9 +54,9 @@ export default function CheckboxComponent(props) {
 
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
-  const { caption } = theConfigProps;
+  const caption = theConfigProps["caption"];
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = thePConn.getStateProps()["value"];
 
   const [checked, setChecked] = useState(false);
   useEffect(() => {
@@ -39,11 +65,11 @@ export default function CheckboxComponent(props) {
   }, [value]);
 
   if (displayMode === 'LABELS_LEFT') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value.toString()} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value.toString()} variant='stacked' />;
   }
 
   const handleChange = event => {
@@ -51,7 +77,7 @@ export default function CheckboxComponent(props) {
   };
 
   const handleBlur = event => {
-    thePConn.getValidationApi().validate(event.target.checked);
+    thePConn.getValidationApi().validate(event.target.checked, "");   // 2nd arg empty string until typedef marked correctly as optional
   };
 
   let theCheckbox = <Checkbox color='primary' disabled={disabled} />;

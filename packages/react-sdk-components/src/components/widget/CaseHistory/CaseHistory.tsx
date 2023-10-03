@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,6 +8,13 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import isDeepEqual from 'fast-deep-equal/react';
 import { Utils } from '../../helpers/utils';
+import type { PConnProps } from '../../../types/PConnProps';
+
+
+interface CaseHistoryProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+}
+
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
@@ -32,15 +38,15 @@ const StyledTableCell = withStyles((theme: Theme) =>
 )(TableCell);
 
 
-export default function CaseHistory(props) {
+export default function CaseHistory(props:CaseHistoryProps) {
   const { getPConnect } = props;
   const thePConn = getPConnect();
   // let waitingForData = true;
 
   const displayedColumns = [
-    { label: thePConn.getLocalizedValue('Date'), type: "DateTime", fieldName: "pxTimeCreated" },
-    { label: thePConn.getLocalizedValue('Description'), type: "TextInput", fieldName: "pyMessageKey" },
-    { label: thePConn.getLocalizedValue('Performed by'), type: "TextInput", fieldName: "pyPerformer" }
+    { label: thePConn.getLocalizedValue('Date', '', ''), type: "DateTime", fieldName: "pxTimeCreated" },  // 2nd and 3rd args empty string until typedef marked correctly
+    { label: thePConn.getLocalizedValue('Description', '', ''), type: "TextInput", fieldName: "pyMessageKey" },  // 2nd and 3rd args empty string until typedef marked correctly
+    { label: thePConn.getLocalizedValue('Performed by', '', ''), type: "TextInput", fieldName: "pyPerformer" }  // 2nd and 3rd args empty string until typedef marked correctly
    ];
 
   const rowData: any = useRef([]);
@@ -48,7 +54,7 @@ export default function CaseHistory(props) {
   const [waitingForData, setWaitingForData] = useState<boolean>(true);
 
 
-  const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
+  const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, '');  // 2nd arg empty string until typedef marked correctly
   const dataViewName = "D_pyWorkHistory";
   const context = thePConn.getContextName();
 
@@ -163,7 +169,3 @@ export default function CaseHistory(props) {
     </div>
   )
 }
-
-CaseHistory.propTypes = {
-  getPConnect: PropTypes.func.isRequired
-};

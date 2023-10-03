@@ -1,8 +1,15 @@
 import React from 'react';
 import MuiPhoneNumber from 'material-ui-phone-number';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function Phone(props) {
+interface PhoneProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Phone here
+}
+
+
+
+export default function Phone(props: PhoneProps) {
   const {
     label,
     required,

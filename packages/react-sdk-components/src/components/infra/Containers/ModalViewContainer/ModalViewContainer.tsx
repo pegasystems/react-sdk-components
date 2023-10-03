@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, createElement } from 'react';
-import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,6 +9,16 @@ import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { getBanners } from '../../../helpers/case-utils';
 import { isEmptyObject } from '../../../helpers/common-utils';
+
+import type { PConnProps } from '../../../../types/PConnProps';
+
+interface ModalViewContainerProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  loadingInfo?: string,
+  routingInfo?: any,
+  pageMessages?: Array<string>
+}
+
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 8 errors)
 declare const PCore: any;
@@ -70,7 +79,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ModalViewContainer = props => {
+export default function ModalViewContainer(props: ModalViewContainerProps) {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap("Assignment");
   const CancelAlert = getComponentFromMap("CancelAlert");
@@ -78,7 +87,7 @@ const ModalViewContainer = props => {
   const classes = useStyles();
 
   const routingInfoRef = useRef({});
-  const { getPConnect, routingInfo, loadingInfo, pageMessages } = props;
+  const { getPConnect, routingInfo = null, loadingInfo = '', pageMessages = [] } = props;
   const pConn = getPConnect();
   const {
     CONTAINER_TYPE: { MULTIPLE },
@@ -322,18 +331,4 @@ const ModalViewContainer = props => {
       )}
     </>
   );
-};
-
-export default ModalViewContainer;
-
-ModalViewContainer.defaultProps = {
-  getPConnect: null,
-  loadingInfo: false,
-  routingInfo: null
-};
-
-ModalViewContainer.propTypes = {
-  getPConnect: PropTypes.func,
-  loadingInfo: PropTypes.bool,
-  routingInfo: PropTypes.objectOf(PropTypes.any)
 };

@@ -5,6 +5,13 @@ import {
   Divider,
 } from '@material-ui/core';
 
+// LeftAlignVerticalTabs does NOT have getPConnect. So, no need to extend from PConnProps
+
+interface LeftAlignVerticalTabsProps {
+  // If any, enter additional props that only exist on this component
+}
+
+
 // LeftAlignVerticalTab is a specialized Tab that has styles to make it
 //  left aligned and full width of the container Tabs
 
@@ -22,6 +29,6 @@ const LeftAlignVerticalTabs: any = withStyles((/* theme */) => ({
     display: 'block',
     textAlign: 'left',
   },
-}))((props) => <div><Tab {...props} /><Divider /></div>);
+}))((props: LeftAlignVerticalTabsProps) => <div><Tab {...props} /><Divider /></div>);
 
 export default LeftAlignVerticalTabs;
