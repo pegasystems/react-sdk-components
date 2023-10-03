@@ -17,14 +17,13 @@ class AuthManager {
   // will store the PegaAuth (OAuth 2.0 client library) instance
   #pegaAuth:any = null;
 
+  #ssKeyConfigInfo:string = '';
   #ssKeySessionInfo:string = '';
   #ssKeyTokenInfo:string = '';
   #ssKeyState:string = `${this.#ssKeyPrefix}State`;
   #authConfig:any = {};
+  #authDynState:any = {};
   #authHeader:string|null = null;
-  // Will retrieve this from PegaAuth library after instance construction
-  // (authRedirectCallack expects 'state' is one of these)
-  #SIStateProps = [];
 
   // state that should be persisted across loads
   state:any = {usePopup:false, noInitialRedirect:false};
@@ -81,8 +80,9 @@ class AuthManager {
     } else {
       // const bClear = (ssKey === this.#ssKeyState || ssKey === this.#ssKeySessionInfo);
       const bClear = false;
-      window.sessionStorage.setItem(ssKey, bClear ? JSON.stringify(obj) : this.#transformer(ssKey, JSON.stringify(obj), true));
-    }
+      const sValue = bClear ? JSON.stringify(obj) : this.#transformer(ssKey, JSON.stringify(obj), true);
+      window.sessionStorage.setItem(ssKey, sValue);
+   }
   }
 
   #calcFoldSpot(s:string) {
@@ -183,8 +183,9 @@ class AuthManager {
     if( s ) {
       // To make it a bit more obtuse reverse the string and use that as the actual suffix
       const sSfx = s.split("").reverse().join("");
-      this.#ssKeyTokenInfo = `${this.#ssKeyPrefix}TI_${sSfx}`;
+      this.#ssKeyConfigInfo = `${this.#ssKeyPrefix}CI_${sSfx}`;
       this.#ssKeySessionInfo = `${this.#ssKeyPrefix}SI_${sSfx}`;
+      this.#ssKeyTokenInfo = `${this.#ssKeyPrefix}TI_${sSfx}`;
       this.#calcFoldSpot(sSfx);
     }
   }
@@ -207,17 +208,10 @@ class AuthManager {
     }
     if( !bFullReauth ) {
       if( this.#usePASS ) {
-        const oSI = this.#getStorage(this.#ssKeySessionInfo);
-        // Remove known transient items
-        for( let i = 0; i < this.#SIStateProps.length; i += 1 ) {
-          const prop:string = this.#SIStateProps[i];
-          // eslint-disable-next-line no-prototype-builtins
-          if( oSI.hasOwnProperty(prop) ) {
-            delete oSI[prop];
-          }
-        }
+        sessionStorage.removeItem(this.#ssKeyConfigInfo);
       } else {
         this.#authConfig={};
+        this.#authDynState={};
       }
       sessionStorage.removeItem(this.#ssKeySessionInfo);
     }
@@ -232,21 +226,15 @@ class AuthManager {
   }
 
   #doBeforeUnload() {
+    // Safari and particularly Safari on mobile devices doesn't seem to load this on first main redirect or
+    // reliably, so have moved to having PegaAuth manage writing all state props to session storage
+
+    // eslint-disable-next-line no-console
+    console.log(`doBeforeUnload: On before unload handler invoked`);
+
     this.#setStorage(this.#ssKeyState, this.state);
-    if( !this.#usePASS ) {
-      const oSI = {};
-      for( let i = 0; i < this.#SIStateProps.length; i += 1 ) {
-        const prop:string = this.#SIStateProps[i];
-        // eslint-disable-next-line no-prototype-builtins
-        if( this.#authConfig.hasOwnProperty(prop) ) {
-          oSI[prop] = this.#authConfig[prop];
-        }
-      }
-      this.#setStorage(this.#ssKeySessionInfo, oSI);
-    } else {
-      // Don't update the auth session storage as it is already created and in use and may
-      //  have been updated by PegaAuth library as part of an auth code grant flow
-    }
+    this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
+
     if( this.#tokenStorage === 'temp' ) {
       this.#setStorage(this.#ssKeyTokenInfo, this.#tokenInfo);
     }
@@ -255,9 +243,6 @@ class AuthManager {
   #loadState() {
     // Note: State storage key doesn't have a client id associated with it
     const oState = this.#getStorage(this.#ssKeyState);
-    const sKey:string = this.#ssKeyState;
-    // eslint-disable-next-line no-console
-    console.log(`ssKeyState: ${sKey}`);
     if( oState ) {
       Object.assign(this.state, oState);
       if( this.state.sfx ) {
@@ -270,18 +255,26 @@ class AuthManager {
   // This is only called from initialize after #ssKey values are setup
   #doOnLoad() {
     if( !this.onLoadDone ) {
+
       // This authConfig state doesn't collide with other calculated static state...so load it first
       // Note: transform setting will have already been loaded into #authConfig at this point
-      const oSI = this.#getStorage(this.#ssKeySessionInfo);
-      if( oSI ) {
-        Object.assign(this.#authConfig, oSI);
-      }
+      this.#authDynState = this.#getStorage(this.#ssKeySessionInfo);
       this.#tokenInfo = this.#getStorage(this.#ssKeyTokenInfo);
       if( this.#tokenStorage !== 'always' ) {
-        sessionStorage.removeItem(this.#ssKeySessionInfo);
         sessionStorage.removeItem(this.#ssKeyTokenInfo);
       }
       this.onLoadDone = true;
+    }
+  }
+
+  // Callback when auth dynamic state has changed. Decide whether to persisting it based on
+  //  config settings
+  #doAuthDynStateChanged() {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
+
+    // Decide whether to persist stuff (if on before unload is flakey for some browsers)
+    if( isSafari ) {
+      this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
     }
   }
 
@@ -405,12 +398,13 @@ class AuthManager {
 
           // Initialise PegaAuth OAuth 2.0 client library
           if( this.#usePASS ) {
-            this.#setStorage(this.#ssKeySessionInfo, this.#authConfig);
-            this.#pegaAuth = new PegaAuth(this.#ssKeySessionInfo);
+            this.#setStorage(this.#ssKeyConfigInfo, this.#authConfig);
+            this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
+            this.#pegaAuth = new PegaAuth(this.#ssKeyConfigInfo, this.#ssKeySessionInfo);
           } else {
-            this.#pegaAuth = new PegaAuth(this.#authConfig);
+            this.#authConfig.fnDynStateChangedCB = this.#doAuthDynStateChanged.bind(this);
+            this.#pegaAuth = new PegaAuth(this.#authConfig, this.#authDynState);
           }
-          this.#SIStateProps = this.#pegaAuth.getStateProps();
           this.initInProgress = false;
           resolve(this.#pegaAuth);
         });
@@ -764,19 +758,19 @@ class AuthManager {
     const state = urlParams.get('state');
 
     // If state should also match before accepting code
-    if( code && state === this.#authConfig.state ) {
-       // clear the state
-      delete this.#authConfig.state;
+    if( code ) {
       this.#initialize(false).then( (aMgr) => {
-        aMgr.getToken(code).then(token => {
-          if( token && token.access_token ) {
-              this.#processTokenOnLogin(token, false);
-              // this.getUserInfo();
-              if( fnLoggedInCB ) {
-                  fnLoggedInCB(token.access_token);
-              }
-          }
-        });
+        if( aMgr.checkStateMatch(state) ) {
+          aMgr.getToken(code).then(token => {
+            if( token && token.access_token ) {
+                this.#processTokenOnLogin(token, false);
+                // this.getUserInfo();
+                if( fnLoggedInCB ) {
+                    fnLoggedInCB(token.access_token);
+                }
+            }
+          });
+        }
       });
     } else {
       const error = urlParams.get('error');
