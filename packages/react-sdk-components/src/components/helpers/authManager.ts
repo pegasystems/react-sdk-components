@@ -228,10 +228,6 @@ class AuthManager {
   #doBeforeUnload() {
     // Safari and particularly Safari on mobile devices doesn't seem to load this on first main redirect or
     // reliably, so have moved to having PegaAuth manage writing all state props to session storage
-
-    // eslint-disable-next-line no-console
-    // console.log(`doBeforeUnload: On before unload handler invoked`);
-
     this.#setStorage(this.#ssKeyState, this.state);
     this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
 
