@@ -25,6 +25,7 @@ class AuthManager {
   #authDynState:any = {};
   #authHeader:string|null = null;
 
+  isSafari: boolean = false;
   // state that should be persisted across loads
   state:any = {usePopup:false, noInitialRedirect:false};
   bC11NBootstrapInProgress:boolean = false;
@@ -43,6 +44,8 @@ class AuthManager {
   #foldSpot: number = 2;
 
   constructor () {
+    // Safari and iOS browsers (all based on Safari) have issues with the onbeforeunload reliably firing
+    this.isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
     // Auth Manager specific state is saved within session storage as important in redirect and popup window scenarios
     this.#loadState();
   }
@@ -259,7 +262,9 @@ class AuthManager {
       this.#tokenInfo = this.#getStorage(this.#ssKeyTokenInfo);
       if( this.#tokenStorage !== 'always' ) {
         sessionStorage.removeItem(this.#ssKeyTokenInfo);
-        sessionStorage.removeItem(this.#ssKeySessionInfo);
+        if( !this.isSafari ) {
+          sessionStorage.removeItem(this.#ssKeySessionInfo);
+        }
       }
       this.onLoadDone = true;
     }
@@ -269,7 +274,7 @@ class AuthManager {
   //  config settings
   #doAuthDynStateChanged() {
     // If tokenStorage is setup for always then always persist the auth dynamic state as well
-    if( this.#tokenStorage === 'always' ) {
+    if( this.#tokenStorage === 'always' || this.isSafari ) {
       this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
     }
   }
@@ -354,14 +359,6 @@ class AuthManager {
           this.#transform = this.#authConfig.transform;
           if( sdkConfigAuth.tokenStorage !== undefined ) {
             this.#tokenStorage = sdkConfigAuth.tokenStorage;
-          }
-          // If tokenStorage is set to "temp", this will not work reliably with mobile browsers...so check
-          //  for browsers which don't support this and for those opt for always.
-          if( this.#tokenStorage === 'temp' ) {
-            const isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-            if( isSafari ) {
-              this.#tokenStorage = 'always';
-            }
           }
 
           // Get latest state once client ids, transform and tokenStorage have been established
@@ -784,7 +781,9 @@ class AuthManager {
     }
   }
 
-  loginIfNecessary(appName:string, noMainRedirect:boolean=false, deferLogin:boolean=false){
+  loginIfNecessary(loginProps:any){
+    const {appName, deferLogin, redirectDoneCB } = loginProps;
+    const noMainRedirect = !loginProps.mainRedirect;
     // We need to load state before making any decisions
     this.#loadState();
     // If no initial redirect status of page changed...clear AuthMgr
@@ -795,7 +794,6 @@ class AuthManager {
       this.#setStorage(this.#ssKeyState, this.state);
     }
     this.noInitialRedirect = noMainRedirect;
-    // setNoInitialRedirect(noMainRedirect);
     // If custom auth no need to do any OAuth logic
     if( this.bCustomAuth ) {
       this.#updateLoginStatus();
@@ -813,9 +811,12 @@ class AuthManager {
     if( window.location.href.includes("?code") ) {
       // initialize authMgr (now initialize in constructor?)
       return this.#initialize(false).then(()=> {
-          this.authRedirectCallback(window.location.href, ()=> {
+          const cbDefault = () => {
             window.location.href = window.location.pathname;
-          });
+          }
+          // eslint-disable-next-line no-console
+          console.log('About to invoke PegaAuth authRedirectCallback');
+          this.authRedirectCallback(window.location.href, redirectDoneCB || cbDefault);
         // });
       });
     }
@@ -902,8 +903,8 @@ export const authRedirectCallback = ( href, fnLoggedInCB:any=null ) => {
  *   away from the main page
  *  @param {boolean} deferLogin - defer logging in (if not already authenticated)
  */
-export const loginIfNecessary = (appName, noMainRedirect=false, deferLogin=false) => {
-  gAuthMgr.loginIfNecessary( appName, noMainRedirect, deferLogin );
+export const loginIfNecessary = (loginProps:any) => {
+  gAuthMgr.loginIfNecessary( loginProps );
 };
 
 export const getHomeUrl = () => {
