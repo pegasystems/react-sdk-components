@@ -10,7 +10,7 @@ import { Utils } from '../../helpers/utils';
 // }
 
 
-export default function QuickCreate(props /*: QuickCreateProps */) {
+export default function QuickCreate(props /* : QuickCreateProps */) {
   const { getPConnect, heading, showCaseIcons, classFilter } = props;
   const pConn = getPConnect();
   const createCase = (className) => {
