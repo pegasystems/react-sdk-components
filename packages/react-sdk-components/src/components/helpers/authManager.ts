@@ -25,7 +25,6 @@ class AuthManager {
   #authDynState:any = {};
   #authHeader:string|null = null;
 
-  isSafari: boolean = false;
   // state that should be persisted across loads
   state:any = {usePopup:false, noInitialRedirect:false};
   bC11NBootstrapInProgress:boolean = false;
@@ -38,14 +37,12 @@ class AuthManager {
   isLoggedIn: boolean = false;
   // Whether to pass a session storage key or structure to auth library
   #usePASS: boolean = false;
-  #beforeUnloadAdded: boolean = false;
+  #pageHideAdded: boolean = false;
   #tokenStorage: string = 'temp';
   #transform:boolean = true;
   #foldSpot: number = 2;
 
   constructor () {
-    // Safari and iOS browsers (all based on Safari) have issues with the onbeforeunload reliably firing
-    this.isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
     // Auth Manager specific state is saved within session storage as important in redirect and popup window scenarios
     this.#loadState();
   }
@@ -228,7 +225,7 @@ class AuthManager {
     this.keySuffix = '';
   }
 
-  #doBeforeUnload() {
+  #doPageHide() {
     // Safari and particularly Safari on mobile devices doesn't seem to load this on first main redirect or
     // reliably, so have moved to having PegaAuth manage writing all state props to session storage
     this.#setStorage(this.#ssKeyState, this.state);
@@ -262,9 +259,7 @@ class AuthManager {
       this.#tokenInfo = this.#getStorage(this.#ssKeyTokenInfo);
       if( this.#tokenStorage !== 'always' ) {
         sessionStorage.removeItem(this.#ssKeyTokenInfo);
-        if( !this.isSafari ) {
-          sessionStorage.removeItem(this.#ssKeySessionInfo);
-        }
+        sessionStorage.removeItem(this.#ssKeySessionInfo);
       }
       this.onLoadDone = true;
     }
@@ -274,7 +269,7 @@ class AuthManager {
   //  config settings
   #doAuthDynStateChanged() {
     // If tokenStorage is setup for always then always persist the auth dynamic state as well
-    if( this.#tokenStorage === 'always' || this.isSafari ) {
+    if( this.#tokenStorage === 'always' ) {
       this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
     }
   }
@@ -391,11 +386,11 @@ class AuthManager {
           }
           Object.assign(this.#authConfig, pegaAuthConfig);
 
-          // Add an on before unload handler to write out key properties that we want to survive a
+          // Add an on page hide handler to write out key properties that we want to survive a
           //  browser reload
-          if (!this.#beforeUnloadAdded && (!this.#usePASS || this.#tokenStorage !== 'always')) {
-            window.addEventListener('beforeunload', this.#doBeforeUnload.bind(this));
-            this.#beforeUnloadAdded = true;
+          if (!this.#pageHideAdded && (!this.#usePASS || this.#tokenStorage !== 'always')) {
+            window.addEventListener('pagehide', this.#doPageHide.bind(this));
+            this.#pageHideAdded = true;
           }
 
           // Initialise PegaAuth OAuth 2.0 client library
@@ -543,7 +538,7 @@ class AuthManager {
     }
 
     this.#tokenInfo = token;
-    if( this.#tokenStorage === 'always') {
+    if( this.#tokenStorage === 'always' ) {
       this.#setStorage( this.#ssKeyTokenInfo, this.#tokenInfo );
     }
     this.#updateLoginStatus();
