@@ -9,7 +9,7 @@ import React from "react";
 // }
 
 
-export default function MultiReferenceReadOnly(props /*: MultiReferenceReadOnlyProps */) {
+export default function MultiReferenceReadOnly(props /* : MultiReferenceReadOnlyProps */) {
   const { getPConnect, label = '', hideLabel = false, config } = props;
   const { referenceList, readonlyContextList } = config;
 

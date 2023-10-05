@@ -10,7 +10,7 @@ import './DefaultForm.css';
 
 
 // Can't use PConn props until proper props for getPConnect().getChildren()[0].getPConnect;
-// extends PConnProps {
+// interface DefaultFormProps extends PConnProps {
 //   // If any, enter additional props that only exist on this component
 //   children: Array<any>,
 //   NumCols: string

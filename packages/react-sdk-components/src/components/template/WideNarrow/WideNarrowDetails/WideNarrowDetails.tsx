@@ -15,7 +15,7 @@ import FieldGroup from '../../../designSystemExtension/FieldGroup';
 
 const COLUMN_WIDTHS = [8, 4];
 
-export default function WideNarrowDetails(props /*: WideNarrowDetailsProps */) {
+export default function WideNarrowDetails(props /* : WideNarrowDetailsProps */) {
   const { label, showLabel = true, getPConnect, showHighlightedData = false } = props;
 
   // Get the inherited props from the parent to determine label settings
