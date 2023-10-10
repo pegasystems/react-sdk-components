@@ -132,13 +132,15 @@ class PegaAuth {
         redirectUri,
         authorizeUri,
         authService,
-        sessionIndex,
         appAlias,
         userIdentifier,
         password,
         noPKCE,
         isolationId
       } = this.#config;
+      const {
+        sessionIndex,
+      } = this.#dynState;
       const bInfinity = serverType === 'infinity';
 
       if (!noPKCE) {
@@ -556,7 +558,6 @@ class PegaAuth {
         clientSecret,
         tokenUri,
         grantType,
-        sessionIndex,
         customTokenParams,
         userIdentifier,
         password,
@@ -564,6 +565,7 @@ class PegaAuth {
       } = this.#config;
 
       const {
+        sessionIndex,
         acRedirectUri,
         codeVerifier
       } = this.#dynState;
