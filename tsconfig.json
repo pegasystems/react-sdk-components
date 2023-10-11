@@ -18,7 +18,7 @@
     "sourceMap": true,
     "module": "es2020",
     "target": "es2020",
-    "lib": [ "es2021" ],
+    "lib": [ "es2021", "dom" ],
     "moduleResolution": "node",
     "jsx": "react",     // May be different options for this with newer versions of React
     "allowJs": true,    // must be false for @pega/pcore-pconnect-typedefs
@@ -32,7 +32,8 @@
     // Declare all ambient type declarations here for VSCode.
     // Override with only specific types for other configurations.
 
-    "typeRoots": ["node_modules/@types", "typings"],
+    "typeRoots": ["node_modules/@types", "node_modules/@pega"],
+    "types": [ "jest", "@testing-library/jest-dom", "pcore-pconnect-typedefs" ],
 
     "noEmit": false,    // JEA - was false
     "incremental": true,
