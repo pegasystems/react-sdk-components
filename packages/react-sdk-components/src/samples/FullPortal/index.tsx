@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import StoreContext from '../../bridge/Context/StoreContext';
 import createPConnectComponent from '../../bridge/react_pconnect';
 import { SdkConfigAccess } from '../../components/helpers/config_access';
@@ -27,6 +27,7 @@ export default function FullPortal() {
   const [defaultPortalName, setDefaultPortalName] = useState('');
   const [availablePortals, setAvailablePortals] = useState<Array<string>>([]);
 
+  const history = useHistory();
   const query = useQuery();
   if (query.get('portal')) {
     const portalValue: any = query.get('portal');
@@ -177,15 +178,21 @@ export default function FullPortal() {
     myLoadPortal('app-root', portal, []); // this is defined in bootstrap shell that's been loaded already
   }
 
+
+  function doRedirectDone() {
+    history.push(window.location.pathname);
+    // appName and mainRedirect params have to be same as earlier invocation
+    loginIfNecessary({appName:'portal', mainRedirect:true});
+  }
+
   // One time (initialization)
   useEffect(() => {
-    // Login if needed, without doing an initial main window redirect
-    loginIfNecessary('portal', false);
-
-    document.addEventListener('SdkConstellationReady', () => {
+     document.addEventListener('SdkConstellationReady', () => {
       // start the portal
       startPortal();
     });
+    // Login if needed, doing an initial main window redirect
+    loginIfNecessary({appName:'portal', mainRedirect:true, redirectDoneCB:doRedirectDone});
   }, []);
 
   return portalSelectionScreen ? (
