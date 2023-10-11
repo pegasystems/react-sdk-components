@@ -591,7 +591,7 @@ class AuthManager {
       const appAlias = serverConfig.appAlias;
       const appAliasPath = appAlias ? `/app/${appAlias}` : '';
       const arExcludedPortals = serverConfig['excludePortals'];
-      // eslint-disable-next-line no-undef
+
       const headers: HeadersInit = {
         Authorization: this.#authHeader===null ? '': this.#authHeader,
         'Content-Type': 'application/json'
