@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "8.8.12",
+  "version": "8.8.20",
   "description": "React SDK packaging: bridge and components, overrides",
   "main": "index.ts",
   "scripts": {
@@ -71,7 +71,7 @@
     "@pega/configs": "^0.4.0",
     "@pega/cspell-config": "^0.4.0",
     "@pega/eslint-config": "^0.4.0",
-    "@pega/pcore-pconnect-typedefs": "8.8.3-dev-0",
+    "@pega/pcore-pconnect-typedefs": "1.0.0",
     "@pega/prettier-config": "^0.4.0",
     "@pega/stylelint-config": "^0.4.0",
     "@pega/tsconfig": "^0.4.0",
