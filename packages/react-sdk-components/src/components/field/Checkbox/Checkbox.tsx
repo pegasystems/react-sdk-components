@@ -8,34 +8,36 @@ import {
 } from '@material-ui/core';
 import handleEvent from '../../helpers/event-utils';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import type { PConnProps } from '../../../types/PConnProps';
+// import type { PConnProps } from '../../../types/PConnProps';
 
 // Checkbox passes in 'value' as a boolean. So can't use the default
 //  PConnFieldProps since it expects value to be a string.
-interface CheckboxProps extends PConnProps {
-  // If any, enter additional props that only exist on Checkbox here
-  // Everything from PConnFieldProps except value and change type of value to boolean
+// But can't use CheckBoxProps until getValidationApi() knows about validate method
+//  Currently just thinks that returns an "object"
+// interface CheckboxProps extends PConnProps {
+//   // If any, enter additional props that only exist on Checkbox here
+//   // Everything from PConnFieldProps except value and change type of value to boolean
 
-  value?: boolean,
-  label: string,
-  required: boolean,
-  disabled: boolean,
-  validatemessage: string,
-  status?: string,
-  // eslint-disable-next-line react/no-unused-prop-types
-  onChange: any,
-  // eslint-disable-next-line react/no-unused-prop-types
-  onBlur?: any,
-  readOnly: boolean,
-  testId: string,
-  helperText: string,
-  displayMode?: string,
-  hideLabel: boolean,
-  // eslint-disable-next-line react/no-unused-prop-types
-  placeholder?: string
-}
+//   value?: boolean,
+//   label: string,
+//   required: boolean,
+//   disabled: boolean,
+//   validatemessage: string,
+//   status?: string,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   onChange: any,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   onBlur?: any,
+//   readOnly: boolean,
+//   testId: string,
+//   helperText: string,
+//   displayMode?: string,
+//   hideLabel: boolean,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   placeholder?: string
+// }
 
-export default function CheckboxComponent(props: CheckboxProps) {
+export default function CheckboxComponent(props /* : CheckboxProps */) {
   const {
     getPConnect,
     label,

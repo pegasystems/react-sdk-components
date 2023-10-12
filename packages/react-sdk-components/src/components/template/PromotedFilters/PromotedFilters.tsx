@@ -6,16 +6,18 @@ import ListView from '../ListView';
 import { isEmptyObject } from '../../helpers/common-utils';
 import './PromotedFilters.css';
 
-import type { PConnProps } from '../../../types/PConnProps';
+// import type { PConnProps } from '../../../types/PConnProps';
 
-interface PromotedFilterProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  viewName: string,
-  filters: Array<any>,
-  listViewProps: any,
-  pageClass: string,
-  parameters?: object
-}
+// Can't use PromotedFilterProps until getContainerManager() knows about addTransientItem
+//  Currently just expects "object"
+// interface PromotedFilterProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   viewName: string,
+//   filters: Array<any>,
+//   listViewProps: any,
+//   pageClass: string,
+//   parameters?: object
+// }
 
 
 const localeCategory = 'SimpleTable';
@@ -65,7 +67,7 @@ function isValidInput(input) {
   return Object.values(input).findIndex((v) => v) >= 0;
 }
 
-export default function PromotedFilters(props: PromotedFilterProps) {
+export default function PromotedFilters(props /* : PromotedFilterProps */) {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const { getPConnect, viewName, filters, listViewProps, pageClass, parameters } = props;
   const [initTable, setInitTable] = useState(false);
