@@ -5,7 +5,6 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect, useRef } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Utils } from '../../helpers/utils';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -39,22 +38,26 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { filterData } from '../../helpers/simpleTableHelpers';
 import './ListView.css';
 import useInit from './hooks'
-import type { PConnProps } from '../../../types/PConnProps';
+import { getDateFormatInfo } from '../../helpers/date-format-utils';
+import { getCurrencyOptions } from '../../field/Currency/currency-utils';
+import { format } from '../../helpers/formatters/';
+// import type { PConnProps } from '../../../types/PConnProps';
 
-interface ListViewProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  bInForm?: boolean,
-  globalSearch?: boolean,
-  referenceList?: Array<any>,
-  rowClickAction?: any,
-  selectionMode?: string,
-  referenceType?: string,
-  payload?: any,
-  parameters?: any,
-  compositeKeys?: any,
-  showDynamicFields?: boolean,
-  presets?: any
-}
+// ListViewProps can't be used until getComponentConfig is NOT private
+// interface ListViewProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   bInForm?: boolean,
+//   globalSearch?: boolean,
+//   referenceList?: Array<any>,
+//   rowClickAction?: any,
+//   selectionMode?: string,
+//   referenceType?: string,
+//   payload?: any,
+//   parameters?: any,
+//   compositeKeys?: any,
+//   showDynamicFields?: boolean,
+//   presets?: any
+// }
 
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -73,7 +76,7 @@ let sortColumnId: any;
 
 const filterByColumns: Array<any> = [];
 
-export default function ListView(props: ListViewProps) {
+export default function ListView(props /* : ListViewProps */) {
   const { getPConnect, bInForm } = props;
   const { globalSearch, referenceList, rowClickAction, selectionMode, referenceType, payload, parameters, compositeKeys, showDynamicFields, presets } = props;
   const ref = useRef({}).current;
@@ -290,52 +293,6 @@ export default function ListView(props: ListViewProps) {
     });
 
     return arReturn;
-  }
-
-  function updateData(listData: Array<any>, fieldData: Array<any>): Array<any> {
-    const returnList: Array<any> = new Array<any>();
-    listData?.forEach(row => {
-      // copy
-      const rowData = JSON.parse(JSON.stringify(row));
-
-      fieldData.forEach(field => {
-        const config = field.config;
-        let fieldName;
-        let formattedDate;
-        let myFormat;
-
-        switch (field.type) {
-          case 'Date':
-            fieldName = config.name;
-            myFormat = config.formatter;
-            if (!myFormat) {
-              myFormat = 'Date';
-            }
-            formattedDate = Utils.generateDate(rowData[fieldName], myFormat);
-
-            rowData[fieldName] = formattedDate;
-            break;
-
-          case 'DateTime':
-            fieldName = config.name;
-            myFormat = config.formatter;
-            if (!myFormat) {
-              myFormat = 'DateTime-Long';
-            }
-            formattedDate = Utils.generateDateTime(rowData[fieldName], myFormat);
-
-            rowData[fieldName] = formattedDate;
-            break;
-
-          default:
-            break;
-        }
-      });
-
-      returnList.push(rowData);
-    });
-
-    return returnList;
   }
 
   function getMyColumnList(arCols: Array<any>): Array<string> {
@@ -612,7 +569,7 @@ export default function ListView(props: ListViewProps) {
     const usingDataResults = getUsingData(tableDataResults);
 
     // store globally, so can be searched, filtered, etc.
-    myRows = updateData(usingDataResults, fields);
+    myRows = usingDataResults;
     myDisplayColumnList = getMyColumnList(myColumns);
 
     // At this point, if we have data ready to render and haven't been asked
@@ -952,8 +909,8 @@ export default function ListView(props: ListViewProps) {
 
   function _listTitle() {
     const defaultTitle = 'List';
-    let title = resolvedConfigProps.title ? resolvedConfigProps.title : defaultTitle;
-    const inheritedProps = resolvedConfigProps?.inheritedProps;
+    let title = resolvedConfigProps.title || resolvedConfigProps?.label || defaultTitle;
+    const inheritedProps = resolvedConfigProps?.["inheritedProps"];
 
     // Let any title in resolvedConfigProps that isn't the default take precedence
     //  but only look in inheritedProps if they exist
@@ -1005,6 +962,31 @@ export default function ListView(props: ListViewProps) {
     getPConnect()
       ?.getListActions()
       ?.setSelectedRows([reqObj]);
+  };
+
+  const processColumnValue = (column, value) => {
+    let val;
+    const type = column.type;
+    let theDateFormatInfo;
+    let theFormat;
+    let theCurrencyOptions;
+    switch (type) {
+      case 'Date':
+      case 'DateTime':
+        theDateFormatInfo = getDateFormatInfo();
+        theFormat = (type === 'DateTime') ? `${theDateFormatInfo.dateFormatStringLong} hh:mm a` : theDateFormatInfo.dateFormatStringLong;
+        val = format(value, column.type, { format: theFormat });
+      break;
+
+      case 'Currency':
+        theCurrencyOptions = getCurrencyOptions(PCore?.getEnvironmentInfo()?.getLocale());
+        val = format(value, column.type, theCurrencyOptions);
+      break;
+
+      default:
+        val = column.format && typeof value === 'number' ? column.format(value) : value;
+    }
+    return val;
   };
 
   return (
@@ -1188,9 +1170,7 @@ export default function ListView(props: ListViewProps) {
                                     key={column.id}
                                     align={column.align}
                                   >
-                                    {column.format && typeof value === 'number'
-                                      ? column.format(value)
-                                      : value}
+                                    {processColumnValue(column, value)}
                                   </TableCell>
                                 );
                               })}
