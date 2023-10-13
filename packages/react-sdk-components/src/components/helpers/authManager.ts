@@ -17,14 +17,13 @@ class AuthManager {
   // will store the PegaAuth (OAuth 2.0 client library) instance
   #pegaAuth:any = null;
 
+  #ssKeyConfigInfo:string = '';
   #ssKeySessionInfo:string = '';
   #ssKeyTokenInfo:string = '';
   #ssKeyState:string = `${this.#ssKeyPrefix}State`;
   #authConfig:any = {};
+  #authDynState:any = {};
   #authHeader:string|null = null;
-  // Will retrieve this from PegaAuth library after instance construction
-  // (authRedirectCallack expects 'state' is one of these)
-  #SIStateProps = [];
 
   // state that should be persisted across loads
   state:any = {usePopup:false, noInitialRedirect:false};
@@ -38,7 +37,7 @@ class AuthManager {
   isLoggedIn: boolean = false;
   // Whether to pass a session storage key or structure to auth library
   #usePASS: boolean = false;
-  #beforeUnloadAdded: boolean = false;
+  #pageHideAdded: boolean = false;
   #tokenStorage: string = 'temp';
   #transform:boolean = true;
   #foldSpot: number = 2;
@@ -81,8 +80,9 @@ class AuthManager {
     } else {
       // const bClear = (ssKey === this.#ssKeyState || ssKey === this.#ssKeySessionInfo);
       const bClear = false;
-      window.sessionStorage.setItem(ssKey, bClear ? JSON.stringify(obj) : this.#transformer(ssKey, JSON.stringify(obj), true));
-    }
+      const sValue = bClear ? JSON.stringify(obj) : this.#transformer(ssKey, JSON.stringify(obj), true);
+      window.sessionStorage.setItem(ssKey, sValue);
+   }
   }
 
   #calcFoldSpot(s:string) {
@@ -183,8 +183,9 @@ class AuthManager {
     if( s ) {
       // To make it a bit more obtuse reverse the string and use that as the actual suffix
       const sSfx = s.split("").reverse().join("");
-      this.#ssKeyTokenInfo = `${this.#ssKeyPrefix}TI_${sSfx}`;
+      this.#ssKeyConfigInfo = `${this.#ssKeyPrefix}CI_${sSfx}`;
       this.#ssKeySessionInfo = `${this.#ssKeyPrefix}SI_${sSfx}`;
+      this.#ssKeyTokenInfo = `${this.#ssKeyPrefix}TI_${sSfx}`;
       this.#calcFoldSpot(sSfx);
     }
   }
@@ -207,17 +208,10 @@ class AuthManager {
     }
     if( !bFullReauth ) {
       if( this.#usePASS ) {
-        const oSI = this.#getStorage(this.#ssKeySessionInfo);
-        // Remove known transient items
-        for( let i = 0; i < this.#SIStateProps.length; i += 1 ) {
-          const prop:string = this.#SIStateProps[i];
-          // eslint-disable-next-line no-prototype-builtins
-          if( oSI.hasOwnProperty(prop) ) {
-            delete oSI[prop];
-          }
-        }
+        sessionStorage.removeItem(this.#ssKeyConfigInfo);
       } else {
         this.#authConfig={};
+        this.#authDynState={};
       }
       sessionStorage.removeItem(this.#ssKeySessionInfo);
     }
@@ -231,22 +225,13 @@ class AuthManager {
     this.keySuffix = '';
   }
 
-  #doBeforeUnload() {
+  #doPageHide() {
+    // Safari and particularly Safari on mobile devices doesn't seem to load this on first main redirect or
+    // reliably, so have moved to having PegaAuth manage writing all state props to session storage
     this.#setStorage(this.#ssKeyState, this.state);
-    if( !this.#usePASS ) {
-      const oSI = {};
-      for( let i = 0; i < this.#SIStateProps.length; i += 1 ) {
-        const prop:string = this.#SIStateProps[i];
-        // eslint-disable-next-line no-prototype-builtins
-        if( this.#authConfig.hasOwnProperty(prop) ) {
-          oSI[prop] = this.#authConfig[prop];
-        }
-      }
-      this.#setStorage(this.#ssKeySessionInfo, oSI);
-    } else {
-      // Don't update the auth session storage as it is already created and in use and may
-      //  have been updated by PegaAuth library as part of an auth code grant flow
-    }
+    this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
+
+    // If tokenStorage was always, token would already be there
     if( this.#tokenStorage === 'temp' ) {
       this.#setStorage(this.#ssKeyTokenInfo, this.#tokenInfo);
     }
@@ -255,9 +240,6 @@ class AuthManager {
   #loadState() {
     // Note: State storage key doesn't have a client id associated with it
     const oState = this.#getStorage(this.#ssKeyState);
-    const sKey:string = this.#ssKeyState;
-    // eslint-disable-next-line no-console
-    console.log(`ssKeyState: ${sKey}`);
     if( oState ) {
       Object.assign(this.state, oState);
       if( this.state.sfx ) {
@@ -270,18 +252,25 @@ class AuthManager {
   // This is only called from initialize after #ssKey values are setup
   #doOnLoad() {
     if( !this.onLoadDone ) {
+
       // This authConfig state doesn't collide with other calculated static state...so load it first
       // Note: transform setting will have already been loaded into #authConfig at this point
-      const oSI = this.#getStorage(this.#ssKeySessionInfo);
-      if( oSI ) {
-        Object.assign(this.#authConfig, oSI);
-      }
+      this.#authDynState = this.#getStorage(this.#ssKeySessionInfo);
       this.#tokenInfo = this.#getStorage(this.#ssKeyTokenInfo);
       if( this.#tokenStorage !== 'always' ) {
-        sessionStorage.removeItem(this.#ssKeySessionInfo);
         sessionStorage.removeItem(this.#ssKeyTokenInfo);
+        sessionStorage.removeItem(this.#ssKeySessionInfo);
       }
       this.onLoadDone = true;
+    }
+  }
+
+  // Callback when auth dynamic state has changed. Decide whether to persisting it based on
+  //  config settings
+  #doAuthDynStateChanged() {
+    // If tokenStorage is setup for always then always persist the auth dynamic state as well
+    if( this.#tokenStorage === 'always' ) {
+      this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
     }
   }
 
@@ -366,6 +355,7 @@ class AuthManager {
           if( sdkConfigAuth.tokenStorage !== undefined ) {
             this.#tokenStorage = sdkConfigAuth.tokenStorage;
           }
+
           // Get latest state once client ids, transform and tokenStorage have been established
           this.#doOnLoad();
 
@@ -396,21 +386,22 @@ class AuthManager {
           }
           Object.assign(this.#authConfig, pegaAuthConfig);
 
-          // Add an on before unload handler to write out key properties that we want to survive a
+          // Add an on page hide handler to write out key properties that we want to survive a
           //  browser reload
-          if (!this.#beforeUnloadAdded && (!this.#usePASS || this.#tokenStorage !== 'always')) {
-            window.addEventListener('beforeunload', this.#doBeforeUnload.bind(this));
-            this.#beforeUnloadAdded = true;
+          if (!this.#pageHideAdded && (!this.#usePASS || this.#tokenStorage !== 'always')) {
+            window.addEventListener('pagehide', this.#doPageHide.bind(this));
+            this.#pageHideAdded = true;
           }
 
           // Initialise PegaAuth OAuth 2.0 client library
           if( this.#usePASS ) {
-            this.#setStorage(this.#ssKeySessionInfo, this.#authConfig);
-            this.#pegaAuth = new PegaAuth(this.#ssKeySessionInfo);
+            this.#setStorage(this.#ssKeyConfigInfo, this.#authConfig);
+            this.#setStorage(this.#ssKeySessionInfo, this.#authDynState);
+            this.#pegaAuth = new PegaAuth(this.#ssKeyConfigInfo, this.#ssKeySessionInfo);
           } else {
-            this.#pegaAuth = new PegaAuth(this.#authConfig);
+            this.#authConfig.fnDynStateChangedCB = this.#doAuthDynStateChanged.bind(this);
+            this.#pegaAuth = new PegaAuth(this.#authConfig, this.#authDynState);
           }
-          this.#SIStateProps = this.#pegaAuth.getStateProps();
           this.initInProgress = false;
           resolve(this.#pegaAuth);
         });
@@ -547,7 +538,7 @@ class AuthManager {
     }
 
     this.#tokenInfo = token;
-    if( this.#tokenStorage === 'always') {
+    if( this.#tokenStorage === 'always' ) {
       this.#setStorage( this.#ssKeyTokenInfo, this.#tokenInfo );
     }
     this.#updateLoginStatus();
@@ -600,7 +591,7 @@ class AuthManager {
       const appAlias = serverConfig.appAlias;
       const appAliasPath = appAlias ? `/app/${appAlias}` : '';
       const arExcludedPortals = serverConfig['excludePortals'];
-      // eslint-disable-next-line no-undef
+
       const headers: HeadersInit = {
         Authorization: this.#authHeader===null ? '': this.#authHeader,
         'Content-Type': 'application/json'
@@ -764,19 +755,19 @@ class AuthManager {
     const state = urlParams.get('state');
 
     // If state should also match before accepting code
-    if( code && state === this.#authConfig.state ) {
-       // clear the state
-      delete this.#authConfig.state;
+    if( code ) {
       this.#initialize(false).then( (aMgr) => {
-        aMgr.getToken(code).then(token => {
-          if( token && token.access_token ) {
-              this.#processTokenOnLogin(token, false);
-              // this.getUserInfo();
-              if( fnLoggedInCB ) {
-                  fnLoggedInCB(token.access_token);
-              }
-          }
-        });
+        if( aMgr.checkStateMatch(state) ) {
+          aMgr.getToken(code).then(token => {
+            if( token && token.access_token ) {
+                this.#processTokenOnLogin(token, false);
+                // this.getUserInfo();
+                if( fnLoggedInCB ) {
+                    fnLoggedInCB(token.access_token);
+                }
+            }
+          });
+        }
       });
     } else {
       const error = urlParams.get('error');
@@ -785,7 +776,9 @@ class AuthManager {
     }
   }
 
-  loginIfNecessary(appName:string, noMainRedirect:boolean=false, deferLogin:boolean=false){
+  loginIfNecessary(loginProps:any){
+    const {appName, deferLogin, redirectDoneCB } = loginProps;
+    const noMainRedirect = !loginProps.mainRedirect;
     // We need to load state before making any decisions
     this.#loadState();
     // If no initial redirect status of page changed...clear AuthMgr
@@ -796,7 +789,6 @@ class AuthManager {
       this.#setStorage(this.#ssKeyState, this.state);
     }
     this.noInitialRedirect = noMainRedirect;
-    // setNoInitialRedirect(noMainRedirect);
     // If custom auth no need to do any OAuth logic
     if( this.bCustomAuth ) {
       this.#updateLoginStatus();
@@ -814,9 +806,12 @@ class AuthManager {
     if( window.location.href.includes("?code") ) {
       // initialize authMgr (now initialize in constructor?)
       return this.#initialize(false).then(()=> {
-          this.authRedirectCallback(window.location.href, ()=> {
+          const cbDefault = () => {
             window.location.href = window.location.pathname;
-          });
+          }
+          // eslint-disable-next-line no-console
+          console.log('About to invoke PegaAuth authRedirectCallback');
+          this.authRedirectCallback(window.location.href, redirectDoneCB || cbDefault);
         // });
       });
     }
@@ -903,8 +898,8 @@ export const authRedirectCallback = ( href, fnLoggedInCB:any=null ) => {
  *   away from the main page
  *  @param {boolean} deferLogin - defer logging in (if not already authenticated)
  */
-export const loginIfNecessary = (appName, noMainRedirect=false, deferLogin=false) => {
-  gAuthMgr.loginIfNecessary( appName, noMainRedirect, deferLogin );
+export const loginIfNecessary = (loginProps:any) => {
+  gAuthMgr.loginIfNecessary( loginProps );
 };
 
 export const getHomeUrl = () => {

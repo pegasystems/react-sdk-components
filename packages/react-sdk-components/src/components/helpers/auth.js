@@ -1,18 +1,22 @@
 class PegaAuth {
+    // The properties within config structure are expected to be more static config values that are then
+    //  used to properly make various OAuth endpoint calls.
     #config = null;
-    // Properties stored in config structure which need to survive a browser reload
-    // (If passing in a sessionStorage key....library updates the session storage when these are updated
-    //  otherwise, the values are only updated within the passed in config object instance and the
-    //  library consumer should make sure to persist on unload and pass these in on reload construction)
-    #stateProps = ['codeVerifier', 'state', 'sessionIndex', 'sessionIndexAttempts', 'acRedirectUri'];
+    // Any dynamic state is stored separately in its own structure.  If a sessionStorage key is passed in
+    //  without a Dynamic State key.
+    #dynState = {};
+    // Current properties within dynState structure:
+    //  codeVerifier, state, sessionIndex, sessionIndexAttempts, acRedirectUri
 
-    constructor(ssKeyConfig) {
+    constructor(ssKeyConfig, ssKeyDynState) {
       if (typeof ssKeyConfig === 'string') {
         this.ssKeyConfig = ssKeyConfig;
+        this.ssKeyDynState = ssKeyDynState || `${ssKeyConfig}_DS`;
         this.#reloadConfig();
       } else {
         // object with config structure is passed in
         this.#config = ssKeyConfig;
+        this.#dynState = ssKeyDynState;
       }
       this.urlencoded = 'application/x-www-form-urlencoded';
       this.isNode = typeof window === 'undefined';
@@ -31,39 +35,52 @@ class PegaAuth {
       }
     }
 
-    #reloadConfig() {
-      if (!this.ssKeyConfig) {
-        return;
-      }
-      const peConfig = window.sessionStorage.getItem(this.ssKeyConfig);
+    #reloadSS(ssKey) {
+      const sItem = window.sessionStorage.getItem(ssKey);
       let obj = {};
-      if (peConfig) {
+      if (sItem) {
         try {
-          obj = JSON.parse(peConfig);
+          obj = JSON.parse(sItem);
         } catch (e) {
           try {
-            obj = JSON.parse(atob(peConfig));
+            obj = JSON.parse(atob(sItem));
           } catch (err) {
             obj = {};
           }
         }
       }
-      this.#config = peConfig ? obj : {};
-    }
-
-    #updateConfig() {
-      if (this.ssKeyConfig) {
-        const val = JSON.stringify(this.#config);
-        // transform must occur unless it is explicitly disabled
-        const transform = this.#config.transform !== false;
-        window.sessionStorage.setItem(this.ssKeyConfig, transform ? btoa(val) : val);
+      if (ssKey === this.ssKeyConfig) {
+        this.#config = sItem ? obj : {};
+      } else {
+        this.#dynState = sItem ? obj : {};
       }
     }
 
-    // Used by library consumer to retrieve array of key properties to persist across page transitions/reloads
-    //  by library consumer
-    getStateProps() {
-      return this.#stateProps;
+    #reloadConfig() {
+      if (this.ssKeyConfig) {
+       this. #reloadSS(this.ssKeyConfig);
+      }
+      if (this.ssKeyDynState) {
+        this.#reloadSS(this.ssKeyDynState);
+      }
+    }
+
+    #updateConfig() {
+      // transform must occur unless it is explicitly disabled
+      const transform = this.#config.transform !== false;
+      // May not need to write out Config info all the time, but there is a scenario where a
+      //  non obfuscated value is passed in and then it needs to be obfuscated
+      if (this.ssKeyConfig) {
+        const sConfig = JSON.stringify(this.#config);
+        window.sessionStorage.setItem(this.ssKeyConfig, transform ? btoa(sConfig) : sConfig);
+      }
+      if (this.ssKeyDynState) {
+        const sDynState = JSON.stringify(this.#dynState);
+        window.sessionStorage.setItem(this.ssKeyDynState, transform ? btoa(sDynState) : sDynState);
+      }
+      if( this.#config.fnDynStateChangedCB ) {
+        this.#config.fnDynStateChangedCB();
+      }
     }
 
     async #importSingleLib(libName, libProp, bLoadAlways = false) {
@@ -115,35 +132,37 @@ class PegaAuth {
         redirectUri,
         authorizeUri,
         authService,
-        sessionIndex,
         appAlias,
         userIdentifier,
         password,
         noPKCE,
         isolationId
       } = this.#config;
+      const {
+        sessionIndex,
+      } = this.#dynState;
       const bInfinity = serverType === 'infinity';
 
       if (!noPKCE) {
         // Generate random string of 64 chars for verifier.  RFC 7636 says from 43-128 chars
         const buf = new Uint8Array(64);
         this.crypto.getRandomValues(buf);
-        this.#config.codeVerifier = this.#base64UrlSafeEncode(buf);
+        this.#dynState.codeVerifier = this.#base64UrlSafeEncode(buf);
       }
 
       // If sessionIndex exists then increment attempts count (we will stop sending session_index after two failures)
       // With Infinity '24 we can now properly detect a invalid_session_index error, but can't for earlier versions
       if (sessionIndex) {
-        this.#config.sessionIndexAttempts += 1;
+        this.#dynState.sessionIndexAttempts += 1;
       }
 
       // We use state to verify that the received code is for the right authorize transaction
       // eslint-disable-next-line no-unneeded-ternary
-      this.#config.state = `${state ? state : ''}.${this.#getRandomString(32)}`;
+      this.#dynState.state = `${state ? state : ''}.${this.#getRandomString(32)}`;
 
       // The same redirectUri needs to be provided to token endpoint, so save this away incase redirectUri is
       //  adjusted for next authorize
-      this.#config.acRedirectUri = redirectUri;
+      this.#dynState.acRedirectUri = redirectUri;
 
       // Persist codeVerifier in session storage so it survives the redirects that are to follow
       this.#updateConfig();
@@ -155,7 +174,7 @@ class PegaAuth {
       // Add explicit creds if specified to try to avoid login popup
       const authServiceArg = authService ? `&authentication_service=${encodeURIComponent(authService)}` : '';
       const sessionIndexArg =
-        sessionIndex && this.#config.sessionIndexAttempts < 3 ? `&session_index=${sessionIndex}` : '';
+        sessionIndex && this.#dynState.sessionIndexAttempts < 3 ? `&session_index=${sessionIndex}` : '';
       const userIdentifierArg = userIdentifier ? `&UserIdentifier=${encodeURIComponent(userIdentifier)}` : '';
       const passwordArg = password && userIdentifier ? `&Password=${encodeURIComponent(atob(password))}` : '';
       const moreAuthArgs = bInfinity
@@ -164,11 +183,11 @@ class PegaAuth {
 
       let pkceArgs = '';
       if (!noPKCE) {
-        const cc = await this.#getCodeChallenge(this.#config.codeVerifier);
+        const cc = await this.#getCodeChallenge(this.#dynState.codeVerifier);
         pkceArgs = `&code_challenge=${cc}&code_challenge_method=S256`;
       }
       return `${authorizeUri}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&state=${
-        this.#config.state
+        this.#dynState.state
       }${pkceArgs}${moreAuthArgs}`;
     }
 
@@ -282,7 +301,7 @@ class PegaAuth {
             const arg = aArgs[i];
             aValues[arg] = event.data[arg] ? event.data[arg].toString() : null;
           }
-          if (aValues.error || (aValues.code && aValues.state === this.#config.state)) {
+          if (aValues.error || (aValues.code && aValues.state === this.#dynState.state)) {
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             fnGetTokenAndFinish(aValues.code, aValues.error, aValues.errorDesc);
           }
@@ -292,7 +311,7 @@ class PegaAuth {
           if (bEnable) {
             window.addEventListener('message', fnAuthMessageReceiver, false);
             window.authCodeCallback = (code, state1, error, errorDesc) => {
-              if (error || (code && state1 === this.#config.state)) {
+              if (error || (code && state1 === this.#dynState.state)) {
                 // eslint-disable-next-line @typescript-eslint/no-use-before-define
                 fnGetTokenAndFinish(code, error, errorDesc);
               }
@@ -420,7 +439,7 @@ class PegaAuth {
                   const state1 = urlParams.get('state');
                   const error = urlParams.get('error');
                   const errorDesc = urlParams.get('error_description');
-                  if (error || (code && state1 === this.#config.state)) {
+                  if (error || (code && state1 === this.#dynState.state)) {
                     // Stop receiving connections and close when all are handled.
                     server.close();
                     // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -438,7 +457,7 @@ class PegaAuth {
         /* Retrieve token(s) and close login window */
         const fnGetTokenAndFinish = (code, error, errorDesc) => {
           // Can clear state in session info at this point
-          delete this.#config.state;
+          delete this.#dynState.state;
           this.#updateConfig();
 
           if (!this.isNode) {
@@ -511,13 +530,18 @@ class PegaAuth {
       });
     }
 
+    // check state
+    checkStateMatch(state) {
+      return state === this.#dynState.state;
+    }
+
     // Clear session index within config
     #updateSessionIndex(sessionIndex) {
       if (sessionIndex) {
-        this.#config.sessionIndex = sessionIndex;
-        this.#config.sessionIndexAttempts = 0;
-      } else if (this.#config.sessionIndex) {
-        delete this.#config.sessionIndex;
+        this.#dynState.sessionIndex = sessionIndex;
+        this.#dynState.sessionIndexAttempts = 0;
+      } else if (this.#dynState.sessionIndex) {
+        delete this.#dynState.sessionIndex;
       }
       this.#updateConfig();
     }
@@ -532,16 +556,19 @@ class PegaAuth {
         isolationId,
         clientId,
         clientSecret,
-        acRedirectUri,
         tokenUri,
-        codeVerifier,
         grantType,
-        sessionIndex,
         customTokenParams,
         userIdentifier,
         password,
         noPKCE
       } = this.#config;
+
+      const {
+        sessionIndex,
+        acRedirectUri,
+        codeVerifier
+      } = this.#dynState;
 
       const bAuthCode = !grantType || grantType === 'authCode';
       if (bAuthCode && !authCode && !this.isNode) {
@@ -609,22 +636,22 @@ class PegaAuth {
             // add property to keep track of current time when the token expires
             token.eA = Date.now() + token.expires_in * 1000;
             // Clear authCode related config state: state, codeVerifier, acRedirectUri
-            if (this.#config.state) {
-              delete this.#config.state;
+            if (this.#dynState.state) {
+              delete this.#dynState.state;
             }
-            if (this.#config.codeVerifier) {
-              delete this.#config.codeVerifier;
+            if (this.#dynState.codeVerifier) {
+              delete this.#dynState.codeVerifier;
             }
-            if (this.#config.acRedirectUri) {
-              delete this.#config.acRedirectUri;
+            if (this.#dynState.acRedirectUri) {
+              delete this.#dynState.acRedirectUri;
             }
             // If there is a session_index then move this to the peConfig structure (as used on authorize)
             if (token.session_index) {
-              this.#config.sessionIndex = token.session_index;
+              this.#dynState.sessionIndex = token.session_index;
             }
             // If we got a token and have a session index, then reset the sessionIndexAttempts
-            if (this.#config.sessionIndex) {
-              this.#config.sessionIndexAttempts = 0;
+            if (this.#dynState.sessionIndex) {
+              this.#dynState.sessionIndexAttempts = 0;
             }
             this.#updateConfig();
           }

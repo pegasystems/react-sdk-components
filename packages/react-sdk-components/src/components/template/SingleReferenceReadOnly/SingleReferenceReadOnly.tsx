@@ -15,7 +15,7 @@
 // }
 
 
-export default function SingleReferenceReadOnly(props /*: SingleReferenceReadOnlyProps */) {
+export default function SingleReferenceReadOnly(props /* : SingleReferenceReadOnlyProps */) {
   const {
     getPConnect,
     displayAs = '',

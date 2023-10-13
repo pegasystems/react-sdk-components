@@ -10,14 +10,16 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 import { getBanners } from '../../../helpers/case-utils';
 import { isEmptyObject } from '../../../helpers/common-utils';
 
-import type { PConnProps } from '../../../../types/PConnProps';
+// import type { PConnProps } from '../../../../types/PConnProps';
 
-interface ModalViewContainerProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  loadingInfo?: string,
-  routingInfo?: any,
-  pageMessages?: Array<string>
-}
+// Can't use ModalViewContainerProps until getContainerManager() knows about initializeContainers
+//  Currently just expects "object"
+// interface ModalViewContainerProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   loadingInfo?: string,
+//   routingInfo?: any,
+//   pageMessages?: Array<string>
+// }
 
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 8 errors)
@@ -79,7 +81,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ModalViewContainer(props: ModalViewContainerProps) {
+export default function ModalViewContainer(props /* : ModalViewContainerProps */) {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap("Assignment");
   const CancelAlert = getComponentFromMap("CancelAlert");
