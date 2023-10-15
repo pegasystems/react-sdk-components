@@ -49,3 +49,7 @@ body {
 input[readonly]+svg {
   opacity: 0.5;
 }
+
+#flowContainerBanner {
+  padding: 8px;
+}
