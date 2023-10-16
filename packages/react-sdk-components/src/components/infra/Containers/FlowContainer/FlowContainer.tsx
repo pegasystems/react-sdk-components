@@ -452,32 +452,31 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
     <div style={{ textAlign: 'left' }} id={buildName} className='psdk-flow-container-top'>
       {!bShowConfirm &&
         (!todo_showTodo ? (
-          <>
-            {displayPageMessages()}
-            {!displayOnlyFA ? (
-              <Card className={classes.root}>
-                <CardHeader
-                  title={<Typography variant='h6'>{containerName}</Typography>}
-                  subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
-                  avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
-                ></CardHeader>
-                <MuiPickersUtilsProvider utils={DayjsUtils}>
-                  <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                    {arNewChildrenAsReact}
-                  </Assignment>
-                </MuiPickersUtilsProvider>
-              </Card>
-            ) : (
-              <Card className={classes.root}>
-                <Typography variant='h6'>{containerName}</Typography>
-                <MuiPickersUtilsProvider utils={DayjsUtils}>
-                  <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                    {arNewChildrenAsReact}
-                  </Assignment>
-                </MuiPickersUtilsProvider>
-              </Card>
-            )}
-          </>
+          !displayOnlyFA ? (
+            <Card className={classes.root}>
+              <CardHeader
+                title={<Typography variant='h6'>{containerName}</Typography>}
+                subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
+                avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
+              ></CardHeader>
+              {displayPageMessages()}
+              <MuiPickersUtilsProvider utils={DayjsUtils}>
+                <Assignment getPConnect={getPConnect} itemKey={itemKey}>
+                  {arNewChildrenAsReact}
+                </Assignment>
+              </MuiPickersUtilsProvider>
+            </Card>
+          ) : (
+            <Card className={classes.root}>
+              <Typography variant='h6'>{containerName}</Typography>
+              {displayPageMessages()}
+              <MuiPickersUtilsProvider utils={DayjsUtils}>
+                <Assignment getPConnect={getPConnect} itemKey={itemKey}>
+                  {arNewChildrenAsReact}
+                </Assignment>
+              </MuiPickersUtilsProvider>
+            </Card>
+          )
         ) : (
           <div>
             <ToDo
