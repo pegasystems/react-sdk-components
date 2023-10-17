@@ -49,7 +49,8 @@ interface NavBarProps extends PConnProps {
 
 const iconMap = {
   'pi pi-headline': <HomeOutlinedIcon fontSize='large' />,
-  'pi pi-flag-solid': <FlagOutlinedIcon fontSize='large' />
+  'pi pi-flag-solid': <FlagOutlinedIcon fontSize='large' />,
+  'pi pi-home-solid': <HomeOutlinedIcon fontSize='large' />
 };
 
 const drawerWidth = 300;
