@@ -67,6 +67,7 @@ import RadioButtons from './components/field/RadioButtons';
 import Reference from './components/infra/Reference/Reference';
 import Region from './components/infra/Region/Region';
 import RootContainer from './components/infra/RootContainer/RootContainer';
+import ScalarList from './components/field/ScalarList';
 import SemanticLink from './components/field/SemanticLink';
 import SimpleTable from './components/template/SimpleTable/SimpleTable';
 import SimpleTableManual from './components/template/SimpleTable/SimpleTableManual';
@@ -170,6 +171,7 @@ const pegaSdkComponentMap = {
   'RadioButtons': RadioButtons,
   'Region': Region,
   'RootContainer': RootContainer,
+  'ScalarList': ScalarList,
   'SemanticLink': SemanticLink,
   'SimpleTable': SimpleTable,
   'SimpleTableManual': SimpleTableManual,
