@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
 import PropTypes from 'prop-types';
+import FieldValueList from '../../designSystemExtension/FieldValueList';
 
 function CommaSeparatedList(props) {
   const { items } = props;
