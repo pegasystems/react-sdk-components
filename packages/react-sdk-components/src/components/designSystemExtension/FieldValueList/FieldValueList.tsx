@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 interface FieldValueListProps{
   // If any, enter additional props that only exist on this component
   name?: string,
-  value: string,
+  value: any,
   variant?: string
 }
 
