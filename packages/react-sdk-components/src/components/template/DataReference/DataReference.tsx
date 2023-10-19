@@ -1,23 +1,23 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import SingleReferenceReadonly from '../SingleReferenceReadOnly';
 import MultiReferenceReadonly from '../MultiReferenceReadOnly';
-// import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
-// Can't use PConn props until proper props for getPConnect().getChildren()[0].getPConnect;
-// interface DataReferenceProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   children: Array<any>,
-//   label: string,
-//   showLabel: any,
-//   displayMode: string,
-//   allowAndPersistChangesInReviewMode: boolean,
-//   referenceType: string,
-//   selectionMode: string,
-//   displayAs: string,
-//   ruleClass: string,
-//   parameters: Array<string>, // need to fix
-//   hideLabel: boolean
-// }
+// ReferenceProps can't be used until getComponentConfig() is NOT private
+interface DataReferenceProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  label: string,
+  showLabel: any,
+  displayMode: string,
+  allowAndPersistChangesInReviewMode: boolean,
+  referenceType: string,
+  selectionMode: string,
+  displayAs: string,
+  ruleClass: string,
+  parameters: Array<string>, // need to fix
+  hideLabel: boolean
+}
 
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -26,7 +26,7 @@ const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 declare const PCore: any;
 
 
-export default function DataReference(props /* : DataReferenceProps */) {
+export default function DataReference(props: DataReferenceProps) {
   const {
     children,
     getPConnect,
@@ -49,9 +49,9 @@ export default function DataReference(props /* : DataReferenceProps */) {
     propsToUse.label = '';
   }
   const rawViewMetadata = pConn.getRawMetadata();
-  const viewName = rawViewMetadata.name;
-  const [firstChildMeta] = rawViewMetadata.children;
-  const refList = rawViewMetadata.config.referenceList;
+  const viewName = rawViewMetadata["name"];
+  const [firstChildMeta] = rawViewMetadata["children"];
+  const refList = rawViewMetadata["config"].referenceList;
   const canBeChangedInReviewMode = allowAndPersistChangesInReviewMode && (displayAs === 'autocomplete' || displayAs === 'dropdown');
   let propName;
   const isDisplayModeEnabled = ['LABELS_LEFT', 'STACKED_LARGE_VAL'].includes(displayMode);
@@ -61,7 +61,7 @@ export default function DataReference(props /* : DataReferenceProps */) {
   useEffect(() => {
     if (
       firstChildMeta?.type === "Dropdown" &&
-      rawViewMetadata.config?.parameters
+      rawViewMetadata["config"]?.parameters
     ) {
       const { value, key, text } = firstChildMeta.config.datasource.fields;
       PCore.getDataApiUtils()
@@ -101,14 +101,14 @@ export default function DataReference(props /* : DataReferenceProps */) {
       delete firstChildMeta.config.readOnly;
     }
     if (firstChildMeta?.type === 'Dropdown') {
-      firstChildMeta.config.datasource.source = rawViewMetadata.config?.parameters
+      firstChildMeta.config.datasource.source = rawViewMetadata["config"]?.parameters
         ? dropDownDataSource
         : '@DATASOURCE '.concat(refList).concat('.pxResults');
     } else if (firstChildMeta?.type === 'AutoComplete') {
       firstChildMeta.config.datasource = refList;
 
       /* Insert the parameters to the component only if present */
-      if (rawViewMetadata.config?.parameters) {
+      if (rawViewMetadata["config"]?.parameters) {
         firstChildMeta.config.parameters = parameters;
       }
     }
@@ -187,8 +187,10 @@ export default function DataReference(props /* : DataReferenceProps */) {
   const recreatedFirstChild = useMemo(() => {
     const { type, config } = firstChildMeta;
     if (firstChildMeta?.type !== 'Region') {
-      pConn.clearErrorMessages({
-        property: propName
+      pConn.clearErrorMessages({  // Need to add empty string for category and context to match typdef
+        property: propName,
+        category: '',
+        context: ''
       });
       if (!canBeChangedInReviewMode && isDisplayModeEnabled && selectionMode === SELECTION_MODE.SINGLE) {
         return (
@@ -203,7 +205,7 @@ export default function DataReference(props /* : DataReferenceProps */) {
             referenceType={referenceType}
             hideLabel={hideLabel}
             dataRelationshipContext={
-              rawViewMetadata.config.contextClass && rawViewMetadata.config.name ? rawViewMetadata.config.name : null
+              rawViewMetadata["config"].contextClass && rawViewMetadata["config"].name ? rawViewMetadata["config"].name : null
             }
           />
         );
@@ -223,7 +225,7 @@ export default function DataReference(props /* : DataReferenceProps */) {
       // In the case of a datasource with parameters you cannot load the dropdown before the parameters
       if (
         type === 'Dropdown' &&
-        rawViewMetadata.config?.parameters &&
+        rawViewMetadata["config"]?.parameters &&
         dropDownDataSource === null
       ) {
         return null;
@@ -238,18 +240,19 @@ export default function DataReference(props /* : DataReferenceProps */) {
           disabled: propsToUse.disabled,
           label: propsToUse.label,
           viewName: getPConnect().getCurrentView(),
-          parameters: rawViewMetadata.config.parameters,
+          parameters: rawViewMetadata["config"].parameters,
           readOnly: false,
-          localeReference: rawViewMetadata.config.localeReference,
+          localeReference: rawViewMetadata["config"].localeReference,
           ...(selectionMode === SELECTION_MODE.SINGLE ? { referenceType } : ''),
           dataRelationshipContext:
-            rawViewMetadata.config.contextClass && rawViewMetadata.config.name
-              ? rawViewMetadata.config.name
+            rawViewMetadata["config"].contextClass && rawViewMetadata["config"].name
+              ? rawViewMetadata["config"].name
               : null,
           hideLabel,
           onRecordChange: handleSelection
-        }
-      });
+        },
+      },
+      '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
     }
   }, [
     firstChildMeta.config?.datasource?.source,
@@ -261,7 +264,7 @@ export default function DataReference(props /* : DataReferenceProps */) {
 
   // Only include the views region for rendering when it has content
   if (firstChildMeta?.type !== 'Region') {
-    const viewsRegion = rawViewMetadata.children[1];
+    const viewsRegion = rawViewMetadata["children"][1];
     if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
       childrenToRender = [recreatedFirstChild, ...children.slice(1)];
     } else {
@@ -279,31 +282,3 @@ export default function DataReference(props /* : DataReferenceProps */) {
     </div>
   );
 }
-
-// DataReference.defaultProps = {
-//   label: undefined,
-//   showLabel: undefined,
-//   displayMode: undefined,
-//   allowAndPersistChangesInReviewMode: false,
-//   referenceType: '',
-//   selectionMode: '',
-//   displayAs: '',
-//   ruleClass: '',
-//   parameters: undefined,
-//   hideLabel: false
-// };
-
-// DataReference.propTypes = {
-//   children: PropTypes.arrayOf(PropTypes.node).isRequired,
-//   getPConnect: PropTypes.func.isRequired,
-//   label: PropTypes.string,
-//   showLabel: PropTypes.func,
-//   displayMode: PropTypes.string,
-//   allowAndPersistChangesInReviewMode: PropTypes.bool,
-//   referenceType: PropTypes.string,
-//   selectionMode: PropTypes.string,
-//   displayAs: PropTypes.string,
-//   ruleClass: PropTypes.string,
-//   parameters: PropTypes.arrayOf(PropTypes.string), // need to fix
-//   hideLabel: PropTypes.bool
-// };

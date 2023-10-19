@@ -4,8 +4,7 @@ import createPConnectComponent from '../../../../bridge/react_pconnect';
 import FieldGroup from '../../../designSystemExtension/FieldGroup';
 // import type { PConnProps } from '../../../../types/PConnProps';
 
-// Can't use PConnProps until getPConnect().getChildren() types are ok
-//  and createComponent types are ok
+// Can't use PConnProps until getPConnect().getChildren() type is ok
 // interface DetailsThreeColumnProps extends PConnProps {
 //   // If any, enter additional props that only exist on this component
 //   showLabel: boolean,
@@ -47,7 +46,8 @@ export default function DetailsThreeColumn(props /* : DetailsThreeColumnProps */
         field.config.displayAsStatus = true;
       }
 
-      return getPConnect().createComponent(field);
+      return getPConnect().createComponent(field,
+        '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
     });
   }
 

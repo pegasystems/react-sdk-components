@@ -1,21 +1,21 @@
-// import type { PConnProps } from '../../../types/PConnProps';
+import React from "react";
+import type { PConnProps } from '../../../types/PConnProps';
 
-// Need to fix an error noted in comment below before typedefs will work correctly
-// interface SingleReferenceReadOnlyProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   config: any,
-//   displayAs?: string,
-//   ruleClass?: string,
-//   label?: string,
-//   displayMode?: string,
-//   type: string,
-//   referenceType?: string,
-//   hideLabel?: boolean,
-//   dataRelationshipContext?: string
-// }
+interface SingleReferenceReadOnlyProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  config: any,
+  displayAs?: string,
+  ruleClass?: string,
+  label?: string,
+  displayMode?: string,
+  type: string,
+  referenceType?: string,
+  hideLabel?: boolean,
+  dataRelationshipContext?: string
+}
 
 
-export default function SingleReferenceReadOnly(props /* : SingleReferenceReadOnlyProps */) {
+export default function SingleReferenceReadOnly(props: SingleReferenceReadOnlyProps) {
   const {
     getPConnect,
     displayAs = '',
@@ -44,8 +44,7 @@ export default function SingleReferenceReadOnly(props /* : SingleReferenceReadOn
     };
   }
 
-  // Need to correct typedefs for createComponent for typedefs to work in this file
-  return getPConnect().createComponent({
+  const component = getPConnect().createComponent({
     type: 'SemanticLink',
     config: {
       ...config,
@@ -55,5 +54,10 @@ export default function SingleReferenceReadOnly(props /* : SingleReferenceReadOn
       hideLabel,
       dataRelationshipContext
     }
-  });
+  },
+  '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
+
+  return (
+    <React.Fragment>{component}</React.Fragment>
+  )
 }
