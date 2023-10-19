@@ -48,7 +48,7 @@ export default function ScalarList(props: ScalarListProps) {
         readOnly: 'true'
       }
     },
-    '','', {}); // 2nd, 3rd, and 4th args empty string/object until typedef marked correctly as optional
+    '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
   });
 
   if (['LABELS_LEFT', 'STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode)) {

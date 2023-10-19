@@ -12,7 +12,7 @@ import React from "react";
 // }
 
 
-export default function Reference(props /* : ReferenceProps */) {
+export default function Reference(props /*: ReferenceProps */) {
   const { visibility = true, context = '', getPConnect, readOnly = false, displayMode = '' } = props;
 
   const pConnect = getPConnect();
