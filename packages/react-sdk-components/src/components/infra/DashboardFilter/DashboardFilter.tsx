@@ -12,20 +12,19 @@ import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-// import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
-// Can't use DashboardFilter props until createComponent typedefs properly allow optional args
-// interface DashboardFilterProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   children?: Array<any>,
-//   name: string,
-//   filterProp: string,
-//   type?: string,
-//   metadata?: any
-// }
+interface DashboardFilterProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children?: Array<any>,
+  name: string,
+  filterProp: string,
+  type?: string,
+  metadata?: any
+}
 
 
-export default function DashboardFilter(props /* : DashboardFilterProps */) {
+export default function DashboardFilter(props: DashboardFilterProps) {
   const { children = [], name, filterProp, type = '', metadata = null, getPConnect } = props;
   const { current: filterId } = useRef(uuidv4());
 
@@ -109,7 +108,8 @@ export default function DashboardFilter(props /* : DashboardFilterProps */) {
     metadata.config.onRecordChange = e => {
       fireFilterChange(e.id);
     };
-    return getPConnect().createComponent(metadata);
+    return getPConnect().createComponent(metadata,
+      null, null, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional;
   };
 
   const onChange = dates => {

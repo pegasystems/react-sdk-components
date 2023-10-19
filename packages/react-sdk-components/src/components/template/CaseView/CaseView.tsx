@@ -60,10 +60,12 @@ const useStyles = makeStyles(theme => ({
 export default function CaseView(props: CaseViewProps) {
   const {
     getPConnect,
-    icon,
+    icon = '',
     header,
     subheader,
-    children,
+    children = [],
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    showIconInHeader = true,
     caseInfo: {
       availableActions = [],
       availableProcesses = [],
@@ -288,11 +290,3 @@ export default function CaseView(props: CaseViewProps) {
 
   return getContainerContents();
 }
-
-CaseView.defaultProps = {
-  icon: '',
-  children: [],
-  caseInfo: {},
-  showIconInHeader: true,
-  getPConnect: null
-};

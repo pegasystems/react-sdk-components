@@ -249,7 +249,8 @@ export default function DataReference(props /* : DataReferenceProps */) {
           hideLabel,
           onRecordChange: handleSelection
         }
-      });
+      },
+      null, null, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional;);
     }
   }, [
     firstChildMeta.config?.datasource?.source,
@@ -279,31 +280,3 @@ export default function DataReference(props /* : DataReferenceProps */) {
     </div>
   );
 }
-
-// DataReference.defaultProps = {
-//   label: undefined,
-//   showLabel: undefined,
-//   displayMode: undefined,
-//   allowAndPersistChangesInReviewMode: false,
-//   referenceType: '',
-//   selectionMode: '',
-//   displayAs: '',
-//   ruleClass: '',
-//   parameters: undefined,
-//   hideLabel: false
-// };
-
-// DataReference.propTypes = {
-//   children: PropTypes.arrayOf(PropTypes.node).isRequired,
-//   getPConnect: PropTypes.func.isRequired,
-//   label: PropTypes.string,
-//   showLabel: PropTypes.func,
-//   displayMode: PropTypes.string,
-//   allowAndPersistChangesInReviewMode: PropTypes.bool,
-//   referenceType: PropTypes.string,
-//   selectionMode: PropTypes.string,
-//   displayAs: PropTypes.string,
-//   ruleClass: PropTypes.string,
-//   parameters: PropTypes.arrayOf(PropTypes.string), // need to fix
-//   hideLabel: PropTypes.bool
-// };
