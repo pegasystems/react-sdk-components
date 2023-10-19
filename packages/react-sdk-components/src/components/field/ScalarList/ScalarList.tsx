@@ -1,7 +1,18 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
-import PropTypes from 'prop-types';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { PConnProps } from 'packages/react-sdk-components/src/types/PConnProps';
+
+// ScalarListProps can't extend PConnFieldProps because its 'value' has a different type
+interface ScalarListProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  displayInModal: boolean,
+  hideLabel: boolean,
+  value: Array<any>,
+  componentType: string,
+  label: string,
+  displayMode: string
+}
 
 function CommaSeparatedList(props) {
   const { items } = props;
@@ -15,7 +26,7 @@ function CommaSeparatedList(props) {
   );
 }
 
-export default function ScalarList(props) {
+export default function ScalarList(props: ScalarListProps) {
   const {
     label,
     getPConnect,
@@ -36,7 +47,8 @@ export default function ScalarList(props) {
         ...restProps,
         readOnly: 'true'
       }
-    });
+    },
+    '','', {}); // 2nd, 3rd, and 4th args empty string/object until typedef marked correctly as optional
   });
 
   if (['LABELS_LEFT', 'STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode)) {
@@ -52,11 +64,3 @@ export default function ScalarList(props) {
 
   return <FieldValueList name={hideLabel ? '' : label} value={displayComp} variant='stacked' />;
 }
-
-ScalarList.defaultProps = {};
-ScalarList.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  displayInModal: PropTypes.bool,
-  hideLabel: PropTypes.bool,
-  value: PropTypes.arrayOf(PropTypes.any)
-};
