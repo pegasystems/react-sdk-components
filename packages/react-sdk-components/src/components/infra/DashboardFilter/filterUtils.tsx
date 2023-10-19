@@ -91,7 +91,7 @@ export const createFilterComponent = (getPConnect, filterMeta, index) => {
       metadata={filterMeta}
       type={filterMeta.type}
     >
-      {getPConnect().createComponent(filterMeta)}
+      {getPConnect().createComponent(filterMeta, '','', {})}
     </DashboardFilter>
   );
 };

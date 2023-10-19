@@ -1,15 +1,14 @@
 import React from "react";
-// import type { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
-// Can't use PConn props until proper props for createComponent in typedefs
-// interface MultiReferenceReadOnlyProps extends PConnProps {
-//   config: { referenceList: any, readonlyContextList: any },
-//   label: string,
-//   hideLabel: boolean
-// }
+interface MultiReferenceReadOnlyProps extends PConnProps {
+  config: { referenceList: any, readonlyContextList: any },
+  label: string,
+  hideLabel: boolean
+}
 
 
-export default function MultiReferenceReadOnly(props /* : MultiReferenceReadOnlyProps */) {
+export default function MultiReferenceReadOnly(props: MultiReferenceReadOnlyProps) {
   const { getPConnect, label = '', hideLabel = false, config } = props;
   const { referenceList, readonlyContextList } = config;
 
@@ -29,7 +28,8 @@ export default function MultiReferenceReadOnly(props /* : MultiReferenceReadOnly
       label,
       hideLabel
     }
-  });
+  },
+  null, null, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional;
 
    return (
     <React.Fragment>{component}</React.Fragment>

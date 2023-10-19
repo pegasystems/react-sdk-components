@@ -15,24 +15,6 @@ interface ViewContainerProps extends PConnProps {
   limit?: number
 }
 
-// ViewContainer.defaultProps = {
-//   getPConnect: null,
-//   name: "",
-//   loadingInfo: false,
-//   routingInfo: null,
-//   mode: "single",
-//   limit: 16
-// };
-
-// ViewContainer.propTypes = {
-//   getPConnect: PropTypes.func,
-//   name: PropTypes.string,
-//   loadingInfo: PropTypes.bool,
-//   routingInfo: PropTypes.objectOf(PropTypes.any),
-//   mode: PropTypes.string,
-//   limit: PropTypes.number
-// };
-
 
 // ViewContainer can emit View
 // import View from '../View';

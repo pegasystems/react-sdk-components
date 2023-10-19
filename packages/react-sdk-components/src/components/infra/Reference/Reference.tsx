@@ -10,21 +10,6 @@ interface ReferenceProps extends PConnProps {
   displayMode?: string
 }
 
-// Reference.defaultProps = {
-//   visibility: true,
-//   context: null,
-//   readOnly: false,
-//   displayMode: null
-// };
-
-// Reference.propTypes = {
-//   getPConnect: PropTypes.func.isRequired,
-//   visibility: PropTypes.bool,
-//   context: PropTypes.string,
-//   readOnly: PropTypes.bool,
-//   displayMode: PropTypes.string
-// };
-
 
 export default function Reference(props: ReferenceProps) {
   const { visibility = true, context = '', getPConnect, readOnly = false, displayMode = '' } = props;
