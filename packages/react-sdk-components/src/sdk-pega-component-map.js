@@ -70,6 +70,7 @@ import QuickCreate from './components/widget/QuickCreate';
 import RadioButtons from './components/field/RadioButtons';
 import Reference from './components/infra/Reference/Reference';
 import Region from './components/infra/Region/Region';
+import RichText from './components/field/RichText';
 import RootContainer from './components/infra/RootContainer/RootContainer';
 import ScalarList from './components/field/ScalarList';
 import SemanticLink from './components/field/SemanticLink';
@@ -178,6 +179,7 @@ const pegaSdkComponentMap = {
   'reference': Reference,   // See note about about non-standard capitalization
   'RadioButtons': RadioButtons,
   'Region': Region,
+  'RichText': RichText,
   'RootContainer': RootContainer,
   'ScalarList': ScalarList,
   'SemanticLink': SemanticLink,
