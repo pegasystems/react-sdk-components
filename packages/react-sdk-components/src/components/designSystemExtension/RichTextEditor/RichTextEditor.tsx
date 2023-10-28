@@ -57,7 +57,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: any, ref) {
   if (readOnly) {
     const value = defaultValue || '--';
     // eslint-disable-next-line react/no-danger
-    richTextComponent = <div key={id} id={id} dangerouslySetInnerHTML={{ __html: value }} />;
+    richTextComponent = <div key={id} id={id} className="readonly-richtext-editor" dangerouslySetInnerHTML={{ __html: value }} />;
   } else {
     richTextComponent = (
       <Editor
