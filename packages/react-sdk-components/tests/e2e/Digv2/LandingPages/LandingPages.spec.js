@@ -31,8 +31,8 @@ test.describe('E2E test', () => {
     await expect(worklist).toBeVisible();
 
     /** Creating a View Templates case-type */
-    const complexFieldsCase = page.locator('div[role="button"]:has-text("View Templates")');
-    await complexFieldsCase.click();
+    const viewTemplatesCase = page.locator('div[role="button"]:has-text("View Templates")');
+    await viewTemplatesCase.click();
 
     /** Extract caseID from CaseView */
     const caseID = await page.locator('#caseId').textContent();
@@ -71,8 +71,8 @@ test.describe('E2E test', () => {
       await expect(worklist).toBeVisible();
 
       /** Creating a View Templates case-type */
-      const complexFieldsCase = page.locator('div[role="button"]:has-text("View Templates")');
-      await complexFieldsCase.click();
+      const viewTemplatesCase = page.locator('div[role="button"]:has-text("View Templates")');
+      await viewTemplatesCase.click();
 
       /** Click on the `Home` landing page */
       const homeLandingPage = page.locator('div[role="button"]:has-text("Home")');
