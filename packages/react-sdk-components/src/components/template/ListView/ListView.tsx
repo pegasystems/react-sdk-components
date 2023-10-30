@@ -78,7 +78,7 @@ const filterByColumns: Array<any> = [];
 
 export default function ListView(props /* : ListViewProps */) {
   const { getPConnect, bInForm } = props;
-  const { globalSearch, referenceList, rowClickAction, selectionMode, referenceType, payload, parameters, compositeKeys, showDynamicFields, presets } = props;
+  const { globalSearch, referenceList, rowClickAction, selectionMode, referenceType, payload, parameters, compositeKeys, showDynamicFields } = props;
   const ref = useRef({}).current;
   const cosmosTableRef = useRef();
   // List component context
@@ -234,7 +234,7 @@ export default function ListView(props /* : ListViewProps */) {
   };
 
   const AssignDashObjects = ['Assign-Worklist', 'Assign-WorkBasket'];
-  function getHeaderCells(colFields, fields, presetFields) {
+  function getHeaderCells(colFields, fields) {
     const arReturn = colFields.map((field: any, index) => {
       let theField = field.config.value.substring(field.config.value.indexOf(' ') + 1);
       if (theField.indexOf('.') === 0) {
@@ -243,7 +243,7 @@ export default function ListView(props /* : ListViewProps */) {
       const colIndex = fields.findIndex(ele => ele.name === theField);
       const displayAsLink = field.config.displayAsLink;
       const headerRow: any = {};
-      headerRow.id = theField;
+      headerRow.id = fields[index].id;
       headerRow.type = field.type;
       headerRow.displayAsLink = displayAsLink;
       headerRow.numeric =
@@ -253,7 +253,7 @@ export default function ListView(props /* : ListViewProps */) {
         field.type === 'Currency' ||
         false;
       headerRow.disablePadding = false;
-      headerRow.label =  presetFields[index].config.label;
+      headerRow.label =  fields[index].label;
       if (colIndex > -1) {
         headerRow.classID = fields[colIndex].classID;
       }
@@ -268,14 +268,6 @@ export default function ListView(props /* : ListViewProps */) {
     return arReturn;
   }
 
-  function updateFields(arFields, theColumns): Array<any> {
-    const arReturn = arFields.filter(ele => ele.type !== 'reference');
-    arReturn.forEach((field, index) => {
-      arReturn[index].config.name = theColumns[index].id;
-    });
-
-    return arReturn;
-  }
 
   function getUsingData(arTableData): Array<any> {
     if (selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) {
@@ -536,15 +528,12 @@ export default function ListView(props /* : ListViewProps */) {
     listFields = addItemKeyInSelect(fieldDefs, itemKey, listFields, compositeKeys);
     const workListJSON = await fetchAllData(listFields);
 
-    // don't update these fields until we return from promise
-    let fields = presets[0].children[0].children;
-
     // this is an unresovled version of this.fields$, need unresolved, so can get the property reference
     const columnFields = componentConfig.presets[0].children[0].children;
 
     const tableDataResults = workListJSON['data'];
 
-    const myColumns = getHeaderCells(columnFields, fieldDefs, fields);
+    const myColumns = getHeaderCells(columnFields, fieldDefs);
 
     const selectParams: any = [];
 
@@ -561,8 +550,6 @@ export default function ListView(props /* : ListViewProps */) {
     });
 
     columnList = colList;
-
-    fields = updateFields(fields, myColumns);
 
     setResponse(tableDataResults);
 
@@ -1016,7 +1003,7 @@ export default function ListView(props /* : ListViewProps */) {
           )}
           <>
             {bInForm ? (
-              <TableContainer className={classes.tableInForm}>
+              <TableContainer id="list-view" className={classes.tableInForm}>
                 <Table stickyHeader aria-label='sticky table'>
                   <TableHead>
                     <TableRow>
@@ -1100,7 +1087,7 @@ export default function ListView(props /* : ListViewProps */) {
                 </Table>
               </TableContainer>
             ) : (
-              <TableContainer>
+              <TableContainer id="list-view">
                 <Table>
                   <TableHead>
                     <TableRow>
