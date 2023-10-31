@@ -4,10 +4,7 @@ import { Utils } from '../../helpers/utils';
 import Avatar from '@material-ui/core/Avatar';
 import { NavContext } from '../../helpers/reactContextHelpers';
 import './AppShell.css';
-
-// AppShell can emit NavBar or WssNavBar
-import NavBar from '../../infra/NavBar';
-import WssNavBar from '../../template/WssNavBar';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 import type { PConnProps } from '../../../types/PConnProps';
 
@@ -55,6 +52,10 @@ declare const PCore: any;
 
 
 export default function AppShell(props:AppShellProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const NavBar = getComponentFromMap("NavBar");
+  const WssNavBar = getComponentFromMap("WssNavBar");
+
   const {
     pages = [],
     caseTypes = [],
@@ -66,6 +67,7 @@ export default function AppShell(props:AppShellProps) {
     portalLogo,
     navDisplayOptions
   } = props;
+
   const [open, setOpen] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [activeTab, setActiveTab] = useState(!pages ? null : pages[0]?.pyRuleName);
