@@ -27,7 +27,7 @@ export default function InlineDashboardPage(props: InlineDashboardPageProps) {
     return Children.toArray(children);
   }, [children]);
 
-  const allFilters = getPConnect().getRawMetadata()["children"][1];
+  const allFilters = getPConnect().getRawMetadata().children[1];
 
   useEffect(() => {
     setFilterComponents(buildFilterComponents(getPConnect, allFilters));
