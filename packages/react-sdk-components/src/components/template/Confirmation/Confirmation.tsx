@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Confirmation(props: ConfirmationProps) {
   // Get emitted components from map (so we can get any override that may exist)
-  const ToDo = getComponentFromMap("ToDo");
+  const ToDo = getComponentFromMap("Todo"); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
   const Details = getComponentFromMap("Details");
 
   const classes = useStyles();

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import AssignmentCard from '../AssignmentCard';
-import MultiStep from '../MultiStep';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 // import type { PConnProps } from '../../../types/PConnProps';
 
@@ -22,6 +21,10 @@ import CloseIcon from '@material-ui/icons/Close';
 
 
 export default function Assignment(props /* : AssignmentProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const AssignmentCard = getComponentFromMap("AssignmentCard");
+  const MultiStep = getComponentFromMap("MultiStep");
+
   const { getPConnect, children, itemKey = '', isInModal = false, banners = [] } = props;
   const thePConn = getPConnect();
 

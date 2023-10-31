@@ -1,8 +1,8 @@
 import React from "react";
-
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import './MultiStep.css';
 
-import AssignmentCard from '../AssignmentCard';
+// import AssignmentCard from '../AssignmentCard';
 
 // import { useConstellationContext } from "../../bridge/Context/StoreContext";
 
@@ -23,6 +23,9 @@ interface MultiStepProps extends PConnProps {
 
 
 export default function MultiStep(props: MultiStepProps) {
+    // Get emitted components from map (so we can get any override that may exist)
+    const AssignmentCard = getComponentFromMap("AssignmentCard");
+
     const { getPConnect, children, itemKey = '', actionButtons, onButtonPress} = props;
     const { bIsVertical, arNavigationSteps } = props;
 
