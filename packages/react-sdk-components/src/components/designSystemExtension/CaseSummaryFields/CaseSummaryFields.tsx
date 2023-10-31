@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import isDeepEqual from 'fast-deep-equal/react';
-
+import isDeepEqual from 'fast-deep-equal/react';=
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Operator from '../Operator';
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getCurrencyOptions } from '../../field/Currency/currency-utils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 import './CaseSummaryFields.css';
 
@@ -21,7 +20,10 @@ interface CaseSummaryFieldsProps{
 }
 
 
-export default function CaseSummaryFields(props:CaseSummaryFieldsProps) {
+export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const Operator = getComponentFromMap("Operator");
+
   const { status, showStatus, theFields } = props;
 
   const [theFieldsToRender, setFieldsToRender] = useState([]);
