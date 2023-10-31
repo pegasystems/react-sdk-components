@@ -2,8 +2,6 @@ import React from "react";
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import './MultiStep.css';
 
-// import AssignmentCard from '../AssignmentCard';
-
 // import { useConstellationContext } from "../../bridge/Context/StoreContext";
 
 import type { PConnProps } from '../../../types/PConnProps';
