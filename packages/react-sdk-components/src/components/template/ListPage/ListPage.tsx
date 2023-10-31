@@ -11,8 +11,9 @@ interface ListPageProps extends PConnProps {
 
 
 export default function ListPage(props: ListPageProps) {
-
+ // special case for ListView - add in a prop
+ const listViewProps = {...props, bInForm: false};
   return (
-    <ListView  {...props}></ListView>
+    <ListView  {...listViewProps}></ListView>
   )
 }
