@@ -52,6 +52,10 @@ declare const PCore: any;
 
 
 export default function AppShell(props:AppShellProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const NavBar = getComponentFromMap("NavBar");
+  const WssNavBar = getComponentFromMap("WssNavBar");
+
   const {
     pages = [],
     caseTypes = [],
@@ -64,10 +68,6 @@ export default function AppShell(props:AppShellProps) {
     navDisplayOptions
   } = props;
 
-  // AppShell can emit NavBar or WssNavBar
-  // Get emitted components from map (so we can get any override that may exist)
-  const NavBar = getComponentFromMap("NavBar");
-  const WssNavBar = getComponentFromMap("WssNavBar");
 
   const [open, setOpen] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars

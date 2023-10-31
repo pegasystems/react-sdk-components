@@ -4,9 +4,9 @@
 import { Fragment, useState } from 'react';
 import React from 'react';
 import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers';
-import ToDo from '../../widget/ToDo';
-import Details from '../Details/Details';
 import { Button, Card, makeStyles } from '@material-ui/core';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+
 import type { PConnProps } from '../../../types/PConnProps';
 
 // XX does NOT have getPConnect. So, no need to extend from PConnProps
@@ -36,6 +36,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Confirmation(props: ConfirmationProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const ToDo = getComponentFromMap("ToDo");
+  const Details = getComponentFromMap("Details");
+
   const classes = useStyles();
   const CONSTS = PCore.getConstants();
   const [showConfirmView, setShowConfirmView] = useState(true);

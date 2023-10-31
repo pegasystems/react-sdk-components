@@ -10,8 +10,7 @@ import Grid from '@material-ui/core/Grid';
 
 import StoreContext from '../../../bridge/Context/StoreContext';
 import CaseViewActionsMenu from '../CaseViewActionsMenu';
-import VerticalTabs from '../../infra/VerticalTabs/VerticalTabs';
-import DeferLoad from '../../infra/DeferLoad';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 import type { PConnProps } from '../../../types/PConnProps';
 
@@ -58,6 +57,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function CaseView(props: CaseViewProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const VerticalTabs = getComponentFromMap("VerticalTabs");
+  const DeferLoad = getComponentFromMap("DeferLoad");
+
   const {
     getPConnect,
     icon = '',
