@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import isDeepEqual from 'fast-deep-equal/react';=
+import isDeepEqual from 'fast-deep-equal/react'
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
