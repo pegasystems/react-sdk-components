@@ -1,6 +1,6 @@
 import React from "react";
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
-import CaseSummaryFields from '../../designSystemExtension/CaseSummaryFields';
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseSummaryProps extends PConnProps {
@@ -10,6 +10,9 @@ interface CaseSummaryProps extends PConnProps {
 
 
 export default function CaseSummary(props: CaseSummaryProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const CaseSummaryFields = getComponentFromMap('CaseSummaryFields');
+
   const { getPConnect, children } = props;
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
