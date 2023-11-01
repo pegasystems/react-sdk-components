@@ -1,8 +1,5 @@
 import React from "react";
-import ListView from '../../ListView';
-import SimpleTable from '../SimpleTable';
-
-import PromotedFilters from '../../PromotedFilters';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // import type { PConnProps } from '../../../../types/PConnProps';
 
@@ -31,6 +28,11 @@ const isSelfReferencedProperty = (param, referenceProp) => {
  * @param {*} props - props
  */
 export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const ListView = getComponentFromMap('ListView');
+  const SimpleTable = getComponentFromMap('SimpleTable');
+  const PromotedFilters = getComponentFromMap('PromotedFilters');
+
   const { label, getPConnect, renderMode = '', showLabel = true, viewName = '', parameters, dataRelationshipContext = null } = props;
 
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };

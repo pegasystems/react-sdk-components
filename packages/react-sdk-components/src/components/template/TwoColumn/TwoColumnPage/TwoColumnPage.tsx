@@ -1,6 +1,5 @@
 import React from "react";
-
-import TwoColumn from '../TwoColumn/TwoColumn';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // TwoColumnPage does NOT have getPConnect. So, no need to extend from PConnProps
 interface TwoColumnPageProps{
@@ -14,6 +13,8 @@ interface TwoColumnPageProps{
  *  and mapping to the TwoColumn template.
  */
 export default function TwoColumnPage(props: TwoColumnPageProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const TwoColumn = getComponentFromMap('TwoColumn');
 
   return (
     <TwoColumn

@@ -1,32 +1,26 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useRef } from 'react';
-import FieldGroupTemplate from '../../FieldGroupTemplate';
-import SimpleTableManual from '../SimpleTableManual';
+import React from 'react';
 import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
-import ListView from '../../ListView';
-import type { PConnProps } from '../../../../types/PConnProps';
+import { useRef } from 'react';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-interface SimpleTableProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  multiRecordDisplayAs: string,
-  allowTableEdit: boolean,
-  contextClass: any,
-  label: string,
-  propertyLabel: any,
-  displayMode: string,
-  fieldMetadata: any,
-  hideLabel: any,
-  parameters: any,
-  isDataObject: any,
-  type: any,
-  ruleClass: any,
-  authorContext: any,
-  name: string
-}
+// import type { PConnProps } from '../../../../types/PConnProps';
 
+// Can't use SimpleTableProps until getComponentConfig() and getFieldMetadata() are NOT private
+// interface SimpleTableProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   multiRecordDisplayAs: string,
+//   allowTableEdit: boolean,
+//   contextClass: any
+// }
 declare const PCore: any;
 
-export default function SimpleTable(props: SimpleTableProps) {
+export default function SimpleTable(props /* : SimpleTableProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const ListView = getComponentFromMap('ListView');
+  const FieldGroupTemplate = getComponentFromMap('FieldGroupTemplate');
+  const SimpleTableManual = getComponentFromMap('SimpleTableManual');
+
   const {
     getPConnect,
     multiRecordDisplayAs,
@@ -120,7 +114,7 @@ export default function SimpleTable(props: SimpleTableProps) {
     const listViewComponent = <ListView {...listViewProps} />;
     return listViewComponent;
   } else {
-    const simpleTableManualProps: any = { ...props, contextClass };
+    const simpleTableManualProps = { ...props, contextClass };
     if (allowTableEdit === false) {
       simpleTableManualProps.hideAddRow = true;
       simpleTableManualProps.hideDeleteRow = true;

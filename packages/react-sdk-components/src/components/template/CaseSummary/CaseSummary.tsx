@@ -1,6 +1,6 @@
 import React from "react";
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
-import CaseSummaryFields from '../../designSystemExtension/CaseSummaryFields';
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseSummaryProps extends PConnProps {
@@ -10,10 +10,15 @@ interface CaseSummaryProps extends PConnProps {
 
 
 export default function CaseSummary(props: CaseSummaryProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const CaseSummaryFields = getComponentFromMap('CaseSummaryFields');
+
   const { getPConnect, children } = props;
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
-  const { status, showStatus } = theConfigProps;
+  // const { status, showStatus } = theConfigProps;
+  const status = theConfigProps["status"];
+  const showStatus = theConfigProps["showStatus"];
 
   // from Constellation DX Components
   // get the primary and secondary fields with the raw data (which has the non-resolved property values)
