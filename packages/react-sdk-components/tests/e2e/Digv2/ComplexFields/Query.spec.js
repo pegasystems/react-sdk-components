@@ -66,7 +66,7 @@ test.describe('E2E test', () => {
     await selectedDisplayAs.click();
     await page.locator('li:has-text("Table")').click();
 
-    const tableRows = page.locator('div[id="simple-table-manual"]');
+    const tableRows = page.locator('div[id="list-view"]');
     await expect(tableRows).toBeVisible();
   }, 10000);
 });
