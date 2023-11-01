@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import FieldValueList from '../../designSystemExtension/FieldValueList';
-import { PConnProps } from 'packages/react-sdk-components/src/types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 // ScalarListProps can't extend PConnFieldProps because its 'value' has a different type
 interface ScalarListProps extends PConnProps {

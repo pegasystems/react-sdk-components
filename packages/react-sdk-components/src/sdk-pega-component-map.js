@@ -5,6 +5,7 @@
 
 import ActionButtons from '../src/components/infra/ActionButtons';
 import ActionButtonsForFileUtil from './components/widget/FileUtility/ActionButtonsForFileUtil';
+import AlertBanner from './components/designSystemExtension/AlertBanner';
 import AppAnnouncement from './components/widget/AppAnnouncement';
 import AppShell from './components/template/AppShell/AppShell';
 import Assignment from './components/infra/Assignment/Assignment';
@@ -109,6 +110,7 @@ import WssQuickCreate from './components/designSystemExtension/WssQuickCreate';
 const pegaSdkComponentMap = {
   'ActionButtons': ActionButtons,
   'ActionButtonsForFileUtil': ActionButtonsForFileUtil,
+  'AlertBanner': AlertBanner,
   'AppAnnouncement': AppAnnouncement,
   'AppShell': AppShell,
   'Assignment': Assignment,
