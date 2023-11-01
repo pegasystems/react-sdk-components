@@ -45,7 +45,7 @@ function getFieldWidth(field, label) {
 export const getContext = (thePConn) => {
   const contextName = thePConn.getContextName();
   const pageReference = thePConn.getPageReference();
-  let { referenceList } = thePConn.getStateProps().config;
+  let { referenceList } = thePConn.getStateProps()?.config || thePConn.getStateProps();
   const pageReferenceForRows = referenceList.startsWith(".")
     ? `${pageReference}.${referenceList.substring(1)}`
     : referenceList;
@@ -102,6 +102,7 @@ export const buildMetaForListView = (
   ruleClass,
   name,
   propertyLabel,
+  isDataObject,
   parameters
 ) => {
   return {
@@ -111,10 +112,12 @@ export const buildMetaForListView = (
       referenceList: fieldMetadata.datasource.name,
       parameters: parameters ?? fieldMetadata.datasource.parameters,
       personalization: false,
+      isDataObject,
       grouping: true,
       globalSearch: true,
       reorderFields: true,
       toggleFieldVisibility: true,
+      title: propertyLabel,
       personalizationId: "" /* TODO */,
       template: "ListView",
       presets: [
