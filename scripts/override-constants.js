@@ -19,14 +19,15 @@ const sdkTopLevelContent = [ 'components_map' ];
 const sdkComponentLocationMap = {
   'ActionButtons': 'infra',
   'ActionButtonsForFileUtil': 'widget/FileUtility',
+  'AlertBanner': 'designSystemExtension',
   'AppAnnouncement': 'widget',
   'AppShell': 'template',
   'Assignment': 'infra',
   'AssignmentCard': 'infra',
   'Attachment': 'widget',
   'AutoComplete': 'field',
-  'BannerPage': 'template',
   'Banner': 'designSystemExtension',
+  'BannerPage': 'template',
   'CancelAlert': 'field',
   'CaseHistory': 'widget',
   'CaseSummary': 'template',
@@ -50,7 +51,10 @@ const sdkComponentLocationMap = {
   'Dropdown': 'field',
   'Email': 'field',
   'ErrorBoundary': 'infra',
+  'FieldGroup': 'designSystemExtension',
+  'FieldGroupList': 'designSystemExtension',
   'FieldGroupTemplate': 'template',
+  'FieldValueList': 'designSystemExtension',
   'FileUtility': 'widget/FileUtility',
   'FlowContainer': 'infra',
   'Followers': 'widget',
@@ -77,10 +81,11 @@ const sdkComponentLocationMap = {
   'PromotedFilters': 'template',
   'Pulse': 'designSystemExtension',
   'QuickCreate': 'widget',
-  'reference': 'infra',
   'RadioButtons': 'field',
+  'reference': 'infra',
   'Region': 'infra',
   'RootContainer': 'infra',
+  'ScalarList': 'field',
   'SemanticLink': 'field',
   'SimpleTable': 'template/SimpleTable',
   'SimpleTableManual': 'template/SimpleTable',
@@ -107,8 +112,8 @@ const sdkComponentLocationMap = {
   'WideNarrowDetails': 'template',
   'WideNarrowForm': 'template',
   'WideNarrowPage': 'template',
-  'WssQuickCreate': 'designSystemExtension',
-  'WssNavBar': 'template'
+  'WssNavBar': 'template',
+  'WssQuickCreate': 'designSystemExtension'
 };
 
 // Now package them up so they can be 'require'd from build-overrides.js

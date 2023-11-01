@@ -1,7 +1,8 @@
 import React, { createElement } from 'react';
 import Grid from '@material-ui/core/Grid';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-import FieldGroup from '../../../designSystemExtension/FieldGroup';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+
 // import type { PConnProps } from '../../../../types/PConnProps';
 
 
@@ -15,6 +16,9 @@ import FieldGroup from '../../../designSystemExtension/FieldGroup';
 
 
 export default function DetailsTwoColumn(props /* : DetailsTwoColumnProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldGroup = getComponentFromMap('FieldGroup');
+
   const { label, showLabel = true, getPConnect, showHighlightedData = false } = props;
 
   // Get the inherited props from the parent to determine label settings
@@ -48,7 +52,7 @@ export default function DetailsTwoColumn(props /* : DetailsTwoColumnProps */) {
       }
 
       return getPConnect().createComponent(field,
-        null, null, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional;
+        '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
     });
   }
 

@@ -37,7 +37,10 @@ import DetailsTwoColumn from './components/template/Details/DetailsTwoColumn/Det
 import Dropdown from './components/field/Dropdown';
 import Email from './components/field/Email/Email';
 import ErrorBoundary from './components/infra/ErrorBoundary';
+import FieldGroup from './components/designSystemExtension/FieldGroup';
+import FieldGroupList from './components/designSystemExtension/FieldGroupList';
 import FieldGroupTemplate from './components/template/FieldGroupTemplate';
+import FieldValueList from './components/designSystemExtension/FieldValueList';
 import FileUtility from './components/widget/FileUtility/FileUtility';
 import FlowContainer from './components/infra/Containers/FlowContainer';
 import Followers from './components/widget/Followers';
@@ -142,7 +145,10 @@ const pegaSdkComponentMap = {
   'Dropdown': Dropdown,
   'Email': Email,
   'ErrorBoundary': ErrorBoundary,
+  'FieldGroup': FieldGroup,
+  'FieldGroupList': FieldGroupList,
   'FieldGroupTemplate': FieldGroupTemplate,
+  'FieldValueList': FieldValueList,
   'FileUtility': FileUtility,
   'FlowContainer': FlowContainer,
   'Followers': Followers,
@@ -169,7 +175,7 @@ const pegaSdkComponentMap = {
   'PromotedFilters': PromotedFilters,
   'Pulse': Pulse,
   'QuickCreate': QuickCreate,
-  'reference': Reference,
+  'reference': Reference,   // See note about about non-standard capitalization
   'RadioButtons': RadioButtons,
   'Region': Region,
   'RootContainer': RootContainer,
@@ -187,7 +193,7 @@ const pegaSdkComponentMap = {
   'TextContent': TextContent,
   'TextInput': TextInput,
   'Time': Time,
-  'Todo': ToDo,
+  'Todo': ToDo,   // See note about about non-standard capitalization
   'TwoColumn': TwoColumn,
   'TwoColumnPage': TwoColumnPage,
   'TwoColumnTab': TwoColumnTab,
@@ -201,7 +207,7 @@ const pegaSdkComponentMap = {
   'WideNarrowForm': WideNarrowForm,
   'WideNarrowPage': WideNarrowPage,
   'WssNavBar': WssNavBar,
-  'WssQuickcreate': WssQuickCreate
+  'WssQuickCreate': WssQuickCreate
 };
 
 export default pegaSdkComponentMap;
