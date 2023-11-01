@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import SingleReferenceReadonly from '../SingleReferenceReadOnly';
-import MultiReferenceReadonly from '../MultiReferenceReadOnly';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+
 import type { PConnProps } from '../../../types/PConnProps';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private
@@ -27,6 +27,10 @@ declare const PCore: any;
 
 
 export default function DataReference(props: DataReferenceProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const SingleReferenceReadonly = getComponentFromMap('SingleReferenceReadOnly');
+  const MultiReferenceReadonly = getComponentFromMap('MultiReferenceReadOnly');
+
   const {
     children,
     getPConnect,

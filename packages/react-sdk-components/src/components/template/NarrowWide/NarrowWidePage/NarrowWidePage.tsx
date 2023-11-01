@@ -1,6 +1,6 @@
 import React, { Children } from "react";
 // import { TwoColumnPage as TwoColumn } from "@pega/cosmos-react-core";
-import NarrowWide from '../NarrowWide/NarrowWide';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 
 // NarrowWidePage does NOT have getPConnect. So, no need to extend from PConnProps
@@ -18,6 +18,9 @@ interface NarrowWidePageProps {
  * to the Cosmos template.
  */
 export default function NarrowWidePage(props: NarrowWidePageProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const NarrowWide = getComponentFromMap('NarrowWide');
+
   const { children, title, templateCol = '1fr 1fr', icon = '' } = props;
   const childArray = Children.toArray(children);
 

@@ -9,7 +9,7 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 import type { PConnProps } from '../../../types/PConnProps';
 
-// XX does NOT have getPConnect. So, no need to extend from PConnProps
+// Confirmation does NOT have getPConnect. So, no need to extend from PConnProps
 
 interface ConfirmationProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Confirmation(props: ConfirmationProps) {
   // Get emitted components from map (so we can get any override that may exist)
-  const ToDo = getComponentFromMap("Todo"); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
+  const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
   const Details = getComponentFromMap("Details");
 
   const classes = useStyles();

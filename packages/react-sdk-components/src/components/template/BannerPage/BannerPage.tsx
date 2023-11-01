@@ -1,6 +1,6 @@
 import { useMemo, Children } from 'react';
-import Banner from '../../designSystemExtension/Banner';
 import React from 'react';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 // BannerPage does NOT have getPConnect. So, no need to extend from PConnProps
 
@@ -20,6 +20,9 @@ interface BannerPageProps {
  * BannerPage template.
  */
 export default function BannerPage(props: BannerPageProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const Banner = getComponentFromMap('Banner');
+
   const {
     children,
     layout = 'two-column',

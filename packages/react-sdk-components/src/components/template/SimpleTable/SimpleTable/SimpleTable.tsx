@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react';
-import FieldGroupTemplate from '../../FieldGroupTemplate';
-import SimpleTableManual from '../SimpleTableManual';
 import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
 import { useRef } from 'react';
-import ListView from '../../ListView';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // import type { PConnProps } from '../../../../types/PConnProps';
 
@@ -18,6 +16,11 @@ import ListView from '../../ListView';
 declare const PCore: any;
 
 export default function SimpleTable(props /* : SimpleTableProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const ListView = getComponentFromMap('ListView');
+  const FieldGroupTemplate = getComponentFromMap('FieldGroupTemplate');
+  const SimpleTableManual = getComponentFromMap('SimpleTableManual');
+
   const {
     getPConnect,
     multiRecordDisplayAs,
