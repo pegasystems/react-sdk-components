@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { PConnProps } from '../../../types/PConnProps';
-
-import ActionButtons from "../ActionButtons";
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 interface AssignmentCardProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -14,6 +13,9 @@ interface AssignmentCardProps extends PConnProps {
 
 
 export default function AssignmentCard(props: AssignmentCardProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const ActionButtons = getComponentFromMap("ActionButtons");
+
   const { children, actionButtons, onButtonPress} = props;
 
   const [arMainButtons, setArMainButtons] = useState([]);
