@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
-// import { TextField } from "@material-ui/core";
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 import handleEvent from '../../helpers/event-utils';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
-import { format } from "../../helpers/formatters";
+import { format } from '../../helpers/formatters';
 import { getCurrencyCharacters, getCurrencyOptions } from './currency-utils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
 // Using control from: https://github.com/unicef/material-ui-currency-textfield
 
 interface CurrrencyProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Currency here
-  currencyISOCode?: string
+  currencyISOCode?: string;
 }
 
+export default function Currency(props: CurrrencyProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
 
-export default function Currency(props:CurrrencyProps) {
   const {
     getPConnect,
     label,
@@ -30,7 +31,7 @@ export default function Currency(props:CurrrencyProps) {
     helperText,
     displayMode,
     hideLabel,
-    currencyISOCode = "USD"
+    currencyISOCode = 'USD'
   } = props;
 
   const pConn = getPConnect();
@@ -53,9 +54,9 @@ export default function Currency(props:CurrrencyProps) {
   };
 
   const [currValue, setCurrValue] = useState('');
-  const [theCurrSym, setCurrSym] = useState("$");
-  const [theCurrDec, setCurrDec] = useState(".");
-  const [theCurrSep, setCurrSep] = useState(",");
+  const [theCurrSym, setCurrSym] = useState('$');
+  const [theCurrDec, setCurrDec] = useState('.');
+  const [theCurrSep, setCurrSep] = useState(',');
 
   useEffect(() => {
     // currencySymbols looks like this: { theCurrencySymbol: '$', theDecimalIndicator: '.', theSeparator: ',' }
@@ -78,7 +79,7 @@ export default function Currency(props:CurrrencyProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant="stacked" />;
   }
 
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
@@ -101,8 +102,8 @@ export default function Currency(props:CurrrencyProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=''
-      size='small'
+      placeholder=""
+      size="small"
       required={required}
       disabled={disabled}
       onChange={currOnChange}
@@ -110,9 +111,9 @@ export default function Currency(props:CurrrencyProps) {
       error={status === 'error'}
       label={label}
       value={currValue}
-      type='text'
-      outputFormat='number'
-      textAlign='left'
+      type="text"
+      outputFormat="number"
+      textAlign="left"
       InputProps={{ ...readOnlyProp, inputProps: { ...testProp, value: currValue } }}
       currencySymbol={theCurrSym}
       decimalCharacter={theCurrDec}
