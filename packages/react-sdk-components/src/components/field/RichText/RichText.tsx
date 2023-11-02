@@ -1,9 +1,18 @@
 import React, { useRef } from 'react';
-import RichTextEditor from '../../designSystemExtension/RichTextEditor';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
 import handleEvent from '../../helpers/event-utils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function RichText(props) {
+interface RichTextProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on TextArea here
+  additionalProps?: object;
+}
+
+export default function RichText(props: RichTextProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
+  const RichTextEditor = getComponentFromMap('RichTextEditor');
+
   const { getPConnect, value, placeholder, validatemessage, label, hideLabel, helperText, testId, displayMode, additionalProps } = props;
   const pConn = getPConnect();
   const editorRef: any = useRef(null);
