@@ -1,15 +1,17 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
-import TextInput from '../TextInput';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IntegerProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Integer here
 }
 
-
 export default function Integer(props: IntegerProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const TextInput = getComponentFromMap('TextInput');
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     label,
     required,
@@ -34,7 +36,7 @@ export default function Integer(props: IntegerProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
   }
 
   if (readOnly) {
@@ -69,8 +71,8 @@ export default function Integer(props: IntegerProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=''
-      size='small'
+      placeholder=""
+      size="small"
       required={required}
       disabled={disabled}
       onChange={intOnChange}
@@ -78,7 +80,7 @@ export default function Integer(props: IntegerProps) {
       error={status === 'error'}
       label={label}
       value={value}
-      type='text'
+      type="text"
       inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', ...testProp }}
     />
   );
