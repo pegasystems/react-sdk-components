@@ -12,7 +12,23 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const RichTextEditor = forwardRef(function RichTextEditor(props: any, ref) {
+interface RichTextEditorProps {
+  id?: string;
+  defaultValue: string;
+  label: string;
+  labelHidden: boolean;
+  info: string;
+  testId: string;
+  placeholder: string;
+  disabled: boolean;
+  required: boolean;
+  readOnly: boolean;
+  error: boolean;
+  onBlur: React.EventHandler<any>;
+  onChange: React.EventHandler<any>;
+}
+
+const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorProps, ref) {
   const classes = useStyles();
   const uid = useUID();
   const { id = uid, defaultValue, label, labelHidden, info, testId, placeholder, disabled, required, readOnly, error, onBlur, onChange } = props;
