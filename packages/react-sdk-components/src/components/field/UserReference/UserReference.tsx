@@ -1,8 +1,7 @@
 import React, { Fragment, memo, useEffect, useState } from 'react';
 import { Typography } from '@material-ui/core';
-import AutoComplete from '../AutoComplete';
-import Dropdown from '../Dropdown';
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 errors)
@@ -11,35 +10,37 @@ declare const PCore: any;
 const DROPDOWN_LIST = 'Drop-down list';
 const SEARCH_BOX = 'Search box';
 
-
 interface UserReferenceProps extends PConnProps {
   // If any, enter additional props that only exist on URLComponent here
-  displayAs?: string,
-  label?: string,
-  value?: any,
-  testId?: string,
-  placeholder?: string,
-  helperText?: string,
-  disabled?: boolean,
-  readOnly?: boolean,
-  required?: boolean,
-  validatemessage?: string,
-  showAsFormattedText?: boolean,
-  additionalProps?: object,
-  hideLabel?: boolean,
-  variant?: string
-  onChange?: any
+  displayAs?: string;
+  label?: string;
+  value?: any;
+  testId?: string;
+  placeholder?: string;
+  helperText?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+  required?: boolean;
+  validatemessage?: string;
+  showAsFormattedText?: boolean;
+  additionalProps?: object;
+  hideLabel?: boolean;
+  variant?: string;
+  onChange?: any;
 }
 
-
 const UserReference = (props: UserReferenceProps) => {
+  // Get emitted components from map (so we can get any override that may exist)
+  const AutoComplete = getComponentFromMap('AutoComplete');
+  const Dropdown = getComponentFromMap('Dropdown');
+
   const {
     label = '',
     displayAs = '',
     getPConnect,
     value = '',
     testId = '',
-    helperText= '',
+    helperText = '',
     validatemessage = '',
     placeholder = '',
     showAsFormattedText = false,
@@ -65,7 +66,7 @@ const UserReference = (props: UserReferenceProps) => {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(userId).then(res => {
+        getOperatorDetails(userId).then((res) => {
           if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
             setUserName(res.data.pyOperatorInfo.pyUserName);
           }
@@ -77,14 +78,14 @@ const UserReference = (props: UserReferenceProps) => {
       };
       PCore.getRestClient()
         .invokeRestApi('getListData', { queryPayload })
-        .then(res => {
-          const ddDataSource = res.data.data.map(listItem => ({
+        .then((res) => {
+          const ddDataSource = res.data.data.map((listItem) => ({
             key: listItem.pyUserIdentifier,
             value: listItem.pyUserName
           }));
           setDropDownDataSource(ddDataSource);
         })
-        .catch(err => {
+        .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err);
         });
@@ -101,8 +102,8 @@ const UserReference = (props: UserReferenceProps) => {
             TODO: This has to be replaced with Operator Component
           */}
           <div>
-            <Typography variant='caption'>{label}</Typography>
-            <Typography variant='body1'>{userName}</Typography>
+            <Typography variant="caption">{label}</Typography>
+            <Typography variant="body1">{userName}</Typography>
           </div>
         </Fragment>
       );
@@ -132,7 +133,7 @@ const UserReference = (props: UserReferenceProps) => {
           label={label}
           getPConnect={getPConnect}
           datasource={OPERATORS_DP}
-          listType='datapage'
+          listType="datapage"
           columns={columns}
           testId={testId}
           placeholder={placeholder}
@@ -152,7 +153,7 @@ const UserReference = (props: UserReferenceProps) => {
         <Dropdown
           additionalProps={additionalProps}
           datasource={dropDownDataSource}
-          listType='associated'
+          listType="associated"
           getPConnect={getPConnect}
           label={label}
           value={userId}
@@ -172,7 +173,6 @@ const UserReference = (props: UserReferenceProps) => {
 
   return userReferenceComponent;
 };
-
 
 // as objects are there in props, shallow comparision fails & re-rendering of comp happens even with
 // same key value pairs in obj. hence using custom comparison function on when to re-render

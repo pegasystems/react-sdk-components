@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
-import { format } from "../../helpers/formatters";
+import { format } from '../../helpers/formatters';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
 // Using control from: https://github.com/unicef/material-ui-currency-textfield
 
 interface DecimalProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Decimal here
-  currencyISOCode?: string,
-  decimalPrecision?: number,
-  showGroupSeparators?: string
+  currencyISOCode?: string;
+  decimalPrecision?: number;
+  showGroupSeparators?: string;
 }
 
-
 export default function Decimal(props: DecimalProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     getPConnect,
     label,
@@ -30,7 +32,7 @@ export default function Decimal(props: DecimalProps) {
     helperText,
     displayMode,
     hideLabel,
-    currencyISOCode = "USD",
+    currencyISOCode = 'USD',
     decimalPrecision = 2,
     showGroupSeparators = true,
     testId
@@ -42,8 +44,8 @@ export default function Decimal(props: DecimalProps) {
   const helperTextToDisplay = validatemessage || helperText;
 
   const [decValue, setDecimalvalue] = useState('');
-  const [theCurrDec, setCurrDec] = useState(".");
-  const [theCurrSep, setCurrSep] = useState(",");
+  const [theCurrDec, setCurrDec] = useState('.');
+  const [theCurrSep, setCurrSep] = useState(',');
 
   useEffect(() => {
     const theSymbols = getCurrencyCharacters(currencyISOCode);
@@ -63,7 +65,7 @@ export default function Decimal(props: DecimalProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant="stacked" />;
   }
 
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly
@@ -92,8 +94,8 @@ export default function Decimal(props: DecimalProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=''
-      size='small'
+      placeholder=""
+      size="small"
       required={required}
       disabled={disabled}
       onChange={decimalOnChange}
@@ -101,11 +103,11 @@ export default function Decimal(props: DecimalProps) {
       error={status === 'error'}
       label={label}
       value={decValue}
-      type='text'
-      outputFormat='number'
-      textAlign='left'
+      type="text"
+      outputFormat="number"
+      textAlign="left"
       InputProps={{ ...readOnlyProp, inputProps: { ...testProp, value: decValue } }}
-      currencySymbol=''
+      currencySymbol=""
       decimalCharacter={theCurrDec}
       digitGroupSeparator={showGroupSeparators ? theCurrSep : ''}
       decimalPlaces={decimalPrecision}

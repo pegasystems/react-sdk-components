@@ -1,5 +1,5 @@
 import React from 'react';
-import AlertBanner from '../designSystemExtension/AlertBanner';
+import { getComponentFromMap } from '../../bridge/helpers/sdk_component_map';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
 declare const PCore: any;
@@ -25,7 +25,7 @@ function getMessagesGrouped(inputMessages) {
   const messages = {};
 
   if (inputMessages && inputMessages instanceof Array && inputMessages.length > 0) {
-    inputMessages.forEach(item => {
+    inputMessages.forEach((item) => {
       const { message, type } = item;
       messages[type] = [...(messages[type] || []), message];
     });
@@ -41,8 +41,7 @@ function getMessagesGrouped(inputMessages) {
  * Eg: 'urgent'
  */
 function getVariant(type) {
-  const { BANNER_VARIANT_SUCCESS, BANNER_VARIANT_INFO, BANNER_VARIANT_URGENT, MESSAGES } =
-    PCore.getConstants();
+  const { BANNER_VARIANT_SUCCESS, BANNER_VARIANT_INFO, BANNER_VARIANT_URGENT, MESSAGES } = PCore.getConstants();
   const { MESSAGES_TYPE_ERROR, MESSAGES_TYPE_INFO, MESSAGES_TYPE_SUCCESS } = MESSAGES;
 
   let variant;
@@ -63,13 +62,14 @@ function getVariant(type) {
 }
 
 function getBanners(config) {
+  const AlertBanner = getComponentFromMap('AlertBanner');
   const { target, pageMessages, httpMessages } = config;
   const { PAGE } = PCore.getConstants();
   const { clearMessages } = PCore.getMessageManager();
   const banners: any = [];
   const groupedPageMessages = getMessagesGrouped(pageMessages);
 
-  Object.keys(groupedPageMessages).forEach(type => {
+  Object.keys(groupedPageMessages).forEach((type) => {
     const messagesByType = groupedPageMessages[type];
     const variant = getVariant(type);
     const pageMessagesBannerID = `${target}_${PAGE}_${type}`.toLowerCase().replace('/', '_');
@@ -94,9 +94,7 @@ function getBanners(config) {
   });
 
   if (httpMessages && httpMessages.length > 0) {
-    banners.push(
-      <AlertBanner id='modalViewContainerBanner' variant='urgent' messages={httpMessages} />
-    );
+    banners.push(<AlertBanner id="modalViewContainerBanner" variant="urgent" messages={httpMessages} />);
   }
 
   return banners;
