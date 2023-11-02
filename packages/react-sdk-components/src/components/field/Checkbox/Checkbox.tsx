@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText
-} from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@material-ui/core';
 import handleEvent from '../../helpers/event-utils';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
 import type { PConnProps } from '../../../types/PConnProps';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 // Checkbox passes in 'value' as a boolean. So can't use the default
 //  PConnFieldProps since it expects value to be a string.
@@ -16,26 +10,29 @@ interface CheckboxProps extends PConnProps {
   // If any, enter additional props that only exist on Checkbox here
   // Everything from PConnFieldProps except value and change type of value to boolean
 
-  value?: boolean,
-  label: string,
-  required: boolean,
-  disabled: boolean,
-  validatemessage: string,
-  status?: string,
+  value?: boolean;
+  label: string;
+  required: boolean;
+  disabled: boolean;
+  validatemessage: string;
+  status?: string;
   // eslint-disable-next-line react/no-unused-prop-types
-  onChange: any,
+  onChange: any;
   // eslint-disable-next-line react/no-unused-prop-types
-  onBlur?: any,
-  readOnly: boolean,
-  testId: string,
-  helperText: string,
-  displayMode?: string,
-  hideLabel: boolean,
+  onBlur?: any;
+  readOnly: boolean;
+  testId: string;
+  helperText: string;
+  displayMode?: string;
+  hideLabel: boolean;
   // eslint-disable-next-line react/no-unused-prop-types
-  placeholder?: string
+  placeholder?: string;
 }
 
 export default function CheckboxComponent(props: CheckboxProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     getPConnect,
     label,
@@ -69,18 +66,18 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value.toString()} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value.toString()} variant="stacked" />;
   }
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     handleEvent(actionsApi, 'changeNblur', propName, event.target.checked);
   };
 
-  const handleBlur = event => {
-    thePConn.getValidationApi().validate(event.target.checked, "");   // 2nd arg empty string until typedef marked correctly as optional
+  const handleBlur = (event) => {
+    thePConn.getValidationApi().validate(event.target.checked, ''); // 2nd arg empty string until typedef marked correctly as optional
   };
 
-  let theCheckbox = <Checkbox color='primary' disabled={disabled} />;
+  let theCheckbox = <Checkbox color="primary" disabled={disabled} />;
 
   if (readOnly) {
     // Workaround for lack of InputProps readOnly from https://github.com/mui-org/material-ui/issues/17043
@@ -97,7 +94,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
           onChange={!readOnly ? handleChange : undefined}
           onBlur={!readOnly ? handleBlur : undefined}
           label={caption}
-          labelPlacement='end'
+          labelPlacement="end"
           data-test-id={testId}
         />
       </FormGroup>

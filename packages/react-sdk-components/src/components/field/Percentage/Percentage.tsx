@@ -2,10 +2,8 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import TextInput from '../TextInput';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
-
 
 // Inspired by https://stackoverflow.com/questions/50823182/material-ui-remove-up-down-arrow-dials-from-textview
 const useStyles = makeStyles((/* theme */) => ({
@@ -24,13 +22,15 @@ const useStyles = makeStyles((/* theme */) => ({
   }
 }));
 
-
 interface PercentageProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Percentage here
 }
 
-
 export default function Percentage(props: PercentageProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const TextInput = getComponentFromMap('TextInput');
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const classes = useStyles();
 
   const {
@@ -57,7 +57,7 @@ export default function Percentage(props: PercentageProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
   }
 
   if (readOnly) {
@@ -76,8 +76,8 @@ export default function Percentage(props: PercentageProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=''
-      size='small'
+      placeholder=""
+      size="small"
       required={required}
       disabled={disabled}
       onChange={onChange}
@@ -85,7 +85,7 @@ export default function Percentage(props: PercentageProps) {
       error={status === 'error'}
       label={label}
       value={value}
-      type='number'
+      type="number"
       inputProps={{ ...testProp }}
     />
   );
