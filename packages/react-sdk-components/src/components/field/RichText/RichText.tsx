@@ -55,9 +55,11 @@ export default function RichText(props: RichTextProps) {
     }
     const handleChange = () => {
       if (status === 'error') {
-        const property = pConn.getStateProps().value;
+        const property = pConn.getStateProps()["value"];
         pConn.clearErrorMessages({
-          property
+          property,
+          category: '',
+          context: ''
         });
       }
     };
@@ -65,7 +67,7 @@ export default function RichText(props: RichTextProps) {
     const handleBlur = () => {
       if (editorRef.current) {
         const editorValue = editorRef.current.getContent({ format: 'html' });
-        const property = pConn.getStateProps().value;
+        const property = pConn.getStateProps()["value"];
         handleEvent(actionsApi, 'changeNblur', property, editorValue);
       }
     };
