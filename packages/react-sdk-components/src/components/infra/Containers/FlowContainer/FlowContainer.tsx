@@ -488,7 +488,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
               type={TODO}
               context={todo_context}
               itemKey={itemKey}
-              isConfirm
+              isConfirm={bHasCaseMessages}
             ></ToDo>
           </div>
         ))}
