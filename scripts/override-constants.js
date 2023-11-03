@@ -87,6 +87,7 @@ const sdkComponentLocationMap = {
   'RadioButtons': 'field',
   'reference': 'infra',
   'Region': 'infra',
+  'RichText': 'field',
   'RichTextEditor': 'designsystemExtension',
   'RootContainer': 'infra',
   'ScalarList': 'field',
