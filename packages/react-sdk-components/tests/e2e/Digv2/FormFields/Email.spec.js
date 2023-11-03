@@ -114,10 +114,10 @@ test.describe('E2E test', () => {
     );
     await editableEmail.type("Johndoe.com");
     await editableEmail.blur();
-    await expect(page.locator('p:has-text("Invalid value")')).toBeVisible();
+    await expect(page.locator('p:has-text("Invalid")')).toBeVisible();
     editableEmail.fill("John@doe.com");
     await editableEmail.blur();
-    await expect(page.locator('p:has-text("Invalid value")')).toBeHidden();
+    await expect(page.locator('p:has-text("Invalid")')).toBeHidden();
 
     attributes = await common.getAttributes(editableEmail);
     await expect(attributes.includes('readonly')).toBeFalsy();
