@@ -70,7 +70,7 @@ export default function DeferLoad(props /* : DeferLoadProps */) {
 
   const getViewOptions = () => ({
     viewContext: resourceType,
-    pageClass: loadViewCaseID ? '' : pConnect.getDataObject('').pyPortal.classID,  // 2nd arg empty string until typedef allows optional
+    pageClass: loadViewCaseID ? '' : pConnect.getDataObject(pConnect.getContextName()).pyPortal.classID,  // 2nd arg empty string until typedef allows optional
     container: isContainerPreview ? 'preview' : null,
     containerName: isContainerPreview ? 'preview' : null,
     updateData: isContainerPreview

@@ -55,7 +55,7 @@ export default function Dropdown(props: DropdownProps) {
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
   useEffect(() => {
-    const list = Utils.getOptionList(props, getPConnect().getDataObject('')); // 1st arg empty string until typedef marked correctly
+    const list = Utils.getOptionList(props, getPConnect().getDataObject(thePConn.getContextName())); // 1st arg empty string until typedef marked correctly
     const optionsList = [...list];
     optionsList.unshift({
       key: placeholder,

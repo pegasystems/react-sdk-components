@@ -53,7 +53,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
 
   // theOptions will be an array of JSON objects that are literally key/value pairs.
   //  Ex: [ {key: "Basic", value: "Basic"} ]
-  const theOptions = Utils.getOptionList(theConfigProps, thePConn.getDataObject(''));
+  const theOptions = Utils.getOptionList(theConfigProps, thePConn.getDataObject(thePConn.getContextName()));
 
   useEffect(() => {
     // This update theSelectedButton which will update the UI to show the selected button correctly

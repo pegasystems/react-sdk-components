@@ -130,7 +130,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
 
   useEffect(() => {
     if (listType === 'associated') {
-      setOptions(Utils.getOptionList(props, getPConnect().getDataObject('')));
+      setOptions(Utils.getOptionList(props, getPConnect().getDataObject(context)));
     }
   }, [theDatasource]);
 

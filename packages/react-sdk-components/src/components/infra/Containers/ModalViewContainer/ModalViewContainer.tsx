@@ -208,8 +208,8 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
           const newComp = configObject.getPConnect();
           // const newCompName = newComp.getComponentName();
           const caseInfo =
-            newComp && newComp.getDataObject() && newComp.getDataObject().caseInfo
-              ? newComp.getDataObject().caseInfo
+            newComp && newComp.getDataObject() && newComp.getDataObject(newComp.getContextName()).caseInfo
+              ? newComp.getDataObject(newComp.getContextName()).caseInfo
               : null;
 
           // console.log(`ModalViewContainer just created newComp: ${newCompName}`);
