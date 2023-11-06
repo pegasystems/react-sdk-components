@@ -5,20 +5,11 @@ const { test, expect } = require('@playwright/test');
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal?portal=DigV2SelfService');
-});
+test.beforeEach(common.launchSelfServicePortal);
 
 test.describe('E2E test', () => {
-  test('should login and able to render self-service portal', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+  test('should login and able to render self-service portal', async ({ page }) => {
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing app name presence */
     const appName = page.locator('button[id="appName"]:has-text("DigV2")');
@@ -44,7 +35,7 @@ test.describe('E2E test', () => {
     const myWork = await page.locator('h6:has-text("My Work")');
     await expect(myWork).toBeVisible();
 
-     /** Testing the Inline Dashboard navigation link */
+    /** Testing the Inline Dashboard navigation link */
     await expect(navLinks.locator('button:has-text("Inline Dashboard")')).toBeVisible();
 
     await navLinks.locator('button:has-text("Inline Dashboard")').click();
