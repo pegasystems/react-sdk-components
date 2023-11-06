@@ -1,14 +1,10 @@
 /* eslint-disable no-undef */
 
-const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
+const { test } = require('@playwright/test');
 
 const common = require('../../common');
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/embedded', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchEmbedded);
 
 test.describe('E2E test', () => {
   test('Embedded: should launch, select a service plan and fill details', async ({ page }) => {
@@ -72,9 +68,7 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("next")').click();
 
-    const dataServiceBeginDate = page.locator(
-      'div[data-test-id="1321FA74451B96BC02663B0EF96CCBB9"]'
-    );
+    const dataServiceBeginDate = page.locator('div[data-test-id="1321FA74451B96BC02663B0EF96CCBB9"]');
     const dataServiceBeginDateInput = dataServiceBeginDate.locator('input');
     await dataServiceBeginDateInput.click();
     const futureDate = common.getFutureDate();
@@ -88,13 +82,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/MediaCo/embedded"
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/MediaCo/embedded';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

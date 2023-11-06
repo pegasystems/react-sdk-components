@@ -1,24 +1,14 @@
 /* eslint-disable no-undef */
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
-  test('should login, create case and run different test cases for Query', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+  test('should login, create case and run different test cases for Query', async ({ page }) => {
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -40,9 +30,7 @@ test.describe('E2E test', () => {
     await page.locator('button:has-text("submit")').click();
 
     /** selecting SingleRecord option from dropdown  */
-    const selectedOption = await page.locator(
-      'div[data-test-id="365ab066d5dd67171317bc3fc755245a"]'
-    );
+    const selectedOption = await page.locator('div[data-test-id="365ab066d5dd67171317bc3fc755245a"]');
     await selectedOption.click();
     await page.locator('li:has-text("SingleRecord")').click();
 
@@ -60,9 +48,7 @@ test.describe('E2E test', () => {
     await page.locator('li:has-text("ListOfRecords")').click();
 
     /** selecting Table option from dropdown  */
-    const selectedDisplayAs = await page.locator(
-      'div[data-test-id="03e83bd975984c06d12c584cb59cc4ad"]'
-    );
+    const selectedDisplayAs = await page.locator('div[data-test-id="03e83bd975984c06d12c584cb59cc4ad"]');
     await selectedDisplayAs.click();
     await page.locator('li:has-text("Table")').click();
 
@@ -71,13 +57,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/DigV2/ComplexFields/Query"
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/ComplexFields/Query';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

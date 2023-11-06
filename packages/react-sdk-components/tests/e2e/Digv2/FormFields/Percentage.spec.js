@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
@@ -11,20 +10,13 @@ const common = require('../../../common');
 const isDisabled = true;
 const isVisible = true;
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   let attributes;
 
   test('should login, create case and run the Percentage tests', async ({ page }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -51,15 +43,11 @@ test.describe('E2E test', () => {
     await page.locator('button:has-text("submit")').click();
 
     /** Required tests */
-    const requiredPercentage = page.locator(
-      'input[data-test-id="86a805ca8375ed5df057777df74dd085"]'
-    );
+    const requiredPercentage = page.locator('input[data-test-id="86a805ca8375ed5df057777df74dd085"]');
     attributes = await common.getAttributes(requiredPercentage);
     await expect(attributes.includes('required')).toBeTruthy();
 
-    const notrequiredPercentage = page.locator(
-      'input[data-test-id="b1de2a4d96400570b2f6de9defed1adc"]'
-    );
+    const notrequiredPercentage = page.locator('input[data-test-id="b1de2a4d96400570b2f6de9defed1adc"]');
     attributes = await common.getAttributes(notrequiredPercentage);
     await expect(attributes.includes('required')).toBeFalsy();
 
@@ -69,15 +57,11 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Disable' }).click();
 
     // /** Disable tests */
-    const alwaysDisabledPercentage = page.locator(
-      'input[data-test-id="7900b3bd0ac7a6a59b1f5fe9b23749c4"]'
-    );
+    const alwaysDisabledPercentage = page.locator('input[data-test-id="7900b3bd0ac7a6a59b1f5fe9b23749c4"]');
     attributes = await common.getAttributes(alwaysDisabledPercentage);
     await expect(attributes.includes('disabled')).toBeTruthy();
 
-    const conditionallyDisabledPercentage = page.locator(
-      'input[data-test-id="2ba7bcc4ab57debc35f68e4dfd2c15d8"]'
-    );
+    const conditionallyDisabledPercentage = page.locator('input[data-test-id="2ba7bcc4ab57debc35f68e4dfd2c15d8"]');
     attributes = await common.getAttributes(conditionallyDisabledPercentage);
     if (isDisabled) {
       await expect(attributes.includes('disabled')).toBeTruthy();
@@ -85,9 +69,7 @@ test.describe('E2E test', () => {
       await expect(attributes.includes('disabled')).toBeFalsy();
     }
 
-    const neverDisabledPercentage = page.locator(
-      'input[data-test-id="bbbf1d564583c33adcd086b330fcb1f7"]'
-    );
+    const neverDisabledPercentage = page.locator('input[data-test-id="bbbf1d564583c33adcd086b330fcb1f7"]');
     attributes = await common.getAttributes(neverDisabledPercentage);
     await expect(attributes.includes('disabled')).toBeFalsy();
 
@@ -97,16 +79,12 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Update' }).click();
 
     /** Update tests */
-    const readonlyPercentage = page.locator(
-      'input[data-test-id="4d28c40ee619dafd16f7f4813e18ece6"]'
-    );
+    const readonlyPercentage = page.locator('input[data-test-id="4d28c40ee619dafd16f7f4813e18ece6"]');
     attributes = await common.getAttributes(readonlyPercentage);
     await expect(attributes.includes('readonly')).toBeTruthy();
 
-    const editablePercentage = page.locator(
-      'input[data-test-id="2cf58b575154624084c009d2648659ad"]'
-    );
-    editablePercentage.type("10000");
+    const editablePercentage = page.locator('input[data-test-id="2cf58b575154624084c009d2648659ad"]');
+    editablePercentage.type('10000');
 
     attributes = await common.getAttributes(editablePercentage);
     await expect(attributes.includes('readonly')).toBeFalsy();
@@ -117,18 +95,12 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Visibility' }).click();
 
     /** Visibility tests */
-    await expect(
-      page.locator('input[data-test-id="bc2c3cb45ab755e262b381abbb0307fa"]')
-    ).toBeVisible();
+    await expect(page.locator('input[data-test-id="bc2c3cb45ab755e262b381abbb0307fa"]')).toBeVisible();
 
-    const neverVisiblePercentage = await page.locator(
-      'input[data-test-id="a3584329c24e284dda8d3771e72bca20"]'
-    );
+    const neverVisiblePercentage = await page.locator('input[data-test-id="a3584329c24e284dda8d3771e72bca20"]');
     await expect(neverVisiblePercentage).not.toBeVisible();
 
-    const conditionallyVisiblePercentage = await page.locator(
-      'input[data-test-id="d73817df2fef4a70f74349d3c70f10a5"]'
-    );
+    const conditionallyVisiblePercentage = await page.locator('input[data-test-id="d73817df2fef4a70f74349d3c70f10a5"]');
 
     if (isVisible) {
       await expect(conditionallyVisiblePercentage).toBeVisible();
@@ -138,13 +110,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/DigV2/FormFields/Percentage"
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/FormFields/Percentage'
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

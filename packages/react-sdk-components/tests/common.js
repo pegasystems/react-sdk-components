@@ -1,4 +1,23 @@
 /* eslint-disable no-undef */
+const { test, expect } = require('@playwright/test');
+import { attachCoverageReport } from 'monocart-reporter';
+
+const { config } = require('./config');
+
+const launchPortal = async ({ page }) => {
+  await page.setViewportSize({ width: 1720, height: 1080 });
+  await page.goto(`${config.baseUrl}/portal`, { waitUntil: 'networkidle' });
+};
+
+const launchEmbedded = async ({ page }) => {
+  await page.setViewportSize({ width: 1720, height: 1080 });
+  await page.goto(`${config.baseUrl}/embedded`, { waitUntil: 'networkidle' });
+};
+
+const launchSelfServicePortal = async ({ page }) => {
+  await page.setViewportSize({ width: 1720, height: 1080 });
+  await page.goto(`${config.baseUrl}/portal?portal=DigV2SelfService`, { waitUntil: 'networkidle' });
+};
 
 const Login = async (username, password, page) => {
   await page.locator('input[id="txtUserID"]').type(username);
@@ -6,17 +25,16 @@ const Login = async (username, password, page) => {
   await page.locator('#submit_row .loginButton').click();
 };
 
-const getAttributes = async element => {
-  const attributes = await element.evaluate(async ele => ele.getAttributeNames());
+const getAttributes = async (element) => {
+  const attributes = await element.evaluate(async (ele) => ele.getAttributeNames());
   return attributes;
 };
 
-const getFormattedDate = date => {
+const getFormattedDate = (date) => {
   if (!date) {
     return date;
   }
-  const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}${(date.getDate()
-  ).toString().padStart(2, '0')}${date.getFullYear()}`;
+  const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getFullYear()}`;
   return formattedDate;
 };
 
@@ -30,8 +48,23 @@ const getFutureDate = () => {
   return formattedFuturedate;
 };
 
+const calculateCoverage = async (page, outputDir) => {
+  const coverageData = await page.evaluate(() => window.__coverage__);
+  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
+  // coverage report
+  const report = await attachCoverageReport(coverageData, test.info(), {
+    outputDir
+  });
+  console.log(report.summary);
+  await page.close();
+};
+
 module.exports = {
+  launchPortal,
+  launchEmbedded,
+  launchSelfServicePortal,
   Login,
   getAttributes,
-  getFutureDate
+  getFutureDate,
+  calculateCoverage
 };
