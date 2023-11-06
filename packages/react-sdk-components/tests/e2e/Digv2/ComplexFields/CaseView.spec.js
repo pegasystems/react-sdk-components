@@ -12,11 +12,11 @@ const common = require('../../../common');
 const detailsTabVisible = false;
 const caseHistoryTabVisible = true;
 
-test.beforeEach(common.launchPortal);
+test.beforeEach(async ({ page }) => await common.launchPortal(page));
 
 test.describe('E2E test', () => {
   test('should login, create case and run different test cases for Case View', async ({ page }) => {
-    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -49,7 +49,34 @@ test.describe('E2E test', () => {
 
     /** Submitting the case */
     await page.locator('button:has-text("submit")').click();
-  }, 10000);
+  }, 10000),
+    test('should login, create case and run test cases for Cancel action on the Assignment', async ({ page }) => {
+      await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+
+      /** Testing announcement banner presence */
+      const announcementBanner = page.locator('h6:has-text("Announcements")');
+      await expect(announcementBanner).toBeVisible();
+
+      /** Testing worklist presence */
+      const worklist = page.locator('h6:has-text("My Worklist")');
+      await expect(worklist).toBeVisible();
+
+      /** Creating a Complex Fields case-type */
+      const complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
+      await complexFieldsCase.click();
+
+      /** Wait until newly created case loads */
+      await expect(page.locator('div[id="Assignment"]')).toBeVisible();
+
+      await page.locator('button >> span:has-text("Cancel")').click();
+
+      await page.locator('button[id="go-btn"]').click();
+
+      await expect(page.locator('div[id="Assignment"]')).toBeVisible();
+
+      /** Submitting the case */
+      await page.locator('button:has-text("submit")').click();
+    }, 10000);
 });
 
 const outputDir = './test-reports/e2e/DigV2/ComplexFields/CaseView';

@@ -4,22 +4,22 @@ import { attachCoverageReport } from 'monocart-reporter';
 
 const { config } = require('./config');
 
-const launchPortal = async ({ page }) => {
+const launchPortal = async (page) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
   await page.goto(`${config.baseUrl}/portal`, { waitUntil: 'networkidle' });
 };
 
-const launchEmbedded = async ({ page }) => {
+const launchEmbedded = async (page) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
   await page.goto(`${config.baseUrl}/embedded`, { waitUntil: 'networkidle' });
 };
 
-const launchSelfServicePortal = async ({ page }) => {
+const launchSelfServicePortal = async (page) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
   await page.goto(`${config.baseUrl}/portal?portal=DigV2SelfService`, { waitUntil: 'networkidle' });
 };
 
-const Login = async (username, password, page) => {
+const login = async (username, password, page) => {
   await page.locator('input[id="txtUserID"]').type(username);
   await page.locator('input[id="txtPassword"]').type(password);
   await page.locator('#submit_row .loginButton').click();
@@ -63,7 +63,7 @@ module.exports = {
   launchPortal,
   launchEmbedded,
   launchSelfServicePortal,
-  Login,
+  login,
   getAttributes,
   getFutureDate,
   calculateCoverage

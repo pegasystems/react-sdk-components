@@ -251,7 +251,7 @@ export default function ToDo(props: ToDoProps) {
             </div>
             {(!isConfirm || canPerform) && (
               <div style={{ marginLeft: 'auto' }}>
-                <IconButton onClick={() => clickGo(assignment)}>
+                <IconButton id='go-btn' onClick={() => clickGo(assignment)}>
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>

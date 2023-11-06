@@ -6,11 +6,17 @@ const { test, expect } = require('@playwright/test');
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(common.launchPortal);
+test.beforeEach(async ({ page }) => await common.launchPortal(page));
 
 test.describe('E2E test', () => {
-  test('should login, create case and run different test cases for Confirmation', async ({ page }) => {
-    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+  test('should login, create case and run different test cases for Confirmation', async ({
+    page
+  }) => {
+    await common.login(
+      config.config.apps.digv2.user.username,
+      config.config.apps.digv2.user.password,
+      page
+    );
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -25,6 +31,8 @@ test.describe('E2E test', () => {
     await complexFieldsCase.click();
 
     const caseID = await page.locator('#caseId').textContent();
+
+
 
     /** Selecting Confirmation from the Category dropdown */
     const selectedCategory = page.locator('div[data-test-id="76729937a5eb6b0fd88c42581161facd"]');

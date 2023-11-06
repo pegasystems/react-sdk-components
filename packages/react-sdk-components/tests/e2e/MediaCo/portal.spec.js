@@ -9,11 +9,11 @@ const endpoints = require('../../../../../sdk-config.json');
 
 let caseID;
 
-test.beforeEach(common.launchPortal);
+test.beforeEach(async ({ page }) => await common.launchPortal(page));
 
 test.describe('E2E test', () => {
   test('should login, create case and send for discount', async ({ page }) => {
-    await common.Login(config.config.apps.mediaCo.rep.username, config.config.apps.mediaCo.rep.password, page);
+    await common.login(config.config.apps.mediaCo.rep.username, config.config.apps.mediaCo.rep.password, page);
 
     const announcementBanner = page.locator('h6:has-text("Announcements")');
     await expect(announcementBanner).toBeVisible();
@@ -135,7 +135,7 @@ test.describe('E2E test', () => {
   }, 10000);
 
   test('should enter a discount value($) and send to tech', async ({ page }) => {
-    await common.Login(config.config.apps.mediaCo.manager.username, config.config.apps.mediaCo.manager.password, page);
+    await common.login(config.config.apps.mediaCo.manager.username, config.config.apps.mediaCo.manager.password, page);
 
     const announcementBanner = page.locator('h6:has-text("Announcements")');
     await expect(announcementBanner).toBeVisible();
@@ -157,7 +157,7 @@ test.describe('E2E test', () => {
   }, 10000);
 
   test('should modify(if required) the actual services/packages to be installed and resolve the case', async ({ page }) => {
-    await common.Login(config.config.apps.mediaCo.tech.username, config.config.apps.mediaCo.tech.password, page);
+    await common.login(config.config.apps.mediaCo.tech.username, config.config.apps.mediaCo.tech.password, page);
 
     const announcementBanner = page.locator('h6:has-text("Announcements")');
     await expect(announcementBanner).toBeVisible();

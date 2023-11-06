@@ -6,11 +6,11 @@ const { test, expect } = require('@playwright/test');
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(common.launchPortal);
+test.beforeEach(async ({ page }) => await common.launchPortal(page));
 
 test.describe('E2E test', () => {
   test('should login, create case and run different test cases for Case Reference', async ({ page }) => {
-    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');

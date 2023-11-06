@@ -10,13 +10,13 @@ const common = require('../../../common');
 const isDisabled = true;
 const isVisible = true;
 
-test.beforeEach(common.launchPortal);
+test.beforeEach(async ({ page }) => await common.launchPortal(page));
 
 test.describe('E2E test', () => {
   let attributes;
 
   test('should login, create case and run the Boolean tests', async ({ page }) => {
-    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
