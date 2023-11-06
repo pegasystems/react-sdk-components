@@ -2,25 +2,15 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
-  test('should login, create case and run different test cases for Data Reference', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+  test('should login, create case and run different test cases for Data Reference', async ({ page }) => {
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -63,9 +53,7 @@ test.describe('E2E test', () => {
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('input[value="Basic Product"]')).toBeVisible();
     await expect(assignment.locator('input[value="75"]')).toBeVisible();
-    await expect(
-      assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')
-    ).toBeVisible();
+    await expect(assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
 
@@ -89,9 +77,7 @@ test.describe('E2E test', () => {
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('input[value="Basic Product"]')).toBeVisible();
     await expect(assignment.locator('input[value="75"]')).toBeVisible();
-    await expect(
-      assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')
-    ).toBeVisible();
+    await expect(assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
 
@@ -115,9 +101,7 @@ test.describe('E2E test', () => {
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('input[value="Basic Product"]')).toBeVisible();
     await expect(assignment.locator('input[value="75"]')).toBeVisible();
-    await expect(
-      assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')
-    ).toBeVisible();
+    await expect(assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
 
@@ -143,9 +127,7 @@ test.describe('E2E test', () => {
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('input[value="Basic Product"]')).toBeVisible();
     await expect(assignment.locator('input[value="75"]')).toBeVisible();
-    await expect(
-      assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')
-    ).toBeVisible();
+    await expect(assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
 
@@ -199,9 +181,7 @@ test.describe('E2E test', () => {
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('input[value="Basic Product"]')).toBeVisible();
     await expect(assignment.locator('input[value="75"]')).toBeVisible();
-    await expect(
-      assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')
-    ).toBeVisible();
+    await expect(assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
 
@@ -224,22 +204,12 @@ test.describe('E2E test', () => {
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('input[value="Basic Product"]')).toBeVisible();
     await expect(assignment.locator('input[value="75"]')).toBeVisible();
-    await expect(
-      assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')
-    ).toBeVisible();
+    await expect(assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     /** Submitting the case */
     await page.locator('button:has-text("submit")').click();
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/DigV2/ComplexFields/DataReference"
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/ComplexFields/DataReference';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
@@ -11,20 +10,13 @@ const common = require('../../../common');
 const isDisabled = true;
 const isVisible = true;
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   let attributes;
 
   test('should login, create case and run the Date tests', async ({ page }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -80,9 +72,7 @@ test.describe('E2E test', () => {
     attributes = await common.getAttributes(alwaysDisabledDateInput);
     await expect(attributes.includes('disabled')).toBeTruthy();
 
-    const conditionallyDisabledDate = page.locator(
-      'div[data-test-id="1064f84bc0ba8525d5f141869fb73a3d"]'
-    );
+    const conditionallyDisabledDate = page.locator('div[data-test-id="1064f84bc0ba8525d5f141869fb73a3d"]');
     const conditionallyDisabledDateInput = conditionallyDisabledDate.locator('input');
     attributes = await common.getAttributes(conditionallyDisabledDateInput);
     if (isDisabled) {
@@ -119,18 +109,12 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Visibility' }).click();
 
     /** Visibility tests */
-    await expect(
-      page.locator('div[data-test-id="8d1ca7132d5ebd69ccc69b850cf0e114"]')
-    ).toBeVisible();
+    await expect(page.locator('div[data-test-id="8d1ca7132d5ebd69ccc69b850cf0e114"]')).toBeVisible();
 
-    const neverVisibleDate = await page.locator(
-      'div[data-test-id="2d575befd938b2cf573f6cdee8d2c194"]'
-    );
+    const neverVisibleDate = await page.locator('div[data-test-id="2d575befd938b2cf573f6cdee8d2c194"]');
     await expect(neverVisibleDate).not.toBeVisible();
 
-    const conditionallyVisibleDate = await page.locator(
-      'div[data-test-id="2a50b142f72fe68effc573bb904c8364"]'
-    );
+    const conditionallyVisibleDate = await page.locator('div[data-test-id="2a50b142f72fe68effc573bb904c8364"]');
     const conditionallyVisibleDateInput = conditionallyVisibleDate.locator('input');
     if (isVisible) {
       await expect(conditionallyVisibleDateInput).toBeVisible();
@@ -140,13 +124,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/DigV2/FormFields/Date"
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/FormFields/Date'
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

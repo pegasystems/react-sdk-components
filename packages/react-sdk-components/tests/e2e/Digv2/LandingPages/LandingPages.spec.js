@@ -2,25 +2,15 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
-  test('should login, create case and run different test cases for My Work landing page', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+  test('should login, create case and run different test cases for My Work landing page', async ({ page }) => {
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -46,21 +36,13 @@ test.describe('E2E test', () => {
     await page.locator(`button:has-text("${caseID}")`).click();
 
     /** Testing that the Case View has rendered */
-    expect(await page.locator('div[id="current-caseID"]').textContent()).toBe(
-      `DXIL-DIGV2-WORK ${caseID}`
-    );
+    expect(await page.locator('div[id="current-caseID"]').textContent()).toBe(`DXIL-DIGV2-WORK ${caseID}`);
 
     /** Testing that the Assignment has opened */
     expect(page.locator('div[id="APP/PRIMARY_1/WORKAREA"]')).toBeVisible();
   }, 10000),
-    test('should login, create case and come back to Home landing page and run tests', async ({
-      page
-    }) => {
-      await common.Login(
-        config.config.apps.digv2.user.username,
-        config.config.apps.digv2.user.password,
-        page
-      );
+    test('should login, create case and come back to Home landing page and run tests', async ({ page }) => {
+      await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
       /** Testing announcement banner presence */
       const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -85,13 +67,5 @@ test.describe('E2E test', () => {
     }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: './test-reports/e2e/DigV2/LandingPages/LandingPages'
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/LandingPages/LandingPages';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));
