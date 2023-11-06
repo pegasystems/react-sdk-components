@@ -81,7 +81,7 @@ export default function Assignment(props: AssignmentProps) {
 
       const oWorkItem = children[0].props.getPConnect();
       const oWorkData = oWorkItem.getDataObject();
-      const oData = thePConn.getDataObject(thePConn.getContextName());  // 1st arg empty string until typedefs allow it to be optional
+      const oData = thePConn.getDataObject(thePConn.getContextName());
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
         const oCaseInfo = oData.caseInfo;
