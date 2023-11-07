@@ -1,4 +1,4 @@
-# React SDK - Release Announcement - v8.8.20 (xx October 2023)
+# React SDK - Release Announcement - v8.8.20 (08 November 2023)
 
 This release - **SDK-R v8.8.20** - is **only compatible with Pega Infinity 8.8**. This release is related to the [**release/8.8.20** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/release/8.8.20).
 <br>
@@ -9,7 +9,7 @@ The SDK-R v23.1.10 and v8.8.20 releases allow React SDK users to to take advanta
 [SDK enhancements and fixes noted in **What's New in the SDK?**](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/react-sdk-updates.html) including:
 
 * Added the use of **TypeScript typedefs** (from @pega/pcore-pconnect-typedefs) to SDK components.
-For more information, see [Using type definitions - update link when published](https://pega-dev.zoominsoftware.io/bundle/constellation-sdk/page/constellation-sdks/sdks/type-definitions-constellation-sdks.html)
+For more information, see [Using type definitions for PCore and PConnect APIs](https://docs.pega.com/bundle/pcore-pconnect-88/page/pcore-pconnect-public-apis/api/using-type-definitions-pcore-pconnect-apis.html)
 * Additional functionality including a **RichTextEditor** component and **many-to-many data reference** support
 * Enhanced security including token storage and item obfuscation support.
 * Bug fixes.
