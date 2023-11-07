@@ -1,4 +1,4 @@
-### React SDK - Release Announcement - v23.1.10 (xx October 2023)
+### React SDK - Release Announcement - v23.1.10 (08 November 2023)
 
 This release - **SDK-R v23.1.10** - is **only compatible with Pega Infinity 23**. This release is related to the [**main** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/main).
 <br>
@@ -13,7 +13,7 @@ For more information, see [Using type definitions - update link when published](
 * Additional functionality including a **RichTextEditor** component and **many-to-many data reference** support
 * Enhanced security including token storage and item obfuscation support.
 * Bug fixes.
-* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?q=is%3Apr+is%3Amerged+base%3Amaster+). This release includes all PRs since (and including) #166 and #xxx.
+* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?q=is%3Apr+is%3Amerged+base%3Amaster+). This release includes all PRs since (and including) #166 and #226.
 
 
 <hr />
