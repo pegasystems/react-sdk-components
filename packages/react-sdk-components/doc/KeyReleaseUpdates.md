@@ -13,7 +13,7 @@ For more information, see [Using type definitions for PCore and PConnect APIs](h
 * Additional functionality including a **RichTextEditor** component and **many-to-many data reference** support
 * Enhanced security including token storage and item obfuscation support.
 * Bug fixes.
-* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?q=is%3Apr+is%3Amerged+base%3Amaster+). This release includes all PRs since (and including) #166 and #xxx.
+* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?q=is%3Apr+is%3Amerged+base%3Amaster+). This release includes all PRs related to the release/8.8.20 branch between (and including) PRs #166 and #202.
 
 <hr>
 
