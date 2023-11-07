@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 export default function FlowContainer(props /* : FlowContainerProps */) {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap('Assignment');
-  const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
+  const ToDo = getComponentFromMap('Todo');  // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
   const AlertBanner = getComponentFromMap("AlertBanner");
 
   const pCoreConstants = PCore.getConstants();
@@ -488,7 +488,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
               type={TODO}
               context={todo_context}
               itemKey={itemKey}
-              isConfirm
+              isConfirm={bHasCaseMessages}
             ></ToDo>
           </div>
         ))}

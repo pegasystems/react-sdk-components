@@ -3,7 +3,7 @@ import { TextField } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
@@ -13,17 +13,19 @@ interface IOption {
 
 interface DropdownProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Dropdown here
-  datasource?: Array<any>,
-  onRecordChange?: any,
-  fieldMetadata?: any,
+  datasource?: Array<any>;
+  onRecordChange?: any;
+  fieldMetadata?: any;
   // eslint-disable-next-line react/no-unused-prop-types
-  listType: string,
+  listType: string;
   // eslint-disable-next-line react/no-unused-prop-types
-  additionalProps?: object
+  additionalProps?: object;
 }
 
-
 export default function Dropdown(props: DropdownProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     getPConnect,
     label,
@@ -53,15 +55,16 @@ export default function Dropdown(props: DropdownProps) {
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
   useEffect(() => {
-    const list = Utils.getOptionList(props, getPConnect().getDataObject(''));   // 1st arg empty string until typedef marked correctly
+    const list = Utils.getOptionList(props, getPConnect().getDataObject(thePConn.getContextName()));
     const optionsList = [...list];
-    optionsList.unshift({ key: placeholder, value: thePConn.getLocalizedValue(placeholder, '', '') });   // 2nd and 3rd args empty string until typedef marked correctly
+    optionsList.unshift({
+      key: placeholder,
+      value: thePConn.getLocalizedValue(placeholder, '', '')
+    }); // 2nd and 3rd args empty string until typedef marked correctly
     setOptions(optionsList);
   }, [datasource]);
 
-  const metaData = Array.isArray(fieldMetadata)
-    ? fieldMetadata.filter(field => field?.classID === className)[0]
-    : fieldMetadata;
+  const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter((field) => field?.classID === className)[0] : fieldMetadata;
 
   let displayName = metaData?.datasource?.propertyForDisplayText;
   displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
@@ -76,11 +79,7 @@ export default function Dropdown(props: DropdownProps) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
-        value={thePConn.getLocalizedValue(
-          value,
-          localePath,
-          thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
-        )}
+        value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
       />
     );
   }
@@ -89,12 +88,8 @@ export default function Dropdown(props: DropdownProps) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
-        value={thePConn.getLocalizedValue(
-          value,
-          localePath,
-          thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
-        )}
-        variant='stacked'
+        value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
+        variant="stacked"
       />
     );
   }
@@ -109,7 +104,7 @@ export default function Dropdown(props: DropdownProps) {
     'data-test-id': testId
   };
 
-  const handleChange = evt => {
+  const handleChange = (evt) => {
     const selectedValue = evt.target.value === placeholder ? '' : evt.target.value;
     handleEvent(actionsApi, 'changeNblur', propName, selectedValue);
     if (onRecordChange) {
@@ -124,8 +119,8 @@ export default function Dropdown(props: DropdownProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder={thePConn.getLocalizedValue(placeholder, "", "")}      // 2nd and 3rd args empty string until typedef marked correctly
-      size='small'
+      placeholder={thePConn.getLocalizedValue(placeholder, '', '')} // 2nd and 3rd args empty string until typedef marked correctly
+      size="small"
       required={required}
       disabled={disabled}
       onChange={!readOnly ? handleChange : undefined}
@@ -137,11 +132,7 @@ export default function Dropdown(props: DropdownProps) {
     >
       {options.map((option: any) => (
         <MenuItem key={option.key} value={option.key}>
-          {thePConn.getLocalizedValue(
-            option.value,
-            localePath,
-            thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
-          )}
+          {thePConn.getLocalizedValue(option.value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         </MenuItem>
       ))}
     </TextField>
