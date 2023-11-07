@@ -1,3 +1,24 @@
+# React SDK - Release Announcement - v8.8.20 (08 November 2023)
+
+This release - **SDK-R v8.8.20** - is **only compatible with Pega Infinity 8.8**. This release is related to the [**release/8.8.20** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/release/8.8.20).
+<br>
+(If you currently are using the React SDK with Pega Infinity 23, update your SDK to
+the [SDK-R v23.1.10 - main branch](https://github.com/pegasystems/react-sdk/tree/main).)
+
+The SDK-R v23.1.10 and v8.8.20 releases allow React SDK users to to take advantage of the latest
+[SDK enhancements and fixes noted in **What's New in the SDK?**](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/react-sdk-updates.html) including:
+
+* Added the use of **TypeScript typedefs** (from @pega/pcore-pconnect-typedefs) to SDK components.
+For more information, see [Using type definitions for PCore and PConnect APIs](https://docs.pega.com/bundle/pcore-pconnect-88/page/pcore-pconnect-public-apis/api/using-type-definitions-pcore-pconnect-apis.html)
+* Additional functionality including a **RichTextEditor** component and **many-to-many data reference** support
+* Enhanced security including token storage and item obfuscation support.
+* Bug fixes.
+* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?q=is%3Apr+is%3Amerged+base%3Amaster+). This release includes all PRs related to the release/8.8.20 branch between (and including) PRs #166 and #202.
+
+<hr>
+
+## Previous releases
+
 #### **Release SDK-R-C 8.23.11 (10 August 2023)**
 
 * Many significant improvements to localization
