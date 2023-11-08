@@ -24,8 +24,6 @@ test.describe('E2E test', () => {
     const complexFieldsCase = page.locator('div[role="button"]:has-text("View Templates")');
     await complexFieldsCase.click();
 
-    const caseID = await page.locator('#caseId').textContent();
-
     /** Selecting Confirmation from the Category dropdown */
     const selectedCategory = page.locator('div[data-test-id="76729937a5eb6b0fd88c42581161facd"]');
     await selectedCategory.click();
