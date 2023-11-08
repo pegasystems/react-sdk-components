@@ -6,18 +6,17 @@ import type { PConnProps } from '../../../types/PConnProps';
 // ReferenceProps can't be used until getComponentConfig() is NOT private
 interface DataReferenceProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
-  label: string,
-  showLabel: any,
-  displayMode: string,
-  allowAndPersistChangesInReviewMode: boolean,
-  referenceType: string,
-  selectionMode: string,
-  displayAs: string,
-  ruleClass: string,
-  parameters: Array<string>, // need to fix
-  hideLabel: boolean,
-  getPConnect: any // Causing a build issue without this at line 103 due to typing
+  children: Array<any>;
+  label: string;
+  showLabel: any;
+  displayMode: string;
+  allowAndPersistChangesInReviewMode: boolean;
+  referenceType: string;
+  selectionMode: string;
+  displayAs: string;
+  ruleClass: string;
+  parameters: Array<string>; // need to fix
+  hideLabel: boolean;
 }
 
 
