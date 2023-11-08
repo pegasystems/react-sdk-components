@@ -337,7 +337,7 @@ export default function ListView(props /* : ListViewProps */) {
     let field = getFieldFromFilter(filterExpression, isDateRange);
     selectParam = [];
     // Constructing the select parameters list (will be sent in dashboardFilterPayload)
-    columnList.current.forEach(col => {
+    columnList.current?.forEach(col => {
       selectParam.push({
         field: col
       });
@@ -602,6 +602,22 @@ export default function ListView(props /* : ListViewProps */) {
           getPConnect().getContextName()
         );
       }, 0);
+    }
+    return function cleanupSubscriptions() {
+
+      PCore.getPubSubUtils().unsubscribe(
+        PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
+        `dashboard-component-${'id'}`,
+        false,
+        getPConnect().getContextName()
+      );
+      PCore.getPubSubUtils().unsubscribe(
+        PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
+        `dashboard-component-${'id'}`,
+        false,
+        getPConnect().getContextName()
+      );
+
     }
   }, [listContext]);
 
