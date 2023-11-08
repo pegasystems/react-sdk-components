@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "8.8.20",
+  "version": "8.8.21",
   "description": "React SDK packaging: bridge and components, overrides",
   "main": "index.ts",
   "scripts": {
