@@ -2,7 +2,7 @@ import React, { Children, useState, useMemo } from 'react';
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 import { buildView } from '../../../helpers/field-group-utils';
-import type { PConnProps } from '../../../../types/PConnProps';
+// import type { PConnProps } from '../../../../types/PConnProps';
 
 const useStyles = makeStyles(() => ({
   tab: {
@@ -10,14 +10,15 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-interface DynamicTabsProps extends PConnProps {
-  // If any, enter additional props that only exist on this component
-  showLabel: boolean;
-  label: string;
-  referenceList?: Array<any>;
-}
+// ListViewProps can't be used until getComponentConfig is NOT private
+// interface DynamicTabsProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   showLabel: boolean;
+//   label: string;
+//   referenceList?: Array<any>;
+// }
 
-function DynamicTabs(props: DynamicTabsProps) {
+function DynamicTabs(props /*: DynamicTabsProps */) {
   const classes = useStyles();
   const { referenceList, showLabel, label, getPConnect } = props;
   const pConnect = getPConnect();
