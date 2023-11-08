@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
@@ -11,20 +10,13 @@ const common = require('../../../common');
 const isDisabled = true;
 const isVisible = true;
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   let attributes;
 
   test('should login, create case and run the Time tests', async ({ page }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -53,9 +45,7 @@ test.describe('E2E test', () => {
     await expect(page.locator('p.Mui-error.Mui-required')).toBeVisible();
 
     /** Required tests */
-    const requiredTime = page.locator(
-      'input[data-test-id="2a98fa391e3ce4e2a077bb71271eb2da"]'
-    );
+    const requiredTime = page.locator('input[data-test-id="2a98fa391e3ce4e2a077bb71271eb2da"]');
     const date = new Date();
     const time = `${date.getHours()}${date.getMinutes()}`;
     requiredTime.type(time);
@@ -64,9 +54,7 @@ test.describe('E2E test', () => {
 
     await expect(page.locator('p.Mui-error.Mui-required')).toBeHidden();
 
-    const notRequiredTime = page.locator(
-      'input[data-test-id="921d625dba40a48cdcd006d6d17273fd"]'
-    );
+    const notRequiredTime = page.locator('input[data-test-id="921d625dba40a48cdcd006d6d17273fd"]');
     attributes = await common.getAttributes(notRequiredTime);
     await expect(attributes.includes('required')).toBeFalsy();
 
@@ -76,15 +64,11 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Disable' }).click();
 
     // /** Disable tests */
-    const alwaysDisabledTime = page.locator(
-      'input[data-test-id="b5b2a2335304986a2aba011c0a2a464d"]'
-    );
+    const alwaysDisabledTime = page.locator('input[data-test-id="b5b2a2335304986a2aba011c0a2a464d"]');
     attributes = await common.getAttributes(alwaysDisabledTime);
     await expect(attributes.includes('disabled')).toBeTruthy();
 
-    const conditionallyDisabledTime = page.locator(
-      'input[data-test-id="9f7b7d5d8793642e0650a03f5f9dd991"]'
-    );
+    const conditionallyDisabledTime = page.locator('input[data-test-id="9f7b7d5d8793642e0650a03f5f9dd991"]');
     attributes = await common.getAttributes(conditionallyDisabledTime);
     if (isDisabled) {
       await expect(attributes.includes('disabled')).toBeTruthy();
@@ -92,9 +76,7 @@ test.describe('E2E test', () => {
       await expect(attributes.includes('disabled')).toBeFalsy();
     }
 
-    const neverDisabledTime = page.locator(
-      'input[data-test-id="aeb770a579929bf10a1b301600da68ca"]'
-    );
+    const neverDisabledTime = page.locator('input[data-test-id="aeb770a579929bf10a1b301600da68ca"]');
     attributes = await common.getAttributes(neverDisabledTime);
     await expect(attributes.includes('disabled')).toBeFalsy();
 
@@ -104,15 +86,11 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Update' }).click();
 
     /** Update tests */
-    const readonlyTime = page.locator(
-      'input[data-test-id="084f8187169ed36f03937ecfd6e67087"]'
-    );
+    const readonlyTime = page.locator('input[data-test-id="084f8187169ed36f03937ecfd6e67087"]');
     attributes = await common.getAttributes(readonlyTime);
     await expect(attributes.includes('readonly')).toBeTruthy();
 
-    const editableTime = page.locator(
-      'input[data-test-id="9a43bbe34f0e3db5a53f8e89082c0770"]'
-    );
+    const editableTime = page.locator('input[data-test-id="9a43bbe34f0e3db5a53f8e89082c0770"]');
     editableTime.type(time);
 
     attributes = await common.getAttributes(editableTime);
@@ -124,18 +102,12 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Visibility' }).click();
 
     /** Visibility tests */
-    await expect(
-      page.locator('input[data-test-id="1b5786591e69307188bb7bb6ed1d6007"]')
-    ).toBeVisible();
+    await expect(page.locator('input[data-test-id="1b5786591e69307188bb7bb6ed1d6007"]')).toBeVisible();
 
-    const neverVisibleTime = await page.locator(
-      'input[data-test-id="971d3da425a39fac98652a85633db661"]'
-    );
+    const neverVisibleTime = await page.locator('input[data-test-id="971d3da425a39fac98652a85633db661"]');
     await expect(neverVisibleTime).not.toBeVisible();
 
-    const conditionallyVisibleTime = await page.locator(
-      'input[data-test-id="6e52133ee5d2aef2dab9a8e61511c030"]'
-    );
+    const conditionallyVisibleTime = await page.locator('input[data-test-id="6e52133ee5d2aef2dab9a8e61511c030"]');
 
     if (isVisible) {
       await expect(conditionallyVisibleTime).toBeVisible();
@@ -145,13 +117,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/DigV2/FormFields/Time"
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/FormFields/Time';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

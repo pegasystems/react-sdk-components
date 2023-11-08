@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
@@ -11,20 +10,13 @@ const common = require('../../../common');
 const isDisabled = true;
 const isVisible = true;
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   let attributes;
 
   test('should login, create case and run the DateTime tests', async ({ page }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -56,7 +48,10 @@ test.describe('E2E test', () => {
     const requiredDateTime = page.locator('div[data-test-id="8c40204d0a4eee26d94339eee34ac0dd"]');
     const requiredDateTimeInput = requiredDateTime.locator('input');
     const date = new Date();
-    const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}${(date.getDate()).toString().padStart(2, '0')}${date.getFullYear()}${date.getHours()}${date.getMinutes()}`;
+    const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}${date
+      .getDate()
+      .toString()
+      .padStart(2, '0')}${date.getFullYear()}${date.getHours()}${date.getMinutes()}`;
     await requiredDateTimeInput.click();
     await requiredDateTimeInput.type(formattedDate);
 
@@ -81,9 +76,7 @@ test.describe('E2E test', () => {
     attributes = await common.getAttributes(alwaysDisabledDateTimeInput);
     await expect(attributes.includes('disabled')).toBeTruthy();
 
-    const conditionallyDisabledDateTime = page.locator(
-      'div[data-test-id="98882344d484a1122bdb831ace88b0d3"]'
-    );
+    const conditionallyDisabledDateTime = page.locator('div[data-test-id="98882344d484a1122bdb831ace88b0d3"]');
     const conditionallyDisabledDateTimeInput = conditionallyDisabledDateTime.locator('input');
     attributes = await common.getAttributes(conditionallyDisabledDateTimeInput);
     if (isDisabled) {
@@ -120,18 +113,12 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Visibility' }).click();
 
     /** Visibility tests */
-    await expect(
-      page.locator('div[data-test-id="f7bace3922d6b19942bcb05f4bbe34ff"]')
-    ).toBeVisible();
+    await expect(page.locator('div[data-test-id="f7bace3922d6b19942bcb05f4bbe34ff"]')).toBeVisible();
 
-    const neverVisibleDateTime = await page.locator(
-      'div[data-test-id="1d7b52f872b9425481bb5c42863dbe02"]'
-    );
+    const neverVisibleDateTime = await page.locator('div[data-test-id="1d7b52f872b9425481bb5c42863dbe02"]');
     await expect(neverVisibleDateTime).not.toBeVisible();
 
-    const conditionallyVisibleDateTime = await page.locator(
-      'div[data-test-id="d7168c76ee76f4242fee3afbd4c9f745"]'
-    );
+    const conditionallyVisibleDateTime = await page.locator('div[data-test-id="d7168c76ee76f4242fee3afbd4c9f745"]');
     const conditionallyVisibleDateTimeInput = conditionallyVisibleDateTime.locator('input');
     if (isVisible) {
       await expect(conditionallyVisibleDateTimeInput).toBeVisible();
@@ -141,13 +128,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/DigV2/FormFields/DateTime"
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/FormFields/DateTime';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

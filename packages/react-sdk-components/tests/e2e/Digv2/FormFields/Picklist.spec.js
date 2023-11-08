@@ -2,29 +2,17 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
 
-// These values represent the data values used for the conditions and are initialised in pyDefault DT
-const isDisabled = true;
-const isVisible = true;
-
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   let attributes;
 
   test('should login, create case and run the Email tests', async ({ page }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -81,13 +69,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: './test-reports/e2e/DigV2/FormFields/Picklist'
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/FormFields/Picklist';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

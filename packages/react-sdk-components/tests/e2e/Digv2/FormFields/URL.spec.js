@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../../config');
 const common = require('../../../common');
@@ -11,20 +10,13 @@ const common = require('../../../common');
 const isDisabled = true;
 const isVisible = true;
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   let attributes;
 
   test('should login, create case and run the URL tests', async ({ page }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -63,15 +55,11 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Disable' }).click();
 
     // /** Disable tests */
-    const alwaysDisabledURL = page.locator(
-      'input[data-test-id="922758766489b064688aba17552c566d"]'
-    );
+    const alwaysDisabledURL = page.locator('input[data-test-id="922758766489b064688aba17552c566d"]');
     attributes = await common.getAttributes(alwaysDisabledURL);
     await expect(attributes.includes('disabled')).toBeTruthy();
 
-    const conditionallyDisabledURL = page.locator(
-      'input[data-test-id="ae2e04faf34d58c5bff6be9b4fc9b0d9"]'
-    );
+    const conditionallyDisabledURL = page.locator('input[data-test-id="ae2e04faf34d58c5bff6be9b4fc9b0d9"]');
     attributes = await common.getAttributes(conditionallyDisabledURL);
     if (isDisabled) {
       await expect(attributes.includes('disabled')).toBeTruthy();
@@ -112,18 +100,12 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Visibility' }).click();
 
     /** Visibility tests */
-    await expect(
-      page.locator('input[data-test-id="c239893d906b22bc8de9c7f3d0c1e219"]')
-    ).toBeVisible();
+    await expect(page.locator('input[data-test-id="c239893d906b22bc8de9c7f3d0c1e219"]')).toBeVisible();
 
-    const neverVisibleURL = await page.locator(
-      'input[data-test-id="01cec81e2fe61acf1b0480187998d1ee"]'
-    );
+    const neverVisibleURL = await page.locator('input[data-test-id="01cec81e2fe61acf1b0480187998d1ee"]');
     await expect(neverVisibleURL).not.toBeVisible();
 
-    const conditionallyVisibleURL = await page.locator(
-      'input[data-test-id="c7a204d92fc6300c68859901de172f8b"]'
-    );
+    const conditionallyVisibleURL = await page.locator('input[data-test-id="c7a204d92fc6300c68859901de172f8b"]');
 
     if (isVisible) {
       await expect(conditionallyVisibleURL).toBeVisible();
@@ -133,13 +115,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  const coverageData = await page.evaluate(() => window.__coverage__);
-  expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-  // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/DigV2/FormFields/URL"
-  });
-  console.log(report.summary);
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/FormFields/URL';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));
