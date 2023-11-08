@@ -48,16 +48,16 @@ function DynamicTabs(props) {
 
   return (
     <>
-      {propsToUse.label && <h3>{propsToUse.label}</h3>}
+      {propsToUse.label && <h3 id="dynamic-tabs-title">{propsToUse.label}</h3>}
       <TabContext value={panelShown.toString()}>
-        <Tabs onChange={handleTabClick} value={panelShown} variant="scrollable" scrollButtons="auto" indicatorColor="primary">
+        <Tabs onChange={handleTabClick} value={panelShown} variant="scrollable" scrollButtons="auto" indicatorColor="primary" id="dynamic-tabs">
           {tabItems.map((tab: any) => (
             <Tab key={tab.id} label={tab.name} value={tab.id} className={classes.tab} />
           ))}
         </Tabs>
 
         {tabItems.map((tab: any) => (
-          <TabPanel key={tab.id} value={tab.id.toString()} tabIndex={+tab.id}>
+          <TabPanel key={tab.id} value={tab.id.toString()} tabIndex={+tab.id} id="dynamic-tabpanel">
             <div>{memoisedTabViews[parseInt(tab.id, 10)] || 'No content exists'}</div>
           </TabPanel>
         ))}
