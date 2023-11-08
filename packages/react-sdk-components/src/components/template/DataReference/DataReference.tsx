@@ -16,7 +16,8 @@ interface DataReferenceProps extends PConnProps {
   displayAs: string,
   ruleClass: string,
   parameters: Array<string>, // need to fix
-  hideLabel: boolean
+  hideLabel: boolean,
+  getPConnect: any // Causing a build issue without this at line 103 due to typing
 }
 
 
@@ -99,7 +100,7 @@ export default function DataReference(props: DataReferenceProps) {
   }, [firstChildMeta, rawViewMetadata, parameters]);
 
   if (firstChildMeta?.type !== 'Region') {
-    firstChildPConnect = getPConnect().getChildren()[0].getPConnect;
+    firstChildPConnect = getPConnect().getChildren()?.[0].getPConnect;
     /* remove refresh When condition from those old view so that it will not be used for runtime */
     if (firstChildMeta.config?.readOnly) {
       delete firstChildMeta.config.readOnly;
