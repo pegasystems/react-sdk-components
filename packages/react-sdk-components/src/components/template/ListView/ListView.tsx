@@ -127,8 +127,8 @@ export default function ListView(props /* : ListViewProps */) {
   const filters = useRef({});
 
   // Will contain the list of columns specific for an instance
-  let columnList: any = useRef([]);
-  let dashboardFilterPayload: any;
+  const columnList: any = useRef([]);
+  const filterPayload: any = useRef();
   // Will be sent in the dashboardFilterPayload
   let selectParam: Array<any> = [];
 
@@ -321,7 +321,7 @@ export default function ListView(props /* : ListViewProps */) {
   // Will be triggered when EVENT_DASHBOARD_FILTER_CHANGE fires
   function processFilterChange(data) {
     const { filterId, filterExpression } = data;
-    dashboardFilterPayload = {
+    let dashboardFilterPayload : any = {
       query: {
         filter: {},
         select: []
@@ -337,14 +337,14 @@ export default function ListView(props /* : ListViewProps */) {
     let field = getFieldFromFilter(filterExpression, isDateRange);
     selectParam = [];
     // Constructing the select parameters list (will be sent in dashboardFilterPayload)
-    columnList.forEach(col => {
+    columnList.current.forEach(col => {
       selectParam.push({
         field: col
       });
     });
 
     // Checking if the triggered filter is applicable for this list
-    if (data.filterExpression !== null && !(columnList.length && columnList.includes(field))) {
+    if (data.filterExpression !== null && !(columnList.current?.length && columnList.current?.includes(field))) {
       return;
     }
     // This is a flag which will be used to reset dashboardFilterPayload in case we don't find any valid filters
@@ -365,7 +365,7 @@ export default function ListView(props /* : ListViewProps */) {
       isDateRange = filter?.AND ? true : false;
       field = getFieldFromFilter(filter, isDateRange);
 
-      if (!(columnList.length && columnList.includes(field))) {
+      if (!(columnList.current?.length && columnList.current?.includes(field))) {
         // eslint-disable-next-line no-continue
         continue;
       }
@@ -414,48 +414,28 @@ export default function ListView(props /* : ListViewProps */) {
     if (!validFilter) {
       dashboardFilterPayload = undefined;
     }
-
+    filterPayload.current = dashboardFilterPayload;
     fetchDataFromServer();
   }
 
   // Will be triggered when EVENT_DASHBOARD_FILTER_CLEAR_ALL fires
   function processFilterClear() {
-    dashboardFilterPayload = undefined;
+    filterPayload.current = undefined;
     fetchDataFromServer();
   }
-
-  useEffect(() => {
-    setTimeout(() => {
-      PCore.getPubSubUtils().subscribe(
-        PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
-        data => {
-          processFilterChange(data);
-        },
-        `dashboard-component-${'id'}`,
-        false,
-        getPConnect().getContextName()
-      );
-      PCore.getPubSubUtils().subscribe(
-        PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
-        () => {
-          filters.current = {};
-          processFilterClear();
-        },
-        `dashboard-component-${'id'}`,
-        false,
-        getPConnect().getContextName()
-      );
-    }, 0);
-  }, []);
 
   function fetchAllData(fields) {
     let query: any = null;
     if (payload) {
       query = payload.query;
     } else if (fields?.length && meta.isQueryable) {
-      query = { select: fields };
-    } else if (dashboardFilterPayload) {
-      query = dashboardFilterPayload.query;
+      if (filterPayload.current) {
+        query = { select: fields, filter: filterPayload.current?.query?.filter };
+      } else {
+        query = { select: fields };
+      }
+    } else if (filterPayload.current) {
+      query = filterPayload.current?.query;
     }
     const context = getPConnect().getContextName();
     // getDataAsync isn't returning correct data for the Page(i.e. ListView within a page) case
@@ -570,7 +550,7 @@ export default function ListView(props /* : ListViewProps */) {
       colList.push(col.field);
     });
 
-    columnList = colList;
+    columnList.current = colList;
 
     setResponse(tableDataResults);
 
@@ -601,6 +581,27 @@ export default function ListView(props /* : ListViewProps */) {
   useEffect(() => {
     if (listContext.meta) {
       fetchDataFromServer();
+      setTimeout(() => {
+        PCore.getPubSubUtils().subscribe(
+          PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
+          data => {
+            processFilterChange(data);
+          },
+          `dashboard-component-${'id'}`,
+          false,
+          getPConnect().getContextName()
+        );
+        PCore.getPubSubUtils().subscribe(
+          PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
+          () => {
+            filters.current = {};
+            processFilterClear();
+          },
+          `dashboard-component-${'id'}`,
+          false,
+          getPConnect().getContextName()
+        );
+      }, 0);
     }
   }, [listContext]);
 
