@@ -6,17 +6,17 @@ import type { PConnProps } from '../../../types/PConnProps';
 // ReferenceProps can't be used until getComponentConfig() is NOT private
 interface DataReferenceProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
-  label: string,
-  showLabel: any,
-  displayMode: string,
-  allowAndPersistChangesInReviewMode: boolean,
-  referenceType: string,
-  selectionMode: string,
-  displayAs: string,
-  ruleClass: string,
-  parameters: Array<string>, // need to fix
-  hideLabel: boolean
+  children: Array<any>;
+  label: string;
+  showLabel: any;
+  displayMode: string;
+  allowAndPersistChangesInReviewMode: boolean;
+  referenceType: string;
+  selectionMode: string;
+  displayAs: string;
+  ruleClass: string;
+  parameters: Array<string>; // need to fix
+  hideLabel: boolean;
 }
 
 
@@ -99,7 +99,7 @@ export default function DataReference(props: DataReferenceProps) {
   }, [firstChildMeta, rawViewMetadata, parameters]);
 
   if (firstChildMeta?.type !== 'Region') {
-    firstChildPConnect = getPConnect().getChildren()[0].getPConnect;
+    firstChildPConnect = getPConnect().getChildren()?.[0].getPConnect;
     /* remove refresh When condition from those old view so that it will not be used for runtime */
     if (firstChildMeta.config?.readOnly) {
       delete firstChildMeta.config.readOnly;
