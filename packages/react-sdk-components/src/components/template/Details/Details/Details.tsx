@@ -1,7 +1,8 @@
 import React, { createElement } from 'react';
 import Grid from '@material-ui/core/Grid';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-import FieldGroup from '../../../designSystemExtension/FieldGroup';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+
 // import type { PConnProps } from '../../../../types/PConnProps';
 
 
@@ -12,6 +13,9 @@ import FieldGroup from '../../../designSystemExtension/FieldGroup';
 
 
 export default function Details(props /* : DetailsProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldGroup = getComponentFromMap('FieldGroup');
+
   const { label, showLabel, getPConnect, showHighlightedData } = props;
 
   // Get the inherited props from the parent to determine label settings

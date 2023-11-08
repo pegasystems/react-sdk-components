@@ -4,9 +4,10 @@ import { Button } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize, getIconForAttachment } from '../../helpers/attachmentHelpers';
 import './Attachment.css';
-import SummaryList from '../SummaryList'
 import { CircularProgress } from "@material-ui/core";
 import download from "downloadjs";
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+
 // import type { PConnProps } from '../../../types/PConnProps';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
@@ -27,6 +28,9 @@ function getCurrentAttachmentsList(key, context) {
 }
 
 export default function Attachment(props /* :AttachmentProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const SummaryList = getComponentFromMap('SummaryList');
+
   const PCoreVersion = PCore.getPCoreVersion();
   const {value, getPConnect, label, validatemessage} = props;
   /* this is a temporary fix because required is supposed to be passed as a boolean and NOT as a string */

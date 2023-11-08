@@ -1,6 +1,6 @@
 import React from "react";
-import WssQuickCreate from '../../designSystemExtension/WssQuickCreate';
 import { Utils } from '../../helpers/utils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 // import type { PConnProps } from '../../../types/PConnProps';
 
 // Can't add PConnTypes until we can resolve type problems with
@@ -11,6 +11,9 @@ import { Utils } from '../../helpers/utils';
 
 
 export default function QuickCreate(props /* : QuickCreateProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const WssQuickCreate = getComponentFromMap('WssQuickCreate');
+
   const { getPConnect, heading, showCaseIcons, classFilter } = props;
   const pConn = getPConnect();
   const createCase = (className) => {

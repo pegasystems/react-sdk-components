@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles'
 
 import Tabs from '@material-ui/core/Tabs';
-import LeftAlignVerticalTab from '../LeftAlignVerticalTabs';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // VerticalTabs does NOT have getPConnect. So, no need to extend from PConnProps
 interface VerticalTabsProps {
@@ -37,6 +37,9 @@ const createCustomEvent = (eventName: string, additionalData: {[key: string]: st
 
 
 export default function VerticalTabs(props: VerticalTabsProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const LeftAlignVerticalTab = getComponentFromMap("LeftAlignVerticalTabs");
+
   // Get a React warning when we use tabConfig as mixed case. So all lowercase tabconfig
   const { tabconfig = [] } = props;
   const classes = useStyles();

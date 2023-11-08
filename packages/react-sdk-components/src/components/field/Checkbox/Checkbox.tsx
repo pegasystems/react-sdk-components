@@ -7,7 +7,7 @@ import {
   FormHelperText
 } from '@material-ui/core';
 import handleEvent from '../../helpers/event-utils';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 // import type { PConnProps } from '../../../types/PConnProps';
 
 // Checkbox passes in 'value' as a boolean. So can't use the default
@@ -36,8 +36,10 @@ import FieldValueList from '../../designSystemExtension/FieldValueList';
 //   // eslint-disable-next-line react/no-unused-prop-types
 //   placeholder?: string
 // }
-
 export default function CheckboxComponent(props /* : CheckboxProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     getPConnect,
     label,
@@ -56,9 +58,9 @@ export default function CheckboxComponent(props /* : CheckboxProps */) {
 
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
-  const caption = theConfigProps["caption"];
+  const caption = theConfigProps['caption'];
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps()["value"];
+  const propName = thePConn.getStateProps()['value'];
 
   const [checked, setChecked] = useState(false);
   useEffect(() => {
@@ -71,7 +73,9 @@ export default function CheckboxComponent(props /* : CheckboxProps */) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value.toString()} variant='stacked' />;
+    return (
+      <FieldValueList name={hideLabel ? '' : label} value={value.toString()} variant='stacked' />
+    );
   }
 
   const handleChange = event => {
@@ -79,7 +83,7 @@ export default function CheckboxComponent(props /* : CheckboxProps */) {
   };
 
   const handleBlur = event => {
-    thePConn.getValidationApi().validate(event.target.checked, "");   // 2nd arg empty string until typedef marked correctly as optional
+    thePConn.getValidationApi().validate(event.target.checked, ''); // 2nd arg empty string until typedef marked correctly as optional
   };
 
   let theCheckbox = <Checkbox color='primary' disabled={disabled} />;

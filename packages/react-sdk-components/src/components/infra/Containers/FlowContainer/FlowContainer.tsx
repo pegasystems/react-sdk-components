@@ -13,9 +13,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
 import { isEmptyObject } from '../../../helpers/common-utils';
-// Need to get correct implementation from component map for Assignment and ToDo
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
-import AlertBanner from '../../../designSystemExtension/AlertBanner';
 
 // import type { PConnProps } from '../../../../types/PConnProps';
 
@@ -64,7 +62,8 @@ const useStyles = makeStyles(theme => ({
 export default function FlowContainer(props /* : FlowContainerProps */) {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap('Assignment');
-  const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
+  const ToDo = getComponentFromMap('Todo');  // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
+  const AlertBanner = getComponentFromMap("AlertBanner");
 
   const pCoreConstants = PCore.getConstants();
   const PCoreVersion = PCore.getPCoreVersion();
@@ -489,7 +488,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
               type={TODO}
               context={todo_context}
               itemKey={itemKey}
-              isConfirm
+              isConfirm={bHasCaseMessages}
             ></ToDo>
           </div>
         ))}

@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import TextField from '@material-ui/core/TextField';
 import { Utils } from '../../../helpers/utils';
 import download from "downloadjs";
-import SummaryList from '../../SummaryList';
-import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
+// import SummaryList from '../../SummaryList';
+// import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
 import './FileUtility.css';
 import  { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Button } from '@material-ui/core';
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { CircularProgress } from "@material-ui/core";
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+
 import type { PConnProps } from '../../../../types/PConnProps';
 
 
@@ -23,6 +25,10 @@ declare const PCore: any;
 
 
 export default function FileUtility(props:FileUtilityProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const SummaryList = getComponentFromMap('SummaryList');
+  const ActionButtonsForFileUtil = getComponentFromMap('ActionButtonsForFileUtil');
+
   const { getPConnect } = props;
   const thePConn = getPConnect();
   const required = true;

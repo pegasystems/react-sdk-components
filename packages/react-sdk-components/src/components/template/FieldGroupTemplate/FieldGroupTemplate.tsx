@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useMemo } from 'react';
-import FieldGroup from '../../designSystemExtension/FieldGroup';
-import FieldGroupList from '../../designSystemExtension/FieldGroupList';
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface FieldGroupTemplateProps extends PConnProps {
@@ -19,6 +19,10 @@ interface FieldGroupTemplateProps extends PConnProps {
 
 
 export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldGroup = getComponentFromMap('FieldGroup');
+  const FieldGroupList = getComponentFromMap('FieldGroupList');
+
   const {
     referenceList = [],
     renderMode,

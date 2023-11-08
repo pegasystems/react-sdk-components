@@ -5,6 +5,7 @@
 
 import ActionButtons from '../src/components/infra/ActionButtons';
 import ActionButtonsForFileUtil from './components/widget/FileUtility/ActionButtonsForFileUtil';
+import AlertBanner from './components/designSystemExtension/AlertBanner';
 import AppAnnouncement from './components/widget/AppAnnouncement';
 import AppShell from './components/template/AppShell/AppShell';
 import Assignment from './components/infra/Assignment/Assignment';
@@ -36,7 +37,10 @@ import DetailsTwoColumn from './components/template/Details/DetailsTwoColumn/Det
 import Dropdown from './components/field/Dropdown';
 import Email from './components/field/Email/Email';
 import ErrorBoundary from './components/infra/ErrorBoundary';
+import FieldGroup from './components/designSystemExtension/FieldGroup';
+import FieldGroupList from './components/designSystemExtension/FieldGroupList';
 import FieldGroupTemplate from './components/template/FieldGroupTemplate';
+import FieldValueList from './components/designSystemExtension/FieldValueList';
 import FileUtility from './components/widget/FileUtility/FileUtility';
 import FlowContainer from './components/infra/Containers/FlowContainer';
 import Followers from './components/widget/Followers';
@@ -66,6 +70,8 @@ import QuickCreate from './components/widget/QuickCreate';
 import RadioButtons from './components/field/RadioButtons';
 import Reference from './components/infra/Reference/Reference';
 import Region from './components/infra/Region/Region';
+import RichText from './components/field/RichText';
+import RichTextEditor from './components/designSystemExtension/RichTextEditor';
 import RootContainer from './components/infra/RootContainer/RootContainer';
 import ScalarList from './components/field/ScalarList';
 import SemanticLink from './components/field/SemanticLink';
@@ -109,6 +115,7 @@ import WssQuickCreate from './components/designSystemExtension/WssQuickCreate';
 const pegaSdkComponentMap = {
   'ActionButtons': ActionButtons,
   'ActionButtonsForFileUtil': ActionButtonsForFileUtil,
+  'AlertBanner': AlertBanner,
   'AppAnnouncement': AppAnnouncement,
   'AppShell': AppShell,
   'Assignment': Assignment,
@@ -140,7 +147,10 @@ const pegaSdkComponentMap = {
   'Dropdown': Dropdown,
   'Email': Email,
   'ErrorBoundary': ErrorBoundary,
+  'FieldGroup': FieldGroup,
+  'FieldGroupList': FieldGroupList,
   'FieldGroupTemplate': FieldGroupTemplate,
+  'FieldValueList': FieldValueList,
   'FileUtility': FileUtility,
   'FlowContainer': FlowContainer,
   'Followers': Followers,
@@ -167,9 +177,11 @@ const pegaSdkComponentMap = {
   'PromotedFilters': PromotedFilters,
   'Pulse': Pulse,
   'QuickCreate': QuickCreate,
-  'reference': Reference,
+  'reference': Reference,   // See note about about non-standard capitalization
   'RadioButtons': RadioButtons,
   'Region': Region,
+  'RichText': RichText,
+  'RichTextEditor': RichTextEditor,
   'RootContainer': RootContainer,
   'ScalarList': ScalarList,
   'SemanticLink': SemanticLink,
@@ -185,7 +197,7 @@ const pegaSdkComponentMap = {
   'TextContent': TextContent,
   'TextInput': TextInput,
   'Time': Time,
-  'Todo': ToDo,
+  'Todo': ToDo,   // See note about about non-standard capitalization
   'TwoColumn': TwoColumn,
   'TwoColumnPage': TwoColumnPage,
   'TwoColumnTab': TwoColumnTab,
@@ -199,7 +211,7 @@ const pegaSdkComponentMap = {
   'WideNarrowForm': WideNarrowForm,
   'WideNarrowPage': WideNarrowPage,
   'WssNavBar': WssNavBar,
-  'WssQuickcreate': WssQuickCreate
+  'WssQuickCreate': WssQuickCreate
 };
 
 export default pegaSdkComponentMap;

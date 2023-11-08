@@ -1,5 +1,5 @@
 import React from "react";
-import SummaryItem from '../SummaryItem/index'
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 // SummaryList does NOT have getPConnect. So, no need to extend from PConnProps
 
@@ -12,6 +12,9 @@ interface SummaryListProps {
 
 
 export default function SummaryList(props: SummaryListProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const SummaryItem = getComponentFromMap('SummaryItem');
+
   const { menuIconOverride$: menuOverride = ""} = props;
   return (
     <div>
