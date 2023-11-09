@@ -2,6 +2,7 @@
 /* eslint-disable no-undef */
 const path = require('path');
 const { test, expect } = require('@playwright/test');
+import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../config');
 const common = require('../../common');
