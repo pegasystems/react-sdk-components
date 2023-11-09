@@ -2,26 +2,20 @@
 /* eslint-disable no-undef */
 const path = require('path');
 const { test, expect } = require('@playwright/test');
-import { attachCoverageReport } from 'monocart-reporter';
 
 const config = require('../../config');
 const common = require('../../common');
-const endpoints = require("../../../../../sdk-config.json");
-
+const endpoints = require('../../../../../sdk-config.json');
 let caseID;
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
+  await page.goto('http://localhost:3502/portal');
 });
 
 test.describe('E2E test', () => {
   test('should login, create case and send for discount', async ({ page }) => {
-    await common.Login(
-      config.config.apps.mediaCo.rep.username,
-      config.config.apps.mediaCo.rep.password,
-      page
-    );
+    await common.Login(config.config.apps.mediaCo.rep.username, config.config.apps.mediaCo.rep.password, page);
 
     const announcementBanner = page.locator('h6:has-text("Announcements")');
     await expect(announcementBanner).toBeVisible();
@@ -121,13 +115,21 @@ test.describe('E2E test', () => {
     const PCoreVersion = await page.evaluate(() => window.PCore.getPCoreVersion());
 
     await Promise.all([
-      page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}${endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ""}/api/application/v2/attachments/upload`)
+      page.waitForResponse(
+        `${endpoints.serverConfig.infinityRestServerUrl}${
+          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
+        }/api/application/v2/attachments/upload`
+      )
     ]);
 
     await page.locator('button:has-text("submit")').click();
 
     await Promise.all([
-      page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}${endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ""}/api/application/v2/cases/${currentCaseID}/attachments${PCoreVersion.includes('8.23') ? '?includeThumbnail=false' : ''}`),
+      page.waitForResponse(
+        `${endpoints.serverConfig.infinityRestServerUrl}${
+          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
+        }/api/application/v2/cases/${currentCaseID}/attachments${PCoreVersion.includes('8.23.0') ? '?includeThumbnail=false' : ''}`
+      )
     ]);
 
     const attachmentCount = await page.locator('div[id="attachments-count"]').textContent();
@@ -135,11 +137,7 @@ test.describe('E2E test', () => {
   }, 10000);
 
   test('should enter a discount value($) and send to tech', async ({ page }) => {
-    await common.Login(
-      config.config.apps.mediaCo.manager.username,
-      config.config.apps.mediaCo.manager.password,
-      page
-    );
+    await common.Login(config.config.apps.mediaCo.manager.username, config.config.apps.mediaCo.manager.password, page);
 
     const announcementBanner = page.locator('h6:has-text("Announcements")');
     await expect(announcementBanner).toBeVisible();
@@ -157,16 +155,11 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("submit")').click();
 
+    await expect(page.locator('div[id="Assignment"]')).not.toBeVisible();
   }, 10000);
 
-  test('should modify(if required) the actual services/packages to be installed and resolve the case', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.mediaCo.tech.username,
-      config.config.apps.mediaCo.tech.password,
-      page
-    );
+  test('should modify(if required) the actual services/packages to be installed and resolve the case', async ({ page }) => {
+    await common.Login(config.config.apps.mediaCo.tech.username, config.config.apps.mediaCo.tech.password, page);
 
     const announcementBanner = page.locator('h6:has-text("Announcements")');
     await expect(announcementBanner).toBeVisible();
@@ -180,9 +173,7 @@ test.describe('E2E test', () => {
     const tvConnected = page.locator('label[data-test-id="EEF2AA5E42FD9F0FB0A44EA0B2D52921"]');
     await tvConnected.click();
 
-    const internetConnected = page.locator(
-      'label[data-test-id="C43FA5D99B9290C0885E058F641CAB8D"]'
-    );
+    const internetConnected = page.locator('label[data-test-id="C43FA5D99B9290C0885E058F641CAB8D"]');
     await internetConnected.click();
 
     await page.locator('button:has-text("submit")').click();
@@ -196,7 +187,7 @@ test.afterEach(async ({ page }) => {
   expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
   // coverage report
   const report = await attachCoverageReport(coverageData, test.info(), {
-    outputDir: "./test-reports/e2e/MediaCo/portal"
+    outputDir: './test-reports/e2e/MediaCo/portal'
   });
   console.log(report.summary);
   await page.close();

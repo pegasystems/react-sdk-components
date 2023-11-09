@@ -109,6 +109,7 @@ export default function ToDo(props: ToDoProps) {
   const localeCategory = 'Todo';
   const showlessLocalizedValue = localizedVal('show_less', 'CosmosFields');
   const showMoreLocalizedValue = localizedVal('show_more', 'CosmosFields');
+  const canPerform = assignments?.[0]?.canPerform === "true" || assignments?.[0]?.canPerform === true;
   // const { setOpen } = useNavBar();
 
   function initAssignments(): Array<any> {
@@ -248,7 +249,7 @@ export default function ToDo(props: ToDoProps) {
                 localeCategory
               )}  ${getPriority(assignment)}`}
             </div>
-            {!isConfirm && (
+            {(!isConfirm || canPerform) && (
               <div style={{ marginLeft: 'auto' }}>
                 <IconButton onClick={() => clickGo(assignment)}>
                   <ArrowForwardIosOutlinedIcon />

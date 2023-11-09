@@ -19,8 +19,6 @@ declare const PCore: any;
 // interface AttachmentProps extends PConnProps {
 //   // If any, enter additional props that only exist on this component
 // }
-
-
 const getAttachmentKey = (name='') => name ? `attachmentsList.${name}` : 'attachmentsList';
 
 function getCurrentAttachmentsList(key, context) {
@@ -53,7 +51,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   const [file, setFile] = useState(fileTemp);
 
   const resetAttachmentStoredState = () => {
-    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), undefined, {
+    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey((PCoreVersion?.includes('8.23') || PCoreVersion?.includes('8.8.4')) ? valueRef : ''), undefined, {
       pageReference: 'context_data',
       isArrayDeepMerge: false
     });
@@ -245,12 +243,12 @@ export default function Attachment(props /* :AttachmentProps */) {
             handle: fileRes.ID,
             ID: fileRes.clientFileID
           };
-          const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), pConn.getContextName()).filter(
+          const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey((PCoreVersion?.includes('8.23') || PCoreVersion?.includes('8.8.4')) ? valueRef : ''), pConn.getContextName()).filter(
             (f) => f.label !== valueRef
           );
           PCore.getStateUtils().updateState(
             pConn.getContextName(),
-            getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''),
+            getAttachmentKey((PCoreVersion?.includes('8.23') || PCoreVersion?.includes('8.8.4')) ? valueRef : ''),
             [...currentAttachmentList, reqObj],
             {
               pageReference: 'context_data',
@@ -321,7 +319,7 @@ export default function Attachment(props /* :AttachmentProps */) {
       });
     } else {
       const attachmentsList = [];
-      const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), pConn.getContextName()).filter(
+      const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey((PCoreVersion?.includes('8.23') || PCoreVersion?.includes('8.8.4')) ? valueRef : ''), pConn.getContextName()).filter(
         (f) => f.label !== valueRef
       );
       if (value && value.pxResults && +value.pyCount > 0) {
@@ -336,7 +334,7 @@ export default function Attachment(props /* :AttachmentProps */) {
         // updating the redux store to help form-handler in passing the data to delete the file from server
         PCore.getStateUtils().updateState(
           pConn.getContextName(),
-          getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''),
+          getAttachmentKey((PCoreVersion?.includes('8.23') || PCoreVersion?.includes('8.8.4')) ? valueRef : ''),
           [...currentAttachmentList, deletedFile],
           {
             pageReference: 'context_data',
@@ -346,7 +344,7 @@ export default function Attachment(props /* :AttachmentProps */) {
       } else {
         PCore.getStateUtils().updateState(
           pConn.getContextName(),
-          getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''),
+          getAttachmentKey((PCoreVersion?.includes('8.23') || PCoreVersion?.includes('8.8.4')) ? valueRef : ''),
           [...currentAttachmentList, ...attachmentsList],
           {
             pageReference: 'context_data',
@@ -423,7 +421,7 @@ export default function Attachment(props /* :AttachmentProps */) {
       }
 
       if (fileTemp) {
-        const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), pConn.getContextName());
+        const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(PCoreVersion?.includes('8.23') || PCoreVersion?.includes('8.8.4') ? valueRef : ''), pConn.getContextName());
         const index = currentAttachmentList.findIndex(element => element.props.ID === fileTemp.props.ID);
         let tempFiles: any = [];
         if (index < 0) {
@@ -431,7 +429,7 @@ export default function Attachment(props /* :AttachmentProps */) {
         }
         PCore.getStateUtils().updateState(
           pConn.getContextName(),
-          getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''),
+          getAttachmentKey((PCoreVersion?.includes('8.23') || PCoreVersion?.includes('8.8.4')) ? valueRef : ''),
           [...currentAttachmentList, ...tempFiles],
           {
             pageReference: 'context_data',
