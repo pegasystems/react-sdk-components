@@ -335,6 +335,8 @@ class AuthManager {
 
           const portalGrantType = sdkConfigAuth.portalGrantType || 'authCode';
           const mashupGrantType = sdkConfigAuth.mashupGrantType || 'authCode';
+          // Some grant types are only available with confidential registrations and require a client secret
+          const clientSecret = bNoInitialRedirect ? sdkConfigAuth.mashupClientSecret : sdkConfigAuth.portalClientSecret;
 
           const pegaAuthConfig:any = {
             clientId: bNoInitialRedirect ? sdkConfigAuth.mashupClientId : sdkConfigAuth.portalClientId,
@@ -346,6 +348,9 @@ class AuthManager {
             appAlias: sdkConfigServer.appAlias || '',
             useLocking: true
           };
+          if( clientSecret ) {
+            pegaAuthConfig.clientSecret = clientSecret;
+          }
           // Invoke keySuffix setter
           // Was using pegaAuthConfig.clientId as key but more secure to just use a random string as getting
           //  both a clientId and the refresh token could yield a new access token.
