@@ -14,7 +14,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
 import { isEmptyObject } from '../../../helpers/common-utils';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
-
+import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 // import type { PConnProps } from '../../../../types/PConnProps';
 
 // Can't use PConnProps until getPConnect().getChildren() types are ok
@@ -38,7 +38,7 @@ declare const PCore: any;
 // is totally at your own risk.
 //
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(2),
     paddingLeft: theme.spacing(2),
@@ -59,21 +59,21 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function FlowContainer(props /* : FlowContainerProps */) {
+export const FlowContainer = (props /* : FlowContainerProps */) => {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap('Assignment');
-  const ToDo = getComponentFromMap('Todo');  // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
-  const AlertBanner = getComponentFromMap("AlertBanner");
+  const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
+  const AlertBanner = getComponentFromMap('AlertBanner');
 
   const pCoreConstants = PCore.getConstants();
   const PCoreVersion = PCore.getPCoreVersion();
   const { TODO } = pCoreConstants;
   const todo_headerText = 'To do';
 
-  const { getPConnect, routingInfo, pageMessages } = props;
+  const { getPConnect: getPConnectOfFlowContainer, routingInfo, pageMessages, getPConnectOfActiveContainerItem } = props;
 
   const { displayOnlyFA } = useContext<any>(StoreContext);
-
+  const getPConnect = getPConnectOfActiveContainerItem || getPConnectOfFlowContainer;
   const thePConn = getPConnect();
 
   // const [init, setInit] = useState(true);
@@ -112,8 +112,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
     const containerType = 'single';
 
     const flowContainerTarget = `${baseContext}/${theContainerName}`;
-    const isContainerItemAvailable =
-      PCore.getContainerUtils().getActiveContainerItemName(flowContainerTarget);
+    const isContainerItemAvailable = PCore.getContainerUtils().getActiveContainerItemName(flowContainerTarget);
 
     window.sessionStorage.setItem('okToInitFlowContainer', 'false');
 
@@ -214,7 +213,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
     const caseActions = ourPConn.getValue(pCoreConstants.CASE_INFO.AVAILABLEACTIONS, ''); // 2nd arg empty string until typedefs properly allow optional
     let bCaseWideAction = false;
     if (caseActions && actionID) {
-      const actionObj = caseActions.find(caseAction => caseAction.ID === actionID);
+      const actionObj = caseActions.find((caseAction) => caseAction.ID === actionID);
       if (actionObj) {
         bCaseWideAction = actionObj.type === 'Case';
       }
@@ -238,9 +237,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
     const ourPConn = getPConnect();
 
     let bHasAssignments = false;
-    const assignmentsList: Array<any> = ourPConn.getValue(
-      pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''
-    ); // 2nd arg empty string until typedefs properly allow optional
+    const assignmentsList: Array<any> = ourPConn.getValue(pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''); // 2nd arg empty string until typedefs properly allow optional
     const isEmbedded = window.location.href.includes('embedded');
     let bAssignmentsForThisOperator = false;
     // 8.7 includes assignments in Assignments List that may be assigned to
@@ -279,7 +276,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
 
     const caseActions = ourPConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS, ''); // 2nd arg empty string until typedefs properly allow optionalv
     const activeActionID = ourPConn.getValue(CASE_CONSTS.ACTIVE_ACTION_ID, ''); // 2nd arg empty string until typedefs properly allow optional
-    const activeAction = caseActions?.find(action => action.ID === activeActionID);
+    const activeAction = caseActions?.find((action) => action.ID === activeActionID);
     if (activeAction) {
       activeActionLabel = activeAction.name;
     }
@@ -344,9 +341,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
     if (theCaseMessages || !hasAssignments()) {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
-      setCaseMessages(
-        theCaseMessages || localizedVal('Thank you! The next step in this case has been routed appropriately.', localeCategory)
-      );
+      setCaseMessages(theCaseMessages || localizedVal('Thank you! The next step in this case has been routed appropriately.', localeCategory));
       setHasCaseMessages(true);
       setShowConfirm(true);
 
@@ -378,13 +373,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
         // debugger;
         setItemKey(key);
 
-        if (
-          currentOrder.length > 0 &&
-          currentItems[key] &&
-          currentItems[key].view &&
-          type === 'single' &&
-          !isEmptyObject(currentItems[key].view)
-        ) {
+        if (currentOrder.length > 0 && currentItems[key] && currentItems[key].view && type === 'single' && !isEmptyObject(currentItems[key].view)) {
           const currentItem = currentItems[key];
           const rootView = currentItem.view;
           const { context } = rootView.config;
@@ -429,32 +418,61 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
   }, [props]);
 
   const caseId = thePConn.getCaseSummary().content.pyID;
-  const urgency = getPConnect().getCaseSummary().assignments
-    ? getPConnect().getCaseSummary().assignments?.[0].urgency
-    : '';
+  const urgency = getPConnect().getCaseSummary().assignments ? getPConnect().getCaseSummary().assignments?.[0].urgency : '';
   const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName());
 
   const bShowBanner = showBanner(getPConnect);
 
   const displayPageMessages = () => {
     let hasBanner = false;
-    const messages = pageMessages
-      ? pageMessages.map(msg => localizedVal(msg.message, 'Messages'))
-      : pageMessages;
+    const messages = pageMessages ? pageMessages.map((msg) => localizedVal(msg.message, 'Messages')) : pageMessages;
     hasBanner = messages && messages.length > 0;
-    return (
-      hasBanner && <AlertBanner id='flowContainerBanner' variant='urgent' messages={messages} />
-    );
+    return hasBanner && <AlertBanner id="flowContainerBanner" variant="urgent" messages={messages} />;
   };
 
+  function getRefreshProps(refreshConditions) {
+    // refreshConditions cuurently supports only "Changes" event
+    if (!refreshConditions) {
+      return [];
+    }
+    return refreshConditions.filter((item) => item.event && item.event === 'Changes').map((item) => [item.field, item.field?.substring(1)]) || [];
+  }
+
+  // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
+  const refreshConditions = thePConn.getCaseInfo()?.getActionRefreshConditions();
+  const context = thePConn.getContextName();
+  const pageReference = thePConn.getPageReference();
+
+  // refresh api de-registration
+  PCore.getRefreshManager().deRegisterForRefresh(context);
+
+  // refresh api registration
+  const refreshProps = getRefreshProps(refreshConditions);
+  const caseKey = thePConn.getCaseInfo().getKey();
+  const refreshOptions = { autoDetectRefresh: true, preserveClientChanges: false };
+  if (refreshProps.length > 0) {
+    refreshProps.forEach((prop) => {
+      PCore.getRefreshManager().registerForRefresh(
+        'PROP_CHANGE',
+        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, null, pageReference, {
+          ...refreshOptions,
+          refreshFor: prop[0]
+        }),
+        `${pageReference}.${prop[1]}`,
+        `${context}/${pageReference}`,
+        context
+      );
+    });
+  }
+
   return (
-    <div style={{ textAlign: 'left' }} id={buildName} className='psdk-flow-container-top'>
+    <div style={{ textAlign: 'left' }} id={buildName} className="psdk-flow-container-top">
       {!bShowConfirm &&
         (!todo_showTodo ? (
           !displayOnlyFA ? (
             <Card className={classes.root}>
               <CardHeader
-                title={<Typography variant='h6'>{containerName}</Typography>}
+                title={<Typography variant="h6">{containerName}</Typography>}
                 subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
                 avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
               ></CardHeader>
@@ -467,7 +485,7 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
             </Card>
           ) : (
             <Card className={classes.root}>
-              <Typography variant='h6'>{containerName}</Typography>
+              <Typography variant="h6">{containerName}</Typography>
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
@@ -494,10 +512,12 @@ export default function FlowContainer(props /* : FlowContainerProps */) {
         ))}
       {bHasCaseMessages && (
         <div className={classes.alert}>
-          <Alert severity='success'>{caseMessages}</Alert>
+          <Alert severity="success">{caseMessages}</Alert>
         </div>
       )}
       {bShowConfirm && bShowBanner && <div>{arNewChildrenAsReact}</div>}
     </div>
   );
-}
+};
+
+export default withSimpleViewContainerRenderer(FlowContainer);
