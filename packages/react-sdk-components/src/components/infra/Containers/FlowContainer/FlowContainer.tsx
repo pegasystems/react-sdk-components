@@ -188,8 +188,8 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     // inside
     // get fist kid, get the name and displa
     // pass first kid to a view container, which will disperse it to a view which will use one column, two column, etc.
-    const oWorkItem = arNewChildren[0].getPConnect(); // child0_getPConnect;
-    const oWorkData = oWorkItem.getDataObject();
+    const oWorkItem = arNewChildren?.[0].getPConnect(); // child0_getPConnect;
+    const oWorkData = oWorkItem?.getDataObject();
 
     if (bLoadChildren && oWorkData) {
       // debugger;
