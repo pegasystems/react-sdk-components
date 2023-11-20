@@ -285,7 +285,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
 
   // From SDK-WC updateSelf - so do this in useEffect that's run only when the props change...
   useEffect(() => {
-    const localPConn = arNewChildren[0].getPConnect();
+    const localPConn = arNewChildren?.[0].getPConnect();
 
     setBuildName(getBuildName());
 
