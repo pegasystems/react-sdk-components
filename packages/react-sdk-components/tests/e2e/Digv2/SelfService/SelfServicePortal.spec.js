@@ -9,7 +9,7 @@ test.beforeEach(common.launchSelfServicePortal);
 
 test.describe('E2E test', () => {
   test('should login and able to render self-service portal', async ({ page }) => {
-    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing app name presence */
     const appName = page.locator('button[id="appName"]:has-text("DigV2")');

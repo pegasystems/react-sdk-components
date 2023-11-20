@@ -38,6 +38,7 @@ export default function FieldGroupList(props: FieldGroupListProps) {
                   style={{ float: 'right' }}
                   className='psdk-utility-button'
                   id={`delete-row-${item.id}`}
+                  aria-label='Delete Row'
                   onClick={() => {
                     props.onDelete(item.id);
                   }}
