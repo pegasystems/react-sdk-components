@@ -568,6 +568,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
                           type='button'
                           className='psdk-utility-button'
                           id='delete-button'
+                          aria-label='Delete Cell'
                           onClick={() => deleteRecord(index)}
                         >
                           <img
