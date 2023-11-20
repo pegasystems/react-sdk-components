@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-boolean-value */
-
-import { Button } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize, getIconForAttachment } from '../../helpers/attachmentHelpers';
-import './Attachment.css';
+import { Button } from '@material-ui/core';
 import { CircularProgress } from "@material-ui/core";
 import download from "downloadjs";
+import { compareVersions } from 'compare-versions';
+import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize, getIconForAttachment } from '../../helpers/attachmentHelpers';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import './Attachment.css';
 
 // import type { PConnProps } from '../../../types/PConnProps';
 
@@ -19,8 +19,6 @@ declare const PCore: any;
 // interface AttachmentProps extends PConnProps {
 //   // If any, enter additional props that only exist on this component
 // }
-
-
 const getAttachmentKey = (name='') => name ? `attachmentsList.${name}` : 'attachmentsList';
 
 function getCurrentAttachmentsList(key, context) {
@@ -51,9 +49,11 @@ export default function Attachment(props /* :AttachmentProps */) {
   let valueRef = pConn.getStateProps()["value"];
   valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
   const [file, setFile] = useState(fileTemp);
+  const attachmentName = compareVersions(PCoreVersion, '8.8.3') === 1 ? valueRef : '';
+
 
   const resetAttachmentStoredState = () => {
-    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), undefined, {
+    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(attachmentName), undefined, {
       pageReference: 'context_data',
       isArrayDeepMerge: false
     });
@@ -245,12 +245,12 @@ export default function Attachment(props /* :AttachmentProps */) {
             handle: fileRes.ID,
             ID: fileRes.clientFileID
           };
-          const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), pConn.getContextName()).filter(
+          const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(attachmentName), pConn.getContextName()).filter(
             (f) => f.label !== valueRef
           );
           PCore.getStateUtils().updateState(
             pConn.getContextName(),
-            getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''),
+            getAttachmentKey(attachmentName),
             [...currentAttachmentList, reqObj],
             {
               pageReference: 'context_data',
@@ -321,7 +321,7 @@ export default function Attachment(props /* :AttachmentProps */) {
       });
     } else {
       const attachmentsList = [];
-      const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), pConn.getContextName()).filter(
+      const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(attachmentName), pConn.getContextName()).filter(
         (f) => f.label !== valueRef
       );
       if (value && value.pxResults && +value.pyCount > 0) {
@@ -336,7 +336,7 @@ export default function Attachment(props /* :AttachmentProps */) {
         // updating the redux store to help form-handler in passing the data to delete the file from server
         PCore.getStateUtils().updateState(
           pConn.getContextName(),
-          getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''),
+          getAttachmentKey(attachmentName),
           [...currentAttachmentList, deletedFile],
           {
             pageReference: 'context_data',
@@ -346,7 +346,7 @@ export default function Attachment(props /* :AttachmentProps */) {
       } else {
         PCore.getStateUtils().updateState(
           pConn.getContextName(),
-          getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''),
+          getAttachmentKey(attachmentName),
           [...currentAttachmentList, ...attachmentsList],
           {
             pageReference: 'context_data',
@@ -423,7 +423,7 @@ export default function Attachment(props /* :AttachmentProps */) {
       }
 
       if (fileTemp) {
-        const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), pConn.getContextName());
+        const currentAttachmentList = getCurrentAttachmentsList( getAttachmentKey(attachmentName), pConn.getContextName());
         const index = currentAttachmentList.findIndex(element => element.props.ID === fileTemp.props.ID);
         let tempFiles: any = [];
         if (index < 0) {
@@ -431,7 +431,7 @@ export default function Attachment(props /* :AttachmentProps */) {
         }
         PCore.getStateUtils().updateState(
           pConn.getContextName(),
-          getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''),
+          getAttachmentKey(attachmentName),
           [...currentAttachmentList, ...tempFiles],
           {
             pageReference: 'context_data',
