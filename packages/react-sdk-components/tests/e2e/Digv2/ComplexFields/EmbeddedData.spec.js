@@ -6,7 +6,7 @@ const { test, expect } = require('@playwright/test');
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(async ({ page }) => await common.launchPortal(page));
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   test('should login, create case and run different test cases for Embedded Data', async ({ page }) => {

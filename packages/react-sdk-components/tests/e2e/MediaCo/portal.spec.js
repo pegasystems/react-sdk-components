@@ -9,7 +9,7 @@ const endpoints = require('../../../../../sdk-config.json');
 
 let caseID;
 
-test.beforeEach(async ({ page }) => await common.launchPortal(page));
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   test('should login, create case and send for discount', async ({ page }) => {

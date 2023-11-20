@@ -5,7 +5,7 @@ const { test, expect } = require('@playwright/test');
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(async ({ page }) => await common.launchSelfServicePortal(page));
+test.beforeEach(common.launchSelfServicePortal);
 
 test.describe('E2E test', () => {
   test('should login and able to render self-service portal', async ({ page }) => {

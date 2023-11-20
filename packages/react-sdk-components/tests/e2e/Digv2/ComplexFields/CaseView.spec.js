@@ -12,7 +12,7 @@ const common = require('../../../common');
 const detailsTabVisible = false;
 const caseHistoryTabVisible = true;
 
-test.beforeEach(async ({ page }) => await common.launchPortal(page));
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   test('should login, create case and run different test cases for Case View', async ({ page }) => {

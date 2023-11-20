@@ -4,7 +4,7 @@ const { test } = require('@playwright/test');
 
 const common = require('../../common');
 
-test.beforeEach(async ({ page }) => await common.launchEmbedded(page));
+test.beforeEach(common.launchEmbedded);
 
 test.describe('E2E test', () => {
   test('Embedded: should launch, select a service plan and fill details', async ({ page }) => {

@@ -10,7 +10,7 @@ const common = require('../../../common');
 const isDisabled = true;
 const isVisible = true;
 
-test.beforeEach(async ({ page }) => await common.launchPortal(page));
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
   let attributes;
