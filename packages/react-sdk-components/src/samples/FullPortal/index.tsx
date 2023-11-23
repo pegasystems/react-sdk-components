@@ -10,6 +10,7 @@ import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers
 import { loginIfNecessary, getAvailablePortals } from '../../components/helpers/authManager';
 import InvalidPortal from './InvalidPortal';
 
+import * as sdkPegaComponentMap from '../../sdk-pega-component-map';
 import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../sdk-local-component-map';
 
@@ -134,7 +135,7 @@ export default function FullPortal() {
 
       // Initialize the SdkComponentMap (local and pega-provided)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-      getSdkComponentMap(localSdkComponentMap).then((theComponentMap: any) => {
+      getSdkComponentMap(localSdkComponentMap, sdkPegaComponentMap).then((theComponentMap: any) => {
         // eslint-disable-next-line no-console
         console.log(`SdkComponentMap initialized`);
 

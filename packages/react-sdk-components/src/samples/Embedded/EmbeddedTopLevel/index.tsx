@@ -14,6 +14,7 @@ import EmbeddedSwatch from '../EmbeddedSwatch';
 import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelpers';
 import { getSdkConfig } from '../../../components/helpers/config_access';
 
+import * as sdkPegaComponentMap from '../../../sdk-pega-component-map';
 import { getSdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../../sdk-local-component-map';
 
@@ -381,7 +382,7 @@ export default function EmbeddedTopLevel() {
 
       // Initialize the SdkComponentMap (local and pega-provided)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-      getSdkComponentMap(localSdkComponentMap).then( (theComponentMap: any) => {
+      getSdkComponentMap(localSdkComponentMap, sdkPegaComponentMap).then( (theComponentMap: any) => {
         // eslint-disable-next-line no-console
         console.log(`SdkComponentMap initialized`);
 

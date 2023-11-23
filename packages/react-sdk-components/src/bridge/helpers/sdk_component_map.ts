@@ -1,8 +1,8 @@
+import type {ComponentType} from 'react';
+
 // Helper singleton class to assist with loading and
 //  accessing the SDK components
 // import localSdkComponentMap from '../../sdk-local-component-map';
-import pegaSdkComponentMap from '../../sdk-pega-component-map';
-
 // Statically load all "local" components
 
 // Create a singleton for this class (with async loading of components map file) and export it
@@ -16,6 +16,8 @@ interface ISdkComponentMap {
   localComponentMap: Object,
   pegaProvidedComponentMap: Object
 }
+
+type PegaSdkComponentMap = Record<string, ComponentType<any>>;
 
 class ComponentMap {
   sdkComponentMap: ISdkComponentMap;            // Top level object
@@ -43,7 +45,7 @@ class ComponentMap {
    * Asynchronous initialization of the config file contents.
    * @returns Promise of config file fetch
    */
-   async readSdkComponentMap(inLocalSdkComponentMap = {}) {
+   async readSdkComponentMap(inLocalSdkComponentMap = {}, pegaSdkComponentMap: PegaSdkComponentMap = {}) {
     // debugger;
     if( Object.keys(this.sdkComponentMap.localComponentMap).length === 0 && Object.keys(this.sdkComponentMap.pegaProvidedComponentMap).length === 0) {
 
@@ -126,7 +128,7 @@ export function getComponentFromMap(inComponentName: string): any {
 
 // Implement Factory function to allow async load
 //  See https://stackoverflow.com/questions/49905178/asynchronous-operations-in-constructor/49906064#49906064 for inspiration
-async function createSdkComponentMap(inLocalComponentMap = {}) {
+async function createSdkComponentMap(inLocalComponentMap = {}, pegaSdkComponentMap: PegaSdkComponentMap = {}) {
   // Note that our initialize function returns a promise...
   const singleton = new ComponentMap();
   await singleton.readSdkComponentMap(inLocalComponentMap);
@@ -134,12 +136,12 @@ async function createSdkComponentMap(inLocalComponentMap = {}) {
 }
 
 // Initialize exported SdkComponentMap structure
-export async function getSdkComponentMap(inLocalComponentMap = {}) {
+export async function getSdkComponentMap(inLocalComponentMap = {}, pegaSdkComponentMap: PegaSdkComponentMap = {}) {
   return new Promise( (resolve) => {
     let idNextCheck;
     if( !SdkComponentMap && !SdkComponentMapCreateInProgress ) {
       SdkComponentMapCreateInProgress = true;
-      createSdkComponentMap(inLocalComponentMap).then( theComponentMap => {
+      createSdkComponentMap(inLocalComponentMap, pegaSdkComponentMap).then( theComponentMap => {
         // debugger;
         // Key initialization of SdkComponentMap
         SdkComponentMap = theComponentMap;
