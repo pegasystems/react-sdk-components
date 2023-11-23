@@ -1,14 +1,26 @@
 import React, { createElement } from 'react';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { GridSize } from '@material-ui/core/Grid';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-import FieldGroup from '../../../designSystemExtension/FieldGroup';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+
+// import type { PConnProps } from '../../../../types/PConnProps';
+
+// Can't use PConnProps until PConnect.getChildren() type is ok
+// interface WideNarrowDetailsProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   showLabel?: boolean,
+//   label?: string,
+//   showHighlightedData?: boolean
+// }
 
 const COLUMN_WIDTHS = [8, 4];
 
-export default function WideNarrowDetails(props) {
-  const { label, showLabel, getPConnect, showHighlightedData } = props;
+export default function WideNarrowDetails(props /* : WideNarrowDetailsProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldGroup = getComponentFromMap('FieldGroup');
+
+  const { label, showLabel = true, getPConnect, showHighlightedData = false } = props;
 
   // Get the inherited props from the parent to determine label settings
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
@@ -19,13 +31,18 @@ export default function WideNarrowDetails(props) {
   getPConnect().setInheritedProp('readOnly', true);
   const children = getPConnect()
     .getChildren()
-    .map((configObject, index) =>
-      createElement(createPConnectComponent(), {
-        ...configObject,
+    ?.map((configObject, index) => {
+      let theConfigObject: object = configObject;
+      if (!theConfigObject) {
+        theConfigObject = {}
+      }
+
+      return createElement(createPConnectComponent(), {
+        ...theConfigObject,
         // eslint-disable-next-line react/no-array-index-key
         key: index.toString()
-      })
-    );
+      });
+    });
 
   // Set up highlighted data to pass in return if is set to show, need raw metadata to pass to createComponent
   let highlightedDataArr = [];
@@ -40,12 +57,18 @@ export default function WideNarrowDetails(props) {
         field.config.displayAsStatus = true;
       }
 
-      return getPConnect().createComponent(field);
+      return getPConnect().createComponent(field,
+        '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
     });
   }
 
+  let theName = '';
+  if (propsToUse?.showLabel && propsToUse.label ) {
+    theName = propsToUse.label;
+  }
+
   return (
-    <FieldGroup name={propsToUse.showLabel ? propsToUse.label : ''}>
+    <FieldGroup name={theName}>
       {showHighlightedData && highlightedDataArr.length > 0 && (
         <Grid container spacing={1} style={{ padding: '0 0 1em' }}>
           {highlightedDataArr.map((child, i) => (
@@ -56,7 +79,7 @@ export default function WideNarrowDetails(props) {
         </Grid>
       )}
       <Grid container spacing={1}>
-        {children.map((child, i) => (
+        {children?.map((child, i) => (
           <Grid item xs={COLUMN_WIDTHS[i] as GridSize} key={`r-${i + 1}`}>
             {child}
           </Grid>
@@ -65,16 +88,3 @@ export default function WideNarrowDetails(props) {
     </FieldGroup>
   );
 }
-
-WideNarrowDetails.defaultProps = {
-  label: undefined,
-  showLabel: true,
-  showHighlightedData: false
-};
-
-WideNarrowDetails.propTypes = {
-  showLabel: PropTypes.bool,
-  label: PropTypes.string,
-  getPConnect: PropTypes.func.isRequired,
-  showHighlightedData: PropTypes.bool
-};

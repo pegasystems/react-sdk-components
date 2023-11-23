@@ -1,5 +1,7 @@
-/* eslint-disable no-undef */
 import getDefaultViewMeta from './DefaultViewMeta';
+
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
+declare const PCore: any;
 
 const USER_REFERENCE = 'UserReference';
 const PAGE = '!P!';
@@ -11,13 +13,49 @@ export const formatConstants = {
   WorkLink: 'WorkLink',
 };
 
+class DataApi {
+  mappedPropertyToOriginalProperty: any;
+  originalPropertyToMappedProperty: any;
+  constructor() {
+    ;
+    this.originalPropertyToMappedProperty = {};
+    this.mappedPropertyToOriginalProperty = {};
+    this.setPropertyMaps = this.setPropertyMaps.bind(this);
+    this.getMappedProperty = this.getMappedProperty.bind(this);
+    this.getOriginalProperty = this.getOriginalProperty.bind(this);
+  }
+
+  setPropertyMaps(originalToMappedPropertyObj = {}, mappedToOriginalPropertyObj = {}) {
+    this.originalPropertyToMappedProperty = {
+      ...this.originalPropertyToMappedProperty,
+      ...originalToMappedPropertyObj
+    };
+    this.mappedPropertyToOriginalProperty = {
+      ...this.mappedPropertyToOriginalProperty,
+      ...mappedToOriginalPropertyObj
+    };
+  }
+
+  getMappedProperty(propertyName) {
+    return this.originalPropertyToMappedProperty[propertyName] ?? propertyName;
+  }
+
+  getOriginalProperty(propertyName) {
+    return this.mappedPropertyToOriginalProperty[propertyName] ?? propertyName;
+  }
+}
+
 export async function getContext(componentConfig) {
   const {
     promisesArray = [], // array of promises which can be invoked paralelly,
   } = componentConfig;
   const promisesResponseArray = await Promise.all(promisesArray);
+  const dataApi = new DataApi();
   return {
     promisesResponseArray,
+    setPropertyMaps: dataApi.setPropertyMaps,
+    getMappedProperty: dataApi.getMappedProperty,
+    getOriginalProperty: dataApi.getOriginalProperty,
   };
 }
 
@@ -32,7 +70,7 @@ export async function getContext(componentConfig) {
  * getFieldNameFromEmbeddedFieldName('!P!Organisation:Name') return 'Organisation.Name'
  * getFieldNameFromEmbeddedFieldName('!PL!Employees:Name') return 'Employees.Name'
  */
- export function getFieldNameFromEmbeddedFieldName(propertyName) {
+export function getFieldNameFromEmbeddedFieldName(propertyName) {
   let value = propertyName;
   if (value.startsWith(PAGE) || value.startsWith(PAGELIST)) {
     value = value.substring(value.lastIndexOf('!') + 1);
@@ -47,7 +85,7 @@ export async function getContext(componentConfig) {
  * @ignore
  * @param {Array} metaFields  Fields metadata Array. Contains metadata of all the fields.
  */
- export function updateMetaEmbeddedFieldID(metaFields) {
+export function updateMetaEmbeddedFieldID(metaFields) {
   return metaFields.forEach((metaField) => {
     if (metaField.fieldID?.startsWith(PAGE) || metaField.fieldID?.startsWith(PAGELIST)) {
       metaField.fieldID = getFieldNameFromEmbeddedFieldName(metaField.fieldID);
@@ -64,6 +102,94 @@ export const isEmbeddedField = (field) => {
 };
 
 /**
+ * [isPageListProperty]
+ * Description    -        checking if propertyName is pageList or not
+ * @ignore
+ * @param {string} propertyName   PropertyName
+ * @returns {boolean}  true if property is pageList else false
+ *
+ * @example <caption>Example for isPageListProperty </caption>
+ * isPageListProperty('!PL!Employees.Name') return true
+ * isPageListProperty('!P!Employees.Name') return false
+ * isPageListProperty('Name') return false
+ */
+export function isPageListProperty(propertyName) {
+  return propertyName.startsWith(PAGELIST);
+}
+
+export const isPageListInPath = (propertyName, currentClassID) => {
+  if (!propertyName.includes('.')) {
+    return false;
+  }
+  const [first, ...rest] = propertyName.split('.');
+  const metadata = PCore.getMetadataUtils().getPropertyMetadata(first, currentClassID);
+  if (metadata?.type === 'Page List') {
+    return true;
+  }
+  return isPageListInPath(rest.join('.'), metadata?.pageClass);
+};
+
+/**
+ * [getEmbeddedFieldName]
+ * Description    -               converting normal field name to embedded field starting with !P! or !PL!
+ * @ignore
+ * @param {string} propertyName   Field name
+ * @param {string} classID        classID of datapage
+ * @returns {string}              returns converted string with !P! or !PL! and :
+ *
+ * @example <caption>Example for getEmbeddedFieldName </caption>
+ * For page property, getEmbeddedFieldName('Organisation.Name') return '!P!Organisation:Name'
+ * For pageList property, getEmbeddedFieldName('Employees.Name') return '!PL!Employees:Name'
+ */
+
+export function getEmbeddedFieldName(propertyName, classID) {
+  let value = propertyName;
+  if (isPageListInPath(value, classID)) {
+    value = `!PL!${value.replace(/\./g, ':')}`;
+  } else {
+    value = `!P!${value.replace(/\./g, ':')}`;
+  }
+  return value;
+}
+
+/**
+ * [preparePropertyMaps]
+ * Description    -        preparing maps for property names and set it in dataApi context
+ * @ignore
+ * @param {Array} fields   fields array
+ * @param {string} classID  classID of datapage
+ * @param {string} context  dataApi context
+ * @returns {boolean} true if pageListProperty is present
+ */
+export function preparePropertyMaps(fields, classID, context) {
+  const { setPropertyMaps } = context;
+  const maps = fields.reduce(
+    (acc, field) => {
+      let { value } = field.config;
+      if (value.startsWith('@')) {
+        value = value.substring(value.indexOf(' ') + 1);
+        if (value[0] === '.') value = value.substring(1);
+      }
+      let name = value;
+      // Preparing name for embedded property
+      if (isEmbeddedField(name)) {
+        name = getEmbeddedFieldName(name, classID);
+      }
+      if (isPageListProperty(name) && !acc[2]) {
+        acc[2] = true;
+      }
+      acc[0][value] = name;
+      acc[1][name] = value;
+
+      return acc;
+    },
+    [{}, {}, false]
+  );
+  setPropertyMaps(maps[0], maps[1]);
+  return maps[2];
+}
+
+/**
  * [getConfigEmbeddedFieldsMeta]
  * Description    -           Get the metadata for configured embedded fields
  * @ignore
@@ -72,7 +198,7 @@ export const isEmbeddedField = (field) => {
  * @returns {Array}           Metadata of configured embedded fields
  */
 export function getConfigEmbeddedFieldsMeta(configFields, classID) {
-  const configEmbeddedFieldsMeta = [];
+  const configEmbeddedFieldsMeta: Array<any> = [];
   configFields.forEach((field) => {
     let value = field;
     if (isEmbeddedField(value)) {
@@ -115,7 +241,7 @@ const oldToNewFieldTypeMapping = {
  * @ignore
  * @param {Array} metaFields  Fields metadata Array. Contains metadata of all the fields.
  */
- function updateFieldType(metaFields) {
+function updateFieldType(metaFields) {
   metaFields.forEach((metaField) => {
     if (metaField.type) metaField.type = oldToNewFieldTypeMapping[metaField.type] || metaField.type;
   });
@@ -141,7 +267,7 @@ function getPresetMetaAttribute(attribute) {
  * @param   {string}  classID          Class ID from the response
  * @returns {Array}                    List of fields with updated meta objects.
  */
- function generateViewMetaData(rawFields, classID, showField) {
+function generateViewMetaData(rawFields, classID, showField) {
   return rawFields.map((item) => getDefaultViewMeta(item, classID, showField));
 }
 
@@ -155,7 +281,7 @@ function getPresetMetaAttribute(attribute) {
  * @param   {string}  classID           Class ID from the response
  * @returns {Array}                     List of all fields with their meta updated.
  */
- function getConfigFields(configFields, primaryFields, metaFields, classID) {
+function getConfigFields(configFields, primaryFields, metaFields, classID) {
   const presetConfigFields = configFields;
   const primaryFieldsViewIndex = presetConfigFields.findIndex((field) => field.config.value === 'pyPrimaryFields');
   if (!primaryFields || !primaryFields.length) {
@@ -172,7 +298,7 @@ function getPresetMetaAttribute(attribute) {
       (primaryField) =>
         !presetConfigFields.some((presetConfigField) => presetConfigField.config.value.split('.')[1] === primaryField)
     );
-    const uncommonFieldsRawMeta = [];
+    const uncommonFieldsRawMeta: Array<any> = [];
     uncommonFieldsList.forEach((uncommonField) => {
       const uncommonFieldMeta = metaFields.find((metaField) => metaField.fieldID === uncommonField);
       if (uncommonFieldMeta) uncommonFieldsRawMeta.push(uncommonFieldMeta);
@@ -196,7 +322,7 @@ function getPresetMetaAttribute(attribute) {
  * @param   {Array}     metaFields          List of all metafields
  * @returns {object}                        Table config object
  */
- export function getTableConfigFromPresetMeta(
+export function getTableConfigFromPresetMeta(
   presetMeta,
   isMetaWithPresets,
   getPConnect,
@@ -281,7 +407,7 @@ function getPresetMetaAttribute(attribute) {
  * @param   {object} response -
  * @returns {Set} Set of columns from the report response
  */
- function getReportColumns(response) {
+function getReportColumns(response) {
   const {
     data: { data: reportColumns }
   } = response;
@@ -305,7 +431,7 @@ function getPresetMetaAttribute(attribute) {
  *                   config.value - Raw value
  * @returns {string} value - Value with out any annotations or "."
  */
- function getConfigFieldValue(config) {
+function getConfigFieldValue(config) {
   let { value } = config;
   if (value.startsWith('@')) {
     value = value.substring(value.indexOf(' ') + 1);
@@ -340,7 +466,7 @@ function prepareConfigFields(configFields, pushToComponentsList) {
  * @param   {string}  fieldID      Filter
  * @returns {object}              config with its field value equal to fieldID, which means an authored field
  */
- function findAuthoredField(configFields, fieldID) {
+function findAuthoredField(configFields, fieldID) {
   return configFields.find((configField) => {
     const val = getConfigFieldValue(configField.config);
     return val === fieldID;
@@ -355,7 +481,7 @@ function prepareConfigFields(configFields, pushToComponentsList) {
  * @param   {object}  item        Field item to copy displayAs and category information
  * @param   {string}  classId     classID from the response
  */
- function findAndUpdateAuthoredFieldConfig(configFields, item, classId) {
+function findAndUpdateAuthoredFieldConfig(configFields, item, classId) {
   const authoredField = findAuthoredField(configFields, item.fieldID);
   if (authoredField?.config) {
     if (item.displayAs) {
@@ -387,7 +513,7 @@ function prepareConfigFields(configFields, pushToComponentsList) {
  * @param   {boolean} showDynamicFields Flag indicating whether fields are fetched dynamically at runtime
  * @returns {boolean}                  true If the field is an extra field else false.
  */
- function isAnExtraField(configFields, configFieldSet, reportColumnsSet, item, classId, showDynamicFields) {
+function isAnExtraField(configFields, configFieldSet, reportColumnsSet, item, classId, showDynamicFields) {
   // Is the field already present in authoring metadata?
   // Mutates config fields to copy displayAs and category information
   if (configFieldSet.has(item.fieldID)) {
@@ -411,7 +537,7 @@ function prepareConfigFields(configFields, pushToComponentsList) {
  * @param   {boolean} showDynamicFields Flag indicating whether fields are fetched dynamically at runtime
  * @returns {Array}                    List of extra fields with their meta updated.
  */
- function prepareExtraFields(
+function prepareExtraFields(
   metaFields,
   configFields,
   configFieldSet,
@@ -444,8 +570,8 @@ function populateRenderingOptions(name, config, field) {
   }
 }
 export function initializeColumns(
-  fields = [],
-  getMappedProperty
+  fields: Array<any> = [],
+  getMappedProperty: any = null
 ) {
   return fields.map((field, originalColIndex) => {
     let name = field.config.value;
@@ -495,9 +621,9 @@ export const getItemKey = (fields) => {
 };
 
 export function preparePatchQueryFields(fields, isDataObject = false, classID = '') {
-  const queryFields = [];
+  const queryFields: Array<any> = [];
   fields.forEach((field) => {
-    const patchFields = [];
+    const patchFields: Array<any> = [];
     if (field.cellRenderer === 'WorkLink') {
       if (field.customObject && field.customObject.isAssignmentLink) {
         const associationName = field.name.includes(':') ? `${field.name.split(':')[0]}:` : '';
@@ -530,6 +656,23 @@ export function preparePatchQueryFields(fields, isDataObject = false, classID = 
   return queryFields;
 }
 
+/**
+ * Update the renderer type for the properties of type Page.
+ */
+export function updatePageFieldsConfig(configFields, parentClassID) {
+  return configFields.forEach((item) => {
+    const {
+      type,
+      config: { value }
+    } = item;
+    const propertyName = PCore.getAnnotationUtils().getPropertyName(value);
+    if (isEmbeddedField(value) && !isPageListInPath(propertyName, parentClassID)) {
+      item.config.componentType = type;
+      item.type = 'PagePropertyRenderer';
+    }
+  });
+}
+
 export const readContextResponse = async (context, params) => {
   const {
     getPConnect,
@@ -542,7 +685,7 @@ export const readContextResponse = async (context, params) => {
   } = params;
   const { promisesResponseArray, apiContext: otherContext } = context;
   // eslint-disable-next-line sonarjs/no-unused-collection
-  const listOfComponents = [];
+  const listOfComponents: Array<any> = [];
   const {
     data: { fields: metaFields, classID, isQueryable }
   } = promisesResponseArray[0];
@@ -562,7 +705,7 @@ export const readContextResponse = async (context, params) => {
 
 
   if (isDataObject) {
-    const compositeKeys = [];
+    const compositeKeys: Array<any> = [];
     const dataViewName = PCore.getDataTypeUtils().getSavableDataPage(classID);
     const dataPageKeys = PCore.getDataTypeUtils().getDataPageKeys(dataViewName);
     dataPageKeys?.forEach((item) =>
@@ -617,13 +760,19 @@ export const readContextResponse = async (context, params) => {
       showDynamicFields
     );
 
+    if (isQueryable) {
+      updatePageFieldsConfig(configFields, classID);
+      preparePropertyMaps([...configFields, ...extraFields], classID, context);
+    }
+
+    const { getMappedProperty } = context;
 
     fields = initializeColumns(
-      [...configFields, ...extraFields],
+      [...configFields, ...extraFields], getMappedProperty
     );
     const patchQueryFields = preparePatchQueryFields(fields, isDataObject, classID);
     const itemKey = getItemKey(fields);
-    tableConfig = { fieldDefs: fields, patchQueryFields, itemKey, isQueryable}
+    tableConfig = { fieldDefs: fields, patchQueryFields, itemKey, isQueryable };
   });
   const meta = tableConfig;
   setListContext({

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable operator-assignment */
 import { useRef, useEffect, useState, Fragment, forwardRef } from 'react';
-import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'throttle-debounce';
 import { createFilter, combineFilters, getFormattedDate } from './filterUtils';
@@ -10,12 +9,23 @@ import { getFilterExpression } from './filterUtils';
 import { TextField } from '@material-ui/core';
 import React from 'react';
 import DatePicker from 'react-datepicker';
+
 import 'react-datepicker/dist/react-datepicker.css';
 
-declare const PCore: any;
+import type { PConnProps } from '../../../types/PConnProps';
 
-export default function DashboardFilter(props) {
-  const { children, name, filterProp, type, metadata, getPConnect } = props;
+interface DashboardFilterProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children?: Array<any>,
+  name: string,
+  filterProp: string,
+  type?: string,
+  metadata?: any
+}
+
+
+export default function DashboardFilter(props: DashboardFilterProps) {
+  const { children = [], name, filterProp, type = '', metadata = null, getPConnect } = props;
   const { current: filterId } = useRef(uuidv4());
 
   const [startDate, setStartDate] = useState(null);
@@ -98,7 +108,8 @@ export default function DashboardFilter(props) {
     metadata.config.onRecordChange = e => {
       fireFilterChange(e.id);
     };
-    return getPConnect().createComponent(metadata);
+    return getPConnect().createComponent(metadata,
+      '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
   };
 
   const onChange = dates => {
@@ -163,18 +174,3 @@ export default function DashboardFilter(props) {
     </Fragment>
   );
 }
-
-DashboardFilter.defaultProps = {
-  children: null,
-  type: null,
-  metadata: null
-};
-
-DashboardFilter.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  children: PropTypes.object,
-  name: PropTypes.string.isRequired,
-  filterProp: PropTypes.string.isRequired,
-  type: PropTypes.string,
-  metadata: PropTypes.objectOf(PropTypes.any)
-};

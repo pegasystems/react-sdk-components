@@ -15,7 +15,7 @@ const { devices } = require('@playwright/test');
  * @type {import('@playwright/test').PlaywrightTestConfig}
  */
 const config = {
-  testDir: 'packages/react-sdk-components/tests',
+  testDir: 'packages/react-sdk-components/tests/e2e',
   /* Maximum time one test can run for. */
   timeout: 120 * 1000,
   expect: {
@@ -101,7 +101,7 @@ const config = {
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  // outputDir: 'test-results/',
+  outputDir: 'test-reports/',
 
   /* Run your local dev server before starting the tests */
   // webServer: {

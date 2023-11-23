@@ -1,15 +1,28 @@
 import React, { useMemo, useRef, useState, useEffect, useContext, createElement } from "react";
 // import { Banner, ModalManager } from "@pega/cosmos-react-core";
-import PropTypes, { object } from "prop-types";
 import isEqual from 'lodash.isequal';
 // import ReAuthMessageModal from "../ReAuthenticationModal";
 import { Box, CircularProgress } from "@material-ui/core";
 import createPConnectComponent from "../../../bridge/react_pconnect";
 import { LazyMap as LazyComponentMap } from "../../../components_map";
 import StoreContext from "../../../bridge/Context/StoreContext";
-import Utils from '../../helpers/utils';
+import { isEmptyObject } from '../../helpers/common-utils';
 
-declare const PCore;
+// import type { PConnProps } from '../../../types/PConnProps';
+
+// Can't use RootContainerProps until getChildren() typedef is fixes to not return an array of 'never'
+// interface RootContainerProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   renderingMode?: string,
+//   routingInfo: { type: string, accessedOrder: Array<any>, items: any },
+//   children: Array<any>,
+//   skeleton: any,
+//   httpMessages: Array<any>
+// }
+
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
+declare const PCore: any;
+
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -37,7 +50,7 @@ function getItemView(routingInfo, renderingMode) {
       if (
         items[key] &&
         items[key].view &&
-        !Utils.isEmptyObject(items[key].view)
+        !isEmptyObject(items[key].view)
       ) {
         viewConfigs.push(items[key]);
       }
@@ -46,25 +59,22 @@ function getItemView(routingInfo, renderingMode) {
   return viewConfigs;
 }
 
-const RootContainer = (props) => {
+export default function RootContainer(props /* : RootContainerProps */) {
   const {
     getPConnect,
-    renderingMode,
-    children,
+    renderingMode = '',
+    children = [],
     skeleton,
-    httpMessages,
+    httpMessages = [],
     routingInfo
   } = props;
 
-  const { displayOnlyFA, isMashup } = useContext(StoreContext);
+  const { displayOnlyFA } = useContext<any>(StoreContext);
 
 
   const pConn = getPConnect();
 
   const options = { "context": "app" };
-  if (isMashup) {
-    options["context"] = "root";
-  }
 
   const [componentName, setComponentName] = useState("");
 
@@ -78,12 +88,15 @@ const RootContainer = (props) => {
 
   let hasBanner = false;
   let banners: any = null;
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'Messages';
+
   const messages = httpMessages
-    ? httpMessages.map((msg) => msg.message)
+    ? httpMessages.map((msg) => localizedVal(msg.message, localeCategory))
     : httpMessages;
 
   hasBanner = messages && messages.length > 0;
-  banners = hasBanner && (<div>RootContainer: trying to emit Banner with {messages}</div>);
+  banners = hasBanner && (<div>{localizedVal(`RootContainer: trying to emit Banner with ${messages}`, localeCategory)}</div>);
 
   const MemoizedModalViewContainer = useMemo(() => {
     return createElement(
@@ -123,7 +136,7 @@ const RootContainer = (props) => {
 
     switch (componentName) {
       case "View":
-        noPortalContent = <div>getNoPortalContent: RootContainer wants to render View in noPortal mode</div>
+        noPortalContent = <div>{localizedVal('getNoPortalContent: RootContainer wants to render View in noPortal mode', localeCategory)}</div>
         break;
 
       case "ViewContainer": {
@@ -148,7 +161,7 @@ const RootContainer = (props) => {
       }
 
       default:
-        noPortalContent = <div>getNoPortalContent: RootContainer wants to render NO componentName in noPortal mode</div>
+        noPortalContent = <div>{localizedVal('getNoPortalContent: RootContainer wants to render NO componentName in noPortal mode', localeCategory)}</div>
         break;
 
     }
@@ -220,7 +233,7 @@ const RootContainer = (props) => {
   }
   else if (renderingMode === "noPortal") {
     // eslint-disable-next-line no-console
-    console.log(`RootContainer rendering in noPortal mode`);
+    console.log(`${localizedVal('RootContainer rendering in noPortal mode', localeCategory)}`);
 
     const theChildren = pConn.getChildren();
     if (theChildren && (theChildren.length === 1)) {
@@ -238,7 +251,7 @@ const RootContainer = (props) => {
   else if (children && children.length > 0) {
     return (
       <React.Fragment>
-        <div>RootContainer: Has children. Trying to show ModalManager with children, etc.</div>
+        <div>{localizedVal('RootContainer: Has children. Trying to show ModalManager with children, etc.', localeCategory)}</div>
         {children}
         {MemoizedModalViewContainer}
       </React.Fragment>
@@ -257,28 +270,8 @@ const RootContainer = (props) => {
   } else {
     return (
       <div id="root-container">
-        <div>RootContainer: Should be ModalManager, etc.</div>
+        <div>{localizedVal('RootContainer: Should be ModalManager, etc.', localeCategory)}</div>
       </div>
     );
   }
 };
-
-RootContainer.defaultProps = {
-  getPConnect: null,
-  renderingMode: null,
-  children: null,
-  routingInfo: object
-};
-
-RootContainer.propTypes = {
-  getPConnect: PropTypes.func,
-  renderingMode: PropTypes.string,
-  routingInfo: PropTypes.shape({
-    type: PropTypes.string,
-    accessedOrder: PropTypes.array,
-    items: PropTypes.object
-  }),
-  children: PropTypes.arrayOf(PropTypes.oneOfType( [PropTypes.object, PropTypes.string ]))
-};
-
-export default RootContainer;

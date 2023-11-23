@@ -1,7 +1,14 @@
 import React from "react";
-// import PropTypes from "prop-types";
 import { Card, CardContent, CardHeader, Typography } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+
+// Pulse is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface PulseProps {
+  // If any, enter additional props that only exist on this component
+  children?: Array<any>
+}
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,8 +19,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Pulse(/* props */) {
-  // const { children } = props;
+export default function Pulse(props: PulseProps) {
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const { children } = props;
   const classes = useStyles();
 
   return (
@@ -25,7 +33,3 @@ export default function Pulse(/* props */) {
       </Card>
     );
 }
-
-// Pulse.propTypes = {
-//   children: PropTypes.arrayOf(PropTypes.node).isRequired
-// };

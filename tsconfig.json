@@ -16,11 +16,12 @@
     "experimentalDecorators": true,
     "strict": true,
     "sourceMap": true,
-    "module": "ES2020",
-    "target": "ES2020",
+    "module": "es2020",
+    "target": "es2020",
+    "lib": [ "es2021", "dom" ],
     "moduleResolution": "node",
-    "jsx": "react", // May be different options for this with newer versions of React
-    "allowJs": true,
+    "jsx": "react",     // May be different options for this with newer versions of React
+    "allowJs": true,    // must be false for @pega/pcore-pconnect-typedefs
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     // End of copied from SDK-R
@@ -31,11 +32,8 @@
     // Declare all ambient type declarations here for VSCode.
     // Override with only specific types for other configurations.
 
-    // Values in types help get jest tests working - JEA
-    "types": [
-      "jest", "@testing-library/jest-dom"
-    ],
-    "typeRoots": ["node_modules/@types", "typings"],
+    "typeRoots": ["node_modules/@types", "node_modules/@pega"],
+    "types": [ "jest", "@testing-library/jest-dom", "pcore-pconnect-typedefs" ],
 
     "noEmit": false,    // JEA - was false
     "incremental": true,

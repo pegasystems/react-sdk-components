@@ -5,6 +5,9 @@
     "project": "tsconfig.json",
     "ecmaVersion": 13
   },
+  "globals": {
+    "PCore": "readonly"
+  },
   "settings": {
     "import/resolver": {
       "typescript": {},

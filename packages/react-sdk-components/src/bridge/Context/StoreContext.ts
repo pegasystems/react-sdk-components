@@ -1,9 +1,11 @@
 import { createContext, useContext } from "react";
 
-// Argument was null but that failed TypeScript compilation. Change to no arg
+declare const process:any;
 
-const ReactReduxContext = createContext();
-// eslint-disable-next-line no-undef
+// Argument was null but that failed TypeScript compilation. Change to empty object
+
+const ReactReduxContext = createContext({});
+
 if (process.env.NODE_ENV !== "production") {
   ReactReduxContext.displayName = "ReactRedux";
 }

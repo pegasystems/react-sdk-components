@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from '@material-ui/core/styles'
 
 import Tabs from '@material-ui/core/Tabs';
-import LeftAlignVerticalTab from '../LeftAlignVerticalTabs';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+
+// VerticalTabs does NOT have getPConnect. So, no need to extend from PConnProps
+interface VerticalTabsProps {
+  // If any, enter additional props that only exist on this component
+  tabconfig: Array<any>
+}
 
 
 // The MuiTabs-indicator class is in a span whose parent is div (under the Tabs root component)
@@ -31,9 +36,12 @@ const createCustomEvent = (eventName: string, additionalData: {[key: string]: st
 };
 
 
-export default function VerticalTabs(props) {
+export default function VerticalTabs(props: VerticalTabsProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const LeftAlignVerticalTab = getComponentFromMap("LeftAlignVerticalTabs");
+
   // Get a React warning when we use tabConfig as mixed case. So all lowercase tabconfig
-  const { tabconfig } = props;
+  const { tabconfig = [] } = props;
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
@@ -65,11 +73,3 @@ export default function VerticalTabs(props) {
     </div>
   )
 }
-
-VerticalTabs.defaultProps = {
-  tabconfig: []
-};
-
-VerticalTabs.propTypes = {
-  tabconfig: PropTypes.arrayOf(PropTypes.object)
-};

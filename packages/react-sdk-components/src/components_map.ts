@@ -1,6 +1,6 @@
 // import loadable from "@loadable/component";
 
-export default {
+const ComponentMap:Array<any> = [ {
   // Currency: {
   //   modules: [
   //     loadable(() =>
@@ -816,6 +816,8 @@ export default {
   //     )
   //   ]
   // }
-};
+} ];
 
-export const LazyMap = {};
+export const LazyMap:Array<any> = [{}];
+
+export default ComponentMap;

@@ -1,17 +1,30 @@
 import React, { useEffect, useRef, useState, createElement } from 'react';
-import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-import Assignment from '../../Assignment';
-import CancelAlert from '../../../field/CancelAlert';
-import Utils from '../../../helpers/utils';
+// Need to get correct implementation from component map for Assignment and CancelAlert
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { getBanners } from '../../../helpers/case-utils';
+import { isEmptyObject } from '../../../helpers/common-utils';
 
-declare const PCore;
+// import type { PConnProps } from '../../../../types/PConnProps';
+
+// Can't use ModalViewContainerProps until getContainerManager() knows about initializeContainers
+//  Currently just expects "object"
+// interface ModalViewContainerProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   loadingInfo?: string,
+//   routingInfo?: any,
+//   pageMessages?: Array<string>
+// }
+
+
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 8 errors)
+declare const PCore: any;
+
 
 function buildName(pConnect, name = '') {
   const context = pConnect.getContextName();
@@ -68,11 +81,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ModalViewContainer = props => {
+export default function ModalViewContainer(props /* : ModalViewContainerProps */) {
+  // Get the proper implementation (local or Pega-provided) for these components that are emitted below
+  const Assignment = getComponentFromMap("Assignment");
+  const CancelAlert = getComponentFromMap("CancelAlert");
+
   const classes = useStyles();
 
   const routingInfoRef = useRef({});
-  const { getPConnect, routingInfo, loadingInfo, pageMessages } = props;
+  const { getPConnect, routingInfo = null, loadingInfo = '', pageMessages = [] } = props;
   const pConn = getPConnect();
   const {
     CONTAINER_TYPE: { MULTIPLE },
@@ -88,6 +105,10 @@ const ModalViewContainer = props => {
   const [arNewChildrenAsReact, setArNewChildrenAsReact] = useState<Array<any>>([]);
   const [itemKey, setItemKey] = useState('');
   const [cancelPConn, setCancelPConn] = useState(null);
+
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'Data Object';
+
 
   function showAlert(payload) {
     const { latestItem } = getKeyAndLatestItem(routingInfoRef.current, pConn);
@@ -161,7 +182,7 @@ const ModalViewContainer = props => {
         if (
           currentItems[key] &&
           currentItems[key].view &&
-          !Utils.isEmptyObject(currentItems[key].view)
+          !isEmptyObject(currentItems[key].view)
         ) {
           const currentItem = currentItems[key];
           const rootView = currentItem.view;
@@ -219,7 +240,7 @@ const ModalViewContainer = props => {
             const caseName = theNewCaseInfo.getName();
             const ID = theNewCaseInfo.getID();
 
-            setTitle(actionName || `New ${caseName} (${ID})`);
+            setTitle(actionName || `${localizedVal('New', localeCategory)} ${caseName} (${ID})`);
 
             let arChildrenAsReact: Array<any> = [];
 
@@ -256,7 +277,7 @@ const ModalViewContainer = props => {
         if (bShowModal) {
           setShowModal(false);
         }
-        if (!Utils.isEmptyObject(oCaseInfo)) {
+        if (!isEmptyObject(oCaseInfo)) {
           setOCaseInfo({});
         }
       }
@@ -312,18 +333,4 @@ const ModalViewContainer = props => {
       )}
     </>
   );
-};
-
-export default ModalViewContainer;
-
-ModalViewContainer.defaultProps = {
-  getPConnect: null,
-  loadingInfo: false,
-  routingInfo: null
-};
-
-ModalViewContainer.propTypes = {
-  getPConnect: PropTypes.func,
-  loadingInfo: PropTypes.bool,
-  routingInfo: PropTypes.objectOf(PropTypes.any)
 };

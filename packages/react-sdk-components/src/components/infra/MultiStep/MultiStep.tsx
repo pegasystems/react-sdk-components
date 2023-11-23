@@ -1,18 +1,34 @@
 import React from "react";
-import PropTypes from "prop-types";
-
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import './MultiStep.css';
-
-import AssignmentCard from '../AssignmentCard';
 
 // import { useConstellationContext } from "../../bridge/Context/StoreContext";
 
-export default function MultiStep(props) {
-    const { getPConnect, children, itemKey, actionButtons, onButtonPress} = props;
+import type { PConnProps } from '../../../types/PConnProps';
+
+
+interface MultiStepProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  itemKey: string,
+  actionButtons: Array<any>,
+  onButtonPress: any,
+  bIsVertical: boolean,
+  arNavigationSteps: Array<any>,
+  // eslint-disable-next-line react/no-unused-prop-types
+  arCurrentStepIndicies?: Array<any>
+}
+
+
+export default function MultiStep(props: MultiStepProps) {
+    // Get emitted components from map (so we can get any override that may exist)
+    const AssignmentCard = getComponentFromMap("AssignmentCard");
+
+    const { getPConnect, children, itemKey = '', actionButtons, onButtonPress} = props;
     const { bIsVertical, arNavigationSteps } = props;
 
-    // const svgCurrent = Utils.getImageSrc("circle-solid", PCore.getAssetLoader().getStaticServerUrl());
-    // const svgNotCurrent = Utils.getImageSrc("circle-solid", PCore.getAssetLoader().getStaticServerUrl());
+    // const svgCurrent = Utils.getImageSrc("circle-solid", Utils.getSDKStaticConentUrl());
+    // const svgNotCurrent = Utils.getImageSrc("circle-solid", Utils.getSDKStaticConentUrl());
 
     function _getVIconClass(status): string {
         if (status === "current") {
@@ -207,19 +223,3 @@ export default function MultiStep(props) {
 
     )
   }
-
-  MultiStep.propTypes = {
-    children: PropTypes.node.isRequired,
-    getPConnect: PropTypes.func.isRequired,
-    itemKey: PropTypes.string,
-    actionButtons: PropTypes.object,
-    onButtonPress: PropTypes.func,
-    bIsVertical: PropTypes.bool,
-    // eslint-disable-next-line react/no-unused-prop-types
-    arCurrentStepIndicies: PropTypes.array,
-    arNavigationSteps: PropTypes.array
-  };
-
-  MultiStep.defaultProps = {
-    itemKey: null
-  };

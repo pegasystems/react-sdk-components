@@ -1,7 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import type { PConnProps } from '../../../types/PConnProps';
+
+// InlineDashboard does NOT have getPConnect. So, no need to extend from PConnProps
+interface InlineDashboardProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>,
+  title: string,
+  filterPosition?: string
+}
+
 
 const useStyles = makeStyles((/* theme */) => ({
   headerStyles: {
@@ -30,7 +39,7 @@ const useStyles = makeStyles((/* theme */) => ({
   }
 }));
 
-export default function InlineDashboard(props) {
+export default function InlineDashboard(props: InlineDashboardProps) {
   const classes = useStyles();
 
   const { children, title, filterPosition } = props;
@@ -65,8 +74,3 @@ export default function InlineDashboard(props) {
     </>
   );
 }
-
-InlineDashboard.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node).isRequired
-  // template: PropTypes.string.isRequired
-};

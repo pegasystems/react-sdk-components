@@ -1,10 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import { Grid, Divider } from "@material-ui/core";
 
+// ActionButtons does NOT have getPConnect. So, no need to extend from PConnProps
+interface ActionButtonsProps {
+  // If any, enter additional props that only exist on this component
+  arMainButtons?: Array<any>,
+  arSecondaryButtons?: Array<any>,
+  onButtonPress: any
+}
 
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -18,9 +24,11 @@ const useStyles = makeStyles((/* theme */) => ({
 }));
 
 
-export default function ActionButtons(props) {
-  const { arMainButtons, arSecondaryButtons, onButtonPress } = props;
+export default function ActionButtons(props: ActionButtonsProps) {
+  const { arMainButtons = [], arSecondaryButtons = [], onButtonPress } = props;
   const classes = useStyles();
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'Assignment';
 
   function _onButtonPress(sAction: string, sButtonType: string) {
 
@@ -35,7 +43,7 @@ export default function ActionButtons(props) {
           <Grid container spacing={1}>
           {arSecondaryButtons.map((sButton) => (
                   <Grid item key={sButton.name}>
-                    <Button variant="contained" color="secondary" onClick={() => { _onButtonPress(sButton.jsAction, "secondary")}} >{sButton.name}</Button>
+                    <Button variant="contained" color="secondary" onClick={() => { _onButtonPress(sButton.jsAction, "secondary")}} >{localizedVal(sButton.name, localeCategory)}</Button>
                   </Grid>
                 ))}
           </Grid>
@@ -44,7 +52,7 @@ export default function ActionButtons(props) {
           <Grid container spacing={1}>
           {arMainButtons.map((mButton) => (
                   <Grid item key={mButton.name}>
-                    <Button variant="contained" color="primary" onClick={() => { _onButtonPress(mButton.jsAction, "primary")}} >{mButton.name}</Button>
+                    <Button variant="contained" color="primary" onClick={() => { _onButtonPress(mButton.jsAction, "primary")}} >{localizedVal(mButton.name, localeCategory)}</Button>
                   </Grid>
                 ))}
           </Grid>
@@ -55,16 +63,3 @@ export default function ActionButtons(props) {
 
   )
 }
-
-ActionButtons.propTypes = {
-  arMainButtons: PropTypes.array,
-  arSecondaryButtons: PropTypes.array,
-  onButtonPress: PropTypes.func
-  // buildName: PropTypes.string
-};
-
-ActionButtons.defaultProps = {
-  arMainButtons: [],
-  arSecondaryButtons: []
-  // buildName: null
-};

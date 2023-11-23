@@ -1,9 +1,15 @@
-import PropTypes from "prop-types";
 import React from "react";
+import type { PConnProps } from '../../../types/PConnProps';
 
-declare const PCore;
-export default function MultiReferenceReadOnly(props) {
-  const { getPConnect, label, hideLabel, config } = props;
+interface MultiReferenceReadOnlyProps extends PConnProps {
+  config: { referenceList: any, readonlyContextList: any },
+  label: string,
+  hideLabel: boolean
+}
+
+
+export default function MultiReferenceReadOnly(props: MultiReferenceReadOnlyProps) {
+  const { getPConnect, label = '', hideLabel = false, config } = props;
   const { referenceList, readonlyContextList } = config;
 
   // When referenceList does not contain selected values, it should be replaced with readonlyContextList while calling SimpleTableManual
@@ -22,21 +28,10 @@ export default function MultiReferenceReadOnly(props) {
       label,
       hideLabel
     }
-  });
+  },
+  '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
 
    return (
     <React.Fragment>{component}</React.Fragment>
   )
 }
-
-MultiReferenceReadOnly.defaultProps = {
-  label: "",
-  hideLabel: false
-};
-
-MultiReferenceReadOnly.propTypes = {
-  config: PropTypes.object.isRequired,
-  getPConnect: PropTypes.func.isRequired,
-  label: PropTypes.string,
-  hideLabel: PropTypes.bool
-};

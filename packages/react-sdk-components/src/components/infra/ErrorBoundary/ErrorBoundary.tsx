@@ -1,13 +1,25 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-declare const PCore;
+import type { PConnProps } from '../../../types/PConnProps';
 
-function ErrorBoundary(props) {
-  const ERROR_TEXT = PCore.getErrorHandler().getGenericFailedMessage();
+interface ErrorBoundaryProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  isInternalError?: boolean
+}
+
+
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
+declare const PCore: any;
+
+
+export default function ErrorBoundary(props: ErrorBoundaryProps) {
+  const errorMsg = PCore.getErrorHandler().getGenericFailedMessage();
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'Messages';
+  const ERROR_TEXT = localizedVal(errorMsg, localeCategory);
   const WORK_AREA = "workarea";
   const ERROR_WHILE_RENDERING = "ERROR_WHILE_RENDERING";
-  const { getPConnect, isInternalError } = props;
+  const { getPConnect, isInternalError = false } = props;
 
   const theErrorDiv = <div>{ERROR_TEXT}</div>
 
@@ -21,12 +33,12 @@ function ErrorBoundary(props) {
 
   if (!isInternalError) {
     // eslint-disable-next-line no-console
-    console.error(`Unable to load the component ${pConn.getComponentName()}
-    This might be due to the view meta data getting corrupted or the component file missing.
-    Raw meta data for the component: ${JSON.stringify(pConn.getRawMetadata())}`);
+    console.error(`${localizedVal('Unable to load the component', localeCategory)} ${pConn.getComponentName()}
+    ${localizedVal(`This might be due to the view meta data getting corrupted or the component file missing.
+    Raw meta data for the component:`, localeCategory)} ${JSON.stringify(pConn.getRawMetadata())}`);
   }
 
-  if (pConn.getConfigProps().type === "page") {
+  if (pConn.getConfigProps()["type"] === "page") {
     return (
       theErrorDiv
     );
@@ -46,14 +58,3 @@ function ErrorBoundary(props) {
     theErrorDiv
   );
 }
-ErrorBoundary.propTypes = {
-  getPConnect: PropTypes.func,
-  isInternalError: PropTypes.bool
-};
-
-ErrorBoundary.defaultProps = {
-  getPConnect: null,
-  isInternalError: false
-};
-
-export default ErrorBoundary;

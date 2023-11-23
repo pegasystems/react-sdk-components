@@ -1,13 +1,25 @@
 import React, { useCallback, useMemo, useState, createElement, Fragment } from 'react';
-import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
-import ListView from '../ListView';
-import Utils from '../../helpers/utils';
+import { isEmptyObject } from '../../helpers/common-utils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import './PromotedFilters.css';
 
-declare const PCore;
+// import type { PConnProps } from '../../../types/PConnProps';
+
+// Can't use PromotedFilterProps until getContainerManager() knows about addTransientItem
+//  Currently just expects "object"
+// interface PromotedFilterProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   viewName: string,
+//   filters: Array<any>,
+//   listViewProps: any,
+//   pageClass: string,
+//   parameters?: object
+// }
+
+
 const localeCategory = 'SimpleTable';
 const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
   'TextInput',
@@ -55,7 +67,10 @@ function isValidInput(input) {
   return Object.values(input).findIndex((v) => v) >= 0;
 }
 
-export default function PromotedFilters(props) {
+export default function PromotedFilters(props /* : PromotedFilterProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const ListView = getComponentFromMap('ListView');
+
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const { getPConnect, viewName, filters, listViewProps, pageClass, parameters } = props;
   const [initTable, setInitTable] = useState(false);
@@ -112,7 +127,7 @@ export default function PromotedFilters(props) {
           dataViewParameters: parameters
         };
 
-        if (!Utils.isEmptyObject(promotedFilters)) {
+        if (!isEmptyObject(promotedFilters)) {
           Query.query = { filter: { filterConditions: promotedFilters } };
         }
         setPayload(Query);
@@ -135,10 +150,10 @@ export default function PromotedFilters(props) {
       </div>
       <div>
         <Button key='1' type='button' onClick={clearFilterData} data-testid='clear' variant='contained' color='primary'>
-            {localizedVal('Clear', localeCategory)}
+          {localizedVal('Clear', localeCategory)}
         </Button>
         <Button style={{float: 'right'}} key='2' type='submit' onClick={getFilterData} data-testid='search' variant='contained' color='primary'>
-            {localizedVal('Search', localeCategory)}
+          {localizedVal('Search', localeCategory)}
         </Button>
       </div>
       {initTable && <ListView {...listViewProps} title='' payload={payload}
@@ -150,12 +165,3 @@ export default function PromotedFilters(props) {
     </Fragment>
   );
 }
-
-PromotedFilters.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  viewName: PropTypes.string.isRequired,
-  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  listViewProps: PropTypes.objectOf(PropTypes.any).isRequired,
-  pageClass: PropTypes.string.isRequired,
-  parameters: PropTypes.object
-};

@@ -8,7 +8,7 @@ import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles
 import StoreContext from "../../../bridge/Context/StoreContext";
 import createPConnectComponent from "../../../bridge/react_pconnect";
 
-import { gbLoggedIn, loginIfNecessary, sdkSetAuthHeader } from '../../../components/helpers/authManager';
+import { sdkIsLoggedIn, loginIfNecessary, sdkSetAuthHeader } from '../../../components/helpers/authManager';
 
 import EmbeddedSwatch from '../EmbeddedSwatch';
 import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelpers';
@@ -18,12 +18,9 @@ import { getSdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../../sdk-local-component-map';
 
 
-
-// declare var gbLoggedIn: boolean;
-// declare var login: Function;
-// declare var logout: Function;
-
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
+
 declare const myLoadMashup: any;
 
 const useStyles = makeStyles((theme) => ({
@@ -162,7 +159,7 @@ export default function EmbeddedTopLevel() {
 
   const classes = useStyles();
 
-  const [pConn, setPConn] = useState<any>(null);
+  // const [pConn, setPConn] = useState<any>(null);
 
   const [bShowTriplePlayOptions, setShowTriplePlayOptions] = useState(false);
   const [bShowPega, setShowPega] = useState(false);
@@ -179,7 +176,7 @@ export default function EmbeddedTopLevel() {
     const theTopLevelRibbon = document.getElementById("embedded-top-level-ribbon");
 
     if (theTopLevelEl) {
-      if (bShowTriplePlayOptions && gbLoggedIn) {
+      if (bShowTriplePlayOptions && sdkIsLoggedIn()) {
         // Only show when user is logged in and we're supposed to show it
         theTopLevelEl.style.display = "block";
         if (theTopLevelRibbon) { theTopLevelRibbon.style.display = "flex"; }
@@ -216,7 +213,7 @@ export default function EmbeddedTopLevel() {
     const theTopLevelEl = document.getElementById("embedded-top-level-resolution");
     const theTopLevelRibbon = document.getElementById("embedded-top-level-ribbon");
 
-    if (bShowResolutionScreen && gbLoggedIn) {
+    if (bShowResolutionScreen && sdkIsLoggedIn()) {
         // Only show when user is logged in and we're supposed to show it
         if (theTopLevelEl) { theTopLevelEl.style.display = "block" };
         if (theTopLevelRibbon) { theTopLevelRibbon.style.display = "flex"; }
@@ -232,7 +229,7 @@ export default function EmbeddedTopLevel() {
     // If not logged in, we used to prompt for login. Now moved up to TopLevelApp
     // If logged in, make the Triple Play Options visible
 
-    if (!gbLoggedIn) {
+    if (!sdkIsLoggedIn()) {
       // login();     // Login now handled at TopLevelApp
     } else {
       setShowTriplePlayOptions(true);
@@ -286,10 +283,13 @@ export default function EmbeddedTopLevel() {
     // const thePConnObj = <div>the RootComponent</div>;
     const thePConnObj = <PegaConnectObj {...props} />;
 
-    // NOTE: For Embedded mode, we add in displayOnlyFA and isMashup to our React context
-    //  so the values are available to any component that may need it.
+    // NOTE: For Embedded mode, we add in displayOnlyFA to our React context
+    //  so it is available to any component that may need it.
+    // VRS: Attempted to remove displayOnlyFA but it presently handles various components which
+    //  SDK does not yet support, so all those need to be fixed up before it can be removed. To
+    //  be done in a future sprint.
     const theComp =
-      <StoreContext.Provider value={{store: PCore.getStore(), displayOnlyFA: true, isMashup: true}} >
+      <StoreContext.Provider value={{store: PCore.getStore(), displayOnlyFA: true}} >
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {thePConnObj}
@@ -320,7 +320,7 @@ export default function EmbeddedTopLevel() {
     } = inRenderObj;
 
     const thePConn = props.getPConnect();
-    setPConn(thePConn);
+    // setPConn(thePConn);
     // eslint-disable-next-line no-console
     console.log(`EmbeddedTopLevel: initialRender got a PConnect with ${thePConn.getComponentName()}`);
 
@@ -401,7 +401,7 @@ export default function EmbeddedTopLevel() {
   // One time (initialization) subscriptions and related unsubscribe
   useEffect(() => {
 
-    getSdkConfig().then( sdkConfig => {
+    getSdkConfig().then( (sdkConfig:any) => {
       const sdkConfigAuth = sdkConfig.authConfig;
 
       if( !sdkConfigAuth.mashupClientId && sdkConfigAuth.customAuthType === "Basic" ) {
@@ -421,14 +421,14 @@ export default function EmbeddedTopLevel() {
         sdkSetAuthHeader( `Basic ${sB64}`);
       }
 
+      document.addEventListener("SdkConstellationReady", () => {
+        // start the portal
+        startMashup();
+      });
+
       // Login if needed, without doing an initial main window redirect
-      loginIfNecessary("embedded", true);
+      loginIfNecessary({appName:"embedded", mainRedirect:false});
 
-    });
-
-    document.addEventListener("SdkConstellationReady", () => {
-      // start the portal
-      startMashup();
     });
 
 
@@ -459,49 +459,25 @@ export default function EmbeddedTopLevel() {
     setShowTriplePlayOptions( false );
     setShowPega(true);
 
-    const actionsApi = pConn.getActionsApi();
-    const createWork = actionsApi.createWork.bind(actionsApi);
-    const sFlowType = "pyStartCase";
+    getSdkConfig().then( sdkConfig => {
+      let mashupCaseType = sdkConfig.serverConfig.appMashupCaseType;
+      if( !mashupCaseType ) {
+        const caseTypes = PCore.getEnvironmentInfo().environmentInfoObject.pyCaseTypeList;
+        mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
+      }
 
-    //
-    // NOTE:  Below, can remove case statement when 8.6.1 and pyCreate
-    //        works with mashup and can default to MediaCo
-
-    let actionInfo;
-
-    switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
-      case "CableCo" :
-        actionInfo = {
-          containerName: "primary",
-          flowType: sFlowType || "pyStartCase",
-          caseInfo: {
-            content : {
-              "Package" : sLevel
-            }
-          }
-        };
-
-        createWork("CableC-CableCon-Work-Service", actionInfo);
-        break;
-
-      case "MediaCo" :
-
-        actionInfo = {
-          containerName: "primary",
-          flowType: sFlowType || "pyStartCase",
-          caseInfo: {
-            content : {
-              "Package" : sLevel
-            }
-          }
-        };
-
-        createWork("DIXL-MediaCo-Work-NewService", actionInfo);
-        break;
-
-      default:
-          break;
-    }
+      const options = {
+        pageName: 'pyEmbedAssignment',
+        startingFields: mashupCaseType === "DIXL-MediaCo-Work-NewService" ?
+          {
+            Package: sLevel
+          } : {}
+      };
+      PCore.getMashupApi().createCase(mashupCaseType, PCore.getConstants().APP.APP, options).then(() => {
+        // eslint-disable-next-line no-console
+        console.log('createCase rendering is complete');
+      });
+    });
 
   }
 
@@ -572,7 +548,6 @@ export default function EmbeddedTopLevel() {
       <div>
       <div className={classes.pegaPartInfo} id="pega-part-of-page">
             <div className={classes.pegaPartPega}>
-                {/* <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container> */}
                 <div id="pega-root"></div>
                 <br />
                 <div className={classes.pegaPartText}> * - required fields</div>

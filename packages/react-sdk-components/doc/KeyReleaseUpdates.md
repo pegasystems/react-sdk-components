@@ -1,7 +1,34 @@
-#### **Release SDK-R-C 8.23.11 (xx xxxx 2023)**
+### React SDK - Release Announcement - v23.1.10 (08 November 2023)
 
+This release - **SDK-R v23.1.10** - is **only compatible with Pega Infinity 23**. This release is related to the [**main** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/main).
+<br>
+(If you currently are using the React SDK with Pega Infinity 8.8, update your SDK to
+the [SDK-R v8.8.20 - release/8.8.20 branch](https://github.com/pegasystems/react-sdk/tree/release/8.8.20).)
+
+The SDK-R v23.1.10 and v8.8.20 releases allow React SDK users to to take advantage of the latest
+[SDK enhancements and fixes noted in **What's New in the SDK?**](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/react-sdk-updates.html) including:
+
+* Added the use of **TypeScript typedefs** (from @pega/pcore-pconnect-typedefs) to SDK components.
+For more information, see [Using type definitions - update link when published](https://pega-dev.zoominsoftware.io/bundle/constellation-sdk/page/constellation-sdks/sdks/type-definitions-constellation-sdks.html)
+* Additional functionality including **RichTextEditor** and **Dynamic Tabs** components and **many-to-many data reference** support
+* Enhanced security including token storage and item obfuscation support.
+* Bug fixes.
+* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?q=is%3Apr+is%3Amerged+base%3Amaster+). This release includes all PRs since (and including) #166 and #230.
+
+
+<hr />
+
+### Previous Releases
+
+#### **Release SDK-R-C 8.23.11 (10 August 2023)**
+
+* Many significant improvements to localization
 * Added new AlertBanner component (in designSystemExtension) and its use in Assignment and ModalViewContainer
 * Bug fixes in Decimal and Attachment components
+* Fixed some cases where Dropdown items weren't properly loaded from datasource
+* Infrastructure components (FlowContainer and ModalViewContainer) now use overridden component implementations when overrides are available.
+* Bug fixes
+* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?page=1&q=is%3Apr+is%3Amerged). This release includes all PRs since (and including) #117 and #165.
 
 <br />
 

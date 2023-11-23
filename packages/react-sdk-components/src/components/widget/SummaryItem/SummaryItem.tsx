@@ -4,19 +4,27 @@ import './SummaryItem.css'
 import  { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-declare const PCore: any;
+// SummaryItem does NOT have getPConnect. So, no need to extend from PConnProps
 
-export default function SummaryItem(props) {
+interface SummaryItemProps {
+  // If any, enter additional props that only exist on this component
+  menuIconOverride$: string,
+  menuIconOverrideAction$: any,
+  arItems$: Array<any> | any
+}
+
+
+export default function SummaryItem(props:SummaryItemProps) {
   let imagePath$ = "";
   let menuIconOverride$;
   menuIconOverride$ = props.menuIconOverride$
-  imagePath$ = Utils.getIconPath(PCore.getAssetLoader().getStaticServerUrl());
+  imagePath$ = Utils.getIconPath(Utils.getSDKStaticConentUrl());
   const item = props.arItems$;
   const srcImg = `${imagePath$}${item.visual.icon}.svg`
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   if (menuIconOverride$) {
-    menuIconOverride$ = Utils.getImageSrc(menuIconOverride$ , PCore.getAssetLoader().getStaticServerUrl());
+    menuIconOverride$ = Utils.getImageSrc(menuIconOverride$ , Utils.getSDKStaticConentUrl());
   }
 
   function removeAttachment() {
@@ -47,7 +55,7 @@ export default function SummaryItem(props) {
         {item.secondary.text && (<div style={{ color: item.secondary.error ? 'red' : undefined }}>{item.secondary.text}</div>)}
       </div>
       <div className="psdk-utility-action">
-        {menuIconOverride$ && (<button type="button" className="psdk-utility-button" onClick={removeAttachment}>
+        {menuIconOverride$ && (<button type="button" className="psdk-utility-button" aria-label='Delete Attachment' onClick={removeAttachment}>
             <img className="psdk-utility-card-action-svg-icon" src={menuIconOverride$}></img>
         </button>)}
         {!menuIconOverride$ && (<div>

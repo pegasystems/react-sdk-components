@@ -1,15 +1,32 @@
 import React, { createElement } from 'react';
-import PropTypes from 'prop-types';
-
 import { getInstructions } from '../../helpers/template-utils';
 import createPConnectComponent from '../../../bridge/react_pconnect';
+import connectToState from '../../helpers/state-utils';
+import { getKeyForMappedField, mapStateToProps } from './utils';
+// import type { PConnProps } from '../../../types/PConnProps';
+
 
 import './DefaultForm.css';
 
-export default function DefaultForm(props) {
-  const { getPConnect, NumCols } = props;
+
+// Can't use PConn props until proper props for getPConnect().getChildren()[0].getPConnect;
+// interface DefaultFormProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   children: Array<any>,
+//   NumCols: string
+
+// }
+
+
+const Child = connectToState(mapStateToProps)(props => {
+  const { key, visibility, ...rest } = props;
+
+  return createElement(createPConnectComponent(), { ...rest, key, visibility });
+});
+
+export default function DefaultForm(props /* : DefaultFormProps */) {
+  const { getPConnect, NumCols = '1' } = props;
   const instructions = getInstructions(getPConnect(), props.instructions);
-  const instructionText = instructions?.replace(/<\/?[^>]+(>|$)/g, '');
 
   let divClass: string;
 
@@ -35,26 +52,18 @@ export default function DefaultForm(props) {
   // to take the children and create components for them, put in an array and pass as the
   // defaultForm kids
   const arChildren = getPConnect().getChildren()[0].getPConnect().getChildren();
-  const dfChildren = arChildren.map((kid, idx) =>
-    // eslint-disable-next-line react/no-array-index-key
-    createElement(createPConnectComponent(), { ...kid, key: idx })
-  );
+  const dfChildren = arChildren.map(kid => <Child key={getKeyForMappedField(kid)} {...kid} />);
 
   return (
     <>
-      {instructionText && (
-        <div className='psdk-default-form-instruction-text'>{instructionText}</div>
+      {instructions && (
+        <div className='psdk-default-form-instruction-text'>
+          {/* server performs sanitization method for instructions html content */}
+          { /* eslint-disable react/no-danger */ }
+          <div key="instructions" id="instruction-text" dangerouslySetInnerHTML={{ __html: instructions }} />
+        </div>
       )}
       <div className={divClass}>{dfChildren}</div>
     </>
   );
 }
-
-DefaultForm.propTypes = {
-  // children: PropTypes.arrayOf(PropTypes.node).isRequired,
-  NumCols: PropTypes.string
-};
-
-DefaultForm.defaultProps = {
-  NumCols: '1'
-};

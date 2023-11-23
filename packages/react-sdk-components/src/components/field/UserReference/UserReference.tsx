@@ -1,31 +1,57 @@
 import React, { Fragment, memo, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
-import AutoComplete from '../AutoComplete';
-import Dropdown from '../Dropdown';
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnProps } from '../../../types/PConnProps';
 
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 errors)
 declare const PCore: any;
+
 const DROPDOWN_LIST = 'Drop-down list';
 const SEARCH_BOX = 'Search box';
 
-const UserReference = props => {
+interface UserReferenceProps extends PConnProps {
+  // If any, enter additional props that only exist on URLComponent here
+  displayAs?: string;
+  label?: string;
+  value?: any;
+  testId?: string;
+  placeholder?: string;
+  helperText?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+  required?: boolean;
+  validatemessage?: string;
+  showAsFormattedText?: boolean;
+  additionalProps?: object;
+  hideLabel?: boolean;
+  variant?: string;
+  onChange?: any;
+}
+
+const UserReference = (props: UserReferenceProps) => {
+  // Get emitted components from map (so we can get any override that may exist)
+  const AutoComplete = getComponentFromMap('AutoComplete');
+  const Dropdown = getComponentFromMap('Dropdown');
+
   const {
-    label,
-    displayAs,
+    label = '',
+    displayAs = '',
     getPConnect,
-    value,
-    testId,
-    helperText,
-    validatemessage,
-    placeholder,
-    showAsFormattedText,
-    additionalProps,
-    hideLabel,
-    readOnly,
-    required,
-    disabled,
-    onChange
+    value = '',
+    testId = '',
+    helperText = '',
+    validatemessage = '',
+    placeholder = '',
+    showAsFormattedText = false,
+    additionalProps = {},
+    hideLabel = false,
+    readOnly = false,
+    required = false,
+    disabled = false,
+    onChange,
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    variant = 'inline'
   } = props;
   const [dropDownDataSource, setDropDownDataSource] = useState([]);
   const [userName, setUserName] = useState('');
@@ -40,7 +66,7 @@ const UserReference = props => {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(userId).then(res => {
+        getOperatorDetails(userId).then((res) => {
           if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
             setUserName(res.data.pyOperatorInfo.pyUserName);
           }
@@ -52,14 +78,14 @@ const UserReference = props => {
       };
       PCore.getRestClient()
         .invokeRestApi('getListData', { queryPayload })
-        .then(res => {
-          const ddDataSource = res.data.data.map(listItem => ({
+        .then((res) => {
+          const ddDataSource = res.data.data.map((listItem) => ({
             key: listItem.pyUserIdentifier,
             value: listItem.pyUserName
           }));
           setDropDownDataSource(ddDataSource);
         })
-        .catch(err => {
+        .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err);
         });
@@ -76,8 +102,8 @@ const UserReference = props => {
             TODO: This has to be replaced with Operator Component
           */}
           <div>
-            <Typography variant='caption'>{label}</Typography>
-            <Typography variant='body1'>{userName}</Typography>
+            <Typography variant="caption">{label}</Typography>
+            <Typography variant="body1">{userName}</Typography>
           </div>
         </Fragment>
       );
@@ -107,7 +133,7 @@ const UserReference = props => {
           label={label}
           getPConnect={getPConnect}
           datasource={OPERATORS_DP}
-          listType='datapage'
+          listType="datapage"
           columns={columns}
           testId={testId}
           placeholder={placeholder}
@@ -127,7 +153,7 @@ const UserReference = props => {
         <Dropdown
           additionalProps={additionalProps}
           datasource={dropDownDataSource}
-          listType='associated'
+          listType="associated"
           getPConnect={getPConnect}
           label={label}
           value={userId}
@@ -146,40 +172,6 @@ const UserReference = props => {
   }
 
   return userReferenceComponent;
-};
-
-UserReference.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  displayAs: PropTypes.string,
-  label: PropTypes.string,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.objectOf(PropTypes.any)]),
-  testId: PropTypes.string,
-  placeholder: PropTypes.string,
-  helperText: PropTypes.string,
-  disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  readOnly: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  required: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  validatemessage: PropTypes.string,
-  showAsFormattedText: PropTypes.bool,
-  additionalProps: PropTypes.objectOf(PropTypes.any),
-  hideLabel: PropTypes.bool
-};
-
-UserReference.defaultProps = {
-  displayAs: null,
-  label: null,
-  value: null,
-  readOnly: false,
-  testId: null,
-  placeholder: null,
-  helperText: null,
-  disabled: false,
-  required: false,
-  validatemessage: null,
-  showAsFormattedText: false,
-  additionalProps: {},
-  variant: 'inline',
-  hideLabel: false
 };
 
 // as objects are there in props, shallow comparision fails & re-rendering of comp happens even with

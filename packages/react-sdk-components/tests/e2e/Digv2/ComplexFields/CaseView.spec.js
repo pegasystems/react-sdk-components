@@ -4,6 +4,7 @@
 /** We're testing the visibility of tabs within the Case Summary area in the Case View here, more tests to be added in the future. */
 
 const { test, expect } = require('@playwright/test');
+
 const config = require('../../../config');
 const common = require('../../../common');
 
@@ -11,20 +12,11 @@ const common = require('../../../common');
 const detailsTabVisible = false;
 const caseHistoryTabVisible = true;
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
-  test('should login, create case and run different test cases for Case View', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+  test('should login, create case and run different test cases for Case View', async ({ page }) => {
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -47,19 +39,45 @@ test.describe('E2E test', () => {
 
     /** Visibility of both(basically more than one) tabs should be set to true in order for them to be displayed otherwise
      *  they won't be displayed and that is what we're testing here. */
-    if(detailsTabVisible && caseHistoryTabVisible){
+    if (detailsTabVisible && caseHistoryTabVisible) {
       await expect(detailsTab).toBeVisible();
       await expect(caseHistoryTab).toBeVisible();
-    }else{
+    } else {
       await expect(detailsTab).toBeHidden();
       await expect(caseHistoryTab).toBeHidden();
     }
 
     /** Submitting the case */
     await page.locator('button:has-text("submit")').click();
-  }, 10000);
+  }, 10000),
+    test('should login, create case and run test cases for Cancel action on the Assignment', async ({ page }) => {
+      await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+
+      /** Testing announcement banner presence */
+      const announcementBanner = page.locator('h6:has-text("Announcements")');
+      await expect(announcementBanner).toBeVisible();
+
+      /** Testing worklist presence */
+      const worklist = page.locator('h6:has-text("My Worklist")');
+      await expect(worklist).toBeVisible();
+
+      /** Creating a Complex Fields case-type */
+      const complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
+      await complexFieldsCase.click();
+
+      /** Wait until newly created case loads */
+      await expect(page.locator('div[id="Assignment"]')).toBeVisible();
+
+      await page.locator('button >> span:has-text("Cancel")').click();
+
+      await page.locator('button[id="go-btn"]').click();
+
+      await expect(page.locator('div[id="Assignment"]')).toBeVisible();
+
+      /** Submitting the case */
+      await page.locator('button:has-text("submit")').click();
+    }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/ComplexFields/CaseView';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

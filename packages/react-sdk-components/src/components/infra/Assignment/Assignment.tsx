@@ -1,25 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-
-import AssignmentCard from '../AssignmentCard';
-import MultiStep from '../MultiStep';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
-declare const PCore: any;
+// import type { PConnProps } from '../../../types/PConnProps';
 
-export default function Assignment(props) {
-  const { getPConnect, children, itemKey, isInModal, banners } = props;
+// Can't use AssignmentProps until the following are NOT private
+//  getCaseInfo().isAssignmentInCreateStage()
+//  getCaseInfo().isLocalAction()
+// interface AssignmentProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   children: Array<any>,
+//   itemKey: string,
+//   isInModal: boolean,
+//   banners: Array<any>
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   actionButtons: Array<any>,
+// }
+
+
+export default function Assignment(props /* : AssignmentProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const AssignmentCard = getComponentFromMap("AssignmentCard");
+  const MultiStep = getComponentFromMap("MultiStep");
+
+  const { getPConnect, children, itemKey = '', isInModal = false, banners = [] } = props;
   const thePConn = getPConnect();
 
   const [bHasNavigation, setHasNavigation] = useState(false);
-  const [actionButtons, setActionButtons] = useState({});
+  const [actionButtons, setActionButtons] = useState([]);
   const [bIsVertical, setIsVertical] = useState(false);
   const [arCurrentStepIndicies, setArCurrentStepIndicies] = useState<Array<any>>([]);
   const [arNavigationSteps, setArNavigationSteps] = useState<Array<any>>([]);
 
   const actionsAPI = thePConn.getActionsApi();
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'Assignment';
+  const localeReference = `${getPConnect().getCaseInfo().getClassName()}!CASE!${getPConnect().getCaseInfo().getName()}`.toUpperCase();
 
   // store off bound functions to above pointers
   const finishAssignment = actionsAPI.finishAssignment.bind(actionsAPI);
@@ -66,10 +84,10 @@ export default function Assignment(props) {
 
       const oWorkItem = children[0].props.getPConnect();
       const oWorkData = oWorkItem.getDataObject();
-      const oData = thePConn.getDataObject();
+      const oData = thePConn.getDataObject('');  // 1st arg empty string until typedefs allow it to be optional
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
-        const oCaseInfo = oData.caseInfo;
+        const oCaseInfo = oData["caseInfo"];
 
         if (oCaseInfo && oCaseInfo.actionButtons) {
           setActionButtons(oCaseInfo.actionButtons);
@@ -91,8 +109,13 @@ export default function Assignment(props) {
           } else {
             setIsVertical(false);
           }
-
-          setArNavigationSteps(JSON.parse(JSON.stringify(oCaseInfo.navigation.steps)));
+          const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
+          steps.forEach(step => {
+            if (step.name) {
+              step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
+            }
+          });
+          setArNavigationSteps(steps);
           setArCurrentStepIndicies(
             findCurrentIndicies(arNavigationSteps, arCurrentStepIndicies, 0)
           );
@@ -134,7 +157,7 @@ export default function Assignment(props) {
           navigatePromise
             .then(() => {})
             .catch(() => {
-              showToast(`Navigation failed!`);
+              showToast(`${localizedVal('Navigation failed!', localeCategory)}`);
             });
 
           break;
@@ -153,7 +176,7 @@ export default function Assignment(props) {
               onSaveActionSuccess({ caseType, caseID, assignmentID });
             })
             .catch(() => {
-              showToast('Save failed');
+              showToast(`${localizedVal('Save failed', localeCategory)}`);
             });
 
           break;
@@ -167,7 +190,7 @@ export default function Assignment(props) {
           const isLocalAction =
             thePConn.getCaseInfo().isLocalAction() ||
             (PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION &&
-              getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION));
+              getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION, ''));// 2nd arg empty string until typedefs allow it to be optional
           if (isAssignmentInCreateStage && isInModal && !isLocalAction) {
             const cancelPromise = cancelCreateStageAssignment(itemKey);
 
@@ -176,7 +199,7 @@ export default function Assignment(props) {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
-                showToast(`Cancel failed!`);
+                showToast(`${localizedVal('Cancel failed!', localeCategory)}`);
               });
           } else {
             const cancelPromise = cancelAssignment(itemKey);
@@ -186,7 +209,7 @@ export default function Assignment(props) {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
-                showToast(`Cancel failed!`);
+                showToast(`${localizedVal('Cancel failed!', localeCategory)}`);
               });
           }
           break;
@@ -204,7 +227,7 @@ export default function Assignment(props) {
           finishPromise
             .then(() => {})
             .catch(() => {
-              showToast(`Submit failed!`);
+              showToast(`${localizedVal('Submit failed!', localeCategory)}`);
             });
 
           break;
@@ -304,19 +327,3 @@ export default function Assignment(props) {
 //         <lit-toast></lit-toast>
 //     </div>`}
 // `;
-
-Assignment.propTypes = {
-  children: PropTypes.node.isRequired,
-  getPConnect: PropTypes.func.isRequired,
-  itemKey: PropTypes.string,
-  isInModal: PropTypes.bool,
-  banners: PropTypes.any
-  // actionButtons: PropTypes.object
-  // buildName: PropTypes.string
-};
-
-Assignment.defaultProps = {
-  itemKey: null,
-  isInModal: false
-  // buildName: null
-};

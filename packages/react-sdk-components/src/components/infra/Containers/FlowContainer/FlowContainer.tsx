@@ -1,14 +1,10 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
 import React, { useState, useEffect, useContext, createElement } from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
 import { Utils } from '../../../helpers/utils';
 import { Alert } from '@material-ui/lab';
-
-import Assignment from '../../Assignment';
-import ToDo from '../../../widget/ToDo';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import StoreContext from '../../../../bridge/Context/StoreContext';
@@ -16,8 +12,25 @@ import DayjsUtils from '@date-io/dayjs';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
+import { isEmptyObject } from '../../../helpers/common-utils';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-declare const PCore;
+// import type { PConnProps } from '../../../../types/PConnProps';
+
+// Can't use PConnProps until getPConnect().getChildren() types are ok
+// interface FlowContainerProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   children?: Array<any>,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   name?: string,
+//   routingInfo?: any,
+//   // eslint-disable-next-line react/no-unused-prop-types
+//   pageMessages: Array<any>
+// }
+
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 3 errors)
+declare const PCore: any;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -46,14 +59,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function FlowContainer(props) {
+export default function FlowContainer(props /* : FlowContainerProps */) {
+  // Get the proper implementation (local or Pega-provided) for these components that are emitted below
+  const Assignment = getComponentFromMap('Assignment');
+  const ToDo = getComponentFromMap('Todo');  // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
+  const AlertBanner = getComponentFromMap("AlertBanner");
+
   const pCoreConstants = PCore.getConstants();
+  const PCoreVersion = PCore.getPCoreVersion();
   const { TODO } = pCoreConstants;
   const todo_headerText = 'To do';
 
-  const { getPConnect, routingInfo } = props;
+  const { getPConnect, routingInfo, pageMessages } = props;
 
-  const { displayOnlyFA } = useContext(StoreContext);
+  const { displayOnlyFA } = useContext<any>(StoreContext);
 
   const thePConn = getPConnect();
 
@@ -78,6 +97,10 @@ export default function FlowContainer(props) {
   const [containerName, setContainerName] = useState('');
   const [buildName, setBuildName] = useState('');
   const [bShowConfirm, setShowConfirm] = useState(false);
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'Messages';
+  const caseInfo = getPConnect().getCaseInfo();
+  const localeReference = `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase();
 
   const classes = useStyles();
 
@@ -116,7 +139,7 @@ export default function FlowContainer(props) {
   }
 
   function getTodoVisibility() {
-    const caseViewMode = getPConnect().getValue('context_data.caseViewMode');
+    const caseViewMode = getPConnect().getValue('context_data.caseViewMode', ''); // 2nd arg empty string until typedefs properly allow optional
     if (caseViewMode && caseViewMode === 'review') {
       return true;
     }
@@ -171,7 +194,7 @@ export default function FlowContainer(props) {
 
     if (bLoadChildren && oWorkData) {
       // debugger;
-      setContainerName(oWorkData.caseInfo.assignments?.[0].name);
+      setContainerName(localizedVal(oWorkData.caseInfo.assignments?.[0].name, undefined, localeReference));
     }
 
     // debugger;
@@ -187,8 +210,8 @@ export default function FlowContainer(props) {
   function isCaseWideLocalAction() {
     const ourPConn = getPConnect();
 
-    const actionID = ourPConn.getValue(pCoreConstants.CASE_INFO.ACTIVE_ACTION_ID);
-    const caseActions = ourPConn.getValue(pCoreConstants.CASE_INFO.AVAILABLEACTIONS);
+    const actionID = ourPConn.getValue(pCoreConstants.CASE_INFO.ACTIVE_ACTION_ID, ''); // 2nd arg empty string until typedefs properly allow optional
+    const caseActions = ourPConn.getValue(pCoreConstants.CASE_INFO.AVAILABLEACTIONS, ''); // 2nd arg empty string until typedefs properly allow optional
     let bCaseWideAction = false;
     if (caseActions && actionID) {
       const actionObj = caseActions.find(caseAction => caseAction.ID === actionID);
@@ -202,7 +225,7 @@ export default function FlowContainer(props) {
   function hasChildCaseAssignments() {
     const ourPConn = getPConnect();
 
-    const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS);
+    const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS, ''); // 2nd arg empty string until typedefs properly allow optional
     // const allAssignments = [];
     // eslint-disable-next-line sonarjs/prefer-single-boolean-return
     if (childCases && childCases.length > 0) {
@@ -216,23 +239,26 @@ export default function FlowContainer(props) {
 
     let bHasAssignments = false;
     const assignmentsList: Array<any> = ourPConn.getValue(
-      pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS
-    );
-    const thisOperator = PCore.getEnvironmentInfo().getOperatorIdentifier();
+      pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''
+    ); // 2nd arg empty string until typedefs properly allow optional
+    const isEmbedded = window.location.href.includes('embedded');
+    let bAssignmentsForThisOperator = false;
     // 8.7 includes assignments in Assignments List that may be assigned to
     //  a different operator. So, see if there are any assignments for
     //  the current operator
-    let bAssignmentsForThisOperator = false;
-
+    if (PCoreVersion?.includes('8.7') || isEmbedded) {
+      const thisOperator = PCore.getEnvironmentInfo().getOperatorIdentifier();
+      for (const assignment of assignmentsList) {
+        if (assignment['assigneeInfo']['ID'] === thisOperator) {
+          bAssignmentsForThisOperator = true;
+        }
+      }
+    } else {
+      bAssignmentsForThisOperator = true;
+    }
     // Bail out if there isn't an assignmentsList
     if (!assignmentsList) {
       return bHasAssignments;
-    }
-
-    for (const assignment of assignmentsList) {
-      if (assignment['assigneeInfo']['ID'] === thisOperator) {
-        bAssignmentsForThisOperator = true;
-      }
     }
 
     const bHasChildCaseAssignments = hasChildCaseAssignments();
@@ -251,8 +277,8 @@ export default function FlowContainer(props) {
 
     const { CASE_INFO: CASE_CONSTS } = pCoreConstants;
 
-    const caseActions = ourPConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS);
-    const activeActionID = ourPConn.getValue(CASE_CONSTS.ACTIVE_ACTION_ID);
+    const caseActions = ourPConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS, ''); // 2nd arg empty string until typedefs properly allow optionalv
+    const activeActionID = ourPConn.getValue(CASE_CONSTS.ACTIVE_ACTION_ID, ''); // 2nd arg empty string until typedefs properly allow optional
     const activeAction = caseActions?.find(action => action.ID === activeActionID);
     if (activeAction) {
       activeActionLabel = activeAction.name;
@@ -271,7 +297,7 @@ export default function FlowContainer(props) {
 
     let loadingInfo: any;
     try {
-      loadingInfo = thePConn.getLoadingStatus();
+      loadingInfo = thePConn.getLoadingStatus(''); // 1st arg empty string until typedefs properly allow optional
     } catch (ex) {
       // eslint-disable-next-line no-console
       console.error(`${thePConn.getComponentName()}: loadingInfo catch block`);
@@ -284,14 +310,14 @@ export default function FlowContainer(props) {
       // this.psService.sendMessage(false);
     }
 
-    const caseViewMode = thePConn.getValue('context_data.caseViewMode');
+    const caseViewMode = thePConn.getValue('context_data.caseViewMode', ''); // 2nd arg empty string until typedefs properly allow optional
     const { CASE_INFO: CASE_CONSTS } = pCoreConstants;
     if (caseViewMode && caseViewMode === 'review') {
       setTimeout(() => {
         // updated for 8.7 - 30-Mar-2022
         const todoAssignments = getToDoAssignments(thePConn);
         if (todoAssignments && todoAssignments.length > 0) {
-          setCaseInfoID(thePConn.getValue(CASE_CONSTS.CASE_INFO_ID));
+          setCaseInfoID(thePConn.getValue(CASE_CONSTS.CASE_INFO_ID, '')); // 2nd arg empty string until typedefs properly allow optional
           setTodoDatasource({ source: todoAssignments });
         }
         setShowTodo(true);
@@ -313,13 +339,13 @@ export default function FlowContainer(props) {
     }
 
     // if have caseMessage show message and end
-    const theCaseMessages = thePConn.getValue('caseMessages');
+    const theCaseMessages = localizedVal(thePConn.getValue('caseMessages', ''), localeCategory); // 2nd arg empty string until typedefs properly allow optional
 
     if (theCaseMessages || !hasAssignments()) {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
       setCaseMessages(
-        theCaseMessages || 'Thank you! The next step in this case has been routed appropriately.'
+        theCaseMessages || localizedVal('Thank you! The next step in this case has been routed appropriately.', localeCategory)
       );
       setHasCaseMessages(true);
       setShowConfirm(true);
@@ -328,7 +354,7 @@ export default function FlowContainer(props) {
       PCore.getPubSubUtils().publish('assignmentFinished');
 
       // debugger;
-      setCheckSvg(Utils.getImageSrc('check', PCore.getAssetLoader().getStaticServerUrl()));
+      setCheckSvg(Utils.getImageSrc('check', Utils.getSDKStaticConentUrl()));
     } else {
       // debugger;
       setHasCaseMessages(false);
@@ -357,7 +383,7 @@ export default function FlowContainer(props) {
           currentItems[key] &&
           currentItems[key].view &&
           type === 'single' &&
-          !Utils.isEmptyObject(currentItems[key].view)
+          !isEmptyObject(currentItems[key].view)
         ) {
           const currentItem = currentItems[key];
           const rootView = currentItem.view;
@@ -395,7 +421,7 @@ export default function FlowContainer(props) {
           // check if have oWorkData, there are times due to timing of state change, when this
           // may not be available
           if (oWorkData) {
-            setContainerName(getActiveViewLabel() || oWorkData.caseInfo.assignments?.[0].name);
+            setContainerName(localizedVal(getActiveViewLabel() || oWorkData.caseInfo.assignments?.[0].name, undefined, localeReference));
           }
         }
       }
@@ -407,12 +433,19 @@ export default function FlowContainer(props) {
     ? getPConnect().getCaseSummary().assignments?.[0].urgency
     : '';
   const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName());
-  let instructionText = thePConn.getCaseSummary()?.assignments?.[0]?.instructions;
-  if (instructionText === undefined) {
-    instructionText = '';
-  }
 
   const bShowBanner = showBanner(getPConnect);
+
+  const displayPageMessages = () => {
+    let hasBanner = false;
+    const messages = pageMessages
+      ? pageMessages.map(msg => localizedVal(msg.message, 'Messages'))
+      : pageMessages;
+    hasBanner = messages && messages.length > 0;
+    return (
+      hasBanner && <AlertBanner id='flowContainerBanner' variant='urgent' messages={messages} />
+    );
+  };
 
   return (
     <div style={{ textAlign: 'left' }} id={buildName} className='psdk-flow-container-top'>
@@ -425,9 +458,7 @@ export default function FlowContainer(props) {
                 subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
                 avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
               ></CardHeader>
-              {instructionText !== '' ? (
-                <Typography variant='caption'>{instructionText}</Typography>
-              ) : null}
+              {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
                   {arNewChildrenAsReact}
@@ -437,9 +468,7 @@ export default function FlowContainer(props) {
           ) : (
             <Card className={classes.root}>
               <Typography variant='h6'>{containerName}</Typography>
-              {instructionText !== '' ? (
-                <Typography variant='caption'>{instructionText}</Typography>
-              ) : null}
+              {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
                   {arNewChildrenAsReact}
@@ -450,6 +479,7 @@ export default function FlowContainer(props) {
         ) : (
           <div>
             <ToDo
+              key={Math.random()}
               getPConnect={getPConnect}
               caseInfoID={todo_caseInfoID}
               datasource={todo_datasource}
@@ -458,6 +488,7 @@ export default function FlowContainer(props) {
               type={TODO}
               context={todo_context}
               itemKey={itemKey}
+              isConfirm
             ></ToDo>
           </div>
         ))}
@@ -470,22 +501,3 @@ export default function FlowContainer(props) {
     </div>
   );
 }
-
-FlowContainer.defaultProps = {
-  children: null,
-  getPConnect: null,
-  name: '',
-  routingInfo: null,
-  pageMessages: null
-};
-
-FlowContainer.propTypes = {
-  // eslint-disable-next-line react/no-unused-prop-types
-  children: PropTypes.node,
-  getPConnect: PropTypes.func,
-  // eslint-disable-next-line react/no-unused-prop-types
-  name: PropTypes.string,
-  routingInfo: PropTypes.objectOf(PropTypes.any),
-  // eslint-disable-next-line react/no-unused-prop-types
-  pageMessages: PropTypes.arrayOf(PropTypes.any)
-};

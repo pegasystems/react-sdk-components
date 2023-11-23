@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import { Button, Grid, IconButton, Snackbar } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-
+import type { PConnFieldProps } from '../../../types/PConnProps';
 import './CancelAlert.css';
 
-declare const PCore;
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
+declare const PCore: any;
 
-const CancelAlert = props => {
+
+interface CancelAlertProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on CancelAlert here
+  pConn: any,
+  updateAlertState: any
+}
+
+
+export default function CancelAlert(props: CancelAlertProps) {
   const { pConn, updateAlertState } = props;
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -15,6 +24,8 @@ const CancelAlert = props => {
   const caseInfo = pConn.getCaseInfo();
   const caseName = caseInfo.getName();
   const ID = caseInfo.getID();
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'ModalContainer';
 
   function showToast(message: string) {
     setSnackbarMessage(message);
@@ -53,7 +64,7 @@ const CancelAlert = props => {
             );
           })
           .catch(() => {
-            showToast('Save failed');
+            showToast(localizedVal('Save failed', localeCategory));
           });
         break;
 
@@ -71,7 +82,7 @@ const CancelAlert = props => {
             PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL);
           })
           .catch(() => {
-            showToast('Delete failed.');
+            showToast(localizedVal('Delete failed.', localeCategory));
           });
         break;
 
@@ -86,22 +97,22 @@ const CancelAlert = props => {
         <div className='cancel-alert-top'>
           <h3>{`Delete ${caseName}(${ID})`}</h3>
           <div>
-            <p>{`Are you sure you want to delete ${caseName} (${ID})?`}</p>
-            <p>Alternatively, you can continue working or save your work for later.</p>
+            <p>{`${localizedVal('Are you sure you want to delete', localeCategory)} ${caseName} (${ID})?`}</p>
+            <p>{localizedVal('Alternatively, you can continue working or save your work for later.', localeCategory)}</p>
           </div>
           <div className='action-controls'>
             <Grid container spacing={4} justifyContent='space-between'>
               <Grid item>
                 <Button variant='outlined' color='primary' onClick={() => buttonClick('save')}>
-                  Save for later
+                  {localizedVal('Save for later', localeCategory)}
                 </Button>
               </Grid>
               <Grid item>
                 <Button variant='outlined' color='primary' onClick={() => buttonClick('continue')}>
-                  Continue Working
+                  {localizedVal('Continue Working', localeCategory)}
                 </Button>
                 <Button variant='contained' color='primary' onClick={() => buttonClick('delete')}>
-                  Delete
+                  {localizedVal('Delete', localeCategory)}
                 </Button>
               </Grid>
             </Grid>
@@ -122,5 +133,3 @@ const CancelAlert = props => {
     </>
   );
 };
-
-export default CancelAlert;

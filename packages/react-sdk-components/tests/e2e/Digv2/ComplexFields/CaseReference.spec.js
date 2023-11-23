@@ -2,23 +2,15 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
+
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
-  test('should login, create case and run different test cases for Case Reference', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+  test('should login, create case and run different test cases for Case Reference', async ({ page }) => {
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -32,10 +24,10 @@ test.describe('E2E test', () => {
     let queryCase = page.locator('div[role="button"]:has-text("Query")');
     await queryCase.click();
 
-    let modal =  page.locator('div[role="dialog"]');
+    let modal = page.locator('div[role="dialog"]');
 
     /** Value to be typed in the Name input */
-    const name = "John Doe";
+    const name = 'John Doe';
 
     await modal.locator('input').type(name);
     await modal.locator('button:has-text("submit")').click();
@@ -164,6 +156,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/ComplexFields/CaseReference';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

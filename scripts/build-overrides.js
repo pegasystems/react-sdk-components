@@ -197,14 +197,26 @@ const processRelativeRef = function(inMatch, splitSep, arrTerms) {
           break;
 
         case overrideConstants.SDK_TOP_LEVEL_CONTENT:
-          //  concatenate rtString and frag (the frag will already start
+          //  concatenate retString and frag (the frag will already start
           //     with the top-level content - ex: components_map)
           retString = `${retString}${relativePathReplacementPrefix}${frag}`;
           break;
 
-        default:
-          console.error(`processRelativeRef failed: inMatch: ${inMatch}`);
+        case overrideConstants.SDK_TYPES_DIR:
+          // if this fragment not empty and starts with one of our dir names,
+          //  concatenate retString and frag (the frag will already start with 'types')
+          retString = `${retString}${relativePathReplacementPrefix}${frag}`;
           break;
+
+        case overrideConstants.SDK_HOOKS_DIR:
+          // if this fragment not empty and starts with one of our dir names,
+          //  concatenate retString and frag (the frag will already start with 'hooks')
+          retString = `${retString}${relativePathReplacementPrefix}${frag}`;
+          break;
+
+        default:
+        console.error(`processRelativeRef failed: inMatch: ${inMatch}`);
+        break;
       }
     }
   });
@@ -284,9 +296,11 @@ const processImportLine = function (inMatch) {
   // pseudocode:
   //  1. If inMatch doesn't contain '../', then return inMatch (nothing to process)
   //  2. If inMatch does contain '../' followed by sdkBridgeDir then process as relative bridge reference
-  //  3. If inMatch does contain '../' followed by one of our sdkCompSubDirs then process as relative component DIR reference
-  //  4. If inMatch does contain '../' followed directly by a component name, the process as relative component reference
-  //  5. If inMatch does contain '../' followed directly by a top-level content name, the process as relative top-level content reference
+  //  3. If inMatch does contain '../' followed by sdkHooksDir then process as relative bridge reference
+  //  4. If inMatch does contain '../' followed by one of our sdkCompSubDirs then process as relative component DIR reference
+  //  5. If inMatch does contain '../' followed directly by a component name, the process as relative component reference
+  //  6. If inMatch does contain '../' followed directly by a top-level content name, the process as relative top-level content reference
+  //  7. If inMatch does contain '../' followed by one of our typesDirs, then process as relative reference to types dir
   //  otherwise, return inMatch unprocessed..
 
   //  1. If inMatch doesn't contain '../', then return inMatch (nothing to process)
@@ -302,7 +316,15 @@ const processImportLine = function (inMatch) {
     return replacementString;
   }
 
-  //  3. If inMatch does contain '../' followed by one of our sdkCompSubDirs, then process as relative component DIR reference
+  //  3. If inMatch does contain '../' followed by sdkHooksDir then process as relative bridge reference
+  if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_HOOKS_DIR)) {
+    const replacementString = processRelativeRef(inMatch, splitWith, overrideConstants.SDK_HOOKS_DIR);
+    console.log(`  --> replacing with: ${replacementString}`);
+    iPathReplacements = iPathReplacements + 1;
+    return replacementString;
+  }
+
+  //  4. If inMatch does contain '../' followed by one of our sdkCompSubDirs, then process as relative component DIR reference
   if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_COMP_SUBDIRS)) {
     const replacementString = processRelativeRef(inMatch, splitWith, overrideConstants.SDK_COMP_SUBDIRS);
     console.log(`  --> replacing with: ${replacementString}`);
@@ -310,7 +332,7 @@ const processImportLine = function (inMatch) {
     return replacementString;
   }
 
-  //  4. If inMatch does contain '../' followed by directly by a component name, the process as relative component reference
+  //  5. If inMatch does contain '../' followed by directly by a component name, the process as relative component reference
   if (hasRelativeComponent(inMatch, splitWith, overrideConstants.SDK_COMP_LOCATION_MAP)) {
     // console.log(` ----> hasRelativeComponent: ${inMatch}`);
 
@@ -320,11 +342,19 @@ const processImportLine = function (inMatch) {
     return replacementString;
   }
 
-  //  5. If inMatch does contain '../' followed directly by a top-level content name, the process as relative top-level content reference
+  //  6. If inMatch does contain '../' followed directly by a top-level content name, the process as relative top-level content reference
   if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_TOP_LEVEL_CONTENT)) {
     // console.log(` ----> hasTopLevelContent: ${inMatch}`);
 
     const replacementString = processRelativeRef(inMatch, splitWith, overrideConstants.SDK_TOP_LEVEL_CONTENT);
+    console.log(`  --> replacing with: ${replacementString}`);
+    iPathReplacements = iPathReplacements + 1;
+    return replacementString;
+  }
+
+  //  7. If inMatch does contain '../' followed by one of our typesDirs, then process as relative reference to types dir
+  if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_TYPES_DIR)) {
+    const replacementString = processRelativeRef(inMatch, splitWith, overrideConstants.SDK_TYPES_DIR);
     console.log(`  --> replacing with: ${replacementString}`);
     iPathReplacements = iPathReplacements + 1;
     return replacementString;

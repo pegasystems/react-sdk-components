@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { Utils } from '../../helpers/utils';
 import './NavBar.css';
 import {
@@ -35,11 +34,23 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useNavBar } from '../../helpers/reactContextHelpers';
 import { logout } from '../../helpers/authManager';
 
-declare const PCore;
+import type { PConnProps } from '../../../types/PConnProps';
+
+
+interface NavBarProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  // eslint-disable-next-line react/no-unused-prop-types
+  appName?: string,
+  pages?: Array<any>,
+  caseTypes: Array<any>,
+  pConn?: any
+}
+
 
 const iconMap = {
   'pi pi-headline': <HomeOutlinedIcon fontSize='large' />,
-  'pi pi-flag-solid': <FlagOutlinedIcon fontSize='large' />
+  'pi pi-flag-solid': <FlagOutlinedIcon fontSize='large' />,
+  'pi pi-home-solid': <HomeOutlinedIcon fontSize='large' />
 };
 
 const drawerWidth = 300;
@@ -95,8 +106,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function NavBar(props) {
-  const { pConn, pages, caseTypes } = props;
+export default function NavBar(props: NavBarProps) {
+  const { pConn, pages = [], caseTypes = [] } = props;
 
   const classes = useStyles();
   const theme = useTheme();
@@ -108,7 +119,10 @@ export default function NavBar(props) {
   const [bShowOperatorButtons, setBShowOperatorButtons] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const portalLogoImage = Utils.getIconPath(PCore.getAssetLoader().getStaticServerUrl()).concat(
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'AppShell';
+
+  const portalLogoImage = Utils.getIconPath(Utils.getSDKStaticConentUrl()).concat(
     'pzpega-logo-mark.svg'
   );
   const portalOperator = PCore.getEnvironmentInfo().getOperatorName();
@@ -126,7 +140,7 @@ export default function NavBar(props) {
       .showPage(pyRuleName, pyClassName)
       .then(() => {
         // eslint-disable-next-line no-console
-        console.log(`showPage completed`);
+        console.log(`${localizedVal('showPage completed', localeCategory)}`);
       });
   }
 
@@ -142,7 +156,7 @@ export default function NavBar(props) {
       .createWork(sCaseType, actionInfo)
       .then(() => {
         // eslint-disable-next-line no-console
-        console.log(`createWork completed`);
+        console.log(`${localizedVal('createWork completed', localeCategory)}`);
       });
   }
 
@@ -278,7 +292,7 @@ export default function NavBar(props) {
               <ListItemIcon>
                 <ArrowBackIcon fontSize='large' />
               </ListItemIcon>
-              <Typography variant='inherit'>Logout</Typography>
+              <Typography variant='inherit'>{localizedVal('Logout', localeCategory)}</Typography>
             </MenuItem>
           </Menu>
         </>
@@ -286,18 +300,3 @@ export default function NavBar(props) {
     </Drawer>
   );
 }
-
-NavBar.defaultProps = {
-  pConn: null,
-  appName: '',
-  pages: [],
-  caseTypes: []
-};
-
-NavBar.propTypes = {
-  pConn: PropTypes.object,
-  // eslint-disable-next-line react/no-unused-prop-types
-  appName: PropTypes.string,
-  pages: PropTypes.arrayOf(PropTypes.object),
-  caseTypes: PropTypes.arrayOf(PropTypes.object)
-};

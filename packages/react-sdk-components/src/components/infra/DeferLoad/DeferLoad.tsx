@@ -1,11 +1,19 @@
 import React, { useState, useEffect, createElement } from 'react';
-import PropTypes from 'prop-types';
 import { Box, Card, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
-declare const PCore;
+// import type { PConnProps } from '../../../types/PConnProps';
+
+// Can't use PConnProps until typedefs for showData are fixed
+// interface DeferLoadProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   name: string,
+//   isChildDeferLoad?: boolean,
+//   isTab: boolean
+// }
+
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -26,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DeferLoad(props) {
+export default function DeferLoad(props /* : DeferLoadProps */) {
   const { getPConnect, name, deferLoadId, isTab } = props;
   const [content, setContent] = useState<any>(null);
   const [isLoading, setLoading] = useState(true);
@@ -37,7 +45,7 @@ export default function DeferLoad(props) {
   const pConnect = getPConnect();
   const constants = PCore.getConstants();
 
-  const theRequestedAssignment = pConnect.getValue( PCore.getConstants().CASE_INFO.ASSIGNMENT_LABEL);
+  const theRequestedAssignment = pConnect.getValue( PCore.getConstants().CASE_INFO.ASSIGNMENT_LABEL, '');  // 2nd arg empty string until typedef allows optional
   if (theRequestedAssignment !== currentLoadedAssignment)  {
     // console.log(`DeferLoad: currentLoadedAssignment about to change from ${currentLoadedAssignment} to ${theRequestedAssignment}`);
     setCurrentLoadedAssignment(theRequestedAssignment);
@@ -45,7 +53,7 @@ export default function DeferLoad(props) {
 
   const { CASE, PAGE, DATA } = constants.RESOURCE_TYPES;
   const loadViewCaseID =
-    pConnect.getValue(constants.PZINSKEY) || pConnect.getValue(constants.CASE_INFO.CASE_INFO_ID);
+    pConnect.getValue(constants.PZINSKEY, '') || pConnect.getValue(constants.CASE_INFO.CASE_INFO_ID, '');  // 2nd arg empty string until typedef allows optional
   let containerName;
   let containerItemData;
   const targetName = pConnect.getTarget();
@@ -62,7 +70,7 @@ export default function DeferLoad(props) {
 
   const getViewOptions = () => ({
     viewContext: resourceType,
-    pageClass: loadViewCaseID ? '' : pConnect.getDataObject().pyPortal.classID,
+    pageClass: loadViewCaseID ? '' : pConnect.getDataObject('').pyPortal.classID,  // 2nd arg empty string until typedef allows optional
     container: isContainerPreview ? 'preview' : null,
     containerName: isContainerPreview ? 'preview' : null,
     updateData: isContainerPreview
@@ -110,7 +118,7 @@ export default function DeferLoad(props) {
 
         getPConnect()
           .getActionsApi()
-          .showData(name, dataContext, dataContextParameters, {
+          .showData(name, dataContext, dataContextParameters, {   // Need to wait for typedefs to be fixed for showData
             skipSemanticUrl: true,
             isDeferLoaded: true
           })
@@ -132,7 +140,7 @@ export default function DeferLoad(props) {
     } else {
       getPConnect()
         .getActionsApi()
-        .refreshCaseView(encodeURI(loadViewCaseID), name)
+        .refreshCaseView(encodeURI(loadViewCaseID), name, '')  // 3rd arg empty string until typedef allows optional
         .then(data => {
           onResponse(data.root);
         });
@@ -162,14 +170,3 @@ export default function DeferLoad(props) {
 
   return deferLoadContent;
 }
-
-DeferLoad.defaultProps = {
-  isChildDeferLoad: false
-};
-
-DeferLoad.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  isChildDeferLoad: PropTypes.bool,
-  isTab: PropTypes.bool
-};

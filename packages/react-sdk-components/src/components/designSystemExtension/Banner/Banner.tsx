@@ -2,7 +2,18 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import './Banner.css';
 
-export default function Banner(props) {
+// AlertBanner is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+
+interface BannerProps {
+  // If any, enter additional props that only exist on this component
+  a: any,
+  b: any,
+  banner: { variant: any, backgroundColor: any, title: any, message: any, backgroundImage: any, tintImage: any },
+  variant: any
+}
+
+export default function Banner(props:BannerProps) {
   const { a, b, banner, variant} = props;
   const { title, message, backgroundImage } = banner;
   const variantMap = {

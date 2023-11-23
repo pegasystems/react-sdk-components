@@ -1,6 +1,5 @@
 import { Utils } from './utils';
 
-declare const PCore;
 
 export const TABLE_CELL = "SdkRenderer";
 export const DELETE_ICON = "DeleteIcon";
@@ -8,7 +7,7 @@ export const DELETE_ICON = "DeleteIcon";
 // BUG-615253: Workaround for autosize in table with lazy loading components
 /* istanbul ignore next */
 function getFieldWidth(field, label) {
-  let width;
+  let width: number;
   switch (field.type) {
     case "Time":
       width = 150;
@@ -46,7 +45,7 @@ function getFieldWidth(field, label) {
 export const getContext = (thePConn) => {
   const contextName = thePConn.getContextName();
   const pageReference = thePConn.getPageReference();
-  let { referenceList } = thePConn.getStateProps().config;
+  let { referenceList } = thePConn.getStateProps()?.config || thePConn.getStateProps();
   const pageReferenceForRows = referenceList.startsWith(".")
     ? `${pageReference}.${referenceList.substring(1)}`
     : referenceList;
@@ -65,7 +64,7 @@ export const getContext = (thePConn) => {
 };
 
 export const populateRowKey = (rawData) => {
-  return rawData.map((row, index) => {
+  return rawData.map((row: any, index: number) => {
     return { ...row, index };
   });
 };
@@ -103,6 +102,7 @@ export const buildMetaForListView = (
   ruleClass,
   name,
   propertyLabel,
+  isDataObject,
   parameters
 ) => {
   return {
@@ -112,10 +112,12 @@ export const buildMetaForListView = (
       referenceList: fieldMetadata.datasource.name,
       parameters: parameters ?? fieldMetadata.datasource.parameters,
       personalization: false,
+      isDataObject,
       grouping: true,
       globalSearch: true,
       reorderFields: true,
       toggleFieldVisibility: true,
+      title: propertyLabel,
       personalizationId: "" /* TODO */,
       template: "ListView",
       presets: [
@@ -207,7 +209,7 @@ export const createMetaForTable = (fields, renderMode) => {
  * @param {number} index - index of the page list to add
  */
 export const getAddRowCallback = (pConnect, index) => {
-  return () => pConnect.getListActions().insert({}, index);
+  return () => pConnect.getListActions().insert({}, index, '');  // 3rd arg null until typedef marked correctly as optional
 };
 
 /**
@@ -216,7 +218,9 @@ export const getAddRowCallback = (pConnect, index) => {
  * @param {string} referenceList - referenceList
  * @param {string} pageReference - pageReference
  */
-export const createPConnect = (contextName, referenceList, pageReference) => {
+// NOTE: use of type "any" is required since TypeScript doesn't allow private/protected properties
+//  to be exported from a class (TS4094 error)
+export function createPConnect(contextName, referenceList, pageReference): any {
   const options = {
     context: contextName,
     pageReference,

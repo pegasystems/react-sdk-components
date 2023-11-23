@@ -1,12 +1,20 @@
 import React from 'react';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
-import TextInput from '../TextInput';
 import handleEvent from '../../helpers/event-utils';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
-import { format } from '../../helpers/formatters/';
-import { dateFormatInfoDefault, getDateFormatInfo} from '../../helpers/date-format-utils';
+import { format } from '../../helpers/formatters';
+import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function DateTime(props) {
+interface DateTimeProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on DateTime here
+}
+
+export default function DateTime(props: DateTimeProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const TextInput = getComponentFromMap('TextInput');
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     getPConnect,
     label,
@@ -25,26 +33,29 @@ export default function DateTime(props) {
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps().value;
+  const propName = pConn.getStateProps()["value"];
   const helperTextToDisplay = validatemessage || helperText;
 
   // Start with default dateFormatInfo
   const dateFormatInfo = dateFormatInfoDefault;
   // and then update, as needed, based on locale, etc.
-  const theDateFormat = getDateFormatInfo()
+  const theDateFormat = getDateFormatInfo();
   dateFormatInfo.dateFormatString = theDateFormat.dateFormatString;
   dateFormatInfo.dateFormatStringLC = theDateFormat.dateFormatStringLC;
   dateFormatInfo.dateFormatMask = theDateFormat.dateFormatMask;
 
-
   if (displayMode === 'LABELS_LEFT') {
-    const formattedDateTime = format(props.value, 'datetime', { format: `${dateFormatInfo.dateFormatString} hh:mm a` });
+    const formattedDateTime = format(props.value, 'datetime', {
+      format: `${dateFormatInfo.dateFormatString} hh:mm a`
+    });
     return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    const formattedDateTime = format(props.value, 'datetime', { format: `${dateFormatInfo.dateFormatString} hh:mm a` });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant='stacked' />;
+    const formattedDateTime = format(props.value, 'datetime', {
+      format: `${dateFormatInfo.dateFormatString} hh:mm a`
+    });
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant="stacked" />;
   }
 
   if (readOnly) {
@@ -52,12 +63,12 @@ export default function DateTime(props) {
     return <TextInput {...props} value={formattedDateTime} />;
   }
 
-  const handleChange = date => {
+  const handleChange = (date) => {
     const changeValue = date && date.isValid() ? date.toISOString() : null;
     onChange({ value: changeValue });
   };
 
-  const handleAccept = date => {
+  const handleAccept = (date) => {
     const changeValue = date && date.isValid() ? date.toISOString() : null;
     handleEvent(actions, 'changeNblur', propName, changeValue);
   };
@@ -69,8 +80,8 @@ export default function DateTime(props) {
 
   return (
     <KeyboardDateTimePicker
-      variant='inline'
-      inputVariant='outlined'
+      variant="inline"
+      inputVariant="outlined"
       fullWidth
       autoOk
       required={required}
@@ -81,7 +92,7 @@ export default function DateTime(props) {
       minutesStep={5}
       error={status === 'error'}
       helperText={helperTextToDisplay}
-      size='small'
+      size="small"
       label={label}
       value={value || null}
       onChange={handleChange}

@@ -1,10 +1,21 @@
 import React, { createElement } from 'react';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-import FieldGroup from '../../../designSystemExtension/FieldGroup';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-export default function Details(props) {
+// import type { PConnProps } from '../../../../types/PConnProps';
+
+
+// Can't use PConnProps until getPConnect().getChildren() type is ok
+// interface DetailsProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+// }
+
+
+export default function Details(props /* : DetailsProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldGroup = getComponentFromMap('FieldGroup');
+
   const { label, showLabel, getPConnect, showHighlightedData } = props;
 
   // Get the inherited props from the parent to determine label settings
@@ -37,7 +48,8 @@ export default function Details(props) {
         field.config.displayAsStatus = true;
       }
 
-      return getPConnect().createComponent(field);
+      return getPConnect().createComponent(field,
+        '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
     });
   }
 
@@ -62,16 +74,3 @@ export default function Details(props) {
     </FieldGroup>
   );
 }
-
-Details.defaultProps = {
-  label: undefined,
-  showLabel: true,
-  showHighlightedData: false
-};
-
-Details.propTypes = {
-  showLabel: PropTypes.bool,
-  label: PropTypes.string,
-  getPConnect: PropTypes.func.isRequired,
-  showHighlightedData: PropTypes.bool
-};

@@ -1,6 +1,5 @@
 /* eslint-disable react/no-array-index-key */
 import React, { createElement, isValidElement } from 'react';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,6 +7,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
 import { format } from '../../helpers/formatters';
+
+// DetailsFields is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface DetailsFieldsProps{
+  // If any, enter additional props that only exist on this component
+  fields: Array<any>
+}
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,9 +38,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DetailsFields(props) {
+export default function DetailsFields(props: DetailsFieldsProps) {
   // const componentName = "DetailsFields";
-  const { fields } = props;
+  const { fields = [] } = props;
   const classes = useStyles();
   const fieldComponents: Array<any> = [];
 
@@ -138,11 +145,3 @@ export default function DetailsFields(props) {
 
   return <React.Fragment>{getGridItems()}</React.Fragment>;
 }
-
-DetailsFields.defaultProps = {
-  fields: []
-};
-
-DetailsFields.propTypes = {
-  fields: PropTypes.arrayOf(PropTypes.any)
-};

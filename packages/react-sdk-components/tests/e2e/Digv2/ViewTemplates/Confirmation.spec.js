@@ -2,23 +2,15 @@
 /* eslint-disable no-undef */
 
 const { test, expect } = require('@playwright/test');
+
 const config = require('../../../config');
 const common = require('../../../common');
 
-test.beforeEach(async ({ page }) => {
-  await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3502/portal', { waitUntil: 'networkidle' });
-});
+test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
-  test('should login, create case and run different test cases for Confirmation', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
+  test('should login, create case and run different test cases for Confirmation', async ({ page }) => {
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('h6:has-text("Announcements")');
@@ -87,11 +79,8 @@ test.describe('E2E test', () => {
     await expect(page.locator('div >> text="Case View"')).toBeHidden();
 
     await expect(page.locator(`span >> text=${caseID}`)).toBeHidden();
-
-    await page.close();
   }, 10000);
 });
 
-test.afterEach(async ({ page }) => {
-  await page.close();
-});
+const outputDir = './test-reports/e2e/DigV2/ViewTemplates/Confirmation';
+test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

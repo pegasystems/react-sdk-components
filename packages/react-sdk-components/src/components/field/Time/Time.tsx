@@ -1,24 +1,20 @@
 import React from 'react';
 import { KeyboardTimePicker } from '@material-ui/pickers';
-import TextInput from '../TextInput';
-import dayjs from 'dayjs';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
+import dayjs from 'dayjs';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function Time(props) {
-  const {
-    label,
-    required,
-    disabled,
-    value,
-    validatemessage,
-    status,
-    onChange,
-    readOnly,
-    helperText,
-    displayMode,
-    hideLabel
-  } = props;
+interface TimeProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Time here
+}
+
+export default function Time(props: TimeProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
+  const TextInput = getComponentFromMap('TextInput');
+
+  const { label, required, disabled, value = '', validatemessage, status, onChange, readOnly, helperText, displayMode, hideLabel, testId } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
   if (displayMode === 'LABELS_LEFT') {
@@ -26,21 +22,27 @@ export default function Time(props) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
   }
 
   if (readOnly) {
     return <TextInput {...props} />;
   }
 
-  const handleChange = date => {
+  let testProp = {};
+
+  testProp = {
+    'data-test-id': testId
+  };
+
+  const handleChange = (date) => {
     const theValue = date && date.isValid() ? date.format('HH:mm') : null;
     onChange({ value: theValue });
   };
 
   let timeValue: any = null;
   if (value) {
-    const timeArray = value.split(':').map(itm => Number(itm));
+    const timeArray = value.split(':').map((itm) => Number(itm));
     timeValue = dayjs().hour(timeArray[0]).minute(timeArray[1]);
   }
 
@@ -51,9 +53,9 @@ export default function Time(props) {
 
   return (
     <KeyboardTimePicker
-      variant='inline'
-      inputVariant='outlined'
-      placeholder='hh:mm am'
+      variant="inline"
+      inputVariant="outlined"
+      placeholder="hh:mm am"
       keyboardIcon={<AccessTimeIcon />}
       fullWidth
       required={required}
@@ -61,13 +63,14 @@ export default function Time(props) {
       error={status === 'error'}
       helperText={helperTextToDisplay}
       minutesStep={5}
-      size='small'
+      size="small"
       label={label}
       autoOk
-      mask='__:__ _m'
-      format='hh:mm a'
+      mask="__:__ _m"
+      format="hh:mm a"
       value={timeValue}
       onChange={handleChange}
+      InputProps={{ inputProps: { ...testProp } }}
     />
   );
 }

@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import PropTypes from "prop-types";
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
@@ -9,7 +8,22 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Utils from '../../helpers/utils';
 
-declare const PCore: any;
+// Operator is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface OperatorProps{
+  // If any, enter additional props that only exist on this component
+  caseOpConfig: {
+    label: string,
+    createDateTime: string,
+    createLabel: string,
+    createOperator: { userName: string, userId: string },
+    updateDateTime: string,
+    updateLabel: string,
+    updateOperator: { userName: string, userId: string }
+  }
+}
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Operator(props) {
+export default function Operator(props: OperatorProps) {
   // const componentName = "Operator";
   const { caseOpConfig } = props;
   const classes = useStyles();
@@ -31,7 +45,7 @@ export default function Operator(props) {
   let caseOpLabel = "---";
   let caseOpName = "---";
   let caseOpId = "";
-  let caseTime = null;
+  let caseTime = "";
 
   if (fieldLabel === "create operator") {
     caseOpLabel = caseOpConfig.createLabel;
@@ -59,6 +73,8 @@ export default function Operator(props) {
   function showOperatorDetails(event) {
 
     const operatorPreviewPromise = PCore.getUserApi().getOperatorDetails(caseOpId);
+    const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+    const localeCategory = 'Operator';
 
     operatorPreviewPromise.then((res) => {
       const fillerString = "---";
@@ -71,27 +87,27 @@ export default function Operator(props) {
         fields = [
           {
             id: "pyPosition",
-            name: "Position",
+            name: localizedVal("Position", localeCategory),
             value: res.data.pyOperatorInfo.pyPosition ? res.data.pyOperatorInfo.pyPosition : fillerString
           },
           {
             id: "pyOrganization",
-            name: "Organization",
+            name: localizedVal("Organization", localeCategory),
             value: res.data.pyOperatorInfo.pyOrganization ? res.data.pyOperatorInfo.pyOrganization : fillerString
           },
           {
             id: "ReportToUserName",
-            name: "Reports to",
+            name: localizedVal('Reports to', localeCategory),
             value: res.data.pyOperatorInfo.pyReportToUserName ? res.data.pyOperatorInfo.pyReportToUserName : fillerString
           },
           {
             id: "pyTelephone",
-            name: "Telephone",
+            name: localizedVal('Telephone', localeCategory),
             value: res.data.pyOperatorInfo.pyTelephone ? <a href={`tel:${res.data.pyOperatorInfo.pyTelephone}`}>{res.data.pyOperatorInfo.pyTelephone}</a> : fillerString
           },
           {
             id: "pyEmailAddress",
-            name: "Email address",
+            name: localizedVal('Email address', localeCategory),
             value: res.data.pyOperatorInfo.pyEmailAddress ? <a href={`mailto:${res.data.pyOperatorInfo.pyEmailAddress}`}>{res.data.pyOperatorInfo.pyEmailAddress}</a> : fillerString
           }
         ];
@@ -101,27 +117,27 @@ export default function Operator(props) {
         fields = [
           {
             id: "pyPosition",
-            name: "Position",
+            name: localizedVal("Position", localeCategory),
             value: fillerString
           },
           {
             id: "pyOrganization",
-            name: "Organization",
+            name: localizedVal("Organization", localeCategory),
             value: fillerString
           },
           {
             id: "ReportToUserName",
-            name: "Reports to",
+            name: localizedVal('Reports to', localeCategory),
             value: fillerString
           },
           {
             id: "pyTelephone",
-            name: "Telephone",
+            name: localizedVal('Telephone', localeCategory),
             value: fillerString
           },
           {
             id: "pyEmailAddress",
-            name: "Email address",
+            name: localizedVal('Email address', localeCategory),
             value: fillerString
           }
         ];
@@ -187,10 +203,3 @@ export default function Operator(props) {
     </React.Fragment>;
 
 }
-
-Operator.defaultProps = {
-}
-
-Operator.propTypes = {
-  caseOpConfig: PropTypes.object.isRequired,
-};

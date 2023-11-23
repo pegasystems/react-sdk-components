@@ -1,6 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Alert } from '@material-ui/lab';
+
+
+// AlertBanner is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface AlertBannerProps {
+  // If any, enter additional props that only exist on Date here
+  id: string,
+  variant: string,
+  messages: Array<string>,
+  onDismiss?: any
+}
+
 
 const SEVERITY_MAP = {
   urgent: 'error',
@@ -9,7 +20,7 @@ const SEVERITY_MAP = {
   info: 'info'
 };
 
-export default function AlertBanner(props) {
+export default function AlertBanner(props:AlertBannerProps) {
   const { id, variant, messages, onDismiss } = props;
   let additionalProps = {};
 
@@ -34,10 +45,3 @@ export default function AlertBanner(props) {
     </div>
   );
 }
-
-AlertBanner.propTypes = {
-  id: PropTypes.string,
-  variant: PropTypes.string,
-  messages: PropTypes.arrayOf(PropTypes.string),
-  onDismiss: PropTypes.any
-};

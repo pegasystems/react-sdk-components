@@ -2,7 +2,15 @@ import React from "react";
 
 import './NarrowWideForm.css';
 
-export default function NarrowWideForm(props) {
+// NarrowWideForm does NOT have getPConnect. So, no need to extend from PConnProps
+
+interface NarrowWideFormProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any>
+}
+
+
+export default function NarrowWideForm(props: NarrowWideFormProps) {
   const {children} = props;
 
   return (

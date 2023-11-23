@@ -1,21 +1,39 @@
-import PropTypes from 'prop-types';
 import React from "react";
-import ListView from '../../ListView';
-import SimpleTable from '../SimpleTable';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-import PromotedFilters from '../../PromotedFilters';
+// import type { PConnProps } from '../../../../types/PConnProps';
+
+// Need to fix an error noted in comment below before typedefs will work correctly
+// interface SimpleTableSelectProps extends PConnProps {
+//   // If any, enter additional props that only exist on this component
+//   label: string,
+//   referenceList: Array<object> | string,
+//   renderMode: string,
+//   showLabel: boolean,
+//   promptedFilters: Array<object>,
+//   viewName: string,
+//   parameters: any,
+//   readonlyContextList: Array<object> | string,
+//   dataRelationshipContext: string
+// }
+
 
 const isSelfReferencedProperty = (param, referenceProp) => {
   const [, parentPropName] = param.split('.');
   return parentPropName === referenceProp;
 };
-declare const PCore;
+
 /**
  * SimpleTable react component
  * @param {*} props - props
  */
-export default function SimpleTableSelect(props) {
-  const { label, getPConnect, renderMode, showLabel, viewName, parameters, dataRelationshipContext } = props;
+export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const ListView = getComponentFromMap('ListView');
+  const SimpleTable = getComponentFromMap('SimpleTable');
+  const PromotedFilters = getComponentFromMap('PromotedFilters');
+
+  const { label, getPConnect, renderMode = '', showLabel = true, viewName = '', parameters, dataRelationshipContext = null } = props;
 
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
   if (propsToUse.showLabel === false) {
@@ -40,6 +58,7 @@ export default function SimpleTableSelect(props) {
     contextPageReference = pageReference.concat('.').concat(referenceProp);
   }
 
+  // Need to get this written so typedefs work
   const { datasource: { parameters: fieldParameters = {} } = {}, pageClass } = isMultiSelectMode
     ? pConn.getFieldMetadata(`@P .${referenceProp}`)
     : pConn.getCurrentPageFieldMetadata(contextPageReference);
@@ -104,27 +123,3 @@ export default function SimpleTableSelect(props) {
   }
   return <ListView {...listViewProps} />;
 }
-
-SimpleTableSelect.defaultProps = {
-  label: undefined,
-  renderMode: '',
-  showLabel: true,
-  promptedFilters: [],
-  viewName: '',
-  parameters: undefined,
-  readonlyContextList: [],
-  dataRelationshipContext: null
-};
-
-SimpleTableSelect.propTypes = {
-  label: PropTypes.string,
-  getPConnect: PropTypes.func.isRequired,
-  referenceList: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.string]).isRequired,
-  renderMode: PropTypes.string,
-  showLabel: PropTypes.bool,
-  promptedFilters: PropTypes.arrayOf(PropTypes.object),
-  viewName: PropTypes.string,
-  parameters: PropTypes.objectOf(PropTypes.any),
-  readonlyContextList: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.string]),
-  dataRelationshipContext: PropTypes.string
-};

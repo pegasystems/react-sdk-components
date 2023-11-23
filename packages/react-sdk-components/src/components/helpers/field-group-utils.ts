@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { createElement, ReactElement } from 'react';
 
 import createPConnectComponent from '../../bridge/react_pconnect';
 
@@ -8,7 +8,7 @@ import createPConnectComponent from '../../bridge/react_pconnect';
  * @returns {string} - returns the name of referenceList
  */
 
-export const getReferenceList = pConn => {
+export const getReferenceList = (pConn) => {
   let resolvePage = pConn.getComponentConfig().referenceList.replace('@P ', '');
   if (resolvePage.includes('D_')) {
     resolvePage = pConn.resolveDatasourceReference(resolvePage);
@@ -28,17 +28,16 @@ export const getReferenceList = pConn => {
  * @param {*} viewConfigPath - boolean value to check for children in config
  * @returns {*} - return the react element of the view
  */
-export const buildView = (pConn, index, viewConfigPath) => {
+export function buildView(pConn, index, viewConfigPath): ReactElement {
   const context = pConn.getContextName();
   const referenceList = getReferenceList(pConn);
 
   const isDatapage = referenceList.startsWith('D_');
-  const pageReference = isDatapage
-    ? `${referenceList}[${index}]`
-    : `${pConn.getPageReference()}${referenceList}[${index}]`;
-  const meta = viewConfigPath
-    ? pConn.getRawMetadata().children[0].children[0]
-    : pConn.getRawMetadata().children[0];
+  const pageReference = isDatapage ? `${referenceList}[${index}]` : `${pConn.getPageReference()}${referenceList}[${index}]`;
+  const meta = viewConfigPath ? pConn.getRawMetadata().children[0].children[0] : pConn.getRawMetadata().children[0];
+
+  delete meta?.config?.ruleClass;
+
   const config = {
     meta,
     options: {
@@ -48,10 +47,10 @@ export const buildView = (pConn, index, viewConfigPath) => {
       hasForm: true
     }
   };
-  // eslint-disable-next-line no-undef
+
   const view = PCore.createPConnect(config);
   if (pConn.getConfigProps()?.displayMode === 'LABELS_LEFT') {
     view.getPConnect()?.setInheritedProp('displayMode', 'LABELS_LEFT');
   }
   return createElement(createPConnectComponent(), view);
-};
+}

@@ -31,6 +31,26 @@ import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import type { PConnProps } from '../../../../types/PConnProps';
+
+interface SimpleTableManualProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  hideAddRow?: boolean,
+  hideDeleteRow?: boolean,
+  // eslint-disable-next-line react/no-unused-prop-types
+  disableDragDrop?: boolean
+  referenceList?: Array<any>,
+  children?: Array<any>,
+  renderMode?: string,
+  presets?: Array<any>,
+  label?: string,
+  showLabel?: boolean,
+  dataPageName?: string,
+  contextClass?: string,
+  propertyLabel?: string,
+  fieldMetadata?: any
+}
+
 const useStyles = makeStyles((/* theme */) => ({
   label: {
     margin: '8px'
@@ -58,7 +78,6 @@ const useStyles = makeStyles((/* theme */) => ({
   }
 }));
 
-declare const PCore: any;
 
 let menuColumnId = '';
 let menuColumnType = '';
@@ -66,7 +85,9 @@ let menuColumnLabel = '';
 
 const filterByColumns: Array<any> = [];
 let myRows: Array<any>;
-export default function SimpleTableManual(props) {
+
+
+export default function SimpleTableManual(props: SimpleTableManualProps) {
   const classes = useStyles();
   const {
     getPConnect,
@@ -113,7 +134,7 @@ export default function SimpleTableManual(props) {
   const resolvedList = getReferenceList(pConn);
   const pageReference = `${pConn.getPageReference()}${resolvedList}`;
   pConn.setReferenceList(resolvedList);
-  const menuIconOverride$ = Utils.getImageSrc('trash', PCore.getAssetLoader().getStaticServerUrl());
+  const menuIconOverride$ = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
 
   const resolvedFields = children?.[0]?.children || presets?.[0].children?.[0].children;
   // NOTE: props has each child.config with datasource and value undefined
@@ -129,7 +150,7 @@ export default function SimpleTableManual(props) {
   //    config.datasource (ex: "@ASSOCIATED .DeclarantChoice")
   //  Neither of these appear in the resolved props
 
-  const rawConfig = rawMetadata?.config;
+  const rawConfig = rawMetadata?.["config"];
   const rawFields =
     rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
 
@@ -186,8 +207,8 @@ export default function SimpleTableManual(props) {
   };
 
   function generateRowsData() {
-    // if dataPageName property value exists then make a datapage fetch call and get the list of data.
-    if (dataPageName) {
+    // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
+    if (!referenceList.length && dataPageName) {
       getDataPage(dataPageName, parameters, context).then(listData => {
         const data = formatRowsData(listData);
         myRows = data;
@@ -231,7 +252,7 @@ export default function SimpleTableManual(props) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
     } else {
-      pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
+      pConn.getListActions().insert({ classID: contextClass }, referenceList.length, '');  // 3rd arg null until typedef marked correctly as optional
     }
   };
 
@@ -239,7 +260,7 @@ export default function SimpleTableManual(props) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().deleteEntry(index, pageReference);
     } else {
-      pConn.getListActions().deleteEntry(index);
+      pConn.getListActions().deleteEntry(index, '');  // 2nd arg empty string until typedef marked correctly as optional
     }
   };
 
@@ -547,6 +568,7 @@ export default function SimpleTableManual(props) {
                           type='button'
                           className='psdk-utility-button'
                           id='delete-button'
+                          aria-label='Delete Cell'
                           onClick={() => deleteRecord(index)}
                         >
                           <img

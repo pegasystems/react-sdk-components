@@ -9,7 +9,7 @@ export default {
   ...DateFormatter
 };
 
-function getDateObject(text) {
+function getDateObject(text): Date {
   // TODO - cleanup formatters util functions as DX APIs are returning values per ISO std now.
   const timeStamp = text.replace(/-/g, "");
   const isDateTime = timeStamp.indexOf("GMT") !== -1;
@@ -58,8 +58,8 @@ function parseDateInISO(value) {
   return value ? getDateObject(value).toISOString() : value;
 }
 
-export function format(value, type, options = {}) {
-  let formattedValue;
+export function format(value, type, options = {}): string {
+  let formattedValue: string;
 
   switch (type?.toLowerCase()) {
     case "currency": {

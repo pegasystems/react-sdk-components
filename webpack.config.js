@@ -61,6 +61,10 @@ module.exports = (env, argv) => {
           to: './'
         },
         {
+          from: './node_modules/tinymce',
+          to: './tinymce'
+        },
+        {
           from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
           to: './constellation'
         },
@@ -176,7 +180,30 @@ module.exports = (env, argv) => {
           loader: 'url-loader',
           options: { limit: 10000, mimetype: 'application/font-woff' }
         },
-        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' }
+        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
+        {
+          test: /\.(js|ts|jsx|tsx)$/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              plugins: ['babel-plugin-istanbul']
+            }
+          },
+          enforce: 'post',
+          exclude: [
+              /\.(e2e|spec)\.ts$/,
+              /node_modules/,
+              /(ngfactory|ngstyle)\.js/
+            ]
+        },
+        {
+          test: /\.(d.ts)$/,    /* latest react-sdk-components needs to ignore compiling .d.ts and .map files */
+          loader: 'null-loader',
+        },
+        {
+          test: /\.(map)$/,    /* latest react-sdk-components needs to ignore compiling .d.ts and .map files */
+          loader: 'null-loader',
+        }
       ]
     },
     resolve: {

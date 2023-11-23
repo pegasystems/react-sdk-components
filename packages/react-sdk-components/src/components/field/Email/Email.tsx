@@ -1,10 +1,18 @@
 import React from 'react';
 import { TextField, InputAdornment } from '@material-ui/core';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import TextInput from '../TextInput';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function Email(props) {
+interface EmailProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Date here
+}
+
+export default function Email(props: EmailProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const TextInput = getComponentFromMap('TextInput');
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     label,
     required,
@@ -27,7 +35,7 @@ export default function Email(props) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
   }
 
   if (readOnly) {
@@ -43,10 +51,10 @@ export default function Email(props) {
   return (
     <TextField
       fullWidth
-      variant='outlined'
+      variant="outlined"
       helperText={helperTextToDisplay}
-      placeholder=''
-      size='small'
+      placeholder=""
+      size="small"
       required={required}
       disabled={disabled}
       onChange={onChange}
@@ -54,10 +62,10 @@ export default function Email(props) {
       error={status === 'error'}
       label={label}
       value={value}
-      type='email'
+      type="email"
       InputProps={{
         startAdornment: (
-          <InputAdornment position='start'>
+          <InputAdornment position="start">
             <MailOutlineIcon />
           </InputAdornment>
         ),

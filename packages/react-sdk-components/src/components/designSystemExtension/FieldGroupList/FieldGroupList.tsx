@@ -6,14 +6,22 @@ import Link from '@material-ui/core/Link';
 
 import { Utils } from '../../helpers/utils';
 
-declare const PCore: any;
+// FieldGroupList is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface FieldGroupListProps {
+  // If any, enter additional props that only exist on this component
+  items: Array<any> | any,
+  onDelete: any,
+  onAdd: any
+}
 
-const FieldGroupList = props => {
+
+export default function FieldGroupList(props: FieldGroupListProps) {
   let menuIconOverride$ = 'trash';
   if (menuIconOverride$) {
     menuIconOverride$ = Utils.getImageSrc(
       menuIconOverride$,
-      PCore.getAssetLoader().getStaticServerUrl()
+      Utils.getSDKStaticConentUrl()
     );
   }
 
@@ -30,6 +38,7 @@ const FieldGroupList = props => {
                   style={{ float: 'right' }}
                   className='psdk-utility-button'
                   id={`delete-row-${item.id}`}
+                  aria-label='Delete Row'
                   onClick={() => {
                     props.onDelete(item.id);
                   }}
@@ -53,5 +62,3 @@ const FieldGroupList = props => {
     </Grid>
   );
 };
-
-export default FieldGroupList;

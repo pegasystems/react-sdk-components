@@ -4,7 +4,13 @@
 const sdkCompSubDirs = ['designSystemExtension', 'field', 'helpers', 'infra', 'template', 'widget' ];
 
 // array of bridge dir (just an array for symmetry with sdkCompSubDirs)
-const sdkBridgeDir = [ 'bridge'];
+const sdkBridgeDir = [ 'bridge' ];
+
+// array of types dir (just an array for symmetry with sdkCompSubDirs)
+const sdkTypesDir = [ 'types' ];
+
+// array of hooks dir (just an array for symmetry with sdkCompSubDirs)
+const sdkHooksDir = [ 'hooks' ];
 
 // array of top level content (@pega/react-sdk-components/lib) that we needs to be exposed
 const sdkTopLevelContent = [ 'components_map' ];
@@ -15,15 +21,16 @@ const sdkTopLevelContent = [ 'components_map' ];
 //    'SimpleTable' is in 'template/SimpleTable/SimpleTable' subdirectory
 const sdkComponentLocationMap = {
   'ActionButtons': 'infra',
-  'ActionButtonsForFileUtil': 'widget/FileUtility',
+  'ActionButtonsForFileUtil': 'widget/FileUtility/ActionButttonsForFileUtil',
+  'AlertBanner': 'designSystemExtension',
   'AppAnnouncement': 'widget',
   'AppShell': 'template',
   'Assignment': 'infra',
   'AssignmentCard': 'infra',
   'Attachment': 'widget',
   'AutoComplete': 'field',
-  'BannerPage': 'template',
   'Banner': 'designSystemExtension',
+  'BannerPage': 'template',
   'CancelAlert': 'field',
   'CaseHistory': 'widget',
   'CaseSummary': 'template',
@@ -40,16 +47,19 @@ const sdkComponentLocationMap = {
   'Decimal': 'field',
   'DefaultForm': 'template',
   'DeferLoad': 'infra',
-  'Details': 'template',
-  'DetailsSubTabs': 'template',
-  'DetailsThreeColumn': 'template',
-  'DetailsTwoColumn': 'template',
+  'Details': 'template/Details/Details',
+  'DetailsSubTabs': 'template/Details/DetailsSubTabs',
+  'DetailsThreeColumn': 'template/Details/DetailsThreeColumn',
+  'DetailsTwoColumn': 'template/Details/DetailsTwoColumn',
   'Dropdown': 'field',
   'Email': 'field',
   'ErrorBoundary': 'infra',
+  'FieldGroup': 'designSystemExtension',
+  'FieldGroupList': 'designSystemExtension',
   'FieldGroupTemplate': 'template',
-  'FileUtility': 'widget/FileUtility',
-  'FlowContainer': 'infra',
+  'FieldValueList': 'designSystemExtension',
+  'FileUtility': 'widget/FileUtility/FileUtility',
+  'FlowContainer': 'infra/Containers',
   'Followers': 'widget',
   'InlineDashboard': 'template',
   'InlineDashboardPage': 'template',
@@ -57,31 +67,34 @@ const sdkComponentLocationMap = {
   'LeftAlignVerticalTabs': 'infra/VerticalTabs',
   'ListPage': 'template',
   'ListView': 'template',
-  'ModalViewContainer': 'infra',
+  'ModalViewContainer': 'infra/Containers',
   'MultiReferenceReadOnly': 'template',
   'MultiStep': 'infra',
-  'NarrowWide': 'template',
-  'NarrowWideDetails': 'template',
-  'NarrowWideForm': 'template',
-  'NarrowWidePage': 'template',
+  'NarrowWide': 'template/NarrowWide/NarrowWide',
+  'NarrowWideDetails': 'template/NarrowWide/NarrowWideDetails',
+  'NarrowWideForm': 'template/NarrowWide/NarrowWideForm',
+  'NarrowWidePage': 'template/NarrowWide//NarrowWidePage',
   'NavBar': 'infra',
-  'OneColumn': 'template',
-  'OneColumnPage': 'template',
-  'OneColumnTab': 'template',
+  'OneColumn': 'template/OneColumn/OneColumn',
+  'OneColumnPage': 'template/OneColumn/OneColumnPage',
+  'OneColumnTab': 'template/OneColumn/OneColumnTab',
   'Operator': 'designSystemExtension',
   'Percentage': 'field',
   'Phone': 'field',
   'PromotedFilters': 'template',
   'Pulse': 'designSystemExtension',
   'QuickCreate': 'widget',
-  'reference': 'infra',
   'RadioButtons': 'field',
+  'reference': 'infra',
   'Region': 'infra',
+  'RichText': 'field',
+  'RichTextEditor': 'designsystemExtension',
   'RootContainer': 'infra',
+  'ScalarList': 'field',
   'SemanticLink': 'field',
-  'SimpleTable': 'template/SimpleTable',
-  'SimpleTableManual': 'template/SimpleTable',
-  'SimpleTableSelect': 'template/SimpleTable',
+  'SimpleTable': 'template/SimpleTable/SimpleTable',
+  'SimpleTableManual': 'template/SimpleTable/SimpleTableManual',
+  'SimpleTableSelect': 'template/SimpleTable/SimpleTable/Select',
   'SingleReferenceReadOnly': 'template',
   'Stages': 'infra',
   'SubTabs': 'template',
@@ -92,26 +105,28 @@ const sdkComponentLocationMap = {
   'TextInput': 'field',
   'Time': 'field',
   'ToDo': 'widget',
-  'TwoColumn': 'template',
-  'TwoColumnPage': 'template',
-  'TwoColumnTab': 'template',
+  'TwoColumn': 'template/TwoColumn/TwoColumn',
+  'TwoColumnPage': 'template/TwoColumn/TwoColumnPage',
+  'TwoColumnTab': 'template/TwoColumn/TwoColumnTab',
   'URL': 'field',
   'UserReference': 'field',
   'VerticalTabs': 'infra/VerticalTabs',
   'View': 'infra',
-  'ViewContainer': 'infra',
-  'WideNarrow': 'template',
-  'WideNarrowDetails': 'template',
-  'WideNarrowForm': 'template',
-  'WideNarrowPage': 'template',
-  'WssQuickCreate': 'designSystemExtension',
-  'WssNavBar': 'template'
+  'ViewContainer': 'infra/Containers',
+  'WideNarrow': 'template/WideNarrow/WideNarrow',
+  'WideNarrowDetails': 'template/WideNarrow/WideNarrowDetails',
+  'WideNarrowForm': 'template/WideNarrow/WideNarrowForm',
+  'WideNarrowPage': 'template/WideNarrow/WideNarrowPage',
+  'WssNavBar': 'template',
+  'WssQuickCreate': 'designSystemExtension'
 };
 
 // Now package them up so they can be 'require'd from build-overrides.js
 module.exports = {
   SDK_COMP_SUBDIRS: sdkCompSubDirs,
   SDK_BRIDGE_DIR: sdkBridgeDir,
+  SDK_TYPES_DIR: sdkTypesDir,
+  SDK_HOOKS_DIR: sdkHooksDir,
   SDK_TOP_LEVEL_CONTENT: sdkTopLevelContent,
   SDK_COMP_LOCATION_MAP: sdkComponentLocationMap
 }

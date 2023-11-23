@@ -2,6 +2,15 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
+// FieldGroupProps is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface FieldGroupProps {
+  // If any, enter additional props that only exist on this component
+  children: Array<any> | any,
+  name: string | object,
+}
+
+
 const useStyles = makeStyles(theme => ({
   root: {
     marginRight: theme.spacing(1),
@@ -19,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FieldGroup = props => {
+export default function FieldGroup(props: FieldGroupProps) {
   const { children, name } = props;
   const classes = useStyles();
 
@@ -44,5 +53,3 @@ const FieldGroup = props => {
     </React.Fragment>
   );
 };
-
-export default FieldGroup;

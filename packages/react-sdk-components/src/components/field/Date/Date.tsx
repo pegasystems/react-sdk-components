@@ -1,12 +1,25 @@
 import React from 'react';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import TextInput from '../TextInput';
 import handleEvent from '../../helpers/event-utils';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
-import { format } from '../../helpers/formatters/';
-import { dateFormatInfoDefault, getDateFormatInfo} from '../../helpers/date-format-utils';
+import { format } from '../../helpers/formatters';
+import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function Date(props) {
+// Will return the date string in YYYY-MM-DD format which we'll be POSTing to the server
+function getFormattedDate(date) {
+  return `${date.$y.toString()}-${(date.$M + 1).toString().padStart(2, '0')}-${date.$D.toString().padStart(2, '0')}`;
+}
+
+interface DateProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Date here
+}
+
+export default function Date(props: DateProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const TextInput = getComponentFromMap('TextInput');
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     getPConnect,
     label,
@@ -26,17 +39,16 @@ export default function Date(props) {
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps().value;
+  const propName = pConn.getStateProps()["value"];
   const helperTextToDisplay = validatemessage || helperText;
 
   // Start with default dateFormatInfo
   const dateFormatInfo = dateFormatInfoDefault;
   // and then update, as needed, based on locale, etc.
-  const theDateFormat = getDateFormatInfo()
+  const theDateFormat = getDateFormatInfo();
   dateFormatInfo.dateFormatString = theDateFormat.dateFormatString;
   dateFormatInfo.dateFormatStringLC = theDateFormat.dateFormatStringLC;
   dateFormatInfo.dateFormatMask = theDateFormat.dateFormatMask;
-
 
   if (displayMode === 'LABELS_LEFT') {
     const formattedDate = format(props.value, 'date', { format: dateFormatInfo.dateFormatString });
@@ -45,7 +57,7 @@ export default function Date(props) {
 
   if (displayMode === 'STACKED_LARGE_VAL') {
     const formattedDate = format(props.value, 'date', { format: dateFormatInfo.dateFormatString });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDate} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedDate} variant="stacked" />;
   }
 
   if (readOnly) {
@@ -59,21 +71,23 @@ export default function Date(props) {
     'data-test-id': testId
   };
 
-  const handleChange = date => {
-    const changeValue = date && date.isValid() ? date.toISOString() : null;
-    onChange({ value: changeValue });
+  const handleChange = (date) => {
+    if (date && date.isValid()) {
+      onChange({ value: getFormattedDate(date) });
+    }
   };
 
-  const handleAccept = date => {
-    const changeValue = date && date.isValid() ? date.toISOString() : null;
-    handleEvent(actions, 'changeNblur', propName, changeValue);
+  const handleAccept = (date) => {
+    if (date && date.isValid()) {
+      handleEvent(actions, 'changeNblur', propName, getFormattedDate(date));
+    }
   };
 
   return (
     <KeyboardDatePicker
       disableToolbar
-      variant='inline'
-      inputVariant='outlined'
+      variant="inline"
+      inputVariant="outlined"
       placeholder={dateFormatInfo.dateFormatStringLC}
       format={dateFormatInfo.dateFormatString}
       mask={dateFormatInfo.dateFormatMask}
@@ -83,7 +97,7 @@ export default function Date(props) {
       disabled={disabled}
       error={status === 'error'}
       helperText={helperTextToDisplay}
-      size='small'
+      size="small"
       label={label}
       value={value || null}
       onChange={handleChange}

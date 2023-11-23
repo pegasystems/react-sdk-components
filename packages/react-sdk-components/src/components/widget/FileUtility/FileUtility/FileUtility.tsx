@@ -2,18 +2,33 @@ import React, { useEffect, useState } from "react";
 import TextField from '@material-ui/core/TextField';
 import { Utils } from '../../../helpers/utils';
 import download from "downloadjs";
-import SummaryList from '../../SummaryList';
-import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
+// import SummaryList from '../../SummaryList';
+// import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
 import './FileUtility.css';
 import  { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Button } from '@material-ui/core';
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { CircularProgress } from "@material-ui/core";
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-declare const PCore;
+import type { PConnProps } from '../../../../types/PConnProps';
 
-export default function FileUtility(props) {
+
+interface FileUtilityProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+}
+
+
+// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
+declare const PCore: any;
+
+
+export default function FileUtility(props:FileUtilityProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const SummaryList = getComponentFromMap('SummaryList');
+  const ActionButtonsForFileUtil = getComponentFromMap('ActionButtonsForFileUtil');
+
   const { getPConnect } = props;
   const thePConn = getPConnect();
   const required = true;
@@ -22,8 +37,8 @@ export default function FileUtility(props) {
     count: 0
   };
   const [list, setList] = useState(listTemp);
-  const headerSvgIcon$ = Utils.getImageSrc('paper-clip', PCore.getAssetLoader().getStaticServerUrl());
-  const closeSvgIcon = Utils.getImageSrc("times", PCore.getAssetLoader().getStaticServerUrl());
+  const headerSvgIcon$ = Utils.getImageSrc('paper-clip', Utils.getSDKStaticConentUrl());
+  const closeSvgIcon = Utils.getImageSrc("times", Utils.getSDKStaticConentUrl());
   const configProps: any = thePConn.resolveConfigProps(thePConn.getConfigProps());
 
   const header = configProps.label;
@@ -31,16 +46,16 @@ export default function FileUtility(props) {
     showfileModal: false,
     fileList: [],
     attachedFiles: [],
-    fileMainButtons: [{ actionID: "attach", jsAction: "attachFiles", name: "Attach files"}],
-    fileSecondaryButtons: [{ actionID: "cancel", jsAction: "cancel", name: "Cancel"}]
+    fileMainButtons: [{ actionID: "attach", jsAction: "attachFiles", name: thePConn.getLocalizedValue('Attach files', '', '')}],     // 2nd and 3rd args empty string until typedef marked correctly
+    fileSecondaryButtons: [{ actionID: "cancel", jsAction: "cancel", name: thePConn.getLocalizedValue('Cancel', '', '')}]     // 2nd and 3rd args empty string until typedef marked correctly
   };
   const [fileData, setFileData] = useState(fileTemp);
   const linkTemp = {
     showLinkModal: false,
     linksList: [],
     attachedLinks: [],
-    linkMainButtons: [{ actionID: "attach", jsAction: "attachLinks", name: "Attach links"}],
-    linkSecondaryButtons: [{ actionID: "cancel", jsAction: "cancel", name: "Cancel"}]
+    linkMainButtons: [{ actionID: "attach", jsAction: "attachLinks", name: thePConn.getLocalizedValue('Attach links', '', '')}],   // 2nd and 3rd args empty string until typedef marked correctly
+    linkSecondaryButtons: [{ actionID: "cancel", jsAction: "cancel", name: thePConn.getLocalizedValue('Cancel', '', '')}]   // 2nd and 3rd args empty string until typedef marked correctly
   };
   const [linkData, setLinkData] = useState(linkTemp);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -75,12 +90,11 @@ export default function FileUtility(props) {
   }) {
     let actions;
 
-
     if (att.progress && att.progress !== 100) {
       actions = [
         {
           id: `Cancel-${att.ID}`,
-          text: "Cancel",
+          text: thePConn.getLocalizedValue('Cancel', '', ''),   // 2nd and 3rd args empty string until typedef marked correctly
           icon: "times",
           onClick: cancelFile
         }
@@ -93,7 +107,7 @@ export default function FileUtility(props) {
           "download",
           {
             id: `download-${ID}`,
-            text: isFile ? "Download" : "Open",
+            text: isFile ? thePConn.getLocalizedValue('Download', '', '') : thePConn.getLocalizedValue('Open', '', ''),   // 2nd and 3rd args empty string until typedef marked correctly
             icon: isFile ? "download" : "open",
             onClick: downloadFile
           }
@@ -102,7 +116,7 @@ export default function FileUtility(props) {
           "delete",
           {
             id: `Delete-${ID}`,
-            text: "Delete",
+            text: thePConn.getLocalizedValue('Delete', '', ''),   // 2nd and 3rd args empty string until typedef marked correctly
             icon: "trash",
             onClick: deleteFile
           }
@@ -118,7 +132,7 @@ export default function FileUtility(props) {
       actions = [
         {
           id: `Remove-${att.ID}`,
-          text: "Remove",
+          text: thePConn.getLocalizedValue('Remove', '', ''),   // 2nd and 3rd args empty string until typedef marked correctly
           icon: "trash",
           onClick: removeFile
         }
@@ -186,7 +200,7 @@ export default function FileUtility(props) {
   const getAttachments = () => {
 
     const attachmentUtils = PCore.getAttachmentUtils();
-    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
+    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, '');  // 2nd arg empty string until typedef marked correctly
 
     if (caseID && caseID !== "") {
       const attPromise = attachmentUtils.getCaseAttachments(caseID, thePConn.getContextName());
@@ -245,7 +259,7 @@ export default function FileUtility(props) {
   function setNewFiles(arFiles) {
     let index = 0;
     for (const file of arFiles) {
-      if (!validateMaxSize(file, 5)) {
+      if (!validateMaxSize(file, '5')) {
         file.error = true;
         file.meta = "File is too big. Max allowed size is 5MB.";
       }
@@ -318,7 +332,7 @@ export default function FileUtility(props) {
 
   function onAttachFiles() {
     const attachmentUtils = PCore.getAttachmentUtils();
-    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
+    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, '');  // 2nd arg empty string until typedef marked correctly
     const onUploadProgress = () => {};
     const errorHandler = () => {};
     closeFilePopup()
@@ -443,7 +457,7 @@ export default function FileUtility(props) {
 
   function onAttachLinks() {
     const attachmentUtils = PCore.getAttachmentUtils();
-    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
+    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, '');  // 2nd arg empty string until typedef marked correctly
     const links = linkData.attachedLinks;
     closeAddLinksPopup();
     const linksToAttach = links.map((item: any) => ({
@@ -492,8 +506,8 @@ export default function FileUtility(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem style={{fontSize: '14px'}} onClick={onAddFilesClick}>Add Files</MenuItem>
-            <MenuItem style={{fontSize: '14px'}} onClick={onAddLinksClick}>Add Links</MenuItem>
+            <MenuItem style={{fontSize: '14px'}} onClick={onAddFilesClick}>{thePConn.getLocalizedValue('Add files', '', '')}</MenuItem> {/* 2nd and 3rd args empty string until typedef marked correctly */}
+            <MenuItem style={{fontSize: '14px'}} onClick={onAddLinksClick}>{thePConn.getLocalizedValue('Add links', '', '')}</MenuItem> {/* 2nd and 3rd args empty string until typedef marked correctly */}
           </Menu>
         </div>
       </div>
@@ -506,12 +520,12 @@ export default function FileUtility(props) {
       {fileData.showfileModal && (
         <div className="psdk-dialog-background">
         <div className="psdk-modal-file-top">
-          <h3>Add local files</h3>
+          <h3>{thePConn.getLocalizedValue('Add local files', '', '')}</h3>
           <div className="psdk-modal-body">
             <div className="psdk-modal-file-selector">
               <label htmlFor='upload-files'>
                 <input style={{ display: 'none' }} id='upload-files' name='upload-files' type='file' multiple onChange={uploadMyFiles}/>
-                <Button variant='outlined' color='primary' component="span">Upload file(s)</Button>
+                <Button variant='outlined' color='primary' component="span">{thePConn.getLocalizedValue('Attach files', '', '')}</Button>  {/* 2nd and 3rd args empty string until typedef marked correctly */}
               </label>
             </div>
             {fileData.fileList.length > 0 && (<div style={{marginTop: '1rem'}}>
@@ -527,7 +541,7 @@ export default function FileUtility(props) {
       {linkData.showLinkModal && (
         <div className="psdk-dialog-background">
           <div className="psdk-modal-file-top">
-            <h3>Add links</h3>
+            <h3>{thePConn.getLocalizedValue('Add links', '', '')}</h3> {/* 2nd and 3rd args empty string until typedef marked correctly */}
             <div className="psdk-modal-body">
               <div className="psdk-modal-links-row">
                   <div className="psdk-links-two-column">
@@ -539,7 +553,7 @@ export default function FileUtility(props) {
                     </div>
                   </div>
                   <div className="psdk-modal-link-add">
-                    <Button className="psdk-add-link-action" color="primary" variant="contained" component="span" onClick={addLink} disabled={link.disable}>Add Link</Button>
+                    <Button className="psdk-add-link-action" color="primary" variant="contained" component="span" onClick={addLink} disabled={link.disable}>{thePConn.getLocalizedValue('Add link', '', '')}</Button> {/* 2nd and 3rd args empty string until typedef marked correctly */}
                   </div>
                 </div>
                 {linkData.linksList.length > 0 && (<div style={{marginTop: '1rem'}}>
@@ -554,7 +568,7 @@ export default function FileUtility(props) {
       {showViewAllModal && (<div className="psdk-dialog-background">
         <div className="psdk-modal-file-top">
           <div className="psdk-view-all-header">
-              <h3>Attachments</h3>
+              <h3>{thePConn.getLocalizedValue('Attachments', '', '')}</h3> {/* 2nd and 3rd args empty string until typedef marked correctly */}
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <button type="button" className="psdk-close-button" onClick = {() => setViewAll(false)}><img className="psdk-utility-card-actions-svg-icon" src={closeSvgIcon}></img></button>
           </div>

@@ -1,8 +1,17 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function TextArea(props) {
+interface TextAreaProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on TextArea here
+  fieldMetadata?: any;
+}
+
+export default function TextArea(props: TextAreaProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     label,
     required,
@@ -30,7 +39,7 @@ export default function TextArea(props) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
   }
 
   if (readOnly) {
@@ -53,8 +62,8 @@ export default function TextArea(props) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=''
-      size='small'
+      placeholder=""
+      size="small"
       required={required}
       disabled={disabled}
       onChange={onChange}

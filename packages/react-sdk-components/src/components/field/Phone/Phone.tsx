@@ -1,8 +1,16 @@
 import React from 'react';
 import MuiPhoneNumber from 'material-ui-phone-number';
-import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
-export default function Phone(props) {
+interface PhoneProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Phone here
+}
+
+export default function Phone(props: PhoneProps) {
+  // Get emitted components from map (so we can get any override that may exist)
+  const FieldValueList = getComponentFromMap('FieldValueList');
+
   const {
     label,
     required,
@@ -31,7 +39,7 @@ export default function Phone(props) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
   }
 
   if (readOnly) {
@@ -41,8 +49,8 @@ export default function Phone(props) {
         <MuiPhoneNumber
           fullWidth
           helperText={helperTextToDisplay}
-          placeholder=''
-          size='small'
+          placeholder=""
+          size="small"
           required={required}
           disabled={disabled}
           onChange={onChange}
@@ -50,7 +58,8 @@ export default function Phone(props) {
           label={label}
           value={value}
           InputProps={{
-            readOnly: true
+            readOnly: true,
+            inputProps: { ...testProp }
           }}
           disableDropdown={disableDropdown}
         />
@@ -58,13 +67,13 @@ export default function Phone(props) {
     );
   }
 
-  const handleChange = inputVal => {
+  const handleChange = (inputVal) => {
     let phoneValue = inputVal && inputVal.replace(/\D+/g, '');
     phoneValue = `+${phoneValue}`;
     onChange({ value: phoneValue });
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event) => {
     const phoneValue = event?.target?.value;
     event.target.value = `+${phoneValue && phoneValue.replace(/\D+/g, '')}`;
     onBlur(event);
@@ -73,11 +82,11 @@ export default function Phone(props) {
   return (
     <MuiPhoneNumber
       fullWidth
-      variant='outlined'
+      variant="outlined"
       helperText={helperTextToDisplay}
-      placeholder=''
-      size='small'
-      defaultCountry='us'
+      placeholder=""
+      size="small"
+      defaultCountry="us"
       required={required}
       disabled={disabled}
       onChange={handleChange}
