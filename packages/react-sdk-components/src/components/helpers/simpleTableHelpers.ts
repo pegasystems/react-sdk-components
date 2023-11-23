@@ -45,16 +45,17 @@ function getFieldWidth(field, label) {
 export const getContext = (thePConn) => {
   const contextName = thePConn.getContextName();
   const pageReference = thePConn.getPageReference();
-  let { referenceList } = thePConn.getStateProps()?.config || thePConn.getStateProps();
+  const { referenceList } = thePConn.getStateProps()?.config || thePConn.getStateProps();
   const pageReferenceForRows = referenceList.startsWith(".")
     ? `${pageReference}.${referenceList.substring(1)}`
     : referenceList;
 
   // removing "caseInfo.content" prefix to avoid setting it as a target while preparing pageInstructions
-  referenceList = pageReferenceForRows.replace(
-    PCore.getConstants().CASE_INFO.CASE_INFO_CONTENT,
-    ""
-  );
+  // skipping the removal as StateMachine itself is removing this case info prefix while preparing pageInstructions
+  // referenceList = pageReferenceForRows.replace(
+  //   PCore.getConstants().CASE_INFO.CASE_INFO_CONTENT,
+  //   ""
+  // );
 
   return {
     contextName,
