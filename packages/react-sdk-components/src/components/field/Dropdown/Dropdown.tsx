@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
+import isDeepEqual from 'fast-deep-equal/react';
 import Utils from '../../helpers/utils';
+import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
@@ -11,15 +13,51 @@ interface IOption {
   value: string;
 }
 
+const flattenParameters = (params = {}) => {
+  const flatParams = {};
+  Object.keys(params).forEach((key) => {
+    const { name, value: theVal } = params[key];
+    flatParams[name] = theVal;
+  });
+
+  return flatParams;
+};
+
+const preProcessColumns = (columnList) => {
+  return columnList.map((col) => {
+    const tempColObj = { ...col };
+    tempColObj.value = col.value && col.value.startsWith('.') ? col.value.substring(1) : col.value;
+    return tempColObj;
+  });
+};
+
+const getDisplayFieldsMetaData = (columnList) => {
+  const displayColumns = columnList.filter((col) => col.display === 'true');
+  const metaDataObj: any = { key: '', primary: '', secondary: [] };
+  const keyCol = columnList.filter((col) => col.key === 'true');
+  metaDataObj.key = keyCol.length > 0 ? keyCol[0].value : 'auto';
+  for (let index = 0; index < displayColumns.length; index += 1) {
+    if (displayColumns[index].primary === 'true') {
+      metaDataObj.primary = displayColumns[index].value;
+    } else {
+      metaDataObj.secondary.push(displayColumns[index].value);
+    }
+  }
+  return metaDataObj;
+};
+
 interface DropdownProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Dropdown here
   datasource?: Array<any>;
   onRecordChange?: any;
   fieldMetadata?: any;
-  // eslint-disable-next-line react/no-unused-prop-types
   listType: string;
   // eslint-disable-next-line react/no-unused-prop-types
   additionalProps?: object;
+  deferDatasource?: boolean;
+  datasourceMetadata?: any;
+  parameters: any;
+  columns: Array<any>;
 }
 
 export default function Dropdown(props: DropdownProps) {
@@ -32,20 +70,24 @@ export default function Dropdown(props: DropdownProps) {
     required,
     disabled,
     value = '',
-    datasource = [],
     validatemessage,
     status,
     readOnly,
     testId,
     helperText,
     displayMode,
+    deferDatasource,
+    datasourceMetadata,
     hideLabel,
     onRecordChange,
     fieldMetadata
   } = props;
-  let { placeholder } = props;
+  let { placeholder = '' } = props;
+  const context = getPConnect().getContextName();
+  let { listType, parameters, datasource = [] as any, columns = [] } = props;
   placeholder = placeholder || 'Select...';
   const [options, setOptions] = useState<Array<IOption>>([]);
+  const [theDatasource, setDatasource] = useState(null);
   const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
@@ -54,15 +96,68 @@ export default function Dropdown(props: DropdownProps) {
   const className = thePConn.getCaseInfo().getClassName();
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
+  if (!isDeepEqual(datasource, theDatasource)) {
+    // inbound datasource is different, so update theDatasource (to trigger useEffect)
+    setDatasource(datasource);
+  }
+
+  // convert associated to datapage listtype and transform props
+  // Process deferDatasource when datapage name is present. WHhen tableType is promptList / localList
+  if (deferDatasource && datasourceMetadata?.datasource?.name) {
+    listType = 'datapage';
+    datasource = datasourceMetadata.datasource.name;
+    parameters = flattenParameters(datasourceMetadata?.datasource?.parameters);
+    const displayProp = datasourceMetadata.datasource.propertyForDisplayText.startsWith('@P')
+      ? datasourceMetadata.datasource.propertyForDisplayText.substring(3)
+      : datasourceMetadata.datasource.propertyForDisplayText;
+    const valueProp = datasourceMetadata.datasource.propertyForValue.startsWith('@P')
+      ? datasourceMetadata.datasource.propertyForValue.substring(3)
+      : datasourceMetadata.datasource.propertyForValue;
+    columns = [
+      {
+        key: 'true',
+        setProperty: 'Associated property',
+        value: valueProp
+      },
+      {
+        display: 'true',
+        primary: 'true',
+        useForSearch: true,
+        value: displayProp
+      }
+    ];
+  }
+  columns = preProcessColumns(columns);
+
   useEffect(() => {
-    const list = Utils.getOptionList(props, getPConnect().getDataObject(thePConn.getContextName()));
-    const optionsList = [...list];
-    optionsList.unshift({
-      key: placeholder,
-      value: thePConn.getLocalizedValue(placeholder, '', '')
-    }); // 2nd and 3rd args empty string until typedef marked correctly
-    setOptions(optionsList);
-  }, [datasource]);
+    if(theDatasource) {
+      const list = Utils.getOptionList(props, getPConnect().getDataObject('')); // 1st arg empty string until typedef marked correctly
+      const optionsList = [...list];
+      optionsList.unshift({
+        key: placeholder,
+        value: thePConn.getLocalizedValue(placeholder, '', '')
+      }); // 2nd and 3rd args empty string until typedef marked correctly
+      setOptions(optionsList);
+    }
+  }, [theDatasource]);
+
+  useEffect(() => {
+    if (!displayMode && listType !== 'associated' && typeof datasource === 'string') {
+      getDataPage(datasource, parameters, context).then((results: any) => {
+        const optionsData: Array<any> = [];
+        const displayColumn = getDisplayFieldsMetaData(columns);
+        results?.forEach((element) => {
+          const val = element[displayColumn.primary]?.toString();
+          const obj = {
+            key: element[displayColumn.key] || element.pyGUID,
+            value: val
+          };
+          optionsData.push(obj);
+        });
+        setOptions(optionsData);
+      });
+    }
+  }, []);
 
   const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter((field) => field?.classID === className)[0] : fieldMetadata;
 
