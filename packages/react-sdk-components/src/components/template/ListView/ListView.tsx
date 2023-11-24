@@ -580,22 +580,20 @@ export default function ListView(props /* : ListViewProps */) {
           getPConnect().getContextName()
         );
       }, 0);
-    }
 
-    return function cleanupSubscriptions() {
-      PCore.getPubSubUtils().unsubscribe(
-        PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
-        `dashboard-component-${'id'}`,
-        false,
-        getPConnect().getContextName()
-      );
-      PCore.getPubSubUtils().unsubscribe(
-        PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
-        `dashboard-component-${'id'}`,
-        false,
-        getPConnect().getContextName()
-      );
-    };
+      return function cleanupSubscriptions() {
+          PCore.getPubSubUtils().unsubscribe(
+            PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
+            `dashboard-component-${'id'}`,
+            getPConnect().getContextName()
+          );
+          PCore.getPubSubUtils().unsubscribe(
+            PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
+            `dashboard-component-${'id'}`,
+            getPConnect().getContextName()
+          );
+      };
+    }
   }, [listContext]);
 
   function searchFilter(value: string, rows: Array<any>) {
@@ -1135,6 +1133,7 @@ export default function ListView(props /* : ListViewProps */) {
           </>
           {arRows && arRows.length > 0 && (
             <TablePagination
+              id="pagination"
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
               count={arRows.length}
