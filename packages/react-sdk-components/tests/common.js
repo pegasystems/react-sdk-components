@@ -19,7 +19,7 @@ const launchSelfServicePortal = async ({ page }) => {
   await page.goto(`${config.baseUrl}/portal?portal=DigV2SelfService`, { waitUntil: 'networkidle' });
 };
 
-const Login = async (username, password, page) => {
+const login = async (username, password, page) => {
   await page.locator('input[id="txtUserID"]').type(username);
   await page.locator('input[id="txtPassword"]').type(password);
   await page.locator('#submit_row .loginButton').click();
@@ -63,7 +63,7 @@ module.exports = {
   launchPortal,
   launchEmbedded,
   launchSelfServicePortal,
-  Login,
+  login,
   getAttributes,
   getFutureDate,
   calculateCoverage

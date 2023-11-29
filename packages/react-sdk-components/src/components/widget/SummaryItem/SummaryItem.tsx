@@ -55,7 +55,7 @@ export default function SummaryItem(props:SummaryItemProps) {
         {item.secondary.text && (<div style={{ color: item.secondary.error ? 'red' : undefined }}>{item.secondary.text}</div>)}
       </div>
       <div className="psdk-utility-action">
-        {menuIconOverride$ && (<button type="button" className="psdk-utility-button" onClick={removeAttachment}>
+        {menuIconOverride$ && (<button type="button" className="psdk-utility-button" aria-label='Delete Attachment' onClick={removeAttachment}>
             <img className="psdk-utility-card-action-svg-icon" src={menuIconOverride$}></img>
         </button>)}
         {!menuIconOverride$ && (<div>
