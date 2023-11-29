@@ -56,7 +56,7 @@ export default function InlineDashboard(props: InlineDashboardProps) {
           <Grid item xs={12} className={classes.colStyles}>
             {children[0]}
           </Grid>
-          <Grid item xs={12} className={classes.filterContainerStyles}>
+          <Grid id="filters" item xs={12} className={classes.filterContainerStyles}>
             {children[1]}
           </Grid>
         </Grid>
@@ -66,7 +66,7 @@ export default function InlineDashboard(props: InlineDashboardProps) {
           <Grid item xs={9}>
             {children[0]}
           </Grid>
-          <Grid item xs={3} className={classes.inlineStyles}>
+          <Grid id="filters" item xs={3} className={classes.inlineStyles}>
             {children[1]}
           </Grid>
         </Grid>
