@@ -263,7 +263,7 @@ const createPConnectComponent = () => {
       if (getPConnect().hasChildren() && getPConnect().getChildren()) {
         return getPConnect()
           .getChildren()
-          .map(childProps => <PConnect {...childProps} />);
+          .map((childProps, index) => <PConnect {...childProps} key={this.getKey() + index} />);
       }
       return null;
     }
