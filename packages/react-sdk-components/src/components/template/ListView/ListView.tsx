@@ -86,7 +86,9 @@ export default function ListView(props /* : ListViewProps */) {
     payload,
     parameters,
     compositeKeys,
-    showDynamicFields
+    showDynamicFields,
+    readonlyContextList: selectedValues,
+    value
   } = props;
   const ref = useRef({}).current;
   const cosmosTableRef = useRef();
@@ -121,7 +123,7 @@ export default function ListView(props /* : ListViewProps */) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState(value);
 
   // This basically will hold the list of all current filters
   const filters = useRef({});
@@ -133,7 +135,7 @@ export default function ListView(props /* : ListViewProps */) {
   let selectParam: Array<any> = [];
 
   // dataview parameters coming from the ListPage
-  // This constant will also be used for parameters coming from from other components/utility fnctions in future
+  // This constant will also be used for parameters coming from from other components/utility functions in future
   const dataViewParameters = parameters;
 
   const useStyles = makeStyles((theme: Theme) =>
@@ -1169,10 +1171,7 @@ export default function ListView(props /* : ListViewProps */) {
                               )}
                               {selectionMode === SELECTION_MODE.MULTI && (
                                 <TableCell>
-                                  <Checkbox
-                                    onChange={onCheckboxClick}
-                                    value={row[rowID]}
-                                  ></Checkbox>
+                                  <Checkbox onChange={onCheckboxClick} checked={selectedValues.some(selectedValue => selectedValue[rowID] === row[rowID])} value={row[rowID]}></Checkbox>
                                 </TableCell>
                               )}
                               {arColumns.map(column => {
