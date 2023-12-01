@@ -105,6 +105,11 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("Previous")').click();
 
+    /** Testing whether the row/record selected above is checked/selected */
+    const basicProductRecord = await assignment.locator('tr:has-text("Basic Product") >> input[type="radio"]');
+    let attributes = await common.getAttributes(basicProductRecord);
+    expect(attributes.includes('checked')).toBeTruthy();
+
     /** Options subcategory tests */
 
     /** SingleRecord options type test */
@@ -157,6 +162,15 @@ test.describe('E2E test', () => {
     await expect(assignment.locator('tr:has-text("Green Item")')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
+
+    /** Testing whether the rows/records selected above are checked/selected */
+    const luxuryProductRecord = await assignment.locator('tr:has-text("Luxury Product") >> input[type="checkbox"]');
+    attributes = await common.getAttributes(luxuryProductRecord);
+    expect(attributes.includes('checked')).toBeTruthy();
+
+    const greenItemRecord = await assignment.locator('tr:has-text("Green Item") >> input[type="checkbox"]');
+    attributes = await common.getAttributes(greenItemRecord);
+    expect(attributes.includes('checked')).toBeTruthy();
 
     /** Mode subcategory tests */
 
