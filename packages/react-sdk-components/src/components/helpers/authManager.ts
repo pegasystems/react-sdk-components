@@ -24,6 +24,7 @@ class AuthManager {
   #authConfig:any = {};
   #authDynState:any = {};
   #authHeader:string|null = null;
+  #customTokenParamsCB:Function|null = null;
 
   // state that should be persisted across loads
   state:any = {usePopup:false, noInitialRedirect:false};
@@ -123,6 +124,11 @@ class AuthManager {
       window.PCore.getAuthUtils().setAuthorizationHeader(authHdr);
     }
     this.#updateLoginStatus();
+  }
+
+  // Setter for customTokenParamsCB
+  set customTokenParamsCB(fn:Function|null) {
+    this.#customTokenParamsCB = fn;
   }
 
   // Setter/getter for usePopupForRestOfSession
@@ -329,6 +335,8 @@ class AuthManager {
 
           const portalGrantType = sdkConfigAuth.portalGrantType || 'authCode';
           const mashupGrantType = sdkConfigAuth.mashupGrantType || 'authCode';
+          // Some grant types are only available with confidential registrations and require a client secret
+          const clientSecret = bNoInitialRedirect ? sdkConfigAuth.mashupClientSecret : sdkConfigAuth.portalClientSecret;
 
           const pegaAuthConfig:any = {
             clientId: bNoInitialRedirect ? sdkConfigAuth.mashupClientId : sdkConfigAuth.portalClientId,
@@ -340,6 +348,9 @@ class AuthManager {
             appAlias: sdkConfigServer.appAlias || '',
             useLocking: true
           };
+          if( clientSecret ) {
+            pegaAuthConfig.clientSecret = clientSecret;
+          }
           // Invoke keySuffix setter
           // Was using pegaAuthConfig.clientId as key but more secure to just use a random string as getting
           //  both a clientId and the refresh token could yield a new access token.
@@ -449,7 +460,12 @@ class AuthManager {
       constellationBootConfig.appAlias = sdkConfigServer.appAlias;
     }
 
-    if( tokenInfo ) {
+    if( this.#authConfig.grantType === 'customBearer' || !tokenInfo ) {
+      if( tokenInfo ) {
+        this.#authHeader = `${tokenInfo.token_type} ${tokenInfo.access_token}`;
+      }
+      constellationBootConfig.authorizationHeader = this.#authHeader;
+    } else {
       // Pass in auth info to Constellation
       constellationBootConfig.authInfo = {
         authType: "OAuth2.0",
@@ -468,10 +484,7 @@ class AuthManager {
         // TODO: setup callback so we can update own storage
         onTokenRetrieval: this.#authTokenUpdated.bind(this)
       }
-    } else {
-      constellationBootConfig.authorizationHeader = this.#authHeader;
     }
-
 
     // Turn off dynamic load components (should be able to do it here instead of after load?)
     constellationBootConfig.dynamicLoadComponents = false;
@@ -564,10 +577,28 @@ class AuthManager {
     if( this.#tokenStorage === 'always' ) {
       this.#setStorage(this.#ssKeyTokenInfo, this.#tokenInfo);
     }
-    if( window.PCore ) {
-      PCore.getAuthUtils().setTokens(token);
+    if (this.#authConfig.grantType === 'customBearer') {
+      // authHeader setter will also set #authHeader and invoke getAuthUtils().setAuthorizationHeader
+      this.authHeader = `${token.token_type} ${token.access_token}`;
+    }
+    if( window.PCore && !this.#authHeader ) {
+        PCore.getAuthUtils().setTokens(token);
     } else {
       this.#fireTokenAvailable(token, bLoadC11N);
+    }
+  }
+
+  #doCustomTokenParamsCB() {
+    if (this.#authConfig.grantType === 'customBearer' && this.#customTokenParamsCB) {
+      try {
+        const customTokenParams = this.#customTokenParamsCB();
+        if (customTokenParams) {
+          this.#authConfig.customTokenParams = customTokenParams;
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(`Error on customTokenParams callback. ${e}`);
+      }
     }
   }
 
@@ -712,37 +743,41 @@ class AuthManager {
     this.loginStart = Date.now();
 
     this.#initialize(!bFullReauth).then( (aMgr) => {
-      const bMainRedirect = !this.noInitialRedirect;
       const sdkConfigAuth = SdkConfigAccess.getSdkConfigAuth();
-      let sRedirectUri=sdkConfigAuth.redirectUri;
 
-      // If initial main redirect is OK, redirect to main page, otherwise will authorize in a popup window
-      if (bMainRedirect && !bFullReauth) {
-        // update redirect uri to be the root
-        this.updateRedirectUri(sRedirectUri);
-        aMgr.loginRedirect();
-        // Don't have token til after the redirect
-        return Promise.resolve(undefined);
-      } else {
-        // Construct path to redirect uri
-        const nLastPathSep = sRedirectUri.lastIndexOf("/");
-        sRedirectUri = nLastPathSep !== -1 ? `${sRedirectUri.substring(0,nLastPathSep+1)}auth.html` : `${sRedirectUri}/auth.html`;
-        // Set redirectUri to static auth.html
-        this.updateRedirectUri(sRedirectUri);
-        return new Promise( (resolve, reject) => {
-          aMgr.login().then(token => {
-              this.#processTokenOnLogin(token);
-              // this.getUserInfo();
-              resolve(token.access_token);
-          }).catch( (e) => {
-              // Use setter to update state
-              this.loginStart = 0;
-              // eslint-disable-next-line no-console
-              console.log(e);
-              reject(e);
-          });
-        });
+      if (this.#authConfig.grantType === 'authCode') {
+        const bMainRedirect = !this.noInitialRedirect;
+        let sRedirectUri=sdkConfigAuth.redirectUri;
+        // If initial main redirect is OK, redirect to main page, otherwise will authorize in a popup window
+        if (bMainRedirect && !bFullReauth) {
+          // update redirect uri to be the root
+          this.updateRedirectUri(sRedirectUri);
+          aMgr.loginRedirect();
+          // Don't have token til after the redirect
+          return Promise.resolve(undefined);
+        } else {
+          // Construct path to redirect uri
+          const nLastPathSep = sRedirectUri.lastIndexOf("/");
+          sRedirectUri = nLastPathSep !== -1 ? `${sRedirectUri.substring(0,nLastPathSep+1)}auth.html` : `${sRedirectUri}/auth.html`;
+          // Set redirectUri to static auth.html
+          this.updateRedirectUri(sRedirectUri);
+        }
       }
+
+      return new Promise( (resolve, reject) => {
+        this.#doCustomTokenParamsCB();
+        aMgr.login().then(token => {
+            this.#processTokenOnLogin(token);
+            // this.getUserInfo();
+            resolve(token.access_token);
+        }).catch( (e) => {
+            // Use setter to update state
+            this.loginStart = 0;
+            // eslint-disable-next-line no-console
+            console.log(e);
+            reject(e);
+        });
+      });
     });
 
   }
@@ -927,6 +962,14 @@ export const sdkSetAuthHeader = (authHeader) => {
   // Use setter to set this securely
   gAuthMgr.authHeader = authHeader;
 };
+
+// Set specific call back function to retrieve custom token endpoint params prior to login.  This would
+//  be set with specifying deferLoad='true' and prior to the invocation of the load method
+export const sdkSetCustomTokenParamsCB = (fnCustomTokenParamsCB:Function) => {
+  if (typeof fnCustomTokenParamsCB === 'function') {
+    gAuthMgr.customTokenParamsCB = fnCustomTokenParamsCB;
+  }
+}
 
 export const getAvailablePortals = async () => {
   return gAuthMgr.getAvailablePortals();

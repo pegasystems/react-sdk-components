@@ -8,7 +8,7 @@ import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles
 import StoreContext from "../../../bridge/Context/StoreContext";
 import createPConnectComponent from "../../../bridge/react_pconnect";
 
-import { sdkIsLoggedIn, loginIfNecessary, sdkSetAuthHeader } from '../../../components/helpers/authManager';
+import { sdkIsLoggedIn, loginIfNecessary, sdkSetAuthHeader, sdkSetCustomTokenParamsCB } from '../../../components/helpers/authManager';
 
 import EmbeddedSwatch from '../EmbeddedSwatch';
 import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelpers';
@@ -306,7 +306,7 @@ export default function EmbeddedTopLevel() {
    * is ready to be rendered
    * @param inRenderObj the initial, top-level PConnect object to render
    */
-   function initialRender(inRenderObj) {
+  function initialRender(inRenderObj) {
 
     // loadMashup does its own thing so we don't need to do much/anything here
 
@@ -367,7 +367,7 @@ export default function EmbeddedTopLevel() {
   /**
    * kick off the application's portal that we're trying to serve up
    */
-   function startMashup() {
+  function startMashup() {
 
     // NOTE: When loadMashup is complete, this will be called.
     PCore.onPCoreReady(renderObj => {
@@ -419,6 +419,14 @@ export default function EmbeddedTopLevel() {
         // Service package to use custom auth with Basic
         const sB64 = window.btoa(`${sdkConfigAuth.mashupUserIdentifier}:${window.atob(sdkConfigAuth.mashupPassword)}:${sISOTime}`);
         sdkSetAuthHeader( `Basic ${sB64}`);
+      }
+
+      if( sdkConfigAuth.customAuthType === "CustomIdentifier" ) {
+        // Use custom bearer with specific custom parameter to set the desired operator via
+        //  a userIdentifier property.  (Caution: highly insecure...being used for simple demonstration)
+        sdkSetCustomTokenParamsCB(() => {
+          return {"userIdentifier": sdkConfigAuth.mashupUserIdentifier };
+        });
       }
 
       document.addEventListener("SdkConstellationReady", () => {
