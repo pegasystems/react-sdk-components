@@ -244,7 +244,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
             const headingValue =
               isDataObject || isMultiRecord
                 ? getModalHeading(dataObjectAction)
-                : determineModalHeaderByAction(actionName, caseTypeName, ID, `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase());
+                : determineModalHeaderByAction(actionName, caseTypeName, ID, `${theNewCaseInfo?.getClassName()}!CASE!${theNewCaseInfo.getName()}`.toUpperCase());
 
             setTitle(headingValue);
 
