@@ -9,7 +9,6 @@ import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { getBanners } from '../../../helpers/case-utils';
 import { isEmptyObject } from '../../../helpers/common-utils';
-
 // import type { PConnProps } from '../../../../types/PConnProps';
 
 // Can't use ModalViewContainerProps until getContainerManager() knows about initializeContainers
@@ -21,10 +20,8 @@ import { isEmptyObject } from '../../../helpers/common-utils';
 //   pageMessages?: Array<string>
 // }
 
-
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 8 errors)
 declare const PCore: any;
-
 
 function buildName(pConnect, name = '') {
   const context = pConnect.getContextName();
@@ -58,7 +55,7 @@ function getConfigObject(item, pConnect) {
   return null;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dlgTitle: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
@@ -83,8 +80,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function ModalViewContainer(props /* : ModalViewContainerProps */) {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
-  const Assignment = getComponentFromMap("Assignment");
-  const CancelAlert = getComponentFromMap("CancelAlert");
+  const Assignment = getComponentFromMap('Assignment');
+  const CancelAlert = getComponentFromMap('CancelAlert');
+  const ListViewActionButtons = getComponentFromMap('ListViewActionButtons');
 
   const classes = useStyles();
 
@@ -105,10 +103,11 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
   const [arNewChildrenAsReact, setArNewChildrenAsReact] = useState<Array<any>>([]);
   const [itemKey, setItemKey] = useState('');
   const [cancelPConn, setCancelPConn] = useState(null);
-
+  const [isMultiRecordData, setMultiRecordData] = useState(false);
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Data Object';
 
+  const actionsDialog = useRef(false);
 
   function showAlert(payload) {
     const { latestItem } = getKeyAndLatestItem(routingInfoRef.current, pConn);
@@ -118,7 +117,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
       If we are in create stage full page mode, created a new case and trying to click on cancel button
       it will show two alert dialogs which is not expected. Hence isModalAction flag to avoid that.
     */
-    if (latestItem && isModalAction) {
+    if (latestItem && isModalAction && !actionsDialog.current) {
       const configObject = getConfigObject(latestItem, pConn);
       setCancelPConn(configObject.getPConnect());
       setShowCancelAlert(true);
@@ -148,10 +147,23 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
     return bRet;
   }
 
-  const updateAlertState = modalFlag => {
+  const updateAlertState = (modalFlag) => {
     setShowCancelAlert(false);
     setShowModal(modalFlag);
   };
+
+  function getModalHeading(dataObjectAction) {
+    return dataObjectAction === PCore.getConstants().RESOURCE_STATUS.CREATE
+      ? localizedVal('Add Record', localeCategory)
+      : localizedVal('Edit Record', localeCategory);
+  }
+
+  function determineModalHeaderByAction(actionName, caseTypeName, ID, caseLocaleRef) {
+    if (actionName) {
+      return localizedVal(actionName, localeCategory);
+    }
+    return `${localizedVal('Create', localeCategory)} ${localizedVal(caseTypeName, undefined, caseLocaleRef)} (${ID})`;
+  }
 
   useEffect(() => {
     // Establish the necessary containers
@@ -162,9 +174,6 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
   useEffect(() => {
     // Update routingInfoRef.current whenever routingInfo changes
     routingInfoRef.current = routingInfo;
-  }, [routingInfo]);
-
-  useEffect(() => {
     if (routingInfoRef.current && !loadingInfo) {
       const currentOrder = routingInfo.accessedOrder;
 
@@ -175,15 +184,10 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
       const currentItems = routingInfo.items;
 
       const { key, latestItem } = getKeyAndLatestItem(routingInfoRef.current, pConn);
-
       // console.log(`ModalViewContainer: key: ${key} latestItem: ${JSON.stringify(latestItem)}`);
 
       if (currentOrder.length > 0) {
-        if (
-          currentItems[key] &&
-          currentItems[key].view &&
-          !isEmptyObject(currentItems[key].view)
-        ) {
+        if (currentItems[key] && currentItems[key].view && !isEmptyObject(currentItems[key].view)) {
           const currentItem = currentItems[key];
           const rootView = currentItem.view;
           const { context } = rootView.config;
@@ -196,11 +200,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
 
           if (!bSubscribed) {
             setSubscribed(true);
-            subscribe(
-              EVENT_SHOW_CANCEL_ALERT,
-              showAlert,
-              EVENT_SHOW_CANCEL_ALERT /* Unique string for subscription */
-            );
+            subscribe(EVENT_SHOW_CANCEL_ALERT, showAlert, EVENT_SHOW_CANCEL_ALERT /* Unique string for subscription */);
           }
 
           const configObject = PCore.createPConnect(config);
@@ -209,10 +209,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
           //    The config has meta.config.type = "view"
           const newComp = configObject.getPConnect();
           // const newCompName = newComp.getComponentName();
-          const caseInfo =
-            newComp && newComp.getDataObject() && newComp.getDataObject().caseInfo
-              ? newComp.getDataObject().caseInfo
-              : null;
+          const caseInfo = newComp && newComp.getDataObject() && newComp.getDataObject().caseInfo ? newComp.getDataObject().caseInfo : null;
 
           // console.log(`ModalViewContainer just created newComp: ${newCompName}`);
 
@@ -233,14 +230,23 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
           // right now need to check caseInfo for changes, to trigger redraw, not getting
           // changes from angularPconnect except for first draw
           if (newComp && caseInfo && compareCaseInfoIsDifferent(caseInfo)) {
-            setCreatedView(configObject);
+            setCreatedView({ configObject, latestItem });
 
             const { actionName } = latestItem;
             const theNewCaseInfo = newComp.getCaseInfo();
             const caseName = theNewCaseInfo.getName();
-            const ID = theNewCaseInfo.getID();
+            const ID = theNewCaseInfo.getBusinessID() || theNewCaseInfo.getID();
+            const caseTypeName = theNewCaseInfo.getCaseTypeName();
+            const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
+            const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
+            const isMultiRecord = routingInfo.items[latestItem.context].isMultiRecordData;
+            setMultiRecordData(isMultiRecord);
+            const headingValue =
+              isDataObject || isMultiRecord
+                ? getModalHeading(dataObjectAction)
+                : determineModalHeaderByAction(actionName, caseTypeName, ID, `${theNewCaseInfo?.getClassName()}!CASE!${theNewCaseInfo.getName()}`.toUpperCase());
 
-            setTitle(actionName || `${localizedVal('New', localeCategory)} ${caseName} (${ID})`);
+            setTitle(headingValue);
 
             let arChildrenAsReact: Array<any> = [];
 
@@ -258,7 +264,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
               // This is the 8.6 implementation. Leaving it in for reference for now.
               // And create a similar array of the children as React components
               //  passed to Assignment component when rendered
-              arChildrenAsReact = newComp.getChildren().map(child => {
+              arChildrenAsReact = newComp.getChildren().map((child) => {
                 // Use Case Summary ID as the React element's key
                 const caseSummaryID = child.getPConnect().getCaseSummary().ID;
                 return createElement(createPConnectComponent(), { ...child, key: caseSummaryID });
@@ -282,7 +288,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
         }
       }
     }
-  });
+  }, [routingInfo]);
 
   // function placeholderModalClose() {
   //   // Intentionally a no-op. Similar behavior in other SDKs.
@@ -300,16 +306,21 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
   //   console.log(`--> arNewChildrenAsReact: ${JSON.stringify(arNewChildrenAsReact)}`);
   // }
 
+  function closeActionsDialog() {
+    actionsDialog.current = true;
+    setShowModal(false);
+  }
+
   return (
     <>
-      <Dialog open={bShowModal} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title' className={classes.dlgTitle}>
+      <Dialog open={bShowModal} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title" className={classes.dlgTitle}>
           {title}
         </DialogTitle>
         <DialogContent className={classes.dlgContent}>
           {bShowModal ? (
             <Assignment
-              getPConnect={createdView.getPConnect}
+              getPConnect={createdView.configObject.getPConnect}
               itemKey={itemKey}
               isInModal
               banners={getBanners({
@@ -323,14 +334,15 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
             <></>
           )}
         </DialogContent>
+        {isMultiRecordData && (
+          <ListViewActionButtons
+            getPConnect={createdView.configObject.getPConnect}
+            context={createdView.latestItem.context}
+            closeActionsDialog={closeActionsDialog}
+          ></ListViewActionButtons>
+        )}
       </Dialog>
-      {bShowCancelAlert && (
-        <CancelAlert
-          pConn={cancelPConn}
-          showAlert={bShowCancelAlert}
-          updateAlertState={updateAlertState}
-        />
-      )}
+      {bShowCancelAlert && <CancelAlert pConn={cancelPConn} showAlert={bShowCancelAlert} updateAlertState={updateAlertState} />}
     </>
   );
-};
+}

@@ -110,6 +110,10 @@ test.describe('E2E test', () => {
     await selectedTestName.click();
     await page.locator('li:has-text("Editable")').click();
 
+    let selectEditMode = page.locator('div[data-test-id="80c1db3a7b228760228004b1a532c71e"]');
+    await selectEditMode.click();
+    await page.locator('li:has-text("Table rows")').click();
+
     const noRecordsMsg = page.locator('div[id="no-records"]');
     await expect(noRecordsMsg.locator('text="No records found."')).toBeVisible();
 
@@ -215,14 +219,109 @@ test.describe('E2E test', () => {
 
     await page.locator('button[id="delete-button"] >> nth=0').click();
 
+    /** Table Edit Modal tests */
+    selectEditMode = page.locator('div[data-test-id="80c1db3a7b228760228004b1a532c71e"]');
+    await selectEditMode.click();
+    await page.locator('li:has-text("Modal")').click();
+
+    await page.locator('a:has-text("+ Add")').click();
+
+    modal = page.locator('div[role="dialog"]');
+
+    /** Testing Add Record Title */
+    const addRecordTitle = modal.locator('h2:has-text("Add Record")');
+    await expect(addRecordTitle).toBeVisible();
+
+    /** Adding record to the Table in Modal */
+    await modal.locator('input[data-test-id="202003240938510823869"]').type('Main St');
+    await modal.locator('input[data-test-id="202003240938510831291"]').type('Cambridge');
+    await modal.locator('input[data-test-id="202003240938510831411"]').type('MA');
+    await modal.locator('input[data-test-id="202003240938510832734"]').type('02142');
+
+    phone = modal.locator('div[data-test-id="1f8261d17452a959e013666c5df45e07"]');
+    await phone.locator('button').click();
+    /** Selecting the country code */
+    await page.locator('text=United States+1 >> nth=0').click();
+    await phone.locator('input').type('6175551212');
+
+    let country = modal.locator('div[data-test-id="59716c97497eb9694541f7c3d37b1a4d"]');
+    await country.click();
+    await page.getByRole('option', { name: 'Switzerland' }).click();
+
+    /** submitting the record */
+    await modal.locator('button:has-text("submit")').click();
+
+    assignment = page.locator('div[id="Assignment"]');
+
+    /** Testing the values present on table */
+    await expect(assignment.locator('td >> text="Main St"')).toBeVisible();
+    await expect(assignment.locator('td >> text="Cambridge"')).toBeVisible();
+    await expect(assignment.locator('td >> text="MA"')).toBeVisible();
+    await expect(assignment.locator('td >> text="02142"')).toBeVisible();
+    await expect(assignment.locator('td >> text="+16175551212"')).toBeVisible();
+
+    await assignment.locator('button:has-text("Next")').click();
+
+    /** Testing the values present on Confirm screen */
+    await expect(assignment.locator('td >> text="Main St"')).toBeVisible();
+    await expect(assignment.locator('td >> text="Cambridge"')).toBeVisible();
+    await expect(assignment.locator('td >> text="MA"')).toBeVisible();
+    await expect(assignment.locator('td >> text="02142"')).toBeVisible();
+    await expect(assignment.locator('td >> text="+16175551212"')).toBeVisible();
+
+    await assignment.locator('button:has-text("Previous")').click();
+
+    /** Edit Record tests */
+    await assignment.locator('svg[id="table-edit-menu-icon"] >> nth=0').click();
+    let editMenu = await page.locator('div[id="table-edit-menu"]');
+    await editMenu.locator('li:has-text("Edit")').click();
+
+    modal = page.locator('div[role="dialog"]');
+
+    /** Testing Edit Record title*/
+    const editRecordTitle = modal.locator('h2:has-text("Edit Record")');
+    await expect(editRecordTitle).toBeVisible();
+
+    /** Editing the added row */
+    await modal.locator('input[data-test-id="202003240938510823869"]').fill('');
+    await modal.locator('input[data-test-id="202003240938510823869"]').type('Gandhi St');
+
+    await modal.locator('input[data-test-id="202003240938510831291"]').fill('');
+    await modal.locator('input[data-test-id="202003240938510831291"]').type('Dallas');
+
+    await modal.locator('button:has-text("submit")').click();
+
+    /** Testing the edited values on table */
+    await expect(assignment.locator('td >> text="Gandhi St"')).toBeVisible();
+    await expect(assignment.locator('td >> text="Dallas"')).toBeVisible();
+
+    await assignment.locator('button:has-text("Next")').click();
+
+    /** Testing the edited values on Confirm Screen */
+    await expect(assignment.locator('td >> text="Gandhi St"')).toBeVisible();
+    await expect(assignment.locator('td >> text="Dallas"')).toBeVisible();
+
+    await assignment.locator('button:has-text("Previous")').click();
+
+    /** Delete Row tests */
+    await assignment.locator('svg[id="table-edit-menu-icon"] >> nth=0').click();
+    editMenu = await page.locator('div[id="table-edit-menu"]');
+    await editMenu.locator('li:has-text("Delete")').click();
+
+    await expect(noRecordsMsg.locator('text="No records found."')).toBeVisible();
+
+    await assignment.locator('button:has-text("Next")').click();
+
+    await assignment.locator('button:has-text("Previous")').click();
+
     /** FieldGroup subcategory tests */
 
-    selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
+    selectedSubCategory = await page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
     await selectedSubCategory.click();
     await page.locator('li:has-text("FieldGroup")').click();
 
     /** Editable mode type tests */
-    selectedTestName = page.locator('div[data-test-id="6f64b45d01d11d8efd1693dfcb63b735"]');
+    selectedTestName = await page.locator('div[data-test-id="6f64b45d01d11d8efd1693dfcb63b735"]');
     await selectedTestName.click();
     await page.locator('li:has-text("Editable")').click();
 
