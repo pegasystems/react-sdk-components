@@ -1,5 +1,5 @@
 import React from 'react';
-import { logout } from '../../components/helpers/authManager';
+import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
 export default function InvalidPortal({ defaultPortal, portals, onSelect }) {
   const logOff = () => {
