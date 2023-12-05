@@ -28,8 +28,8 @@ function ListViewActionButtons(props) {
         variant="contained"
         color="secondary"
         onClick={() => {
-          getPConnect().getActionsApi().cancelDataObject(context);
           closeActionsDialog();
+          getPConnect().getActionsApi().cancelDataObject(context);
         }}
       >
         {localizedVal('Cancel', localeCategory)}

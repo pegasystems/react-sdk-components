@@ -49,11 +49,13 @@ interface SimpleTableManualProps extends PConnProps {
   contextClass?: string;
   propertyLabel?: string;
   fieldMetadata?: any;
-  editMode?: string
-  addAndEditRowsWithin?: any,
-  viewForAddAndEditModal?: any,
-  editModeConfig?: any,
-  displayMode?: string
+  editMode?: string;
+  addAndEditRowsWithin?: any;
+  viewForAddAndEditModal?: any;
+  editModeConfig?: any;
+  displayMode?: string;
+  useSeparateViewForEdit: any;
+  viewForEditModal: any;
 }
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -110,7 +112,9 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
     addAndEditRowsWithin,
     viewForAddAndEditModal,
     editModeConfig,
-    displayMode
+    displayMode,
+    useSeparateViewForEdit,
+    viewForEditModal
   } = props;
   const pConn = getPConnect();
   const [rowData, setRowData] = useState([]);
@@ -118,6 +122,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof any>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [editAnchorEl, setEditAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [filterBy, setFilterBy] = useState<string>();
   const [containsDateOrTime, setContainsDateOrTime] = useState<boolean>(false);
@@ -167,15 +172,22 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
     (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);
   const showDeleteButton = editableMode && !hideDeleteRow;
   const defaultView = editModeConfig ? editModeConfig.defaultView : viewForAddAndEditModal;
+  const bUseSeparateViewForEdit = editModeConfig ? editModeConfig.useSeparateViewForEdit : useSeparateViewForEdit;
+  const editView = editModeConfig ? editModeConfig.editView : viewForEditModal;
+
   useEffect(() => {
     if (editableMode && !allowEditingInModal) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       buildElementsForTable();
-    } else {
+    }
+  }, [referenceList.length]);
+
+  useEffect(() => {
+    if (readOnlyMode || allowEditingInModal) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       generateRowsData();
     }
-  }, [referenceList.length]);
+  }, [referenceList]);
 
   // fieldDefs will be an array where each entry will have a "name" which will be the
   //  "resolved" property name (that we can use as the colId) though it's not really
@@ -196,7 +208,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   //  of the given row field
   function getRowValue(inRowData: Object, inColKey: string): any {
     // See what data (if any) we have to display
-    const refKeys: Array<string> = inColKey.split('.');
+    const refKeys: Array<string> = inColKey?.split('.');
     let valBuilder = inRowData;
     for (const key of refKeys) {
       valBuilder = valBuilder[key];
@@ -269,7 +281,23 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
     }
   };
 
+  const editRecord = (data, index) => {
+    setEditAnchorEl(null);
+    if (data) {
+      pConn
+        .getActionsApi()
+        .openEmbeddedDataModal(
+          bUseSeparateViewForEdit ? editView : defaultView,
+          pConn,
+          referenceListStr,
+          index,
+          PCore.getConstants().RESOURCE_STATUS.UPDATE
+        );
+    }
+  };
+
   const deleteRecord = (index) => {
+    setEditAnchorEl(null);
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().deleteEntry(index, pageReference);
     } else {
@@ -357,8 +385,13 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
     setAnchorEl(event.currentTarget);
   }
 
+  function editMenuClick(event) {
+    setEditAnchorEl(event.currentTarget);
+  }
+
   function _menuClose() {
     setAnchorEl(null);
+    setEditAnchorEl(null);
   }
 
   function _filterMenu() {
@@ -591,22 +624,26 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
                         return (
                           <TableCell key={colKey} className={classes.tableCell}>
                             {showDeleteButton && colKey === 'DeleteIcon' ? (
-                              <button
-                                type="button"
-                                className="psdk-utility-button"
-                                id="delete-button"
-                                aria-label="Delete Cell"
-                                onClick={() => deleteRecord(index)}
-                              >
-                                <img className="psdk-utility-card-action-svg-icon" src={menuIconOverride$}></img>
-                              </button>
-                            ) : (typeof row[colKey] === 'boolean' && !row[colKey] ? (
+                              <div>
+                                <MoreIcon
+                                  id="table-edit-menu-icon"
+                                  className={classes.moreIcon}
+                                  onClick={(event) => {
+                                    editMenuClick(event);
+                                  }}
+                                />
+                                <Menu id="table-edit-menu" anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
+                                  <MenuItem onClick={() => editRecord(row, index)}>Edit</MenuItem>
+                                  <MenuItem onClick={() => deleteRecord(index)}>Delete</MenuItem>
+                                </Menu>
+                              </div>
+                            ) : typeof row[colKey] === 'boolean' && !row[colKey] ? (
                               'False'
                             ) : typeof row[colKey] === 'boolean' && row[colKey] ? (
                               'True'
                             ) : (
                               row[colKey]
-                            ))}
+                            )}
                           </TableCell>
                         );
                       })}
