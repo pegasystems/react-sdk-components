@@ -5,9 +5,8 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useLocation, useHistory } from 'react-router-dom';
 import StoreContext from '../../bridge/Context/StoreContext';
 import createPConnectComponent from '../../bridge/react_pconnect';
-import { SdkConfigAccess } from '../../components/helpers/config_access';
+import { SdkConfigAccess, loginIfNecessary, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
 import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers';
-import { loginIfNecessary, getAvailablePortals } from '../../components/helpers/authManager';
 import InvalidPortal from './InvalidPortal';
 
 import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
