@@ -8,7 +8,7 @@ import { IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import MenuIcon from '@material-ui/icons/Menu';
-import { logout } from '../../helpers/authManager';
+import { logout } from '@pega/auth/lib/sdk-auth-manager';
 import './WssNavBar.css';
 
 // WssNavBar does NOT have getPConnect. So, no need to extend from PConnProps
