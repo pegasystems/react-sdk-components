@@ -59,10 +59,15 @@ test.describe('E2E test', () => {
     const day = new Date();
     const nextDay = new Date(day);
     nextDay.setDate(day.getDate() + 1);
-    await datePicker.locator(`div[role="option"]:has-text("${day.getDate().toString()}")`).click();
-    await datePicker.locator(`div[role="option"]:has-text("${nextDay.getDate().toString()}")`).click();
 
-    await expect(page.locator(`td:has-text("${day.getDate()}")`)).toBeVisible();
+    const currentMonthSelector = await datePicker.locator(`.react-datepicker__day:not(.react-datepicker__day--outside-month)`);
+
+    await currentMonthSelector.locator(`text="${day.getDate().toString()}"`).click();
+    await currentMonthSelector.locator(`text="${nextDay.getDate().toString()}"`).click();
+
+    const complexTable = page.locator('div[id="list-view"] >> nth=0');
+
+    await expect(complexTable.locator(`td:has-text("${day.getDate()}")`)).toBeVisible();
 
     let pagination = page.locator('div[id="pagination"]');
     await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeVisible();
