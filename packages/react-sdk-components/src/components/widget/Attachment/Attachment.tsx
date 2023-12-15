@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/no-array-index-key */
 import React, { useState, useEffect, useCallback } from 'react';
-import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
-import './Attachment.css';
 import { CircularProgress } from '@material-ui/core';
-import download from 'downloadjs';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Button } from '@material-ui/core';
+import download from 'downloadjs';
+import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
 import { Utils } from '../../helpers/utils';
+import './Attachment.css';
 // import type { PConnProps } from '../../../types/PConnProps';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
@@ -436,7 +436,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   return (
     <div className="file-upload-container">
       <span className={`label ${required ? 'file-label' : ''}`}>{label}</span>
-      {((files.length === 0 && allowMultiple !== 'false') || allowMultiple === 'true') && <section>{content}</section>}
+      {((files.length === 0 && allowMultiple !== 'true') || allowMultiple === 'true') && <section>{content}</section>}
       {validatemessage !== '' ? <span className="file-error">{validatemessage}</span> : ''}
       {files && files.length > 0 && <section>{fileDisplay}</section>}
     </div>
