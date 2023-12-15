@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/no-array-index-key */
-import { Button } from '@material-ui/core';
 import React, { useState, useEffect, useCallback } from 'react';
 import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
 import './Attachment.css';
@@ -9,6 +7,7 @@ import { CircularProgress } from '@material-ui/core';
 import download from 'downloadjs';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { Button } from '@material-ui/core';
 import { Utils } from '../../helpers/utils';
 // import type { PConnProps } from '../../../types/PConnProps';
 
@@ -24,7 +23,7 @@ declare const PCore: any;
 
 const getAttachmentKey = (name = '') => (name ? `attachmentsList.${name}` : 'attachmentsList');
 
-function getCurrentAttachmentsList(key, context) {
+const getCurrentAttachmentsList = (key, context) => {
   return PCore.getStoreValue(`.${key}`, 'context_data', context) || [];
 }
 
@@ -72,7 +71,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     download(atob(data), fileData);
   };
 
-  function downloadFile(fileObj: any) {
+  const downloadFile = (fileObj: any) => {
     setAnchorEl(null);
     PCore.getAttachmentUtils()
       .downloadAttachment(fileObj.pzInsKey, pConn.getContextName())
@@ -131,18 +130,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     [pConn, value, valueRef, filesWithError]
   );
 
-  const onUploadProgress = (id, ev) => {
-    // const progress = Math.floor((ev.loaded / ev.total) * 100) - 1;
-    // setFiles((current) => [
-    //   ...current.map((f) => {
-    //     if (f.ID === id) {
-    //       f.inProgress = true;
-    //       f.props.progress = progress;
-    //     }
-    //     return f;
-    //   })
-    // ]);
-  };
+  const onUploadProgress = () => {};
 
   const errorHandler = (isFetchCanceled, attachedFile) => {
     return (error) => {
@@ -214,6 +202,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     const tempFilesToBeUploaded = [
       ...addedFiles.map((f: any, index) => {
         f.ID = `${new Date().getTime()}I${index}`;
+        f.inProgress = true;
         f.props = {
           type: f.type,
           name: f.name,
@@ -264,8 +253,8 @@ export default function Attachment(props /* :AttachmentProps */) {
       .map((f) =>
         window.PCore.getAttachmentUtils().uploadAttachment(
           f,
-          (ev) => {
-            onUploadProgress(f.ID, ev);
+          () => {
+            onUploadProgress();
           },
           (isFetchCanceled) => {
             return errorHandler(isFetchCanceled, f);
@@ -369,11 +358,6 @@ export default function Attachment(props /* :AttachmentProps */) {
   const content = (
     <div style={{ marginBottom: '8px' }}>
       <div className={`${disabled ? 'file-disabled' : ''} ${validatemessage === '' ? 'file-div' : 'file-div-error'}`}>
-        {/* {file.inProgress && (
-          <div className="progress-div">
-            <CircularProgress />
-          </div>
-        )} */}
         <div hidden={true} id="attachment-ID">
           {valueRef}
         </div>
@@ -404,7 +388,8 @@ export default function Attachment(props /* :AttachmentProps */) {
           return (
             <div key={index} className="psdk-utility-card">
               <div className="psdk-utility-card-icon">
-                <img className="psdk-utility-card-svg-icon" src={srcImg}></img>
+                {!item.inProgress && <img className="psdk-utility-card-svg-icon" src={srcImg}></img>}
+                {item.inProgress && <div><CircularProgress /></div>}
               </div>
               <div className="psdk-utility-card-main">
                 <div className="psdk-utility-card-main-primary-label">{item.props.name}</div>
@@ -451,7 +436,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   return (
     <div className="file-upload-container">
       <span className={`label ${required ? 'file-label' : ''}`}>{label}</span>
-      {((files.length === 0 && allowMultiple === 'false') || allowMultiple === 'true') && <section>{content}</section>}
+      {((files.length === 0 && allowMultiple !== 'false') || allowMultiple === 'true') && <section>{content}</section>}
       {validatemessage !== '' ? <span className="file-error">{validatemessage}</span> : ''}
       {files && files.length > 0 && <section>{fileDisplay}</section>}
     </div>
