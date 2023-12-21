@@ -26,7 +26,8 @@ export default function Email(props: EmailProps) {
     testId,
     helperText,
     displayMode,
-    hideLabel
+    hideLabel,
+    placeholder
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -53,7 +54,7 @@ export default function Email(props: EmailProps) {
       fullWidth
       variant="outlined"
       helperText={helperTextToDisplay}
-      placeholder=""
+      placeholder={placeholder ?? ''}
       size="small"
       required={required}
       disabled={disabled}
