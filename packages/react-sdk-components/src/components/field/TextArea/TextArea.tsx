@@ -26,7 +26,8 @@ export default function TextArea(props: TextAreaProps) {
     fieldMetadata,
     helperText,
     displayMode,
-    hideLabel
+    hideLabel,
+    placeholder
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -62,7 +63,7 @@ export default function TextArea(props: TextAreaProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=""
+      placeholder={placeholder ?? ''}
       size="small"
       required={required}
       disabled={disabled}

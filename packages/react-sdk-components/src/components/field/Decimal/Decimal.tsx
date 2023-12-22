@@ -35,7 +35,8 @@ export default function Decimal(props: DecimalProps) {
     currencyISOCode = 'USD',
     decimalPrecision = 2,
     showGroupSeparators = true,
-    testId
+    testId,
+    placeholder
   } = props;
 
   const pConn = getPConnect();
@@ -94,7 +95,7 @@ export default function Decimal(props: DecimalProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=""
+      placeholder={placeholder ?? ''}
       size="small"
       required={required}
       disabled={disabled}

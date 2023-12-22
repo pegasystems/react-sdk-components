@@ -25,7 +25,8 @@ export default function Integer(props: IntegerProps) {
     testId,
     helperText,
     displayMode,
-    hideLabel
+    hideLabel,
+    placeholder
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -71,7 +72,7 @@ export default function Integer(props: IntegerProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=""
+      placeholder={placeholder ?? ''}
       size="small"
       required={required}
       disabled={disabled}
