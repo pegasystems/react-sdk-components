@@ -31,7 +31,8 @@ export default function Currency(props: CurrrencyProps) {
     helperText,
     displayMode,
     hideLabel,
-    currencyISOCode = 'USD'
+    currencyISOCode = 'USD',
+    placeholder
   } = props;
 
   const pConn = getPConnect();
@@ -102,7 +103,7 @@ export default function Currency(props: CurrrencyProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=""
+      placeholder={placeholder ?? ''}
       size="small"
       required={required}
       disabled={disabled}

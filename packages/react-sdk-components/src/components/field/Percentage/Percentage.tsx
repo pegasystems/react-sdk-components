@@ -46,7 +46,8 @@ export default function Percentage(props: PercentageProps) {
     testId,
     helperText,
     displayMode,
-    hideLabel
+    hideLabel,
+    placeholder
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -76,7 +77,7 @@ export default function Percentage(props: PercentageProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=""
+      placeholder={placeholder ?? ''}
       size="small"
       required={required}
       disabled={disabled}
