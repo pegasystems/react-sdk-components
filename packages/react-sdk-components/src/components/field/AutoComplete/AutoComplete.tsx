@@ -207,7 +207,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
           fullWidth
           variant="outlined"
           helperText={helperTextToDisplay}
-          placeholder={placeholder}
+          placeholder={placeholder ?? ''}
           size="small"
           required={required}
           error={status === 'error'}

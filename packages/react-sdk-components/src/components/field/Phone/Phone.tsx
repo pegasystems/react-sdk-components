@@ -24,7 +24,8 @@ export default function Phone(props: PhoneProps) {
     testId,
     helperText,
     displayMode,
-    hideLabel
+    hideLabel,
+    placeholder
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -49,7 +50,7 @@ export default function Phone(props: PhoneProps) {
         <MuiPhoneNumber
           fullWidth
           helperText={helperTextToDisplay}
-          placeholder=""
+          placeholder={placeholder ?? ''}
           size="small"
           required={required}
           disabled={disabled}
