@@ -27,7 +27,8 @@ export default function TextInput(props: TextInputProps) {
     fieldMetadata,
     helperText,
     displayMode,
-    hideLabel
+    hideLabel,
+    placeholder
   } = props;
 
   const pConn = getPConnect();
@@ -77,7 +78,7 @@ export default function TextInput(props: TextInputProps) {
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
-      placeholder=""
+      placeholder={placeholder ?? ''}
       size="small"
       required={required}
       disabled={disabled}

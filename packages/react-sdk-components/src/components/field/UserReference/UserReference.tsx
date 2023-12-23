@@ -136,7 +136,7 @@ const UserReference = (props: UserReferenceProps) => {
           listType="datapage"
           columns={columns}
           testId={testId}
-          placeholder={placeholder}
+          placeholder={placeholder ?? ''}
           readOnly={readOnly}
           disabled={disabled}
           required={required}
@@ -158,7 +158,7 @@ const UserReference = (props: UserReferenceProps) => {
           label={label}
           value={userId}
           testId={testId}
-          placeholder={placeholder}
+          placeholder={placeholder ?? ''}
           readOnly={readOnly}
           disabled={disabled}
           required={required}

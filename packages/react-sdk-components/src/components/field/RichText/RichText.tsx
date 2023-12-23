@@ -77,7 +77,7 @@ export default function RichText(props: RichTextProps) {
         labelHidden={hideLabel}
         info={helperTextToDisplay}
         defaultValue={value}
-        placeholder={placeholder}
+        placeholder={placeholder ?? ''}
         disabled={disabled}
         required={required}
         testId={testId}
