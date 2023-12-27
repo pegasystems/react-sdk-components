@@ -9,7 +9,6 @@ const endpoints = require('../../../../../../sdk-config.json');
 
 // These values represent the data values used for the conditions and are initialised in pyDefault DT
 const isDisabled = true;
-const isVisible = true;
 
 test.beforeEach(common.launchPortal);
 
