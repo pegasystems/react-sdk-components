@@ -4,12 +4,6 @@
 //  make sure that this code isn't run until PCore is defined (after onPCoreReady)
 // const { CASE_INFO } = window.PCore.getConstants();
 
-export const isContainerInitialized = (pConnect) => {
-  const context = pConnect.getContextName();
-  const containerName = pConnect.getContainerName();
-  return PCore.getContainerUtils().isContainerInitialized(context, containerName);
-};
-
 export const addContainerItem = (pConnect) => {
   const containerManager = pConnect.getContainerManager();
   const contextName = pConnect.getContextName(); // here we will get parent context name, as flow container is child of view container

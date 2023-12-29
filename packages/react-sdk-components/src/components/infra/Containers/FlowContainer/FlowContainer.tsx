@@ -10,7 +10,8 @@ import StoreContext from '../../../../bridge/Context/StoreContext';
 import DayjsUtils from '@date-io/dayjs';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-import { addContainerItem, getToDoAssignments, showBanner, isContainerInitialized, hasContainerItems } from './helpers';
+import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
+import { isContainerInitialized } from '../containerHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 // import type { PConnProps } from '../../../../types/PConnProps';

@@ -1,11 +1,6 @@
 import { useEffect, createElement } from 'react';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-
-const isContainerInitialized = (pConnect) => {
-  const context = pConnect.getContextName();
-  const containerName = pConnect.getContainerName();
-  return PCore.getContainerUtils().isContainerInitialized(context, containerName);
-};
+import { isContainerInitialized } from '../containerHelpers';
 
 const processRootViewDetails = (rootView, containerItem, options) => {
   const {
@@ -56,7 +51,7 @@ const processRootViewDetails = (rootView, containerItem, options) => {
   };
 };
 
-export const getPConnectOfActiveContainerItem = (containerInfo, options) => {
+export const getPConnectOfActiveContainerItem: any = (containerInfo, options) => {
   const { accessedOrder, items } = containerInfo;
   const { isAssignmentView = false, parentGetPConnect } = options;
   const containerName = parentGetPConnect().getContainerName();
