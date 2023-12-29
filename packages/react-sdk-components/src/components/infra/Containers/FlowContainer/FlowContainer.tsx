@@ -1,18 +1,16 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
-import React, { useState, useEffect, useContext, createElement } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
 import { Utils } from '../../../helpers/utils';
 import { Alert } from '@material-ui/lab';
 
-import createPConnectComponent from '../../../../bridge/react_pconnect';
 import StoreContext from '../../../../bridge/Context/StoreContext';
 import DayjsUtils from '@date-io/dayjs';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-import { addContainerItem, getToDoAssignments, showBanner } from './helpers';
-import { isEmptyObject } from '../../../helpers/common-utils';
+import { addContainerItem, getToDoAssignments, showBanner, isContainerInitialized, hasContainerItems } from './helpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 // import type { PConnProps } from '../../../../types/PConnProps';
@@ -70,16 +68,24 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   const { TODO } = pCoreConstants;
   const todo_headerText = 'To do';
 
-  const { getPConnect: getPConnectOfFlowContainer, routingInfo, pageMessages, getPConnectOfActiveContainerItem } = props;
+  const {
+    getPConnect: getPConnectOfFlowContainer,
+    pageMessages,
+    rootViewElement,
+    getPConnectOfActiveContainerItem,
+    activeContainerItemID: itemKey
+  } = props;
 
   const { displayOnlyFA } = useContext<any>(StoreContext);
+  const pConnectOfFlowContainer = getPConnectOfFlowContainer();
+  const isInitialized = isContainerInitialized(pConnectOfFlowContainer);
+  const hasItems = isInitialized && hasContainerItems(pConnectOfFlowContainer);
   const getPConnect = getPConnectOfActiveContainerItem || getPConnectOfFlowContainer;
   const thePConn = getPConnect();
 
   // const [init, setInit] = useState(true);
   // const [fcState, setFCState] = useState({ hasError: false });
   const [arNewChildren, setArNewChildren] = useState<Array<any>>(thePConn.getChildren());
-  const [arNewChildrenAsReact, setArNewChildrenAsReact] = useState<Array<any>>([]);
 
   const [todo_showTodo, setShowTodo] = useState(false);
   const [todo_caseInfoID, setCaseInfoID] = useState('');
@@ -93,7 +99,6 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [checkSvg, setCheckSvg] = useState('');
 
-  const [itemKey, setItemKey] = useState('');
   const [containerName, setContainerName] = useState('');
   const [buildName, setBuildName] = useState('');
   const [bShowConfirm, setShowConfirm] = useState(false);
@@ -103,28 +108,6 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   const localeReference = `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase();
 
   const classes = useStyles();
-
-  function initContainer() {
-    const ourPConn = getPConnect();
-    const containerMgr = ourPConn.getContainerManager();
-    const baseContext = ourPConn.getContextName();
-    const theContainerName = ourPConn.getContainerName();
-    const containerType = 'single';
-
-    const flowContainerTarget = `${baseContext}/${theContainerName}`;
-    const isContainerItemAvailable = PCore.getContainerUtils().getActiveContainerItemName(flowContainerTarget);
-
-    window.sessionStorage.setItem('okToInitFlowContainer', 'false');
-
-    if (!isContainerItemAvailable) {
-      containerMgr.initializeContainers({
-        type: containerType
-      });
-
-      // updated for 8.7 - 30-Mar-2022
-      addContainerItem(ourPConn);
-    }
-  }
 
   function getBuildName(): string {
     const ourPConn = getPConnect();
@@ -171,18 +154,6 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     // debugger;
     setShowTodo(getTodoVisibility());
 
-    // create pointers to functions
-    // const containerMgr = ourPConn.getContainerManager();
-    // const actionsAPI = thePConn.getActionsApi();
-    const baseContext = ourPConn.getContextName();
-    const acName = ourPConn.getContainerName();
-
-    // for now, in general this should be overridden by updateSelf(), and not be blank
-    if (itemKey === '') {
-      // debugger;
-      setItemKey(baseContext.concat('/').concat(acName));
-    }
-
     ourPConn.isBoundToState();
 
     // inside
@@ -203,8 +174,15 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   useEffect(() => {
     // from WC SDK connectedCallback (mount)
     initComponent(true);
-    initContainer();
   }, []);
+
+  useEffect(() => {
+    if (isInitialized && pConnectOfFlowContainer.getMetadata().children && !hasItems) {
+      // ensuring not to add container items, if container already has items
+      // because during multi doc mode, we will have container items already in store
+      addContainerItem(pConnectOfFlowContainer);
+    }
+  }, [isInitialized, hasItems]);
 
   function isCaseWideLocalAction() {
     const ourPConn = getPConnect();
@@ -267,26 +245,8 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     return bHasAssignments;
   }
 
-  function getActiveViewLabel() {
-    const ourPConn = getPConnect();
-
-    let activeActionLabel = '';
-
-    const { CASE_INFO: CASE_CONSTS } = pCoreConstants;
-
-    const caseActions = ourPConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS, ''); // 2nd arg empty string until typedefs properly allow optionalv
-    const activeActionID = ourPConn.getValue(CASE_CONSTS.ACTIVE_ACTION_ID, ''); // 2nd arg empty string until typedefs properly allow optional
-    const activeAction = caseActions?.find((action) => action.ID === activeActionID);
-    if (activeAction) {
-      activeActionLabel = activeAction.name;
-    }
-    return activeActionLabel;
-  }
-
   // From SDK-WC updateSelf - so do this in useEffect that's run only when the props change...
   useEffect(() => {
-    const localPConn = arNewChildren?.[0].getPConnect();
-
     setBuildName(getBuildName());
 
     // routingInfo was added as component prop in populateAdditionalProps
@@ -320,19 +280,10 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
         setShowTodo(true);
         setShowTodoList(false);
       }, 100);
-
-      // in React, when cancel is called, somehow the constructor for flowContainer is called which
-      // does init/add of containers.  This mimics that
-      initContainer();
     } else if (caseViewMode && caseViewMode === 'perform') {
       // perform
       // debugger;
       setShowTodo(false);
-
-      // this is different than Angular SDK, as we need to initContainer if root container reloaded
-      if (window.sessionStorage.getItem('okToInitFlowContainer') === 'true') {
-        initContainer();
-      }
     }
 
     // if have caseMessage show message and end
@@ -355,66 +306,6 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
       setHasCaseMessages(false);
       setShowConfirm(false);
     }
-
-    // this check in routingInfo, mimic React to check and get the internals of the
-    // flowContainer and force updates to pConnect/redux
-    if (routingInfo && loadingInfo !== undefined) {
-      // debugging/investigation help
-      // console.log(`${thePConn.getComponentName()}: >>routingInfo: ${JSON.stringify(routingInfo)}`);
-
-      const currentOrder = routingInfo.accessedOrder;
-      const currentItems = routingInfo.items;
-      const type = routingInfo.type;
-      if (currentOrder && currentItems) {
-        // JA - making more similar to React version
-        const key = currentOrder[currentOrder.length - 1];
-
-        // save off itemKey to be used for finishAssignment, etc.
-        // debugger;
-        setItemKey(key);
-
-        if (currentOrder.length > 0 && currentItems[key] && currentItems[key].view && type === 'single' && !isEmptyObject(currentItems[key].view)) {
-          const currentItem = currentItems[key];
-          const rootView = currentItem.view;
-          const { context } = rootView.config;
-          const config = { meta: rootView };
-
-          config['options'] = {
-            context: currentItem.context,
-            pageReference: context || localPConn.getPageReference(),
-            hasForm: true,
-            isFlowContainer: true,
-            containerName: localPConn.getContainerName(),
-            containerItemName: key,
-            parentPageReference: localPConn.getPageReference()
-          };
-
-          const configObject = PCore.createPConnect(config);
-
-          // Since we're setting an array, need to add in an appropriate key
-          //  to remove React warning.
-          configObject['key'] = config['options'].parentPageReference;
-
-          // keep track of these changes
-          const theNewChildren: Array<Object> = [];
-          theNewChildren.push(configObject);
-          setArNewChildren(theNewChildren);
-
-          // JEA - adapted from Constellation DX Components FlowContainer since we want to render children that are React components
-          const root = createElement(createPConnectComponent(), configObject);
-          setArNewChildrenAsReact([root]);
-
-          const oWorkItem = configObject.getPConnect(); // was theNewChildren[0].getPConnect()
-          const oWorkData = oWorkItem.getDataObject();
-
-          // check if have oWorkData, there are times due to timing of state change, when this
-          // may not be available
-          if (oWorkData) {
-            setContainerName(localizedVal(getActiveViewLabel() || oWorkData.caseInfo.assignments?.[0].name, undefined, localeReference));
-          }
-        }
-      }
-    }
   }, [props]);
 
   const caseId = thePConn.getCaseSummary().content.pyID;
@@ -430,41 +321,6 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     return hasBanner && <AlertBanner id="flowContainerBanner" variant="urgent" messages={messages} />;
   };
 
-  function getRefreshProps(refreshConditions) {
-    // refreshConditions cuurently supports only "Changes" event
-    if (!refreshConditions) {
-      return [];
-    }
-    return refreshConditions.filter((item) => item.event && item.event === 'Changes').map((item) => [item.field, item.field?.substring(1)]) || [];
-  }
-
-  // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
-  const refreshConditions = thePConn.getCaseInfo()?.getActionRefreshConditions();
-  const context = thePConn.getContextName();
-  const pageReference = thePConn.getPageReference();
-
-  // refresh api de-registration
-  PCore.getRefreshManager().deRegisterForRefresh(context);
-
-  // refresh api registration
-  const refreshProps = getRefreshProps(refreshConditions);
-  const caseKey = thePConn.getCaseInfo().getKey();
-  const refreshOptions = { autoDetectRefresh: true, preserveClientChanges: false };
-  if (refreshProps.length > 0) {
-    refreshProps.forEach((prop) => {
-      PCore.getRefreshManager().registerForRefresh(
-        'PROP_CHANGE',
-        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, null, pageReference, {
-          ...refreshOptions,
-          refreshFor: prop[0]
-        }),
-        `${pageReference}.${prop[1]}`,
-        `${context}/${pageReference}`,
-        context
-      );
-    });
-  }
-
   return (
     <div style={{ textAlign: 'left' }} id={buildName} className="psdk-flow-container-top">
       {!bShowConfirm &&
@@ -479,7 +335,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                  {arNewChildrenAsReact}
+                  {[rootViewElement]}
                 </Assignment>
               </MuiPickersUtilsProvider>
             </Card>
@@ -489,7 +345,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                  {arNewChildrenAsReact}
+                  {[rootViewElement]}
                 </Assignment>
               </MuiPickersUtilsProvider>
             </Card>
@@ -515,7 +371,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
           <Alert severity="success">{caseMessages}</Alert>
         </div>
       )}
-      {bShowConfirm && bShowBanner && <div>{arNewChildrenAsReact}</div>}
+      {bShowConfirm && bShowBanner && <div>{[rootViewElement]}</div>}
     </div>
   );
 };
