@@ -1,11 +1,6 @@
 import { useEffect, createElement } from 'react';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-
-const isContainerInitialized = (pConnect) => {
-  const context = pConnect.getContextName();
-  const containerName = pConnect.getContainerName();
-  return PCore.getContainerUtils().isContainerInitialized(context, containerName);
-};
+import { isContainerInitialized } from '../containerHelpers';
 
 const processRootViewDetails = (rootView, containerItem, options) => {
   const {
