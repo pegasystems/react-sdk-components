@@ -74,6 +74,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     pageMessages,
     rootViewElement,
     getPConnectOfActiveContainerItem,
+    assignmentNames,
     activeContainerItemID: itemKey
   } = props;
 
@@ -83,10 +84,9 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   const hasItems = isInitialized && hasContainerItems(pConnectOfFlowContainer);
   const getPConnect = getPConnectOfActiveContainerItem || getPConnectOfFlowContainer;
   const thePConn = getPConnect();
-
+  const containerName = assignmentNames[0];
   // const [init, setInit] = useState(true);
   // const [fcState, setFCState] = useState({ hasError: false });
-  const [arNewChildren, setArNewChildren] = useState<Array<any>>(thePConn.getChildren());
 
   const [todo_showTodo, setShowTodo] = useState(false);
   const [todo_caseInfoID, setCaseInfoID] = useState('');
@@ -100,13 +100,10 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [checkSvg, setCheckSvg] = useState('');
 
-  const [containerName, setContainerName] = useState('');
   const [buildName, setBuildName] = useState('');
   const [bShowConfirm, setShowConfirm] = useState(false);
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Messages';
-  const caseInfo = getPConnect().getCaseInfo();
-  const localeReference = `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase();
 
   const classes = useStyles();
 
@@ -134,13 +131,8 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     return true;
   }
 
-  function initComponent(bLoadChildren: boolean) {
+  function initComponent() {
     const ourPConn = getPConnect();
-
-    // when true, update arChildren from pConn, otherwise, arChilren will be updated in updateSelf()
-    if (bLoadChildren) {
-      setArNewChildren(ourPConn.getChildren());
-    }
 
     // debugging/investigation help
     // console.log(`${ourPConn.getComponentName()}: children update for main draw`);
@@ -157,24 +149,13 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
 
     ourPConn.isBoundToState();
 
-    // inside
-    // get fist kid, get the name and displa
-    // pass first kid to a view container, which will disperse it to a view which will use one column, two column, etc.
-    const oWorkItem = arNewChildren?.[0].getPConnect(); // child0_getPConnect;
-    const oWorkData = oWorkItem?.getDataObject();
-
-    if (bLoadChildren && oWorkData) {
-      // debugger;
-      setContainerName(localizedVal(oWorkData.caseInfo.assignments?.[0].name, undefined, localeReference));
-    }
-
     // debugger;
     setBuildName(getBuildName());
   }
 
   useEffect(() => {
     // from WC SDK connectedCallback (mount)
-    initComponent(true);
+    initComponent();
   }, []);
 
   useEffect(() => {
