@@ -67,7 +67,7 @@ test.describe('E2E test', () => {
 
     const complexTable = page.locator('div[id="list-view"] >> nth=0');
 
-    await expect(complexTable.locator(`td:has-text("${day.getDate()}")`)).toBeVisible();
+    await expect(complexTable.locator(`td:has-text("${day.getDate().toString().padStart(2, '0')}")`)).toBeVisible();
 
     let pagination = page.locator('div[id="pagination"]');
     await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeVisible();
