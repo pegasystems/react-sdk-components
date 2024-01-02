@@ -11,7 +11,7 @@ import DayjsUtils from '@date-io/dayjs';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
-import { isContainerInitialized } from '../containerHelpers';
+import { isContainerInitialized } from '../helpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 // import type { PConnProps } from '../../../../types/PConnProps';
@@ -84,7 +84,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   const hasItems = isInitialized && hasContainerItems(pConnectOfFlowContainer);
   const getPConnect = getPConnectOfActiveContainerItem || getPConnectOfFlowContainer;
   const thePConn = getPConnect();
-  const containerName = assignmentNames[0];
+  const containerName = assignmentNames && assignmentNames.length > 0 ? assignmentNames[0] : '';
   // const [init, setInit] = useState(true);
   // const [fcState, setFCState] = useState({ hasError: false });
 
