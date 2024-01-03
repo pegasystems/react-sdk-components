@@ -223,6 +223,41 @@ export default function Assignment(props /* : AssignmentProps */) {
     }
   }
 
+  function getRefreshProps(refreshConditions) {
+    // refreshConditions cuurently supports only "Changes" event
+    if (!refreshConditions) {
+      return [];
+    }
+    return refreshConditions.filter((item) => item.event && item.event === 'Changes').map((item) => [item.field, item.field?.substring(1)]) || [];
+  }
+
+  // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
+  const refreshConditions = thePConn.getCaseInfo()?.getActionRefreshConditions();
+  const context = thePConn.getContextName();
+  const pageReference = thePConn.getPageReference();
+
+  // refresh api de-registration
+  PCore.getRefreshManager().deRegisterForRefresh(context);
+
+  // refresh api registration
+  const refreshProps = getRefreshProps(refreshConditions);
+  const caseKey = thePConn.getCaseInfo().getKey();
+  const refreshOptions = { autoDetectRefresh: true, preserveClientChanges: false };
+  if (refreshProps.length > 0) {
+    refreshProps.forEach((prop) => {
+      PCore.getRefreshManager().registerForRefresh(
+        'PROP_CHANGE',
+        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, null, pageReference, {
+          ...refreshOptions,
+          refreshFor: prop[0]
+        }),
+        `${pageReference}.${prop[1]}`,
+        `${context}/${pageReference}`,
+        context
+      );
+    });
+  }
+
   return (
     <div id="Assignment">
       {banners}
