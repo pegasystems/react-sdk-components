@@ -8,19 +8,18 @@ import type { PConnProps } from '../../../types/PConnProps';
 
 interface AssignmentProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
-  itemKey: string,
-  isInModal: boolean,
-  banners: Array<any>
+  children: Array<any>;
+  itemKey: string;
+  isInModal: boolean;
+  banners: Array<any>;
   // eslint-disable-next-line react/no-unused-prop-types
-  actionButtons: Array<any>,
+  actionButtons: Array<any>;
 }
-
 
 export default function Assignment(props: AssignmentProps) {
   // Get emitted components from map (so we can get any override that may exist)
-  const AssignmentCard = getComponentFromMap("AssignmentCard");
-  const MultiStep = getComponentFromMap("MultiStep");
+  const AssignmentCard = getComponentFromMap('AssignmentCard');
+  const MultiStep = getComponentFromMap('MultiStep');
 
   const { getPConnect, children, itemKey = '', isInModal = false, banners = [] } = props;
   const thePConn = getPConnect();
@@ -47,13 +46,9 @@ export default function Assignment(props: AssignmentProps) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  function findCurrentIndicies(
-    arStepperSteps: Array<any>,
-    arIndicies: Array<number>,
-    depth: number
-  ): Array<number> {
+  function findCurrentIndicies(arStepperSteps: Array<any>, arIndicies: Array<number>, depth: number): Array<number> {
     let count = 0;
-    arStepperSteps.forEach(step => {
+    arStepperSteps.forEach((step) => {
       if (step.visited_status === 'current') {
         arIndicies[depth] = count;
 
@@ -94,28 +89,23 @@ export default function Assignment(props: AssignmentProps) {
           setHasNavigation(true);
 
           if (
-            oCaseInfo.navigation.template &&
-            oCaseInfo.navigation.template.toLowerCase() === 'standard'
+            (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === 'standard') ||
+            oCaseInfo?.navigation?.steps?.length === 1
           ) {
             setHasNavigation(false);
-          } else if (
-            oCaseInfo.navigation.template &&
-            oCaseInfo.navigation.template.toLowerCase() === 'vertical'
-          ) {
+          } else if (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === 'vertical') {
             setIsVertical(true);
           } else {
             setIsVertical(false);
           }
           const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
-          steps.forEach(step => {
+          steps.forEach((step) => {
             if (step.name) {
               step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
             }
           });
           setArNavigationSteps(steps);
-          setArCurrentStepIndicies(
-            findCurrentIndicies(arNavigationSteps, arCurrentStepIndicies, 0)
-          );
+          setArCurrentStepIndicies(findCurrentIndicies(arNavigationSteps, arCurrentStepIndicies, 0));
         }
       }
     }
@@ -138,10 +128,7 @@ export default function Assignment(props: AssignmentProps) {
 
   function onSaveActionSuccess(data) {
     actionsAPI.cancelAssignment(itemKey).then(() => {
-      PCore.getPubSubUtils().publish(
-        PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CREATE_STAGE_SAVED,
-        data
-      );
+      PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CREATE_STAGE_SAVED, data);
     });
   }
 
@@ -167,9 +154,7 @@ export default function Assignment(props: AssignmentProps) {
 
           savePromise
             .then(() => {
-              const caseType = thePConn
-                .getCaseInfo()
-                .c11nEnv.getValue(PCore.getConstants().CASE_INFO.CASE_TYPE_ID);
+              const caseType = thePConn.getCaseInfo().c11nEnv.getValue(PCore.getConstants().CASE_INFO.CASE_TYPE_ID);
               onSaveActionSuccess({ caseType, caseID, assignmentID });
             })
             .catch(() => {
@@ -186,13 +171,12 @@ export default function Assignment(props: AssignmentProps) {
           const isAssignmentInCreateStage = thePConn.getCaseInfo().isAssignmentInCreateStage();
           const isLocalAction =
             thePConn.getCaseInfo().isLocalAction() ||
-            (PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION &&
-              getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION, ''));// 2nd arg empty string until typedefs allow it to be optional
+            (PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION && getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION, '')); // 2nd arg empty string until typedefs allow it to be optional
           if (isAssignmentInCreateStage && isInModal && !isLocalAction) {
             const cancelPromise = cancelCreateStageAssignment(itemKey);
 
             cancelPromise
-              .then(data => {
+              .then((data) => {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
@@ -202,7 +186,7 @@ export default function Assignment(props: AssignmentProps) {
             const cancelPromise = cancelAssignment(itemKey);
 
             cancelPromise
-              .then(data => {
+              .then((data) => {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
@@ -236,8 +220,43 @@ export default function Assignment(props: AssignmentProps) {
     }
   }
 
+  function getRefreshProps(refreshConditions) {
+    // refreshConditions cuurently supports only "Changes" event
+    if (!refreshConditions) {
+      return [];
+    }
+    return refreshConditions.filter((item) => item.event && item.event === 'Changes').map((item) => [item.field, item.field?.substring(1)]) || [];
+  }
+
+  // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
+  const refreshConditions = thePConn.getCaseInfo()?.getActionRefreshConditions();
+  const context = thePConn.getContextName();
+  const pageReference = thePConn.getPageReference();
+
+  // refresh api de-registration
+  PCore.getRefreshManager().deRegisterForRefresh(context);
+
+  // refresh api registration
+  const refreshProps = getRefreshProps(refreshConditions);
+  const caseKey = thePConn.getCaseInfo().getKey();
+  const refreshOptions = { autoDetectRefresh: true, preserveClientChanges: false };
+  if (refreshProps.length > 0) {
+    refreshProps.forEach((prop) => {
+      PCore.getRefreshManager().registerForRefresh(
+        'PROP_CHANGE',
+        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, null, pageReference, {
+          ...refreshOptions,
+          refreshFor: prop[0]
+        }),
+        `${pageReference}.${prop[1]}`,
+        `${context}/${pageReference}`,
+        context
+      );
+    });
+  }
+
   return (
-    <div id='Assignment'>
+    <div id="Assignment">
       {banners}
       {bHasNavigation ? (
         <React.Fragment>
@@ -258,25 +277,15 @@ export default function Assignment(props: AssignmentProps) {
             onClose={handleSnackbarClose}
             message={snackbarMessage}
             action={
-              <IconButton
-                size='small'
-                aria-label='close'
-                color='inherit'
-                onClick={handleSnackbarClose}
-              >
-                <CloseIcon fontSize='small' />
+              <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+                <CloseIcon fontSize="small" />
               </IconButton>
             }
           />
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <AssignmentCard
-            getPConnect={getPConnect}
-            itemKey={itemKey}
-            actionButtons={actionButtons}
-            onButtonPress={buttonPress}
-          >
+          <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
             {children}
           </AssignmentCard>
           <Snackbar
@@ -285,13 +294,8 @@ export default function Assignment(props: AssignmentProps) {
             onClose={handleSnackbarClose}
             message={snackbarMessage}
             action={
-              <IconButton
-                size='small'
-                aria-label='close'
-                color='inherit'
-                onClick={handleSnackbarClose}
-              >
-                <CloseIcon fontSize='small' />
+              <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+                <CloseIcon fontSize="small" />
               </IconButton>
             }
           />
