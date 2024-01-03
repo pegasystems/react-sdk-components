@@ -91,7 +91,10 @@ export default function Assignment(props /* : AssignmentProps */) {
         if (oCaseInfo?.navigation /* was oCaseInfo.navigation != null */) {
           setHasNavigation(true);
 
-          if (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === 'standard') {
+          if (
+            (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === 'standard') ||
+            oCaseInfo?.navigation?.steps?.length === 1
+          ) {
             setHasNavigation(false);
           } else if (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === 'vertical') {
             setIsVertical(true);
