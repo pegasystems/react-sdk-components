@@ -42,19 +42,11 @@ export default function Currency(props: CurrrencyProps) {
 
   // console.log(`Currency: label: ${label} value: ${value}`);
 
-  let readOnlyProp = {}; // Note: empty if NOT ReadOnly
-
-  if (readOnly) {
-    readOnlyProp = { readOnly: true };
-  }
-
-  let testProp = {};
-
-  testProp = {
+  const testProp = {
     'data-test-id': testId
   };
 
-  const [currValue, setCurrValue] = useState('');
+  const [currValue, setCurrValue] = useState(value.toString());
   const [theCurrSym, setCurrSym] = useState('$');
   const [theCurrDec, setCurrDec] = useState('.');
   const [theCurrSep, setCurrSep] = useState(',');
@@ -66,11 +58,6 @@ export default function Currency(props: CurrrencyProps) {
     setCurrDec(theSymbols.theDecimalIndicator);
     setCurrSep(theSymbols.theDigitGroupSeparator);
   }, [currencyISOCode]);
-
-  useEffect(() => {
-    // const testVal = value;
-    setCurrValue(value.toString());
-  }, [value]);
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
   const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
@@ -107,18 +94,19 @@ export default function Currency(props: CurrrencyProps) {
       size="small"
       required={required}
       disabled={disabled}
-      onChange={currOnChange}
-      onBlur={!readOnly ? currOnBlur : undefined}
+      readOnly={!!readOnly}
       error={status === 'error'}
       label={label}
       value={currValue}
       type="text"
       outputFormat="number"
       textAlign="left"
-      InputProps={{ ...readOnlyProp, inputProps: { ...testProp, value: currValue } }}
+      InputProps={{ inputProps: { ...testProp, value: currValue } }}
       currencySymbol={theCurrSym}
       decimalCharacter={theCurrDec}
       digitGroupSeparator={theCurrSep}
+      onChange={currOnChange}
+      onBlur={!readOnly ? currOnBlur : undefined}
     />
   );
 }
