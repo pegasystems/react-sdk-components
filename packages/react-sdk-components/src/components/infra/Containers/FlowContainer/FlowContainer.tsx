@@ -74,7 +74,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     pageMessages,
     rootViewElement,
     getPConnectOfActiveContainerItem,
-    assignmentNames,
+    // assignmentNames,
     activeContainerItemID: itemKey
   } = props;
 
@@ -84,7 +84,9 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   const hasItems = isInitialized && hasContainerItems(pConnectOfFlowContainer);
   const getPConnect = getPConnectOfActiveContainerItem || getPConnectOfFlowContainer;
   const thePConn = getPConnect();
-  const containerName = assignmentNames && assignmentNames.length > 0 ? assignmentNames[0] : '';
+  // `assignmentNames` is currently undefined in 8.8.*. but keeping it here, in case it works later
+  // const containerName = assignmentNames && assignmentNames.length > 0 ? assignmentNames[0] : '';
+  const containerName = thePConn.getDataObject().caseInfo.assignments?.[0].name;
   // const [init, setInit] = useState(true);
   // const [fcState, setFCState] = useState({ hasError: false });
 
