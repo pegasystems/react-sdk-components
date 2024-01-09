@@ -69,7 +69,7 @@ module.exports = (env, argv) => {
         {
           from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.*.*',
           to() {
-            return Promise.resolve("constellation/[name].[ext]");
+            return Promise.resolve("constellation/[name][ext]");
           }
         },        {
           from: './node_modules/@pega/constellationjs/dist/lib_asset.json',
@@ -78,7 +78,7 @@ module.exports = (env, argv) => {
         {
           from: './node_modules/@pega/constellationjs/dist/constellation-core.*.*',
           to() {
-            return Promise.resolve('constellation/prerequisite/[name].[ext]');
+            return Promise.resolve('constellation/prerequisite/[name][ext]');
           }
         }
       ]
