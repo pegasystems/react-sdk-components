@@ -1,4 +1,3 @@
-import React from "react";
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // OneColumnPage does NOT have getPConnect. So, no need to extend from PConnProps

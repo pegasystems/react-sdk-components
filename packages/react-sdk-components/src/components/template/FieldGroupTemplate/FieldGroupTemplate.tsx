@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 

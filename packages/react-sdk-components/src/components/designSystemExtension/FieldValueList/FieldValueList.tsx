@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -86,11 +84,9 @@ export default function FieldValueList(props: FieldValueListProps) {
   }
 
   return (
-    <React.Fragment>
-      <Grid container spacing={4} justifyContent='space-between'>
+    <Grid container spacing={4} justifyContent='space-between'>
         {getGridItemLabel()}
         {getGridItemValue()}
       </Grid>
-    </React.Fragment>
   );
 };

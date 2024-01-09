@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Tab, Tabs } from "@material-ui/core";
 import { TabContext, TabPanel } from '@material-ui/lab';
 import { getTransientTabs, getVisibleTabs, tabClick } from './tabUtils';
@@ -36,8 +36,7 @@ export default function SubTabs(props: SubTabsProps) {
   };
 
   return (
-    <Fragment>
-      <TabContext value={currentTabId.toString()}>
+    <TabContext value={currentTabId.toString()}>
       <Tabs
         onChange={handleTabClick}
         value={currentTabId}
@@ -59,6 +58,5 @@ export default function SubTabs(props: SubTabsProps) {
           </TabPanel>
         ))}
       </TabContext>
-    </Fragment>
   );
 }

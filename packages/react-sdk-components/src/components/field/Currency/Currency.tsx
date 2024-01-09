@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';

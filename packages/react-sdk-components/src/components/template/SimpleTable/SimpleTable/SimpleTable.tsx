@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from 'react';
 import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
 import { useRef } from 'react';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';

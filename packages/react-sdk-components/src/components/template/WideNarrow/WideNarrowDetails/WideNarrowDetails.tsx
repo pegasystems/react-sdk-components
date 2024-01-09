@@ -1,4 +1,4 @@
-import React, { createElement } from 'react';
+import { createElement } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { GridSize } from '@material-ui/core/Grid';
 import createPConnectComponent from '../../../../bridge/react_pconnect';

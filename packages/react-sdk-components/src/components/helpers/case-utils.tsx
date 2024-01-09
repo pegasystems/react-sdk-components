@@ -1,4 +1,3 @@
-import React from 'react';
 import { getComponentFromMap } from '../../bridge/helpers/sdk_component_map';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)

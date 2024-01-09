@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, createElement } from 'react';
+import { useEffect, useRef, useState, createElement } from 'react';
 import isEqual from 'fast-deep-equal';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -330,9 +330,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
             >
               {arNewChildrenAsReact}
             </Assignment>
-          ) : (
-            <></>
-          )}
+          ) : null}
         </DialogContent>
         {isMultiRecordData && (
           <ListViewActionButtons

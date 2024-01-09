@@ -1,4 +1,3 @@
-import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -39,8 +38,7 @@ export default function FieldGroup(props: FieldGroupProps) {
   );
 
   return (
-    <React.Fragment>
-      <Grid container spacing={4} justifyContent='space-between'>
+    <Grid container spacing={4} justifyContent='space-between'>
         <Grid item style={{ width: '100%' }}>
           {name && (
             <div className={classes.fieldMargin}>
@@ -50,6 +48,5 @@ export default function FieldGroup(props: FieldGroupProps) {
           {descAndChildren}
         </Grid>
       </Grid>
-    </React.Fragment>
   );
 };

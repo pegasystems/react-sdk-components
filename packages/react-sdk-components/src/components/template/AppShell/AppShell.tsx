@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Utils } from '../../helpers/utils';
 import Avatar from '@material-ui/core/Avatar';

@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/no-array-index-key */
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';

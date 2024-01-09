@@ -9,7 +9,7 @@ dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 
 export class Utils {
-  static lastControlID: number = 0;
+  static lastControlID = 0;
 
   static getSDKStaticConentUrl() {
     const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();

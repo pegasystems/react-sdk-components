@@ -1,5 +1,3 @@
-import React from "react";
-
 interface OneColumnTabProps{
   // If any, enter additional props that only exist on this component
   children: Array<any>

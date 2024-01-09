@@ -1,4 +1,3 @@
-import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import './Banner.css';
 
@@ -13,7 +12,7 @@ interface BannerProps {
   variant: any
 }
 
-export default function Banner(props:BannerProps) {
+export default function Banner(props:Readonly<BannerProps>) {
   const { a, b, banner, variant} = props;
   const { title, message, backgroundImage } = banner;
   const variantMap = {

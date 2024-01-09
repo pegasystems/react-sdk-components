@@ -1,4 +1,3 @@
-import React from 'react';
 // import { FieldGroup } from "@pega/cosmos-react-core";
 // import { LazyMap as LazyComponentMap } from "../../components_map";
 

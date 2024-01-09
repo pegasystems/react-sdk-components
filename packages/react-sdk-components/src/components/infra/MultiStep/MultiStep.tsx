@@ -84,8 +84,7 @@ export default function MultiStep(props: MultiStepProps) {
       }
 
     return (
-      <React.Fragment>
-          <div>
+      <div>
               {bIsVertical ?
                 <div className="psdk-vertical-stepper">
                     {arNavigationSteps.map((mainStep, index) =>   {
@@ -104,7 +103,6 @@ export default function MultiStep(props: MultiStepProps) {
                             </div>
                             <div className={ _getVBodyClass(index)}>
                                 {mainStep?.steps &&
-                                <React.Fragment>
                                 <ul style={{paddingInlineStart: "0rem", marginLeft: "-7px"}}>
                                     {mainStep.steps.forEach((subStep) => {
                                         <li className="psdk-sub-step-list">
@@ -135,7 +133,6 @@ export default function MultiStep(props: MultiStepProps) {
                                     })}
 
                                 </ul>
-                                </React.Fragment>
                                 }
                                 {!mainStep?.steps && mainStep.visited_status === 'current' &&
                                 <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress} >
@@ -176,10 +173,8 @@ export default function MultiStep(props: MultiStepProps) {
                         return (
                          <React.Fragment key={mainStep.actionID}>
                          {mainStep.steps &&
-                            <React.Fragment>
                             <ul style={{paddingInlineStart: "0rem", marginLeft: "35px"}}>
                             {mainStep.steps.map((subStep) => (
-                                <React.Fragment>
                                 <li className="psdk-sub-step-list">
                                 <div style={{display: "inline-flex"}}>
                                     {subStep.visited_status === 'current' &&
@@ -201,11 +196,9 @@ export default function MultiStep(props: MultiStepProps) {
                                  </AssignmentCard>
                                 }
                               </li>
-                              </React.Fragment>
                             ))}
 
                           </ul>
-                          </React.Fragment>
                         }
                         { !mainStep?.steps && mainStep.visited_status === 'current' &&
                             <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress} >
@@ -218,8 +211,6 @@ export default function MultiStep(props: MultiStepProps) {
               }
 
           </div>
-
-      </React.Fragment>
 
     )
   }

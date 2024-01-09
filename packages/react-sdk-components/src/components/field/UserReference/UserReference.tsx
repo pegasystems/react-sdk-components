@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useState } from 'react';
+import { Fragment, memo, useEffect, useState } from 'react';
 import { Typography } from '@material-ui/core';
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';

@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
 import { Utils } from '../../../helpers/utils';

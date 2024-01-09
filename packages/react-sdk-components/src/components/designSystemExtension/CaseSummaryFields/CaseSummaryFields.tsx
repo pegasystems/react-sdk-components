@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import isDeepEqual from 'fast-deep-equal/react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -231,10 +231,8 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   }
 
   return (
-    <React.Fragment>
-      <Grid container className='psdk-case-summary-fields'>
+    <Grid container className='psdk-case-summary-fields'>
         {theFieldsAsGridItems}
       </Grid>
-    </React.Fragment>
   );
 }

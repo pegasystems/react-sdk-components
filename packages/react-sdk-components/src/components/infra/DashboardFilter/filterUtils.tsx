@@ -2,7 +2,6 @@
 /** This file contains various utility methods to generate filter components, regionLayout data, filter expressions, etc.  */
 
 import { Grid, Link } from '@material-ui/core';
-import React from 'react';
 import DashboardFilter from './DashboardFilter';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)

@@ -159,7 +159,7 @@ export default function DeferLoad(props /* : DeferLoadProps */) {
   } else {
     deferLoadContent = !isTab ? (
       <div className={classes.root}>
-        <React.Fragment>{content}</React.Fragment>
+        {content}
       </div>
     ) : (
       <Card id='DeferLoad' className={classes.root}>

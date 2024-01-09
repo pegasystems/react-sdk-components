@@ -1,4 +1,3 @@
-import React from 'react';
 import { useMemo, Children, useEffect, useState } from 'react';
 
 import { buildFilterComponents } from '../../infra/DashboardFilter/filterUtils';

@@ -1,5 +1,4 @@
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnProps } from '../../../types/PConnProps';
 

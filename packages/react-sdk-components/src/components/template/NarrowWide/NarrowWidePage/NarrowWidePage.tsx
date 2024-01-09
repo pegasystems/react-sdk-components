@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import { Children } from "react";
 // import { TwoColumnPage as TwoColumn } from "@pega/cosmos-react-core";
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 

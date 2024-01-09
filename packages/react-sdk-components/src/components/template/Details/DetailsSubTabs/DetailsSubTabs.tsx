@@ -1,6 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
 import { getTransientTabs, getVisibleTabs, tabClick } from '../../SubTabs/tabUtils';
-import React from 'react';
 import { Tab, Tabs, TextField } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 import type { PConnProps } from '../../../../types/PConnProps';

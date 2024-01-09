@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../helpers/utils';

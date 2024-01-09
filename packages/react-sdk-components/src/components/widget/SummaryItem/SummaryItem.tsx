@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Utils } from "../../helpers/utils";
 import './SummaryItem.css'
 import  { IconButton, Menu, MenuItem } from '@material-ui/core';

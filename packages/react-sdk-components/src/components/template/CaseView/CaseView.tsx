@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Utils } from '../../helpers/utils';
 import { Card, CardHeader, Avatar, Typography, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';

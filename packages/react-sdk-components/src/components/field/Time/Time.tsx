@@ -1,4 +1,3 @@
-import React from 'react';
 import { KeyboardTimePicker } from '@material-ui/pickers';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import dayjs from 'dayjs';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import type { PConnProps } from '../../../types/PConnProps';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
