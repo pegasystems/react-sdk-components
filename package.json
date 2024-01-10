@@ -27,7 +27,7 @@
     "lint-errors-only": "npx eslint \"packages/react-sdk-components/src/**\" --quiet",
     "build-dev-only": "webpack --mode=development",
     "build-prod-only": "webpack --mode=production",
-    "build:dev": "run-p -l build-dev-only",
+    "build:dev": "run-p -l lint build-dev-only",
     "build:dev:ci": "npm run ci && npm run build:dev",
     "build:prod": "run-p -l lint build-prod-only",
     "build:prod:ci": "npm run ci && npm run build:prod",
