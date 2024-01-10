@@ -44,7 +44,7 @@ test.describe('E2E test', () => {
 
     /** Required tests */
     const requiredInteger = page.locator('input[data-test-id="0658481a174254dded4a0c1ffe6b8380"]');
-    requiredInteger.type('10000');
+    requiredInteger.fill('10000');
     attributes = await common.getAttributes(requiredInteger);
     await expect(attributes.includes('required')).toBeTruthy();
 
@@ -85,7 +85,7 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeTruthy();
 
     const editableInteger = page.locator('input[data-test-id="c2aac6ae0d08ac599edf0ea4f27c5437"]');
-    editableInteger.type('10000');
+    editableInteger.fill('10000');
 
     attributes = await common.getAttributes(editableInteger);
     await expect(attributes.includes('readonly')).toBeFalsy();

@@ -48,7 +48,7 @@ test.describe('E2E test', () => {
     const requiredDecimal = page.locator('input[data-test-id="9de2a78c2dd0d4dfff4a9bf33349197d"]');
     requiredDecimal.click();
     await requiredDecimal.clear();
-    await requiredDecimal.type('12345');
+    await requiredDecimal.fill('12345');
     requiredDecimal.blur();
     await expect(page.locator('p.Mui-error.Mui-required')).toBeHidden();
 
@@ -92,7 +92,7 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeTruthy();
 
     const editableDecimal = page.locator('input[data-test-id="3e8f5b4dd3786ae5d79fd2dfa2e53cac"]');
-    editableDecimal.type('12345');
+    editableDecimal.fill('12345');
 
     attributes = await common.getAttributes(editableDecimal);
     await expect(attributes.includes('readonly')).toBeFalsy();

@@ -87,7 +87,7 @@ test.describe('E2E test', () => {
 
     /** Validation tests */
     const validationMsg = 'valid URL';
-    await EditableURL.type('InvalidUrl');
+    await EditableURL.fill('InvalidUrl');
     await EditableURL.blur();
     await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeVisible();
     await EditableURL.clear();

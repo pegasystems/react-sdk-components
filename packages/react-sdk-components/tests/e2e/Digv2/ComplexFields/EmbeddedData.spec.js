@@ -50,10 +50,10 @@ test.describe('E2E test', () => {
     await selectedTestName.click();
     await page.locator('li:has-text("Editable")').click();
 
-    await page.locator('input[data-test-id="d61ebdd8a0c0cd57c22455e9f0918c65"]').type('Main St');
-    await page.locator('input[data-test-id="57d056ed0984166336b7879c2af3657f"]').type('Cambridge');
-    await page.locator('input[data-test-id="46a2a41cc6e552044816a2d04634545d"]').type('MA');
-    await page.locator('input[data-test-id="25f75488c91cb6c3bab92672e479619f"]').type('02142');
+    await page.locator('input[data-test-id="d61ebdd8a0c0cd57c22455e9f0918c65"]').fill('Main St');
+    await page.locator('input[data-test-id="57d056ed0984166336b7879c2af3657f"]').fill('Cambridge');
+    await page.locator('input[data-test-id="46a2a41cc6e552044816a2d04634545d"]').fill('MA');
+    await page.locator('input[data-test-id="25f75488c91cb6c3bab92672e479619f"]').fill('02142');
 
     await page.locator('button:has-text("Next")').click();
 
@@ -121,31 +121,31 @@ test.describe('E2E test', () => {
     await page.locator('a:has-text("+ Add")').click();
 
     /** Entering values in the first Row */
-    await page.locator('input[data-test-id="202003240938510823869"]').type('Main St');
-    await page.locator('input[data-test-id="202003240938510831291"]').type('Cambridge');
-    await page.locator('input[data-test-id="202003240938510831411"]').type('MA');
-    await page.locator('input[data-test-id="202003240938510832734"]').type('02142');
+    await page.locator('input[data-test-id="202003240938510823869"]').fill('Main St');
+    await page.locator('input[data-test-id="202003240938510831291"]').fill('Cambridge');
+    await page.locator('input[data-test-id="202003240938510831411"]').fill('MA');
+    await page.locator('input[data-test-id="202003240938510832734"]').fill('02142');
 
     let phone = page.locator('div[data-test-id="1f8261d17452a959e013666c5df45e07"]');
     await phone.locator('button').click();
     /** Selecting the country code */
     await page.locator('text=United States+1 >> nth=0').click();
-    await phone.locator('input').type('6175551212');
+    await phone.locator('input').fill('6175551212');
 
     /** Creating second row by clicking on `+Add` button */
     await page.locator('a:has-text("+ Add")').click();
 
     /** Entering values in the second Row */
-    await page.locator('input[data-test-id="202003240938510823869"] >> nth=1').type('Global St');
-    await page.locator('input[data-test-id="202003240938510831291"] >> nth=1').type('California');
-    await page.locator('input[data-test-id="202003240938510831411"] >> nth=1').type('AK');
-    await page.locator('input[data-test-id="202003240938510832734"] >> nth=1').type('03142');
+    await page.locator('input[data-test-id="202003240938510823869"] >> nth=1').fill('Global St');
+    await page.locator('input[data-test-id="202003240938510831291"] >> nth=1').fill('California');
+    await page.locator('input[data-test-id="202003240938510831411"] >> nth=1').fill('AK');
+    await page.locator('input[data-test-id="202003240938510832734"] >> nth=1').fill('03142');
 
     phone = page.locator('div[data-test-id="1f8261d17452a959e013666c5df45e07"] >> nth=1');
     await phone.locator('button').click();
     /** Selecting the country code */
     await page.locator('text=United States+1 >> nth=0').click();
-    await phone.locator('input').type('6175451212');
+    await phone.locator('input').fill('6175451212');
 
     await page.locator('button:has-text("Next")').click();
 
@@ -163,7 +163,7 @@ test.describe('E2E test', () => {
     await page.locator('li:has-text("Filter")').click();
     let modal = page.locator('div[role="dialog"]');
 
-    await modal.locator('input[type="text"]').type('main');
+    await modal.locator('input[type="text"]').fill('main');
 
     await modal.locator('button:has-text("Submit")').click();
 
@@ -177,7 +177,7 @@ test.describe('E2E test', () => {
 
     await modal.locator('div[id="filter"]').click();
     await page.locator('li:has-text("Equals")').click();
-    await modal.locator('input[type="text"]').type('Cambridge');
+    await modal.locator('input[type="text"]').fill('Cambridge');
 
     await modal.locator('button:has-text("Submit")').click();
 
@@ -187,7 +187,7 @@ test.describe('E2E test', () => {
 
     await modal.locator('div[id="filter"]').click();
     await page.locator('li:has-text("Starts with")').click();
-    await modal.locator('input[type="text"]').type('0212');
+    await modal.locator('input[type="text"]').fill('0212');
 
     await modal.locator('button:has-text("Submit")').click();
 
@@ -233,16 +233,16 @@ test.describe('E2E test', () => {
     await expect(addRecordTitle).toBeVisible();
 
     /** Adding record to the Table in Modal */
-    await modal.locator('input[data-test-id="202003240938510823869"]').type('Main St');
-    await modal.locator('input[data-test-id="202003240938510831291"]').type('Cambridge');
-    await modal.locator('input[data-test-id="202003240938510831411"]').type('MA');
-    await modal.locator('input[data-test-id="202003240938510832734"]').type('02142');
+    await modal.locator('input[data-test-id="202003240938510823869"]').fill('Main St');
+    await modal.locator('input[data-test-id="202003240938510831291"]').fill('Cambridge');
+    await modal.locator('input[data-test-id="202003240938510831411"]').fill('MA');
+    await modal.locator('input[data-test-id="202003240938510832734"]').fill('02142');
 
     phone = modal.locator('div[data-test-id="1f8261d17452a959e013666c5df45e07"]');
     await phone.locator('button').click();
     /** Selecting the country code */
     await page.locator('text=United States+1 >> nth=0').click();
-    await phone.locator('input').type('6175551212');
+    await phone.locator('input').fill('6175551212');
 
     let country = modal.locator('div[data-test-id="59716c97497eb9694541f7c3d37b1a4d"]');
     await country.click();
@@ -284,10 +284,10 @@ test.describe('E2E test', () => {
 
     /** Editing the added row */
     await modal.locator('input[data-test-id="202003240938510823869"]').fill('');
-    await modal.locator('input[data-test-id="202003240938510823869"]').type('Gandhi St');
+    await modal.locator('input[data-test-id="202003240938510823869"]').fill('Gandhi St');
 
     await modal.locator('input[data-test-id="202003240938510831291"]').fill('');
-    await modal.locator('input[data-test-id="202003240938510831291"]').type('Dallas');
+    await modal.locator('input[data-test-id="202003240938510831291"]').fill('Dallas');
 
     await modal.locator('button:has-text("submit")').click();
 
@@ -326,16 +326,16 @@ test.describe('E2E test', () => {
     await page.locator('li:has-text("Editable")').click();
 
     /** Entering values in the first Row */
-    await page.locator('input[data-test-id="202003240938510823869"]').type('Main St');
-    await page.locator('input[data-test-id="202003240938510831291"]').type('Cambridge');
-    await page.locator('input[data-test-id="202003240938510831411"]').type('MA');
-    await page.locator('input[data-test-id="202003240938510832734"]').type('02142');
+    await page.locator('input[data-test-id="202003240938510823869"]').fill('Main St');
+    await page.locator('input[data-test-id="202003240938510831291"]').fill('Cambridge');
+    await page.locator('input[data-test-id="202003240938510831411"]').fill('MA');
+    await page.locator('input[data-test-id="202003240938510832734"]').fill('02142');
 
     phone = page.locator('div[data-test-id="1f8261d17452a959e013666c5df45e07"]');
     await phone.locator('button').click();
     /** Selecting the country code */
     await page.locator('text=United States+1 >> nth=0').click();
-    await phone.locator('input').type('6175551212');
+    await phone.locator('input').fill('6175551212');
 
     let countryName = page.locator('div[data-test-id="59716c97497eb9694541f7c3d37b1a4d"]');
     await countryName.click();
@@ -345,16 +345,16 @@ test.describe('E2E test', () => {
     await page.locator('a:has-text("+Add")').click();
 
     /** Entering values into the newly created row */
-    await page.locator('input[data-test-id="202003240938510823869"] >> nth=1').type('Global St');
-    await page.locator('input[data-test-id="202003240938510831291"] >> nth=1').type('California');
-    await page.locator('input[data-test-id="202003240938510831411"] >> nth=1').type('AK');
-    await page.locator('input[data-test-id="202003240938510832734"] >> nth=1').type('03142');
+    await page.locator('input[data-test-id="202003240938510823869"] >> nth=1').fill('Global St');
+    await page.locator('input[data-test-id="202003240938510831291"] >> nth=1').fill('California');
+    await page.locator('input[data-test-id="202003240938510831411"] >> nth=1').fill('AK');
+    await page.locator('input[data-test-id="202003240938510832734"] >> nth=1').fill('03142');
 
     phone = page.locator('div[data-test-id="1f8261d17452a959e013666c5df45e07"] >> nth=1');
     await phone.locator('button').click();
     /** Selecting the country code */
     await page.locator('text=United States+1 >> nth=0').click();
-    await phone.locator('input').type('6175451212');
+    await phone.locator('input').fill('6175451212');
 
     countryName = page.locator('div[data-test-id="59716c97497eb9694541f7c3d37b1a4d"] >> nth=1');
     await countryName.click();

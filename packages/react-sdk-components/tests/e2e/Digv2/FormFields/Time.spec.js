@@ -48,7 +48,7 @@ test.describe('E2E test', () => {
     const requiredTime = page.locator('input[data-test-id="2a98fa391e3ce4e2a077bb71271eb2da"]');
     const date = new Date();
     const time = `${date.getHours()}${date.getMinutes()}`;
-    requiredTime.type(time);
+    requiredTime.fill(time);
     attributes = await common.getAttributes(requiredTime);
     await expect(attributes.includes('required')).toBeTruthy();
 
@@ -91,7 +91,7 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeTruthy();
 
     const editableTime = page.locator('input[data-test-id="9a43bbe34f0e3db5a53f8e89082c0770"]');
-    editableTime.type(time);
+    editableTime.fill(time);
 
     attributes = await common.getAttributes(editableTime);
     await expect(attributes.includes('readonly')).toBeFalsy();

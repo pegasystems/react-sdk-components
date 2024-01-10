@@ -27,15 +27,15 @@ test.describe('E2E test', () => {
 
     const firstNameInput = page.locator('input[data-test-id="BC910F8BDF70F29374F496F05BE0330C"]');
     await firstNameInput.click();
-    await firstNameInput.type('John');
+    await firstNameInput.fill('John');
 
     const middleNameInput = page.locator('input[data-test-id="D3691D297D95C48EF1A2B7D6523EF3F0"]');
     await middleNameInput.click();
-    await middleNameInput.type('');
+    await middleNameInput.fill('');
 
     const lastNameInput = page.locator('input[data-test-id="77587239BF4C54EA493C7033E1DBF636"]');
     await lastNameInput.click();
-    await lastNameInput.type('Doe');
+    await lastNameInput.fill('Doe');
 
     const suffix = page.locator('div[data-test-id="56E6DDD1CB6CEC596B433440DFB21C17"]');
     await suffix.locator('button[title="Open"]').click();
@@ -43,23 +43,23 @@ test.describe('E2E test', () => {
 
     const emailInput = page.locator('input[data-test-id="CE8AE9DA5B7CD6C3DF2929543A9AF92D"]');
     await emailInput.click();
-    await emailInput.type('john@doe.com');
+    await emailInput.fill('john@doe.com');
 
     const serviceDate = page.locator('div[data-test-id="E0BA356AE552ACD4326D51E61F4279AC"]');
     const serviceDateInput = serviceDate.locator('input');
     await serviceDateInput.click();
     const futureDate = common.getFutureDate();
-    await serviceDateInput.type(futureDate);
+    await serviceDateInput.fill(futureDate);
 
     await page.locator('button:has-text("submit")').click();
 
     const streetInput = page.locator('input[data-test-id="D61EBDD8A0C0CD57C22455E9F0918C65"]');
     await streetInput.click();
-    await streetInput.type('Main St');
+    await streetInput.fill('Main St');
 
     const cityInput = page.locator('input[data-test-id="57D056ED0984166336B7879C2AF3657F"]');
     await cityInput.click();
-    await cityInput.type('Cambridge');
+    await cityInput.fill('Cambridge');
 
     const state = page.locator('div[data-test-id="46A2A41CC6E552044816A2D04634545D"]');
     const stateSelector = state.locator('div[role="button"]');
@@ -68,7 +68,7 @@ test.describe('E2E test', () => {
 
     const postalCodeInput = page.locator('input[data-test-id="572ED696F21038E6CC6C86BB272A3222"]');
     await postalCodeInput.click();
-    await postalCodeInput.type('02142');
+    await postalCodeInput.fill('02142');
 
     const phone = page.locator('div[data-test-id="1F8261D17452A959E013666C5DF45E07"]');
     const countrySelector = phone.locator('button');
@@ -76,7 +76,7 @@ test.describe('E2E test', () => {
     await page.locator('text=United States+1 >> nth=0').click();
     const phoneInput = phone.locator('input');
     await phoneInput.click();
-    await phoneInput.type('6175551212');
+    await phoneInput.fill('6175551212');
 
     await page.locator('button:has-text("submit")').click();
 
@@ -99,7 +99,7 @@ test.describe('E2E test', () => {
 
     const otherNotes = page.locator('textarea[data-test-id="F4C6F851B00D5518BF888815DE279ABA"]');
     await otherNotes.click();
-    await otherNotes.type('Thanks for the service!');
+    await otherNotes.fill('Thanks for the service!');
 
     const sendToMgr = page.locator('label[data-test-id="C3B43E79AEC2D689F0CF97BD6AFB7DC4"]');
     await sendToMgr.check();
@@ -149,7 +149,7 @@ test.describe('E2E test', () => {
 
     const mgrDiscountInput = page.locator('input[data-test-id="D69ECA63310344EDB0D0F9881CF9B662"]');
 
-    await mgrDiscountInput.type('20');
+    await mgrDiscountInput.fill('20');
 
     await page.locator('button:has-text("submit")').click();
 

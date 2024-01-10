@@ -84,7 +84,7 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeTruthy();
 
     const editablePercentage = page.locator('input[data-test-id="2cf58b575154624084c009d2648659ad"]');
-    editablePercentage.type('10000');
+    editablePercentage.fill('10000');
 
     attributes = await common.getAttributes(editablePercentage);
     await expect(attributes.includes('readonly')).toBeFalsy();
