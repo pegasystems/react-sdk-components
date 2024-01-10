@@ -183,7 +183,7 @@ export default function ViewContainer(props: ViewContainerProps) {
           containerItemName: key,
           hasForm: viewName === CREATE_DETAILS_VIEW_NAME
         };
-        const configObject = PCore.createPConnect(config);
+        const configObject:any = PCore.createPConnect(config);
 
         // Add in displayOnlyFA if prop is on ViewContainer
         if (displayOnlyFA) {

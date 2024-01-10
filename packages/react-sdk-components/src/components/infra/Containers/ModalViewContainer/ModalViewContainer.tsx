@@ -192,7 +192,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
           const currentItem = currentItems[key];
           const rootView = currentItem.view;
           const { context } = rootView.config;
-          const config = { meta: rootView };
+          const config:any = { meta: rootView };
           config.options = {
             context: currentItem.context,
             hasForm: true,

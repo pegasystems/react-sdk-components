@@ -34,7 +34,7 @@ export default function ErrorBoundary(props: ErrorBoundaryProps) {
 `);
   }
 
-  if (pConn.getConfigProps().type === 'page') {
+  if ((pConn.getConfigProps() as any).type === 'page') {
     return theErrorDiv;
   }
 

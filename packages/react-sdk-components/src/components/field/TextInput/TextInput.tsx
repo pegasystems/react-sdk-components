@@ -34,7 +34,7 @@ export default function TextInput(props: TextInputProps) {
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps().value;
+  const propName = (pConn.getStateProps() as any).value;
 
   const helperTextToDisplay = validatemessage || helperText;
 

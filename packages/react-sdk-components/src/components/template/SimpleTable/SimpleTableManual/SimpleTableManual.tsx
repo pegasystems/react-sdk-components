@@ -151,7 +151,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   //  but getRawMetadata() has each child.config with datasource and value showing their unresolved values (ex: "@P thePropName")
   //  We need to use the prop name as the "glue" to tie the table dataSource, displayColumns and data together.
   //  So, in the code below, we'll use the unresolved config.value (but replacing the space with an underscore to keep things happy)
-  const rawMetadata = getPConnect().getRawMetadata();
+  const rawMetadata:any = getPConnect().getRawMetadata();
 
   // get raw config since @P and other annotations are processed and don't appear in the resolved config.
   //  Destructure "raw" children into array var: "rawFields"
@@ -357,12 +357,12 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   function getComparator<Key extends keyof any>(
     theOrder: Order,
     orderedBy: Key
-     
+
   ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
     return theOrder === 'desc' ? (a, b) => descendingComparator(a, b, orderedBy) : (a, b) => -descendingComparator(a, b, orderedBy);
   }
 
-   
+
   function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
     const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
     stabilizedThis.sort((a, b) => {

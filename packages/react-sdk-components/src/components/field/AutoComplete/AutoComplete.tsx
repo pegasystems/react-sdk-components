@@ -84,7 +84,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = (thePConn.getStateProps() as any).value;
 
   if (!isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)

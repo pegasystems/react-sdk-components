@@ -42,7 +42,7 @@ export default function Decimal(props: DecimalProps) {
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps().value;
+  const propName = (pConn.getStateProps() as any).value;
   const helperTextToDisplay = validatemessage || helperText;
 
   const [decValue, setDecimalvalue] = useState('');

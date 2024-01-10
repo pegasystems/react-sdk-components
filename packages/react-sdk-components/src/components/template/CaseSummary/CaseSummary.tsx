@@ -13,7 +13,7 @@ export default function CaseSummary(props: CaseSummaryProps) {
 
   const { getPConnect, children } = props;
   const thePConn = getPConnect();
-  const theConfigProps = thePConn.getConfigProps();
+  const theConfigProps:any = thePConn.getConfigProps();
   // const { status, showStatus } = theConfigProps;
   const status = theConfigProps.status;
   const showStatus = theConfigProps.showStatus;

@@ -52,7 +52,7 @@ export default function DataReference(props: DataReferenceProps) {
   if (propsToUse.showLabel === false) {
     propsToUse.label = '';
   }
-  const rawViewMetadata = pConn.getRawMetadata();
+  const rawViewMetadata:any = pConn.getRawMetadata();
   const viewName = rawViewMetadata.name;
   const [firstChildMeta] = rawViewMetadata.children;
   const refList = rawViewMetadata.config.referenceList;
