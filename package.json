@@ -27,7 +27,7 @@
     "lint-errors-only": "npx eslint \"packages/react-sdk-components/src/**\" --quiet",
     "build-dev-only": "webpack --mode=development",
     "build-prod-only": "webpack --mode=production",
-    "build:dev": "run-p -l lint build-dev-only",
+    "build:dev": "run-p -l build-dev-only",
     "build:dev:ci": "npm run ci && npm run build:dev",
     "build:prod": "run-p -l lint build-prod-only",
     "build:prod:ci": "npm run ci && npm run build:prod",
@@ -44,7 +44,7 @@
   "author": "Pegasystems",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "@date-io/dayjs": "^2.17.0",
+    "@date-io/dayjs": "^1.3.13",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.60",
