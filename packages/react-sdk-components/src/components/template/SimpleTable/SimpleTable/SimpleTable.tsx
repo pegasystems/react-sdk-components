@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
 import { useRef } from 'react';
+
+import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // import type { PConnProps } from '../../../../types/PConnProps';
@@ -44,7 +45,7 @@ export default function SimpleTable(props /* : SimpleTableProps */) {
     // was... contextClass = getPConnect().getFieldMetadata(listName)?.pageClass;
     const theFieldMetadata = getPConnect().getFieldMetadata(listName);
     if (theFieldMetadata) {
-      contextClass = theFieldMetadata['pageClass'];
+      contextClass = theFieldMetadata.pageClass;
     } else {
       contextClass = undefined;
     }
@@ -110,9 +111,8 @@ export default function SimpleTable(props /* : SimpleTableProps */) {
       fieldName: authorContext,
       bInForm: true
     };
-    const listViewComponent = <ListView {...listViewProps} />;
-    return listViewComponent;
-  } else {
+    return <ListView {...listViewProps} />;
+  } 
     const simpleTableManualProps = { ...props, contextClass };
     if (allowTableEdit === false) {
       simpleTableManualProps.hideAddRow = true;
@@ -120,5 +120,5 @@ export default function SimpleTable(props /* : SimpleTableProps */) {
       simpleTableManualProps.disableDragDrop = true;
     }
     return <SimpleTableManual {...simpleTableManualProps} />;
-  }
+  
 }

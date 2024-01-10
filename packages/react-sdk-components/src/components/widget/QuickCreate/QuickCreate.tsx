@@ -56,7 +56,7 @@ export default function QuickCreate(props /* : QuickCreateProps */) {
 
   return (
       <div>
-        <WssQuickCreate heading={heading} actions={cases}></WssQuickCreate>
+        <WssQuickCreate heading={heading} actions={cases} />
       </div>
     );
 }

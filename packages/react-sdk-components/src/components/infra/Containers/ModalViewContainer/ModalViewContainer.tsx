@@ -4,6 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
+
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 // Need to get correct implementation from component map for Assignment and CancelAlert
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
@@ -100,7 +101,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
   const [oCaseInfo, setOCaseInfo] = useState({});
   const [createdView, setCreatedView] = useState<any>(null);
   const [title, setTitle] = useState('');
-  const [arNewChildrenAsReact, setArNewChildrenAsReact] = useState<Array<any>>([]);
+  const [arNewChildrenAsReact, setArNewChildrenAsReact] = useState<any[]>([]);
   const [itemKey, setItemKey] = useState('');
   const [cancelPConn, setCancelPConn] = useState(null);
   const [isMultiRecordData, setMultiRecordData] = useState(false);
@@ -192,7 +193,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
           const rootView = currentItem.view;
           const { context } = rootView.config;
           const config = { meta: rootView };
-          config['options'] = {
+          config.options = {
             context: currentItem.context,
             hasForm: true,
             pageReference: context || pConn.getPageReference()
@@ -248,7 +249,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
 
             setTitle(headingValue);
 
-            let arChildrenAsReact: Array<any> = [];
+            let arChildrenAsReact: any[] = [];
 
             if (newComp.getComponentName() === 'reference') {
               // Reference component doesn't have children. It can build the View we want.
@@ -337,7 +338,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
             getPConnect={createdView.configObject.getPConnect}
             context={createdView.latestItem.context}
             closeActionsDialog={closeActionsDialog}
-          ></ListViewActionButtons>
+           />
         )}
       </Dialog>
       {bShowCancelAlert && <CancelAlert pConn={cancelPConn} showAlert={bShowCancelAlert} updateAlertState={updateAlertState} />}

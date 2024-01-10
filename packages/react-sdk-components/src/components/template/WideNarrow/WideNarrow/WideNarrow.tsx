@@ -6,7 +6,7 @@ interface WideNarrowProps {
   // If any, enter additional props that only exist on this component
   a: any,
   b: any,
-  children?: Array<any>,
+  children?: any[],
   // eslint-disable-next-line react/no-unused-prop-types
   title?: string,
   // eslint-disable-next-line react/no-unused-prop-types
@@ -21,7 +21,7 @@ export default function WideNarrow(props: WideNarrowProps) {
   const { a, b, children = [] } = props;
 
   return (
-    <React.Fragment>
+    <>
     {children && children.length === 2 &&
       <div className="psdk-wide-narrow-column">
         <div className="psdk-wide-column-column">
@@ -42,7 +42,7 @@ export default function WideNarrow(props: WideNarrowProps) {
         </div>
       </div>
     }
-    </React.Fragment>
+    </>
 
   )
 

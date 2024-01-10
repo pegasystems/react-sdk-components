@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import isDeepEqual from 'fast-deep-equal/react';
+
 import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
@@ -47,7 +48,7 @@ interface AutoCompleteProps extends PConnFieldProps {
   listType: string;
   parameters?: any;
   datasource: any;
-  columns: Array<any>;
+  columns: any[];
 }
 
 export default function AutoComplete(props: AutoCompleteProps) {
@@ -76,14 +77,14 @@ export default function AutoComplete(props: AutoCompleteProps) {
   const context = getPConnect().getContextName();
   let { listType, parameters, datasource = [], columns = [] } = props;
   const [inputValue, setInputValue] = useState('');
-  const [options, setOptions] = useState<Array<IOption>>([]);
+  const [options, setOptions] = useState<IOption[]>([]);
   const [theDatasource, setDatasource] = useState(null);
   let selectedValue: any = '';
   const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps()["value"];
+  const propName = thePConn.getStateProps().value;
 
   if (!isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)
@@ -137,7 +138,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   useEffect(() => {
     if (!displayMode && listType !== 'associated') {
       getDataPage(datasource, parameters, context).then((results: any) => {
-        const optionsData: Array<any> = [];
+        const optionsData: any[] = [];
         const displayColumn = getDisplayFieldsMetaData(columns);
         results?.forEach((element) => {
           const val = element[displayColumn.primary]?.toString();

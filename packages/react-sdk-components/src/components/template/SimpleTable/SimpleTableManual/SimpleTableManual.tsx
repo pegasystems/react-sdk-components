@@ -8,15 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import { buildFieldsForTable, filterData, getContext } from '../../../helpers/simpleTableHelpers';
-import { getDataPage } from '../../../helpers/data_page';
 import Link from '@material-ui/core/Link';
-import { getReferenceList } from '../../../helpers/field-group-utils';
-import { Utils } from '../../../helpers/utils';
 import { createElement } from 'react';
-
-import createPConnectComponent from '../../../../bridge/react_pconnect';
-
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
@@ -31,6 +24,11 @@ import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import createPConnectComponent from '../../../../bridge/react_pconnect';
+import { Utils } from '../../../helpers/utils';
+import { getReferenceList } from '../../../helpers/field-group-utils';
+import { getDataPage } from '../../../helpers/data_page';
+import { buildFieldsForTable, filterData, getContext } from '../../../helpers/simpleTableHelpers';
 import type { PConnProps } from '../../../../types/PConnProps';
 
 interface SimpleTableManualProps extends PConnProps {
@@ -39,10 +37,10 @@ interface SimpleTableManualProps extends PConnProps {
   hideDeleteRow?: boolean;
   // eslint-disable-next-line react/no-unused-prop-types
   disableDragDrop?: boolean;
-  referenceList?: Array<any>;
-  children?: Array<any>;
+  referenceList?: any[];
+  children?: any[];
   renderMode?: string;
-  presets?: Array<any>;
+  presets?: any[];
   label?: string;
   showLabel?: boolean;
   dataPageName?: string;
@@ -89,8 +87,8 @@ let menuColumnId = '';
 let menuColumnType = '';
 let menuColumnLabel = '';
 
-const filterByColumns: Array<any> = [];
-let myRows: Array<any>;
+const filterByColumns: any[] = [];
+let myRows: any[];
 
 export default function SimpleTableManual(props: SimpleTableManualProps) {
   const classes = useStyles();
@@ -127,7 +125,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   const [filterBy, setFilterBy] = useState<string>();
   const [containsDateOrTime, setContainsDateOrTime] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<string>('string');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [displayDialogFilterName, setDisplayDialogFilterName] = useState<string>('');
   const [displayDialogContainsFilter, setDisplayDialogContainsFilter] = useState<string>('contains');
   const [displayDialogContainsValue, setDisplayDialogContainsValue] = useState<string>('');
@@ -162,7 +160,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   //    config.datasource (ex: "@ASSOCIATED .DeclarantChoice")
   //  Neither of these appear in the resolved props
 
-  const rawConfig = rawMetadata?.['config'];
+  const rawConfig = rawMetadata?.config;
   const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
   const isDisplayModeEnabled = displayMode === 'DISPLAY_ONLY';
   const readOnlyMode = renderMode === 'ReadOnly';
@@ -208,7 +206,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   //  of the given row field
   function getRowValue(inRowData: Object, inColKey: string): any {
     // See what data (if any) we have to display
-    const refKeys: Array<string> = inColKey?.split('.');
+    const refKeys: string[] = inColKey?.split('.');
     let valBuilder = inRowData;
     for (const key of refKeys) {
       valBuilder = valBuilder[key];
@@ -359,16 +357,16 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   function getComparator<Key extends keyof any>(
     theOrder: Order,
     orderedBy: Key
-    // eslint-disable-next-line no-unused-vars
+     
   ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
     return theOrder === 'desc' ? (a, b) => descendingComparator(a, b, orderedBy) : (a, b) => -descendingComparator(a, b, orderedBy);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  function stableSort<T>(array: Array<T>, comparator: (a: T, b: T) => number) {
+   
+  function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
     const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
     stabilizedThis.sort((a, b) => {
-      // eslint-disable-next-line @typescript-eslint/no-shadow, no-shadow
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       const order = comparator(a[0], b[0]);
       if (order !== 0) return order;
       return a[1] - b[1];
@@ -477,14 +475,14 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   function updateFilterWithInfo() {
     let bFound = false;
     for (const filterObj of filterByColumns) {
-      if (filterObj['ref'] === menuColumnId) {
-        filterObj['type'] = filterType;
+      if (filterObj.ref === menuColumnId) {
+        filterObj.type = filterType;
         if (containsDateOrTime) {
-          filterObj['containsFilter'] = displayDialogDateFilter;
-          filterObj['containsFilterValue'] = displayDialogDateValue;
+          filterObj.containsFilter = displayDialogDateFilter;
+          filterObj.containsFilterValue = displayDialogDateValue;
         } else {
-          filterObj['containsFilter'] = displayDialogContainsFilter;
-          filterObj['containsFilterValue'] = displayDialogContainsValue;
+          filterObj.containsFilter = displayDialogContainsFilter;
+          filterObj.containsFilterValue = displayDialogContainsValue;
         }
         bFound = true;
         break;
@@ -495,13 +493,13 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
       // add in
       const filterObj: any = {};
       filterObj.ref = menuColumnId;
-      filterObj['type'] = filterType;
+      filterObj.type = filterType;
       if (containsDateOrTime) {
-        filterObj['containsFilter'] = displayDialogDateFilter;
-        filterObj['containsFilterValue'] = displayDialogDateValue;
+        filterObj.containsFilter = displayDialogDateFilter;
+        filterObj.containsFilterValue = displayDialogDateValue;
       } else {
-        filterObj['containsFilter'] = displayDialogContainsFilter;
-        filterObj['containsFilterValue'] = displayDialogContainsValue;
+        filterObj.containsFilter = displayDialogContainsFilter;
+        filterObj.containsFilterValue = displayDialogContainsValue;
       }
 
       filterByColumns.push(filterObj);
@@ -517,9 +515,9 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
 
   function _showFilteredIcon(columnId) {
     for (const filterObj of filterByColumns) {
-      if (filterObj['ref'] === columnId) {
+      if (filterObj.ref === columnId) {
         // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-        if (filterObj['containsFilterValue'] !== '') {
+        if (filterObj.containsFilterValue !== '') {
           return true;
         }
         return false;
@@ -540,7 +538,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <TableContainer component={Paper} style={{ margin: '4px 0px' }} id="simple-table-manual">
         {propsToUse.label && (
           <h3 className={classes.label}>
@@ -605,7 +603,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
                           aria-label="Delete Cell"
                           onClick={() => deleteRecord(index)}
                         >
-                          <img className="psdk-utility-card-action-svg-icon" src={menuIconOverride$}></img>
+                          <img className="psdk-utility-card-action-svg-icon" src={menuIconOverride$} />
                         </button>
                       </TableCell>
                     )}
@@ -753,6 +751,6 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </>
   );
 }

@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import { Utils } from "../../helpers/utils";
+
 import './SummaryItem.css'
 import  { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -10,7 +12,7 @@ interface SummaryItemProps {
   // If any, enter additional props that only exist on this component
   menuIconOverride$: string,
   menuIconOverrideAction$: any,
-  arItems$: Array<any> | any
+  arItems$: any[] | any
 }
 
 
@@ -42,21 +44,21 @@ export default function SummaryItem(props:SummaryItemProps) {
   return (
     <div className="psdk-utility-card">
       <div className="psdk-utility-card-icon">
-        <img className="psdk-utility-card-svg-icon" src={srcImg}></img>
+        <img className="psdk-utility-card-svg-icon" src={srcImg} />
       </div>
       <div className="psdk-utility-card-main">
         {item.primary.type !== 'URL' && (<div className="psdk-utility-card-main-primary-label">{item.primary.name}</div>)}
         {item.primary.type === 'URL' && (<div className="psdk-utility-card-main-primary-url">
           <button type="button" className="psdk-link-button">
             {item.primary.name}&nbsp;
-            <img className="psdk-utility-card-actions-svg-icon" src={`${imagePath$}${item.primary.icon}.svg`}></img>
+            <img className="psdk-utility-card-actions-svg-icon" src={`${imagePath$}${item.primary.icon}.svg`} />
           </button>
         </div>)}
         {item.secondary.text && (<div style={{ color: item.secondary.error ? 'red' : undefined }}>{item.secondary.text}</div>)}
       </div>
       <div className="psdk-utility-action">
         {menuIconOverride$ && (<button type="button" className="psdk-utility-button" aria-label='Delete Attachment' onClick={removeAttachment}>
-            <img className="psdk-utility-card-action-svg-icon" src={menuIconOverride$}></img>
+            <img className="psdk-utility-card-action-svg-icon" src={menuIconOverride$} />
         </button>)}
         {!menuIconOverride$ && (<div>
           <IconButton

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 //  So, no need to extend PConnProps
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any> | any,
+  children: any[] | any,
   name: string | object,
 }
 

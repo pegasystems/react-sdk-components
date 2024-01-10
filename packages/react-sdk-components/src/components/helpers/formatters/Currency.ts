@@ -1,7 +1,7 @@
 import { getLocale } from "./common";
 import CurrencyMap from "./CurrencyMap";
 
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function NumberFormatter(value, { locale = "en-US", decPlaces = 2, style="", currency="USD" } = {}): string {
   const currentLocale: string | undefined = getLocale(locale);
   if (value !== null && value !== undefined) {

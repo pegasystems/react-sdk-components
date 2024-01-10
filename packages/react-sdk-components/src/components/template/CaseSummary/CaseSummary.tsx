@@ -1,10 +1,9 @@
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseSummaryProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>
+  children: any[]
 }
 
 
@@ -16,8 +15,8 @@ export default function CaseSummary(props: CaseSummaryProps) {
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
   // const { status, showStatus } = theConfigProps;
-  const status = theConfigProps["status"];
-  const showStatus = theConfigProps["showStatus"];
+  const status = theConfigProps.status;
+  const showStatus = theConfigProps.showStatus;
 
   // from Constellation DX Components
   // get the primary and secondary fields with the raw data (which has the non-resolved property values)
@@ -27,8 +26,8 @@ export default function CaseSummary(props: CaseSummaryProps) {
 
   // From other SDKs
   // may want to move these into useEffect/useState combo
-  let arPrimaryFields:Array<any> = [];
-  let arSecondaryFields:Array<any> = [];
+  let arPrimaryFields:any[] = [];
+  let arSecondaryFields:any[] = [];
 
   for (const child of children) {
     const childPConn = child.props.getPConnect();

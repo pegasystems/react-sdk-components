@@ -6,6 +6,7 @@ import {
   FormGroup,
   FormHelperText
 } from '@material-ui/core';
+
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 // import type { PConnProps } from '../../../types/PConnProps';
@@ -58,9 +59,9 @@ export default function CheckboxComponent(props /* : CheckboxProps */) {
 
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
-  const caption = theConfigProps['caption'];
+  const caption = theConfigProps.caption;
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps()['value'];
+  const propName = thePConn.getStateProps().value;
 
   const [checked, setChecked] = useState(false);
   useEffect(() => {

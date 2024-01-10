@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/no-array-index-key */
 import { useState, useEffect, useCallback } from 'react';
-import { CircularProgress } from '@material-ui/core';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import { CircularProgress , IconButton, Menu, MenuItem , Button } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Button } from '@material-ui/core';
 import download from 'downloadjs';
+
 import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
 import { Utils } from '../../helpers/utils';
 import './Attachment.css';
@@ -49,14 +48,14 @@ export default function Attachment(props /* :AttachmentProps */) {
   }
   const deleteIcon = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
   const srcImg = Utils.getImageSrc('document-doc', Utils.getSDKStaticConentUrl());
-  let valueRef = pConn.getStateProps()['value'];
+  let valueRef = pConn.getStateProps().value;
   valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [files, setFiles] = useState<Array<any>>(() =>
+  const [files, setFiles] = useState<any[]>(() =>
     value?.pxResults && +value.pyCount > 0 ? value.pxResults.map((f) => buildFilePropsFromResponse(f)) : []
   );
-  const [filesWithError, setFilesWithError] = useState<Array<any>>([]);
+  const [filesWithError, setFilesWithError] = useState<any[]>([]);
   const [toggleUploadBegin, setToggleUploadBegin] = useState(false);
 
   const resetAttachmentStoredState = () => {
@@ -85,7 +84,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   const deleteFile = useCallback(
     (file) => {
       setAnchorEl(null);
-      let attachmentsList: Array<any> = [];
+      let attachmentsList: any[] = [];
       let currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef), pConn.getContextName());
 
       // If file to be deleted is the one added in previous stage i.e. for which a file instance is created in server
@@ -388,7 +387,7 @@ export default function Attachment(props /* :AttachmentProps */) {
           return (
             <div key={index} className="psdk-utility-card">
               <div className="psdk-utility-card-icon">
-                {!item.inProgress && <img className="psdk-utility-card-svg-icon" src={srcImg}></img>}
+                {!item.inProgress && <img className="psdk-utility-card-svg-icon" src={srcImg} />}
                 {item.inProgress && <div><CircularProgress /></div>}
               </div>
               <div className="psdk-utility-card-main">
@@ -398,7 +397,7 @@ export default function Attachment(props /* :AttachmentProps */) {
               <div className="psdk-utility-action">
                 {item.ID && (
                   <button type="button" className="psdk-utility-button" aria-label="Delete Attachment" onClick={() => deleteFile(item)}>
-                    <img className="psdk-utility-card-action-svg-icon" src={deleteIcon}></img>
+                    <img className="psdk-utility-card-action-svg-icon" src={deleteIcon} />
                   </button>
                 )}
                 {!item.ID && (

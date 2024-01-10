@@ -62,7 +62,7 @@ export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) 
     ? pConn.getFieldMetadata(`@P .${referenceProp}`)
     : pConn.getCurrentPageFieldMetadata(contextPageReference);
 
-  const compositeKeys: Array<any> = [];
+  const compositeKeys: any[] = [];
   Object.values(fieldParameters).forEach((param: any) => {
     if (isSelfReferencedProperty(param, referenceProp)) {
      compositeKeys.push(param.substring(param.lastIndexOf('.') + 1));

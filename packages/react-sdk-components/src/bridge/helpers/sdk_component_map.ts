@@ -164,9 +164,9 @@ export async function getSdkComponentMap(inLocalComponentMap = {}) {
       };
       if( SdkComponentMap ) {
         return resolve( SdkComponentMap.sdkComponentMap );
-      } else {
+      } 
         idNextCheck = setInterval(fnCheckForConfig, 500);
-      }
+      
     }
   });
 }

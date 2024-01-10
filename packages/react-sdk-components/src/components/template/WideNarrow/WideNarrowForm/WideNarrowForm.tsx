@@ -5,14 +5,14 @@ import './WideNarrowForm.css';
 // WideNarrowForm does NOT have getPConnect. So, no need to extend from PConnProps
 interface WideNarrowFormProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>
+  children: any[]
 }
 
 export default function WideNarrowForm(props: WideNarrowFormProps) {
   const {children} = props;
 
   return (
-    <React.Fragment>
+    <>
     {children && children.length === 2 &&
       <div className="psdk-wide-narrow-column">
         <div className="psdk-wide-column-column">
@@ -23,7 +23,7 @@ export default function WideNarrowForm(props: WideNarrowFormProps) {
         </div>
       </div>
     }
-    </React.Fragment>
+    </>
 
   )
 

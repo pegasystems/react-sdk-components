@@ -6,7 +6,7 @@ import './NarrowWideForm.css';
 
 interface NarrowWideFormProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>
+  children: any[]
 }
 
 
@@ -14,7 +14,7 @@ export default function NarrowWideForm(props: NarrowWideFormProps) {
   const {children} = props;
 
   return (
-    <React.Fragment>
+    <>
     {children && children.length === 2 &&
       <div className="psdk-narrow-wide-column">
       <div className="psdk-narrow-column-column">
@@ -25,7 +25,7 @@ export default function NarrowWideForm(props: NarrowWideFormProps) {
       </div>
     </div>
     }
-    </React.Fragment>
+    </>
 
   )
 

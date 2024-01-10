@@ -1,4 +1,5 @@
 import { Children } from "react";
+
 // import { TwoColumnPage as TwoColumn } from "@pega/cosmos-react-core";
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
@@ -6,7 +7,7 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 // NarrowWidePage does NOT have getPConnect. So, no need to extend from PConnProps
 interface NarrowWidePageProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
+  children: any[],
   title: string,
   templateCol: string,
   icon: string

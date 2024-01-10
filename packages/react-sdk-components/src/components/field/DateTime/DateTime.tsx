@@ -1,4 +1,5 @@
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
+
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
@@ -32,7 +33,7 @@ export default function DateTime(props: DateTimeProps) {
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps()["value"];
+  const propName = pConn.getStateProps().value;
   const helperTextToDisplay = validatemessage || helperText;
 
   // Start with default dateFormatInfo

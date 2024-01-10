@@ -3,7 +3,7 @@
 
 export function getAllFields(pConnect: any) {
   const metadata = pConnect.getRawMetadata();
-  let allFields: Array<any> = [];
+  let allFields: any[] = [];
   if (metadata.children && metadata.children.map) {
     allFields = metadata.children.map(fields => {
       const children = fields.children instanceof Array ? fields.children : [];
@@ -13,7 +13,7 @@ export function getAllFields(pConnect: any) {
   return allFields;
 }
 
-export function filterForFieldValueList(fields: Array<any>) {
+export function filterForFieldValueList(fields: any[]) {
   return fields
     .filter(({ visibility }) => visibility !== false)
     .map(({ value, label }) => ({

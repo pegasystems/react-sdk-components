@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles'
-
 import Tabs from '@material-ui/core/Tabs';
+
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // VerticalTabs does NOT have getPConnect. So, no need to extend from PConnProps
 interface VerticalTabsProps {
   // If any, enter additional props that only exist on this component
-  tabconfig: Array<any>
+  tabconfig: any[]
 }
 
 

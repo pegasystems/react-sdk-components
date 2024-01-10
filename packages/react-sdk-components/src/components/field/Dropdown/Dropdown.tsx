@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
+
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -47,12 +48,12 @@ export default function Dropdown(props /* : DropdownProps */) {
   } = props;
   let { placeholder = "" } = props;
   placeholder = placeholder || 'Select...';
-  const [options, setOptions] = useState<Array<IOption>>([]);
+  const [options, setOptions] = useState<IOption[]>([]);
   const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps()["value"];
+  const propName = thePConn.getStateProps().value;
   const className = thePConn.getCaseInfo().getClassName();
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 

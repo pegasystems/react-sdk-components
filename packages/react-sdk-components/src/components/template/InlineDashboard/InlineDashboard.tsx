@@ -1,11 +1,12 @@
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
 import type { PConnProps } from '../../../types/PConnProps';
 
 // InlineDashboard does NOT have getPConnect. So, no need to extend from PConnProps
 interface InlineDashboardProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
+  children: any[],
   title: string,
   filterPosition?: string
 }

@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { FormControl, FormHelperText, InputLabel, makeStyles } from '@material-ui/core';
+
 import { useAfterInitialEffect, useConsolidatedRef, useUID } from '../../../hooks';
 
 const useStyles = makeStyles((theme) => ({

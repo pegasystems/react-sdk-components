@@ -48,7 +48,7 @@ export default function Reference(props /*: ReferenceProps */) {
   });
 
   if (visibility !== false) {
-    return <React.Fragment>{viewComponent}</React.Fragment>;
+    return <>{viewComponent}</>;
   }
   return null;
 }

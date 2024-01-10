@@ -8,10 +8,8 @@ import { sdkIsLoggedIn, loginIfNecessary, sdkSetAuthHeader, sdkSetCustomTokenPar
 
 import StoreContext from "../../../bridge/Context/StoreContext";
 import createPConnectComponent from "../../../bridge/react_pconnect";
-
 import EmbeddedSwatch from '../EmbeddedSwatch';
 import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelpers';
-
 import { getSdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../../sdk-local-component-map';
 
@@ -286,15 +284,12 @@ export default function EmbeddedTopLevel() {
     // VRS: Attempted to remove displayOnlyFA but it presently handles various components which
     //  SDK does not yet support, so all those need to be fixed up before it can be removed. To
     //  be done in a future sprint.
-    const theComp =
-      <StoreContext.Provider value={{store: PCore.getStore(), displayOnlyFA: true}} >
+    return <StoreContext.Provider value={{store: PCore.getStore(), displayOnlyFA: true}} >
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {thePConnObj}
           </ThemeProvider>
       </StoreContext.Provider>;
-
-    return theComp;
 
   }
 
@@ -350,9 +345,9 @@ export default function EmbeddedTopLevel() {
 
     // Initial render of component passed in (which should be a RootContainer)
     render(
-      <React.Fragment>
+      <>
         {theComponent}
-      </React.Fragment>,
+      </>,
       target
     )
 
@@ -378,7 +373,7 @@ export default function EmbeddedTopLevel() {
       setShowAppName(true);
 
       // Initialize the SdkComponentMap (local and pega-provided)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       getSdkComponentMap(localSdkComponentMap).then( (theComponentMap: any) => {
         // eslint-disable-next-line no-console
         console.log(`SdkComponentMap initialized`);
@@ -502,12 +497,12 @@ export default function EmbeddedTopLevel() {
     });
 
     return (
-      <React.Fragment>
+      <>
         {theBanner}
         <div className={classes.embedShoppingOptions}>
           {theOptions}
         </div>
-      </React.Fragment>
+      </>
     )
   }
 
@@ -554,7 +549,7 @@ export default function EmbeddedTopLevel() {
       <div>
       <div className={classes.pegaPartInfo} id="pega-part-of-page">
             <div className={classes.pegaPartPega}>
-                <div id="pega-root"></div>
+                <div id="pega-root" />
                 <br />
                 <div className={classes.pegaPartText}> * - required fields</div>
             </div>

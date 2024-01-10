@@ -3,14 +3,16 @@ import ReactDOM from 'react-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useLocation, useHistory } from 'react-router-dom';
+import { SdkConfigAccess, loginIfNecessary, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
+
 import StoreContext from '../../bridge/Context/StoreContext';
 import createPConnectComponent from '../../bridge/react_pconnect';
-import { SdkConfigAccess, loginIfNecessary, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
 import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers';
-import InvalidPortal from './InvalidPortal';
-
 import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../sdk-local-component-map';
+
+import InvalidPortal from './InvalidPortal';
+
 
 declare const myLoadPortal: any;
 declare const myLoadDefaultPortal: any;
@@ -24,7 +26,7 @@ function useQuery() {
 export default function FullPortal() {
   const [portalSelectionScreen, setPortalSelectionScreen] = useState(false);
   const [defaultPortalName, setDefaultPortalName] = useState('');
-  const [availablePortals, setAvailablePortals] = useState<Array<string>>([]);
+  const [availablePortals, setAvailablePortals] = useState<string[]>([]);
 
   const history = useHistory();
   const query = useQuery();
@@ -61,16 +63,12 @@ export default function FullPortal() {
     // const thePConnObj = <div>the RootComponent</div>;
     const thePConnObj = <PegaConnectObj {...props} />;
 
-    const theComp = (
-      <StoreContext.Provider value={{ store: PCore.getStore() }}>
+    return <StoreContext.Provider value={{ store: PCore.getStore() }}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {thePConnObj}
         </ThemeProvider>
-      </StoreContext.Provider>
-    );
-
-    return theComp;
+      </StoreContext.Provider>;
   }
 
   /**
@@ -132,7 +130,7 @@ export default function FullPortal() {
       compareSdkPCoreVersions();
 
       // Initialize the SdkComponentMap (local and pega-provided)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       getSdkComponentMap(localSdkComponentMap).then((theComponentMap: any) => {
         // eslint-disable-next-line no-console
         console.log(`SdkComponentMap initialized`);
@@ -167,7 +165,7 @@ export default function FullPortal() {
       setDefaultPortalName(defaultPortal);
       // Getting current user's access group's available portals list other than excluded portals (relies on Traditional DX APIs)
       getAvailablePortals().then((portals) => {
-        setAvailablePortals(portals as Array<string>);
+        setAvailablePortals(portals as string[]);
       });
     }
   }
@@ -202,7 +200,7 @@ export default function FullPortal() {
     />
   ) : (
     <div>
-      <div id='pega-root'></div>
+      <div id='pega-root' />
     </div>
   );
 }

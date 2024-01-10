@@ -1,14 +1,13 @@
 import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
 import { Grid, Divider } from "@material-ui/core";
 
 // ActionButtons does NOT have getPConnect. So, no need to extend from PConnProps
 interface ActionButtonsProps {
   // If any, enter additional props that only exist on this component
-  arMainButtons?: Array<any>,
-  arSecondaryButtons?: Array<any>,
+  arMainButtons?: any[],
+  arSecondaryButtons?: any[],
   onButtonPress: any
 }
 
@@ -36,7 +35,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Divider className={classes.divider}/>
       <Grid container spacing={4} justifyContent="space-between">
         <Grid item>
@@ -59,7 +58,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
         </Grid>
       </Grid>
 
-    </React.Fragment>
+    </>
 
   )
 }

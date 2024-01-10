@@ -163,7 +163,7 @@ export default function DeferLoad(props /* : DeferLoadProps */) {
       </div>
     ) : (
       <Card id='DeferLoad' className={classes.root}>
-        <React.Fragment>{content}</React.Fragment>
+        <>{content}</>
       </Card>
     );
   }

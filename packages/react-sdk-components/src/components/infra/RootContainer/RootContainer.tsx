@@ -3,6 +3,7 @@ import React, { useMemo, useRef, useState, useEffect, useContext, createElement 
 import isEqual from 'lodash.isequal';
 // import ReAuthMessageModal from "../ReAuthenticationModal";
 import { Box, CircularProgress } from "@material-ui/core";
+
 import createPConnectComponent from "../../../bridge/react_pconnect";
 import { LazyMap as LazyComponentMap } from "../../../components_map";
 import StoreContext from "../../../bridge/Context/StoreContext";
@@ -113,7 +114,7 @@ export default function RootContainer(props /* : RootContainerProps */) {
     );
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const MemoizedPreviewViewContainer = useMemo(() => {
     return createElement(
       createPConnectComponent(),
@@ -151,7 +152,7 @@ export default function RootContainer(props /* : RootContainerProps */) {
         const theViewCont = PCore.createPConnect(viewContConfig);
         // Add in displayOnlyFA if prop is on RootContainer
         if (displayOnlyFA) {
-          theViewCont["displayOnlyFA"] = true;
+          theViewCont.displayOnlyFA = true;
         }
 
         const theViewContainerAsReact = createElement(createPConnectComponent(), theViewCont);
@@ -225,13 +226,13 @@ export default function RootContainer(props /* : RootContainerProps */) {
       <div id="ModalManager">
           {rootView}
           {MemoizedModalViewContainer}
-          <div id="MemoizedPreviewViewContainer"></div>
-          <div id="ReAuthMessageModal"></div>
+          <div id="MemoizedPreviewViewContainer" />
+          <div id="ReAuthMessageModal" />
       </div>
     );
 
   }
-  else if (renderingMode === "noPortal") {
+  if (renderingMode === "noPortal") {
     // eslint-disable-next-line no-console
     console.log(`${localizedVal('RootContainer rendering in noPortal mode', localeCategory)}`);
 
@@ -244,21 +245,19 @@ export default function RootContainer(props /* : RootContainerProps */) {
       }
     }
 
-    const noPortalContent = getNoPortalContent();
-
-    return noPortalContent;
+    return getNoPortalContent();
   }
-  else if (children && children.length > 0) {
+  if (children && children.length > 0) {
     return (
-      <React.Fragment>
+      <>
         <div>{localizedVal('RootContainer: Has children. Trying to show ModalManager with children, etc.', localeCategory)}</div>
         {children}
         {MemoizedModalViewContainer}
-      </React.Fragment>
+      </>
 
     );
-  } else if (skeleton) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  } if (skeleton) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const LoadingComponent = LazyComponentMap[skeleton];
 
     return (
@@ -267,11 +266,11 @@ export default function RootContainer(props /* : RootContainerProps */) {
         <Box textAlign="center"><CircularProgress /></Box>
       </div>
     );
-  } else {
+  } 
     return (
       <div id="root-container">
         <div>{localizedVal('RootContainer: Should be ModalManager, etc.', localeCategory)}</div>
       </div>
     );
-  }
+  
 };

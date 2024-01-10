@@ -143,7 +143,7 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
   }, [transientItemID]);
 
   return (
-    <Fragment>
+    <>
       <div>{listViewProps.title}</div>
       <div className="psdk-grid-filter">
         <Filters filters={filters} transientItemID={transientItemID} localeReference={listViewProps.localeReference}/>
@@ -162,6 +162,6 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
            show: initTable
          }}
        />}
-    </Fragment>
+    </>
   );
 }

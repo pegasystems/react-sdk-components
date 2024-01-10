@@ -198,7 +198,7 @@ export function preparePropertyMaps(fields, classID, context) {
  * @returns {Array}           Metadata of configured embedded fields
  */
 export function getConfigEmbeddedFieldsMeta(configFields, classID) {
-  const configEmbeddedFieldsMeta: Array<any> = [];
+  const configEmbeddedFieldsMeta: any[] = [];
   configFields.forEach((field) => {
     let value = field;
     if (isEmbeddedField(value)) {
@@ -298,7 +298,7 @@ function getConfigFields(configFields, primaryFields, metaFields, classID) {
       (primaryField) =>
         !presetConfigFields.some((presetConfigField) => presetConfigField.config.value.split('.')[1] === primaryField)
     );
-    const uncommonFieldsRawMeta: Array<any> = [];
+    const uncommonFieldsRawMeta: any[] = [];
     uncommonFieldsList.forEach((uncommonField) => {
       const uncommonFieldMeta = metaFields.find((metaField) => metaField.fieldID === uncommonField);
       if (uncommonFieldMeta) uncommonFieldsRawMeta.push(uncommonFieldMeta);
@@ -570,7 +570,7 @@ function populateRenderingOptions(name, config, field) {
   }
 }
 export function initializeColumns(
-  fields: Array<any> = [],
+  fields: any[] = [],
   getMappedProperty: any = null
 ) {
   return fields.map((field, originalColIndex) => {
@@ -621,9 +621,9 @@ export const getItemKey = (fields) => {
 };
 
 export function preparePatchQueryFields(fields, isDataObject = false, classID = '') {
-  const queryFields: Array<any> = [];
+  const queryFields: any[] = [];
   fields.forEach((field) => {
-    const patchFields: Array<any> = [];
+    const patchFields: any[] = [];
     if (field.cellRenderer === 'WorkLink') {
       if (field.customObject && field.customObject.isAssignmentLink) {
         const associationName = field.name.includes(':') ? `${field.name.split(':')[0]}:` : '';
@@ -685,7 +685,7 @@ export const readContextResponse = async (context, params) => {
   } = params;
   const { promisesResponseArray, apiContext: otherContext } = context;
   // eslint-disable-next-line sonarjs/no-unused-collection
-  const listOfComponents: Array<any> = [];
+  const listOfComponents: any[] = [];
   const {
     data: { fields: metaFields, classID, isQueryable }
   } = promisesResponseArray[0];
@@ -705,7 +705,7 @@ export const readContextResponse = async (context, params) => {
 
 
   if (isDataObject) {
-    const compositeKeys: Array<any> = [];
+    const compositeKeys: any[] = [];
     const dataViewName = PCore.getDataTypeUtils().getSavableDataPage(classID);
     const dataPageKeys = PCore.getDataTypeUtils().getDataPageKeys(dataViewName);
     dataPageKeys?.forEach((item) =>

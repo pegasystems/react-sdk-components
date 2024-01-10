@@ -37,7 +37,7 @@ export default function RadioButtons(props /* : RadioButtonsProps */ ) {
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps()["value"];
+  const propName = thePConn.getStateProps().value;
   const helperTextToDisplay = validatemessage || helperText;
   const className = thePConn.getCaseInfo().getClassName();
 

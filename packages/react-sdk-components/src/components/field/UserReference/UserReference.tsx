@@ -1,8 +1,10 @@
 import { Fragment, memo, useEffect, useState } from 'react';
 import { Typography } from '@material-ui/core';
-import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
+
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
+
+import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 errors)
 declare const PCore: any;
@@ -50,7 +52,7 @@ const UserReference = (props: UserReferenceProps) => {
     required = false,
     disabled = false,
     onChange,
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     variant = 'inline'
   } = props;
   const [dropDownDataSource, setDropDownDataSource] = useState([]);
@@ -97,7 +99,7 @@ const UserReference = (props: UserReferenceProps) => {
   if (readOnly && showAsFormattedText) {
     if (userId) {
       userReferenceComponent = (
-        <Fragment>
+        <>
           {/*
             TODO: This has to be replaced with Operator Component
           */}
@@ -105,7 +107,7 @@ const UserReference = (props: UserReferenceProps) => {
             <Typography variant="caption">{label}</Typography>
             <Typography variant="body1">{userName}</Typography>
           </div>
-        </Fragment>
+        </>
       );
     }
   } else {

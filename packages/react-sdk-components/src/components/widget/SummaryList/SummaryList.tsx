@@ -4,7 +4,7 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 interface SummaryListProps {
   // If any, enter additional props that only exist on this component
-  arItems$: Array<any>,
+  arItems$: any[],
   menuIconOverride$?: string,
   menuIconOverrideAction$?: any
 }
@@ -18,7 +18,7 @@ export default function SummaryList(props: SummaryListProps) {
   return (
     <div>
       {props.arItems$.map(file => (
-        <SummaryItem key={file.id} menuIconOverride$={menuOverride} arItems$={file} menuIconOverrideAction$={props.menuIconOverrideAction$}></SummaryItem>
+        <SummaryItem key={file.id} menuIconOverride$={menuOverride} arItems$={file} menuIconOverrideAction$={props.menuIconOverrideAction$} />
       ))}
     </div>
   );

@@ -1,19 +1,19 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable camelcase */
+ 
 import { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
-import { Utils } from '../../../helpers/utils';
 import { Alert } from '@material-ui/lab';
-
-import StoreContext from '../../../../bridge/Context/StoreContext';
 import DayjsUtils from '@date-io/dayjs';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
+import StoreContext from '../../../../bridge/Context/StoreContext';
+import { Utils } from '../../../helpers/utils';
 import { isContainerInitialized } from '../helpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
+
+import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
 // import type { PConnProps } from '../../../../types/PConnProps';
 
 // Can't use PConnProps until getPConnect().getChildren() types are ok
@@ -92,12 +92,12 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   const [todo_caseInfoID, setCaseInfoID] = useState('');
   const [todo_showTodoList, setShowTodoList] = useState(false);
   const [todo_datasource, setTodoDatasource] = useState({});
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [todo_context, setTodoContext] = useState('');
 
   const [caseMessages, setCaseMessages] = useState('');
   const [bHasCaseMessages, setHasCaseMessages] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [checkSvg, setCheckSvg] = useState('');
 
   const [buildName, setBuildName] = useState('');
@@ -197,7 +197,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     const ourPConn = getPConnect();
 
     let bHasAssignments = false;
-    const assignmentsList: Array<any> = ourPConn.getValue(pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''); // 2nd arg empty string until typedefs properly allow optional
+    const assignmentsList: any[] = ourPConn.getValue(pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''); // 2nd arg empty string until typedefs properly allow optional
     const isEmbedded = window.location.href.includes('embedded');
     let bAssignmentsForThisOperator = false;
     // 8.7 includes assignments in Assignments List that may be assigned to
@@ -206,7 +206,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     if (PCoreVersion?.includes('8.7') || isEmbedded) {
       const thisOperator = PCore.getEnvironmentInfo().getOperatorIdentifier();
       for (const assignment of assignmentsList) {
-        if (assignment['assigneeInfo']['ID'] === thisOperator) {
+        if (assignment.assigneeInfo.ID === thisOperator) {
           bAssignmentsForThisOperator = true;
         }
       }
@@ -313,7 +313,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
                 title={<Typography variant="h6">{containerName}</Typography>}
                 subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
                 avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
-              ></CardHeader>
+               />
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
@@ -345,7 +345,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
               context={todo_context}
               itemKey={itemKey}
               isConfirm
-            ></ToDo>
+             />
           </div>
         ))}
       {bHasCaseMessages && (

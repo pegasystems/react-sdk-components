@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 // Followers does NOT have getPConnect. So, no need to extend from PConnProps
 interface FollowersProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>
+  children: any[]
 }
 
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Followers(props: FollowersProps) {
   const componentName = "Followers";
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { children } = props;
   const classes = useStyles();
 

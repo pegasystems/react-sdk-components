@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { Utils } from '../../helpers/utils';
+
 import './NavBar.css';
 import {
   Drawer,
@@ -17,7 +17,6 @@ import {
   MenuItem,
   Typography
 } from '@material-ui/core';
-
 import PersonOutlineIcon from '@material-ui/icons/PersonOutlineOutlined';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -30,10 +29,10 @@ import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-
-import { useNavBar } from '../../helpers/reactContextHelpers';
 import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
+import { useNavBar } from '../../helpers/reactContextHelpers';
+import { Utils } from '../../helpers/utils';
 import type { PConnProps } from '../../../types/PConnProps';
 
 
@@ -41,8 +40,8 @@ interface NavBarProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   // eslint-disable-next-line react/no-unused-prop-types
   appName?: string,
-  pages?: Array<any>,
-  caseTypes: Array<any>,
+  pages?: any[],
+  caseTypes: any[],
   pConn?: any
 }
 

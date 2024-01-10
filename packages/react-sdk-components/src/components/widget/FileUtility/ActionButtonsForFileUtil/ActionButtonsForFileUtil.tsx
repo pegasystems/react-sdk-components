@@ -6,8 +6,8 @@ import './ActionButtonsForFileUtil.css';
 
 interface ActionButtonsForFileUtilProps {
   // If any, enter additional props that only exist on this component
-  arMainButtons: Array<any>,
-  arSecondaryButtons: Array<any>,
+  arMainButtons: any[],
+  arSecondaryButtons: any[],
   primaryAction: any,
   secondaryAction: any
 }

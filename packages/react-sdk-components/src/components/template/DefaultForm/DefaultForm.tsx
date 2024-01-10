@@ -1,7 +1,9 @@
 import { createElement } from 'react';
+
 import { getInstructions } from '../../helpers/template-utils';
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import connectToState from '../../helpers/state-utils';
+
 import { getKeyForMappedField, mapStateToProps } from './utils';
 // import type { PConnProps } from '../../../types/PConnProps';
 

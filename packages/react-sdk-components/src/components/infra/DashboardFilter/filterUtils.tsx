@@ -2,6 +2,7 @@
 /** This file contains various utility methods to generate filter components, regionLayout data, filter expressions, etc.  */
 
 import { Grid, Link } from '@material-ui/core';
+
 import DashboardFilter from './DashboardFilter';
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
@@ -69,7 +70,7 @@ export const createFilterComponent = (getPConnect, filterMeta, index) => {
         filterProp={filterProp}
         metadata={filterMeta}
         type={filterMeta.type}
-      ></DashboardFilter>
+       />
     );
   }
   if (datasource && datasource.fields) {
@@ -136,7 +137,7 @@ export const getFilterExpression = (filterValue, name, metadata) => {
   if (metadata.config.filterType && metadata.config.filterType === 'RelativeDates') {
     const fieldSource = metadata.config.datasource.filter(source => source.key === filterValue)[0];
     const relativeDateExpression = JSON.parse(fieldSource.json);
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const fields = [
       {
         name: relativeDateExpression.condition.lhs.field,
@@ -183,8 +184,7 @@ export const getFormattedDate = date => {
   if (!date) {
     return date;
   }
-  const formattedDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${(
+  return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${(
     '0' + date.getDate()
   ).slice(-2)}`;
-  return formattedDate;
 };

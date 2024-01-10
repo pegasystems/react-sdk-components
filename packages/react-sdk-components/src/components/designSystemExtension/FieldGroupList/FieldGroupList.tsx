@@ -8,7 +8,7 @@ import { Utils } from '../../helpers/utils';
 //  So, no need to extend PConnProps
 interface FieldGroupListProps {
   // If any, enter additional props that only exist on this component
-  items: Array<any> | any,
+  items: any[] | any,
   onDelete: any,
   onAdd: any
 }
@@ -41,7 +41,7 @@ export default function FieldGroupList(props: FieldGroupListProps) {
                     props.onDelete(item.id);
                   }}
                 >
-                  <img className='psdk-utility-card-action-svg-icon' src={menuIconOverride$}></img>
+                  <img className='psdk-utility-card-action-svg-icon' src={menuIconOverride$} />
                 </button>
               )}
               {item.children}

@@ -2,12 +2,13 @@ import { Breadcrumbs, Card, Typography } from "@material-ui/core";
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import DoneIcon from '@material-ui/icons/Done';
 import { makeStyles } from '@material-ui/core/styles';
+
 import type { PConnProps } from '../../../types/PConnProps';
 
 
 interface StagesProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  stages: Array<any>
+  stages: any[]
 }
 
 

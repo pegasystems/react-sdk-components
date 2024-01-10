@@ -1,4 +1,5 @@
 import React from "react";
+
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface MultiReferenceReadOnlyProps extends PConnProps {
@@ -32,6 +33,6 @@ export default function MultiReferenceReadOnly(props: MultiReferenceReadOnlyProp
   '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
 
    return (
-    <React.Fragment>{component}</React.Fragment>
+    <>{component}</>
   )
 }

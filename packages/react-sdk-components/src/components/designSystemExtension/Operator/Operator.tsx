@@ -3,7 +3,6 @@ import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 import Utils from '../../helpers/utils';
@@ -61,7 +60,7 @@ export default function Operator(props: OperatorProps) {
 
   // Popover-related
   const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
-  const [popoverFields, setPopoverFields] = useState<Array<any>>([]);
+  const [popoverFields, setPopoverFields] = useState<any[]>([]);
 
   const popoverOpen = Boolean(popoverAnchorEl);
   const popoverId = popoverOpen ? 'operator-details-popover' : undefined;
@@ -175,7 +174,7 @@ export default function Operator(props: OperatorProps) {
 
   // End of popover-related
 
-  return <React.Fragment>
+  return <>
       <TextField
         defaultValue={caseOpName}
         label={caseOpLabel}
@@ -200,6 +199,6 @@ export default function Operator(props: OperatorProps) {
       >
         {getPopoverGrid()}
       </Popover>
-    </React.Fragment>;
+    </>;
 
 }

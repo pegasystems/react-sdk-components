@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import isDeepEqual from 'fast-deep-equal/react';
+
 import { Utils } from '../../helpers/utils';
 import type { PConnProps } from '../../../types/PConnProps';
 
@@ -50,7 +51,7 @@ export default function CaseHistory(props:CaseHistoryProps) {
    ];
 
   const rowData: any = useRef([]);
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [waitingForData, setWaitingForData] = useState<boolean>(true);
 
 
@@ -59,8 +60,8 @@ export default function CaseHistory(props:CaseHistoryProps) {
   const context = thePConn.getContextName();
 
 
-  function computeRowData(rows: Array<Object>): void {
-    const theRowData: Array<Object> = [];
+  function computeRowData(rows: Object[]): void {
+    const theRowData: Object[] = [];
 
     rows.forEach((row: any, rowIndex: number) => {
       // Now, for each property in the index of row properties (displayedColumns), add an object
@@ -68,8 +69,8 @@ export default function CaseHistory(props:CaseHistoryProps) {
       const rowDisplayValues: any = [];
 
       displayedColumns.forEach((column: Object, rowValIndex) => {
-        const theType = column["type"];
-        const theFieldName = column["fieldName"];
+        const theType = column.type;
+        const theFieldName = column.fieldName;
         const theValue = ((theType === "Date" || theType === "DateTime")) ? Utils.generateDateTime(row[theFieldName], "DateTime-Short") : row[theFieldName];
         rowDisplayValues[rowValIndex] = theValue;
       });
@@ -95,7 +96,7 @@ export default function CaseHistory(props:CaseHistoryProps) {
 
     historyData.then( (historyJSON: Object) => {
 
-      const tableDataResults = historyJSON["data"].data;
+      const tableDataResults = historyJSON.data.data;
 
       // compute the rowData using the tableDataResults
       computeRowData(tableDataResults);
@@ -124,7 +125,7 @@ export default function CaseHistory(props:CaseHistoryProps) {
   function getTableHeader() {
     const theRowKey = "CaseHistory.TableHeader";
 
-    const theHeaderCells: Array<any> = displayedColumns.map((headerCol, index) => {
+    const theHeaderCells: any[] = displayedColumns.map((headerCol, index) => {
       const theCellKey = `${theRowKey}.${index}`;
       return <StyledTableCell key={theCellKey}>{headerCol.label}</StyledTableCell>
     })
@@ -134,12 +135,12 @@ export default function CaseHistory(props:CaseHistoryProps) {
 
 
   function getTableData() {
-    const theDataRows: Array<any> = [];
+    const theDataRows: any[] = [];
 
     // Note: using rowData.current since we're using useRef as a mutatable
     //  value that's only updated when it changes.
     if (rowData.current.length > 0) {
-      rowData.current.forEach((dataRow: Array<Object>, index) => {
+      rowData.current.forEach((dataRow: Object[], index) => {
         // using dataRow[0]-dataRow[1] as the array key since it's a unique value
         const theKey = `CaseHistory-${index}`;
         theDataRows.push( <TableRow key={theKey}>

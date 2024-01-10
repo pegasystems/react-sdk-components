@@ -7,7 +7,7 @@ interface ScalarListProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   displayInModal: boolean;
   hideLabel: boolean;
-  value: Array<any>;
+  value: any[];
   componentType: string;
   label: string;
   displayMode: string;
@@ -58,12 +58,9 @@ export default function ScalarList(props: ScalarListProps) {
   });
 
   if (['LABELS_LEFT', 'STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode)) {
-    const displayComp = (
-      <div>
+    return <div>
         <CommaSeparatedList items={items} />
-      </div>
-    );
-    return displayComp;
+      </div>;
   }
 
   const displayComp = <CommaSeparatedList items={items} />;

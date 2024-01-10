@@ -30,9 +30,9 @@ export class Utils {
     return sPrefix + this.lastControlID.toString();
   }
 
-  static getOptionList(configProps: any, dataObject: any): Array<any> {
+  static getOptionList(configProps: any, dataObject: any): any[] {
     const listType = configProps.listType;
-    let arReturn: Array<any> = [];
+    let arReturn: any[] = [];
 
     if (listType) {
       switch (listType.toLowerCase()) {

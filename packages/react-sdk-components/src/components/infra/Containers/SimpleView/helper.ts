@@ -1,4 +1,5 @@
 import { useEffect, createElement } from 'react';
+
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { isContainerInitialized } from '../helpers';
 

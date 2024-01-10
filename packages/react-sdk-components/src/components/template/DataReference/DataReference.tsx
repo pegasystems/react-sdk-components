@@ -1,12 +1,12 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private
 interface DataReferenceProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>;
+  children: any[];
   label: string;
   showLabel: any;
   displayMode: string;
@@ -15,7 +15,7 @@ interface DataReferenceProps extends PConnProps {
   selectionMode: string;
   displayAs: string;
   ruleClass: string;
-  parameters: Array<string>; // need to fix
+  parameters: string[]; // need to fix
   hideLabel: boolean;
 }
 
@@ -53,9 +53,9 @@ export default function DataReference(props: DataReferenceProps) {
     propsToUse.label = '';
   }
   const rawViewMetadata = pConn.getRawMetadata();
-  const viewName = rawViewMetadata["name"];
-  const [firstChildMeta] = rawViewMetadata["children"];
-  const refList = rawViewMetadata["config"].referenceList;
+  const viewName = rawViewMetadata.name;
+  const [firstChildMeta] = rawViewMetadata.children;
+  const refList = rawViewMetadata.config.referenceList;
   const canBeChangedInReviewMode = allowAndPersistChangesInReviewMode && (displayAs === 'autocomplete' || displayAs === 'dropdown');
   let propName;
   const isDisplayModeEnabled = ['LABELS_LEFT', 'STACKED_LARGE_VAL'].includes(displayMode);
@@ -65,7 +65,7 @@ export default function DataReference(props: DataReferenceProps) {
   useEffect(() => {
     if (
       firstChildMeta?.type === "Dropdown" &&
-      rawViewMetadata["config"]?.parameters
+      rawViewMetadata.config?.parameters
     ) {
       const { value, key, text } = firstChildMeta.config.datasource.fields;
       PCore.getDataApiUtils()
@@ -105,14 +105,14 @@ export default function DataReference(props: DataReferenceProps) {
       delete firstChildMeta.config.readOnly;
     }
     if (firstChildMeta?.type === 'Dropdown') {
-      firstChildMeta.config.datasource.source = rawViewMetadata["config"]?.parameters
+      firstChildMeta.config.datasource.source = rawViewMetadata.config?.parameters
         ? dropDownDataSource
         : '@DATASOURCE '.concat(refList).concat('.pxResults');
     } else if (firstChildMeta?.type === 'AutoComplete') {
       firstChildMeta.config.datasource = refList;
 
       /* Insert the parameters to the component only if present */
-      if (rawViewMetadata["config"]?.parameters) {
+      if (rawViewMetadata.config?.parameters) {
         firstChildMeta.config.parameters = parameters;
       }
     }
@@ -209,7 +209,7 @@ export default function DataReference(props: DataReferenceProps) {
             referenceType={referenceType}
             hideLabel={hideLabel}
             dataRelationshipContext={
-              rawViewMetadata["config"].contextClass && rawViewMetadata["config"].name ? rawViewMetadata["config"].name : null
+              rawViewMetadata.config.contextClass && rawViewMetadata.config.name ? rawViewMetadata.config.name : null
             }
           />
         );
@@ -229,7 +229,7 @@ export default function DataReference(props: DataReferenceProps) {
       // In the case of a datasource with parameters you cannot load the dropdown before the parameters
       if (
         type === 'Dropdown' &&
-        rawViewMetadata["config"]?.parameters &&
+        rawViewMetadata.config?.parameters &&
         dropDownDataSource === null
       ) {
         return null;
@@ -244,13 +244,13 @@ export default function DataReference(props: DataReferenceProps) {
           disabled: propsToUse.disabled,
           label: propsToUse.label,
           viewName: getPConnect().getCurrentView(),
-          parameters: rawViewMetadata["config"].parameters,
+          parameters: rawViewMetadata.config.parameters,
           readOnly: false,
-          localeReference: rawViewMetadata["config"].localeReference,
+          localeReference: rawViewMetadata.config.localeReference,
           ...(selectionMode === SELECTION_MODE.SINGLE ? { referenceType } : ''),
           dataRelationshipContext:
-            rawViewMetadata["config"].contextClass && rawViewMetadata["config"].name
-              ? rawViewMetadata["config"].name
+            rawViewMetadata.config.contextClass && rawViewMetadata.config.name
+              ? rawViewMetadata.config.name
               : null,
           hideLabel,
           onRecordChange: handleSelection
@@ -268,7 +268,7 @@ export default function DataReference(props: DataReferenceProps) {
 
   // Only include the views region for rendering when it has content
   if (firstChildMeta?.type !== 'Region') {
-    const viewsRegion = rawViewMetadata["children"][1];
+    const viewsRegion = rawViewMetadata.children[1];
     if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
       childrenToRender = [recreatedFirstChild, ...children.slice(1)];
     } else {
@@ -281,7 +281,7 @@ export default function DataReference(props: DataReferenceProps) {
   ) : (
     <div>
       {childrenToRender.map(child => (
-        <React.Fragment>{child}</React.Fragment>
+        <>{child}</>
       ))}
     </div>
   );
