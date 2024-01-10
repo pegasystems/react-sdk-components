@@ -7,6 +7,7 @@ import download from 'downloadjs';
 
 import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
 import { Utils } from '../../helpers/utils';
+import { isInfinity23OrHigher } from '../../helpers/common-utils';
 import './Attachment.css';
 // import type { PConnProps } from '../../../types/PConnProps';
 
@@ -34,7 +35,6 @@ const updateAttachmentState = (pConn, key, attachments) => {
 };
 
 export default function Attachment(props /* :AttachmentProps */) {
-  const PCoreVersion = PCore.getPCoreVersion();
   const { value, getPConnect, label, validatemessage, allowMultiple, extensions, displayMode } = props;
   /* this is a temporary fix because required is supposed to be passed as a boolean and NOT as a string */
   let { required, disabled } = props;
@@ -59,7 +59,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   const [toggleUploadBegin, setToggleUploadBegin] = useState(false);
 
   const resetAttachmentStoredState = () => {
-    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(PCoreVersion?.includes('8.23') ? valueRef : ''), undefined, {
+    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(isInfinity23OrHigher() ? valueRef : ''), undefined, {
       pageReference: 'context_data',
       isArrayDeepMerge: false
     });
