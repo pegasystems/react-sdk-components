@@ -1,5 +1,3 @@
-import React from "react";
-
 import './NarrowWide.css';
 
 // NarrowWide does NOT have getPConnect. So, no need to extend from PConnProps

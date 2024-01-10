@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createElement } from 'react';
+import { useState, useEffect, createElement } from 'react';
 import { Box, Card, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 

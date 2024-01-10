@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect, useContext, createElement } from "react";
+import { useMemo, useRef, useState, useEffect, useContext, createElement } from "react";
 // import { Banner, ModalManager } from "@pega/cosmos-react-core";
 import isEqual from 'lodash.isequal';
 // import ReAuthMessageModal from "../ReAuthenticationModal";
@@ -256,7 +256,8 @@ export default function RootContainer(props /* : RootContainerProps */) {
       </>
 
     );
-  } if (skeleton) {
+  }
+  if (skeleton) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const LoadingComponent = LazyComponentMap[skeleton];
 
@@ -266,11 +267,11 @@ export default function RootContainer(props /* : RootContainerProps */) {
         <Box textAlign="center"><CircularProgress /></Box>
       </div>
     );
-  } 
+  }
     return (
       <div id="root-container">
         <div>{localizedVal('RootContainer: Should be ModalManager, etc.', localeCategory)}</div>
       </div>
     );
-  
+
 };

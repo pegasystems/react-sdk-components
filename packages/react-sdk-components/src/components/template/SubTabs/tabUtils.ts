@@ -65,7 +65,7 @@ export const tabClick = (id, availableTabs, currentTabId, setCurrentTabId, tabIt
   }
 
   const nextPConn = availableTabs[id].getPConnect();
-  const { deferLoadId: activeId } = nextPConn?.getConfigProps();
+  const { deferLoadId: activeId } = (nextPConn?.getConfigProps() || {});
   PCore.getDeferLoadManager().activate(activeId, nextPConn?.getContextName());
   PCore.getDeferLoadManager().refreshComponent(activeId, nextPConn?.getContextName());
 };

@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { render } from "react-dom";
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -266,6 +266,7 @@ export default function EmbeddedTopLevel() {
 
 
   // from react_root.js with some modifications
+  // eslint-disable-next-line react/no-unstable-nested-components
   function RootComponent(props) {
     const PegaConnectObj = createPConnectComponent();
 
@@ -284,6 +285,7 @@ export default function EmbeddedTopLevel() {
     // VRS: Attempted to remove displayOnlyFA but it presently handles various components which
     //  SDK does not yet support, so all those need to be fixed up before it can be removed. To
     //  be done in a future sprint.
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     return <StoreContext.Provider value={{store: PCore.getStore(), displayOnlyFA: true}} >
         <ThemeProvider theme={theme}>
           <CssBaseline />

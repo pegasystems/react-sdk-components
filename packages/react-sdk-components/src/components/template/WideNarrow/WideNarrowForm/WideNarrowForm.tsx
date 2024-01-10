@@ -1,5 +1,3 @@
-import React from "react";
-
 import './WideNarrowForm.css';
 
 // WideNarrowForm does NOT have getPConnect. So, no need to extend from PConnProps

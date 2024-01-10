@@ -68,7 +68,7 @@ export default function CaseHistory(props:CaseHistoryProps) {
       //  to a new array of values
       const rowDisplayValues: any = [];
 
-      displayedColumns.forEach((column: Object, rowValIndex) => {
+      displayedColumns.forEach((column: any, rowValIndex) => {
         const theType = column.type;
         const theFieldName = column.fieldName;
         const theValue = ((theType === "Date" || theType === "DateTime")) ? Utils.generateDateTime(row[theFieldName], "DateTime-Short") : row[theFieldName];
@@ -94,7 +94,7 @@ export default function CaseHistory(props:CaseHistoryProps) {
       context
       );
 
-    historyData.then( (historyJSON: Object) => {
+    historyData.then( (historyJSON: any) => {
 
       const tableDataResults = historyJSON.data.data;
 

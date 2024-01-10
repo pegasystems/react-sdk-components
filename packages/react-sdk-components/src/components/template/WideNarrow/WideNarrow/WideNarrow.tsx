@@ -1,4 +1,3 @@
-import React from "react";
 import './WideNarrow.css';
 
 // WideNarrow does NOT have getPConnect. So, no need to extend from PConnProps

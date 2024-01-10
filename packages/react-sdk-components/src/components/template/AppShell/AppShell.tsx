@@ -225,6 +225,7 @@ export default function AppShell(props:AppShellProps) {
   }
 
   return (
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <NavContext.Provider value={{ open, setOpen }}>
       <div id='AppShell' className={classes.root}>
         <NavBar

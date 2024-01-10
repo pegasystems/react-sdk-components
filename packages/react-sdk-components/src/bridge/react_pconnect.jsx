@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import React, { Component, createElement } from 'react';
+import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { connect, shallowEqual } from 'react-redux';
 
@@ -202,6 +202,7 @@ const createPConnectComponent = () => {
       this.changeHandler = this.changeHandler.bind(this);
 
       this.c11nEnv = getPConnect();
+      // eslint-disable-next-line react/no-unused-class-component-methods
       this.Control = getComponent(this.c11nEnv);
       this.actionsAPI = this.c11nEnv.getActionsApi();
 

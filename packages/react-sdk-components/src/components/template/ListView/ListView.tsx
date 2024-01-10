@@ -2,7 +2,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-shadow */
- 
+
 import React, { useState, useEffect, useRef } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -217,12 +217,12 @@ export default function ListView(props /* : ListViewProps */) {
   function getComparator<Key extends keyof any>(
     theOrder: Order,
     orderedBy: Key
-     
+
   ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
     return theOrder === 'desc' ? (a, b) => descendingComparator(a, b, orderedBy) : (a, b) => -descendingComparator(a, b, orderedBy);
   }
 
-   
+
   function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
     const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
     stabilizedThis.sort((a, b) => {
@@ -939,7 +939,7 @@ export default function ListView(props /* : ListViewProps */) {
   const onCheckboxClick = (event) => {
     const value = event?.target?.value;
     const checked = event?.target?.checked;
-    const reqObj = {};
+    const reqObj:any = {};
     if (compositeKeys?.length > 1) {
       const index = response.findIndex((element) => element[rowID] === value);
       const selectedRow = response[index];

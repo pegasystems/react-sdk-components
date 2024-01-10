@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, createElement, Fragment } from 'react';
+import React, { useCallback, useMemo, useState, createElement } from 'react';
 import Button from '@material-ui/core/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';

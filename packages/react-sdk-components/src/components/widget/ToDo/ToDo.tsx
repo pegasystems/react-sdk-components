@@ -1,6 +1,6 @@
- 
+
 /* eslint-disable @typescript-eslint/no-shadow */
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -56,11 +56,11 @@ function getID(assignment: any) {
   if (assignment.value) {
     const refKey = assignment.value;
     return refKey.substring(refKey.lastIndexOf(' ') + 1);
-  } 
+  }
     const refKey = assignment.ID;
     const arKeys = refKey.split('!')[0].split(' ');
     return arKeys[2];
-  
+
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -115,10 +115,10 @@ export default function ToDo(props: ToDoProps) {
     if (assignmentsSource) {
       assignmentCount = assignmentsSource.length;
       return topThreeAssignments(assignmentsSource);
-    } 
+    }
       // turn off todolist
       return [];
-    
+
   }
 
   const getAssignmentId = (assignment) => {
@@ -164,7 +164,7 @@ export default function ToDo(props: ToDoProps) {
     const sTarget = thePConn.getContainerName();
     const sTargetContainerName = sTarget;
 
-    const options = { containerName: sTargetContainerName, channelName: '' };
+    const options:any = { containerName: sTargetContainerName, channelName: '' };
 
     if (classname === null || classname === '') {
       classname = thePConn.getCaseInfo().getClassName();

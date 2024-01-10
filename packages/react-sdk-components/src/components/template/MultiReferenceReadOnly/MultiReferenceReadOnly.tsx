@@ -1,5 +1,3 @@
-import React from "react";
-
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface MultiReferenceReadOnlyProps extends PConnProps {

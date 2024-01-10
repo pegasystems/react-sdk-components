@@ -1,5 +1,3 @@
-import React from "react";
-
 // import type { PConnProps } from '../../../types/PConnProps';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private

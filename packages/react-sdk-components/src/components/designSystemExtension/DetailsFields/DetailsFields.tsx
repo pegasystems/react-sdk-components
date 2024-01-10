@@ -124,20 +124,21 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     const gridItems: any[] = fieldComponents.map((field, index) => {
       if (field?.type === 'reference') {
         return field?.value;
-      } if (isValidElement(field?.value)) {
+      }
+      if (isValidElement(field?.value)) {
         return (
           <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
             {getGridItem(field, `${index}-item`)}
           </Grid>
         );
-      } 
+      }
         return (
           <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
             {getGridItemLabel(field, `${index}-label`)}
             {getGridItemValue(field, `${index}-value`)}
           </Grid>
         );
-      
+
     });
     return gridItems;
   }

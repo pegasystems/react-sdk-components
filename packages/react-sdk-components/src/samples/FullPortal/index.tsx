@@ -49,6 +49,7 @@ export default function FullPortal() {
   //  const outlet = document.getElementById("outlet");
 
   // from react_root.js with some modifications
+  // eslint-disable-next-line react/no-unstable-nested-components
   function RootComponent(props) {
     // const { portalTarget, styleSheetTarget } = props;
     const PegaConnectObj = createPConnectComponent();
@@ -63,6 +64,7 @@ export default function FullPortal() {
     // const thePConnObj = <div>the RootComponent</div>;
     const thePConnObj = <PegaConnectObj {...props} />;
 
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     return <StoreContext.Provider value={{ store: PCore.getStore() }}>
         <ThemeProvider theme={theme}>
           <CssBaseline />

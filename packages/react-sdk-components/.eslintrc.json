@@ -48,6 +48,7 @@
     "import/order": "off",
 
     "no-underscore-dangle": "off", // TODO : adhere to standard naming
+    "no-restricted-syntax": "warn", // TODO : fix for-in loops
 
     "jsx-a11y/alt-text": "off",
     "jsx-a11y/anchor-is-valid": "off",

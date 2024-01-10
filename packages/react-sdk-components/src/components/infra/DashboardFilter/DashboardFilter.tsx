@@ -1,7 +1,7 @@
- 
+
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable operator-assignment */
-import { useRef, useEffect, useState, Fragment, forwardRef } from 'react';
+import { useRef, useEffect, useState, forwardRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'throttle-debounce';
 
@@ -124,6 +124,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
 
   const label = metadata.config.label.substring(3);
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const CustomDateInput = forwardRef<HTMLInputElement, TextProps>(
     ({ value, onClick }, ref: any) => (
       <TextField
