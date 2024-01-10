@@ -49,7 +49,7 @@
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/pickers": "^3.3.10",
-    "@pega/auth": "^0.1.2",
+    "@pega/auth": "^0.1.6",
     "@pega/constellationjs": "SDK-8.23.0",
     "@tinymce/tinymce-react": "^4.3.2",
     "@types/react": "^17.0.74",
