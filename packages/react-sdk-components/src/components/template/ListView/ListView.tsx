@@ -319,8 +319,7 @@ export default function ListView(props /* : ListViewProps */) {
     };
 
     filters.current[filterId] = filterExpression;
-    // eslint-disable-next-line no-unneeded-ternary
-    let isDateRange = data.filterExpression?.AND ? true : false;
+    let isDateRange = data.filterExpression?.AND;
     // Will be AND by default but making it dynamic in case we support dynamic relational ops in future
     const relationalOp = 'AND';
 
@@ -351,8 +350,7 @@ export default function ListView(props /* : ListViewProps */) {
       }
 
       // Checking if the filter is of type- Date Range
-      // eslint-disable-next-line no-unneeded-ternary
-      isDateRange = filter?.AND ? true : false;
+      isDateRange = filter?.AND;
       field = getFieldFromFilter(filter, isDateRange);
 
       if (!(columnList.current.length && columnList.current.includes(field))) {

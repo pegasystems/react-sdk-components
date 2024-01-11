@@ -17,7 +17,6 @@ class DataApi {
   mappedPropertyToOriginalProperty: any;
   originalPropertyToMappedProperty: any;
   constructor() {
-    ;
     this.originalPropertyToMappedProperty = {};
     this.mappedPropertyToOriginalProperty = {};
     this.setPropertyMaps = this.setPropertyMaps.bind(this);
