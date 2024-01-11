@@ -1,4 +1,3 @@
-import React from 'react';
 import { Alert } from '@material-ui/lab';
 
 
@@ -8,7 +7,7 @@ interface AlertBannerProps {
   // If any, enter additional props that only exist on Date here
   id: string,
   variant: string,
-  messages: Array<string>,
+  messages: string[],
   onDismiss?: any
 }
 

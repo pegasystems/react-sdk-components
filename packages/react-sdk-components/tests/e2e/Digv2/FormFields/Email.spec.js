@@ -47,7 +47,7 @@ test.describe('E2E test', () => {
     /** Required tests */
     const requiredEmail = page.locator('input[data-test-id="96fa7548c363cdd5adb29c2c2749e436"]');
 
-    requiredEmail.type('John@doe.com');
+    requiredEmail.fill('John@doe.com');
     await expect(page.locator('p.Mui-error.Mui-required')).toBeHidden();
 
     attributes = await common.getAttributes(requiredEmail);
@@ -90,7 +90,7 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeTruthy();
 
     const editableEmail = page.locator('input[data-test-id="c75f8a926bb5e08fd8342f7fe45dc344"]');
-    await editableEmail.type('Johndoe.com');
+    await editableEmail.fill('Johndoe.com');
     await editableEmail.blur();
     await expect(page.locator('p:has-text("Invalid")')).toBeVisible();
     editableEmail.fill('John@doe.com');

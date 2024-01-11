@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext, createElement } from "react";
 import { Box, CircularProgress } from "@material-ui/core";
+
 import createPConnectComponent from "../../../../bridge/react_pconnect";
 import StoreContext from "../../../../bridge/Context/StoreContext";
 import { isEmptyObject } from '../../../helpers/common-utils';
-
 import type { PConnProps } from '../../../../types/PConnProps';
 
 interface ViewContainerProps extends PConnProps {
@@ -183,11 +183,11 @@ export default function ViewContainer(props: ViewContainerProps) {
           containerItemName: key,
           hasForm: viewName === CREATE_DETAILS_VIEW_NAME
         };
-        const configObject = PCore.createPConnect(config);
+        const configObject:any = PCore.createPConnect(config);
 
         // Add in displayOnlyFA if prop is on ViewContainer
         if (displayOnlyFA) {
-          configObject["displayOnlyFA"] = true;
+          configObject.displayOnlyFA = true;
         }
 
         setRootComponent(configObject);

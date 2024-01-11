@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseViewActionsMenuProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  availableActions: Array<any>,
-  availableProcesses: Array<any>,
+  availableActions: any[],
+  availableProcesses: any[],
   caseTypeID: string,
   caseTypeName: string
 }
@@ -31,7 +32,7 @@ export default function CaseViewActionsMenu(props:CaseViewActionsMenuProps) {
     setAnchorEl(null);
   };
 
-  const arMenuItems: Array<any> = [];
+  const arMenuItems: any[] = [];
 
   function _actionMenuActionsClick(data) {
     const actionsAPI = thePConn.getActionsApi();
@@ -55,7 +56,7 @@ export default function CaseViewActionsMenu(props:CaseViewActionsMenuProps) {
   });
 
   return (
-    <React.Fragment>
+    <>
       <Button aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
         {localizedVal('Actions...', localeCategory)}
       </Button>
@@ -68,6 +69,6 @@ export default function CaseViewActionsMenu(props:CaseViewActionsMenuProps) {
       >
         {arMenuItems}
       </Menu>
-    </React.Fragment>
+    </>
   );
 }

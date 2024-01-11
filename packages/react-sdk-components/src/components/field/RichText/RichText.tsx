@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
@@ -55,7 +56,7 @@ export default function RichText(props: RichTextProps) {
     }
     const handleChange = () => {
       if (status === 'error') {
-        const property = pConn.getStateProps()["value"];
+        const property = (pConn.getStateProps() as any).value;
         pConn.clearErrorMessages({
           property,
           category: '',
@@ -67,7 +68,7 @@ export default function RichText(props: RichTextProps) {
     const handleBlur = () => {
       if (editorRef.current) {
         const editorValue = editorRef.current.getContent({ format: 'html' });
-        const property = pConn.getStateProps()["value"];
+        const property = (pConn.getStateProps() as any).value;
         handleEvent(actionsApi, 'changeNblur', property, editorValue);
       }
     };

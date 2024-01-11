@@ -1,5 +1,3 @@
-import React from "react";
-
 import './NarrowWide.css';
 
 // NarrowWide does NOT have getPConnect. So, no need to extend from PConnProps
@@ -7,7 +5,7 @@ interface NarrowWideProps {
   // If any, enter additional props that only exist on this component
   a: any,
   b: any,
-  children?: Array<any>,
+  children?: any[],
   // eslint-disable-next-line react/no-unused-prop-types
   title?: string,
   // eslint-disable-next-line react/no-unused-prop-types
@@ -22,7 +20,7 @@ export default function NarrowWide(props: NarrowWideProps) {
   const {a, b, children} = props;
 
   return (
-    <React.Fragment>
+    <>
     {children && children.length === 2 &&
       <div className="psdk-narrow-wide-column">
       <div className="psdk-narrow-column-column">
@@ -43,7 +41,7 @@ export default function NarrowWide(props: NarrowWideProps) {
       </div>
     </div>
     }
-    </React.Fragment>
+    </>
 
   )
 

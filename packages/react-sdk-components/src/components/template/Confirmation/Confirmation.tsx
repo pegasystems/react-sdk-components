@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
+ 
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import { Button, Card, makeStyles } from '@material-ui/core';
+
 import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-
 import type { PConnProps } from '../../../types/PConnProps';
 
 // Confirmation does NOT have getPConnect. So, no need to extend from PConnProps
 
 interface ConfirmationProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>;
+  children: any[];
   datasource: { source: any };
   label: string;
   showLabel: boolean;

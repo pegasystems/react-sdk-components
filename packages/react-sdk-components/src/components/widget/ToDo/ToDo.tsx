@@ -1,7 +1,6 @@
-/* eslint-disable no-shadow */
+
 /* eslint-disable @typescript-eslint/no-shadow */
-import React, { Fragment, useState } from 'react';
-import { Utils } from '../../helpers/utils';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -19,11 +18,11 @@ import {
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
-import { makeStyles } from '@material-ui/core/styles';
-import { useTheme } from '@material-ui/core/styles';
+import { makeStyles , useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+import { Utils } from '../../helpers/utils';
 
 import './ToDo.css';
 
@@ -49,7 +48,7 @@ const isChildCase = (assignment) => {
   return assignment.isChild;
 };
 
-function topThreeAssignments(assignmentsSource: Array<any>): Array<any> {
+function topThreeAssignments(assignmentsSource: any[]): any[] {
   return Array.isArray(assignmentsSource) ? assignmentsSource.slice(0, 3) : [];
 }
 
@@ -57,11 +56,11 @@ function getID(assignment: any) {
   if (assignment.value) {
     const refKey = assignment.value;
     return refKey.substring(refKey.lastIndexOf(' ') + 1);
-  } else {
+  }
     const refKey = assignment.ID;
     const arKeys = refKey.split('!')[0].split(' ');
     return arKeys[2];
-  }
+
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -99,7 +98,7 @@ export default function ToDo(props: ToDoProps) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage]: any = useState('');
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  const [assignments, setAssignments] = useState<Array<any>>(initAssignments());
+  const [assignments, setAssignments] = useState<any[]>(initAssignments());
 
   const thePConn = getPConnect();
   const classes = useStyles();
@@ -112,14 +111,14 @@ export default function ToDo(props: ToDoProps) {
   const canPerform = assignments?.[0]?.canPerform === "true" || assignments?.[0]?.canPerform === true;
   // const { setOpen } = useNavBar();
 
-  function initAssignments(): Array<any> {
+  function initAssignments(): any[] {
     if (assignmentsSource) {
       assignmentCount = assignmentsSource.length;
       return topThreeAssignments(assignmentsSource);
-    } else {
+    }
       // turn off todolist
       return [];
-    }
+
   }
 
   const getAssignmentId = (assignment) => {
@@ -165,20 +164,20 @@ export default function ToDo(props: ToDoProps) {
     const sTarget = thePConn.getContainerName();
     const sTargetContainerName = sTarget;
 
-    const options = { containerName: sTargetContainerName, channelName: '' };
+    const options:any = { containerName: sTargetContainerName, channelName: '' };
 
     if (classname === null || classname === '') {
       classname = thePConn.getCaseInfo().getClassName();
     }
 
     if (sTarget === 'workarea') {
-      options['isActionFromToDoList'] = true;
-      options['target'] = '';
-      options['context'] = null;
-      options['isChild'] = isChildCase(assignment);
+      options.isActionFromToDoList = true;
+      options.target = '';
+      options.context = null;
+      options.isChild = isChildCase(assignment);
     } else {
-      options['isActionFromToDoList'] = false;
-      options['target'] = sTarget;
+      options.isActionFromToDoList = false;
+      options.target = sTarget;
     }
 
     thePConn
@@ -234,7 +233,7 @@ export default function ToDo(props: ToDoProps) {
               <Typography variant="h6">{headerText}&nbsp;&nbsp;&nbsp;</Typography>
             </Badge>
           }
-        ></CardHeader>
+         />
       )}
       <List>
         {assignments.map((assignment) => (
@@ -263,7 +262,7 @@ export default function ToDo(props: ToDoProps) {
   );
 
   return (
-    <React.Fragment>
+    <>
       {type === CONSTS.WORKLIST && (
         <Card className={classes.root}>
           {showTodoList && (
@@ -274,7 +273,7 @@ export default function ToDo(props: ToDoProps) {
                 </Badge>
               }
               avatar={<Avatar className={classes.avatar}>{currentUserInitials}</Avatar>}
-            ></CardHeader>
+             />
           )}
           <CardContent>
             <List>
@@ -294,7 +293,7 @@ export default function ToDo(props: ToDoProps) {
       )}
 
       {type === CONSTS.TODO && !isConfirm && <Card className={classes.todoWrapper}>{toDoContent}</Card>}
-      {type === CONSTS.TODO && isConfirm && <Fragment>{toDoContent}</Fragment>}
+      {type === CONSTS.TODO && isConfirm && <>{toDoContent}</>}
 
       {assignmentCount > 3 && (
         <Box display="flex" justifyContent="center">
@@ -319,6 +318,6 @@ export default function ToDo(props: ToDoProps) {
           </IconButton>
         }
       />
-    </React.Fragment>
+    </>
   );
 }

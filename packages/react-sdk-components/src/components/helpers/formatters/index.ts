@@ -44,7 +44,7 @@ function isIsoDate(str) {
 }
 
 function parseDateInISO(value) {
-  const isMilliSeconds = new RegExp("^[0-9]+$").exec(value);
+  const isMilliSeconds = /^[0-9]+$/.exec(value);
   if (isMilliSeconds) {
     const date = new Date(parseInt(value, 10));
     return date.toISOString();

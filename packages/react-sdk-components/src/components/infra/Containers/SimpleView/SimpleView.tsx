@@ -1,4 +1,3 @@
-import React from 'react';
 import { useMemo } from 'react';
 
 import { getActiveContainerItemID, getActiveContainerRootViewElement, getPConnectOfActiveContainerItem, useContainerInitializer } from './helper';

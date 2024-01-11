@@ -1,5 +1,3 @@
-import React from "react";
-
 // import type { PConnProps } from '../../../types/PConnProps';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private
@@ -48,7 +46,7 @@ export default function Reference(props /*: ReferenceProps */) {
   });
 
   if (visibility !== false) {
-    return <React.Fragment>{viewComponent}</React.Fragment>;
+    return <>{viewComponent}</>;
   }
   return null;
 }

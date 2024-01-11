@@ -31,7 +31,7 @@ test.describe('E2E test', () => {
     const myWorkLandingPage = page.locator('div[role="button"]:has-text("My Work")');
     await myWorkLandingPage.click();
 
-    await page.locator('input[id="search"]').type(caseID);
+    await page.locator('input[id="search"]').fill(caseID);
 
     await page.locator(`button:has-text("${caseID}")`).click();
 

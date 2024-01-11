@@ -34,13 +34,11 @@ export const getCurrencyOptions = (inISOCode: string) => {
 
   // If no currMapToUse at this point, default to US as a failsafe
   if (!currMapToUse) {
-    currMapToUse = CurrencyMapAlias['US'];
+    currMapToUse = CurrencyMapAlias.US;
   }
 
   const theCode = currMapToUse.currencyCode.substring(0, 3);
-  const currencyOptions = { locale: localeToUse, style: "currency", currency: theCode }
-
-  return currencyOptions;
+  return { locale: localeToUse, style: "currency", currency: theCode };
 
 }
 

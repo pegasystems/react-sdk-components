@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Utils } from '../../helpers/utils';
 import Avatar from '@material-ui/core/Avatar';
+
+import { Utils } from '../../helpers/utils';
 import { NavContext } from '../../helpers/reactContextHelpers';
 import './AppShell.css';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface AppShellProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   showAppName: boolean,
-  pages: Array<{
+  pages: {
     pxPageViewIcon: string,
     pyClassName: string,
     pyLabel: string,
     pyRuleName: string,
     pyURLContent: string,
 
-  }>,
-  caseTypes?:Array<object>,
-  children?: Array<any>,
+  }[],
+  caseTypes?:object[],
+  children?: any[],
   portalTemplate: string,
   portalName: string,
   portalLogo : string,
@@ -69,7 +69,7 @@ export default function AppShell(props:AppShellProps) {
   } = props;
 
   const [open, setOpen] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeTab, setActiveTab] = useState(!pages ? null : pages[0]?.pyRuleName);
   const pConn = getPConnect();
   const envInfo = PCore.getEnvironmentInfo();
@@ -86,16 +86,16 @@ export default function AppShell(props:AppShellProps) {
   const localeReference = pConn.getValue('.pyLocaleReference', '');  // 2nd arg empty string until typedef marked correctly
   const [imageBlobUrl, setImageBlobUrl] = useState(null);
   // useState for appName and mapChildren - note these are ONLY updated once (on component mount!)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [appName, setAppName] = useState('');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mapChildren, setMapChildren] = useState([]);
 
   // Initial setting of appName and mapChildren
   useEffect(() => {
     setAppName(PCore.getEnvironmentInfo().getApplicationName());
 
-    const tempMap: any = pConn.getChildren()?.["map"]((child: any, index) => {
+    const tempMap: any = (pConn.getChildren() as any)?.map((child: any, index) => {
       const theChildComp = child.getPConnect().getComponentName();
       const theKey = `.${index}`;
       return (
@@ -225,6 +225,7 @@ export default function AppShell(props:AppShellProps) {
   }
 
   return (
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <NavContext.Provider value={{ open, setOpen }}>
       <div id='AppShell' className={classes.root}>
         <NavBar
@@ -237,7 +238,7 @@ export default function AppShell(props:AppShellProps) {
           )}
           pages={pages}
           caseTypes={caseTypes}
-        ></NavBar>
+         />
         <div className={classes.content}>{children}</div>
       </div>
     </NavContext.Provider>

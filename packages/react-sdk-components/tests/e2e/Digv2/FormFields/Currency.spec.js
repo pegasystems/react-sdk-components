@@ -83,7 +83,7 @@ test.describe('E2E test', () => {
 
     const editableCurrency = page.locator('input[data-test-id="837e53069fc48e63debdee7fa61fbc1a"]');
 
-    editableCurrency.type('120');
+    editableCurrency.fill('120');
 
     attributes = await common.getAttributes(editableCurrency);
     await expect(attributes.includes('readonly')).toBeFalsy();

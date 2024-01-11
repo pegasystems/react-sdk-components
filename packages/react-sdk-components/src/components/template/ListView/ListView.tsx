@@ -2,7 +2,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-shadow */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -35,12 +35,15 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { Radio } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
+
 import { filterData } from '../../helpers/simpleTableHelpers';
+
 import './ListView.css';
-import useInit from './hooks';
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getCurrencyOptions } from '../../field/Currency/currency-utils';
-import { format } from '../../helpers/formatters/';
+import { format } from "../../helpers/formatters";
+
+import useInit from './hooks';
 // import type { PConnProps } from '../../../types/PConnProps';
 
 // ListViewProps can't be used until getComponentConfig is NOT private
@@ -64,8 +67,8 @@ const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 3 errors)
 declare const PCore: any;
 
-let myRows: Array<any>;
-let myDisplayColumnList: Array<any>;
+let myRows: any[];
+let myDisplayColumnList: any[];
 
 let menuColumnId = '';
 let menuColumnType = '';
@@ -73,7 +76,7 @@ let menuColumnLabel = '';
 
 let sortColumnId: any;
 
-const filterByColumns: Array<any> = [];
+const filterByColumns: any[] = [];
 
 export default function ListView(props /* : ListViewProps */) {
   const { getPConnect, bInForm = true } = props;
@@ -110,9 +113,9 @@ export default function ListView(props /* : ListViewProps */) {
   /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
   const rowID = compositeKeys && compositeKeys?.length === 1 ? compositeKeys[0] : defRowID;
 
-  const [arRows, setRows] = useState<Array<any>>([]);
-  const [arColumns, setColumns] = useState<Array<any>>([]);
-  const [response, setResponse] = useState<Array<any>>([]);
+  const [arRows, setRows] = useState<any[]>([]);
+  const [arColumns, setColumns] = useState<any[]>([]);
+  const [response, setResponse] = useState<any[]>([]);
 
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof any>('');
@@ -132,7 +135,7 @@ export default function ListView(props /* : ListViewProps */) {
   const columnList: any = useRef([]);
   const filterPayload: any = useRef();
   // Will be sent in the dashboardFilterPayload
-  let selectParam: Array<any> = [];
+  let selectParam: any[] = [];
 
   // dataview parameters coming from the ListPage
   // This constant will also be used for parameters coming from from other components/utility functions in future
@@ -214,13 +217,13 @@ export default function ListView(props /* : ListViewProps */) {
   function getComparator<Key extends keyof any>(
     theOrder: Order,
     orderedBy: Key
-    // eslint-disable-next-line no-unused-vars
+
   ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
     return theOrder === 'desc' ? (a, b) => descendingComparator(a, b, orderedBy) : (a, b) => -descendingComparator(a, b, orderedBy);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  function stableSort<T>(array: Array<T>, comparator: (a: T, b: T) => number) {
+
+  function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
     const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]);
@@ -244,7 +247,7 @@ export default function ListView(props /* : ListViewProps */) {
 
   const AssignDashObjects = ['Assign-Worklist', 'Assign-WorkBasket'];
   function getHeaderCells(colFields, fields) {
-    const arReturn = colFields.map((field: any, index) => {
+    return colFields.map((field: any, index) => {
       let theField = field.config.value.substring(field.config.value.indexOf(' ') + 1);
       if (theField.indexOf('.') === 0) {
         theField = theField.substring(1);
@@ -269,10 +272,9 @@ export default function ListView(props /* : ListViewProps */) {
       }
       return headerRow;
     });
-    return arReturn;
   }
 
-  function getUsingData(arTableData): Array<any> {
+  function getUsingData(arTableData): any[] {
     if (selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) {
       const record = arTableData?.length > 0 ? arTableData[0] : '';
       if (typeof record === 'object' && !('pyGUID' in record) && !('pyID' in record)) {
@@ -280,17 +282,13 @@ export default function ListView(props /* : ListViewProps */) {
         console.error('pyGUID or pyID values are mandatory to select the required row from the list');
       }
     }
-    const arReturn = arTableData?.map((data: any) => {
-      const row = data;
-
-      return row;
+    return arTableData?.map((data: any) => {
+      return data;
     });
-
-    return arReturn;
   }
 
-  function getMyColumnList(arCols: Array<any>): Array<string> {
-    const myColList: Array<string> = [];
+  function getMyColumnList(arCols: any[]): string[] {
+    const myColList: string[] = [];
 
     arCols.forEach((col) => {
       myColList.push(col.id);
@@ -321,8 +319,7 @@ export default function ListView(props /* : ListViewProps */) {
     };
 
     filters.current[filterId] = filterExpression;
-    // eslint-disable-next-line no-unneeded-ternary
-    let isDateRange = data.filterExpression?.AND ? true : false;
+    let isDateRange = data.filterExpression?.AND;
     // Will be AND by default but making it dynamic in case we support dynamic relational ops in future
     const relationalOp = 'AND';
 
@@ -353,8 +350,7 @@ export default function ListView(props /* : ListViewProps */) {
       }
 
       // Checking if the filter is of type- Date Range
-      // eslint-disable-next-line no-unneeded-ternary
-      isDateRange = filter?.AND ? true : false;
+      isDateRange = filter?.AND;
       field = getFieldFromFilter(filter, isDateRange);
 
       if (!(columnList.current.length && columnList.current.includes(field))) {
@@ -512,7 +508,7 @@ export default function ListView(props /* : ListViewProps */) {
     // this is an unresovled version of this.fields$, need unresolved, so can get the property reference
     const columnFields = componentConfig.presets[0].children[0].children;
 
-    const tableDataResults = !bInForm ? workListJSON['data'].data : workListJSON['data'];
+    const tableDataResults = !bInForm ? workListJSON.data.data : workListJSON.data;
 
     const myColumns = getHeaderCells(columnFields, fieldDefs);
 
@@ -598,7 +594,7 @@ export default function ListView(props /* : ListViewProps */) {
     }
   }, [listContext]);
 
-  function searchFilter(value: string, rows: Array<any>) {
+  function searchFilter(value: string, rows: any[]) {
     function filterArray(el: any): boolean {
       const bReturn = false;
       for (const key in el) {
@@ -699,7 +695,7 @@ export default function ListView(props /* : ListViewProps */) {
   const [filterBy, setFilterBy] = useState<string>();
   const [containsDateOrTime, setContainsDateOrTime] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<string>('string');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [displayDialogFilterName, setDisplayDialogFilterName] = useState<string>('');
   const [displayDialogContainsFilter, setDisplayDialogContainsFilter] = useState<string>('contains');
   const [displayDialogContainsValue, setDisplayDialogContainsValue] = useState<string>('');
@@ -763,9 +759,9 @@ export default function ListView(props /* : ListViewProps */) {
 
   function _showFilteredIcon(columnId) {
     for (const filterObj of filterByColumns) {
-      if (filterObj['ref'] === columnId) {
+      if (filterObj.ref === columnId) {
         // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-        if (filterObj['containsFilterValue'] !== '') {
+        if (filterObj.containsFilterValue !== '') {
           return true;
         }
         return false;
@@ -778,14 +774,14 @@ export default function ListView(props /* : ListViewProps */) {
   function updateFilterWithInfo() {
     let bFound = false;
     for (const filterObj of filterByColumns) {
-      if (filterObj['ref'] === menuColumnId) {
-        filterObj['type'] = filterType;
+      if (filterObj.ref === menuColumnId) {
+        filterObj.type = filterType;
         if (containsDateOrTime) {
-          filterObj['containsFilter'] = displayDialogDateFilter;
-          filterObj['containsFilterValue'] = displayDialogDateValue;
+          filterObj.containsFilter = displayDialogDateFilter;
+          filterObj.containsFilterValue = displayDialogDateValue;
         } else {
-          filterObj['containsFilter'] = displayDialogContainsFilter;
-          filterObj['containsFilterValue'] = displayDialogContainsValue;
+          filterObj.containsFilter = displayDialogContainsFilter;
+          filterObj.containsFilterValue = displayDialogContainsValue;
         }
         bFound = true;
         break;
@@ -796,13 +792,13 @@ export default function ListView(props /* : ListViewProps */) {
       // add in
       const filterObj: any = {};
       filterObj.ref = menuColumnId;
-      filterObj['type'] = filterType;
+      filterObj.type = filterType;
       if (containsDateOrTime) {
-        filterObj['containsFilter'] = displayDialogDateFilter;
-        filterObj['containsFilterValue'] = displayDialogDateValue;
+        filterObj.containsFilter = displayDialogDateFilter;
+        filterObj.containsFilterValue = displayDialogDateValue;
       } else {
-        filterObj['containsFilter'] = displayDialogContainsFilter;
-        filterObj['containsFilterValue'] = displayDialogContainsValue;
+        filterObj.containsFilter = displayDialogContainsFilter;
+        filterObj.containsFilterValue = displayDialogContainsValue;
       }
 
       filterByColumns.push(filterObj);
@@ -906,7 +902,7 @@ export default function ListView(props /* : ListViewProps */) {
   function _listTitle() {
     const defaultTitle = 'List';
     let title = resolvedConfigProps.title || resolvedConfigProps?.label || defaultTitle;
-    const inheritedProps = resolvedConfigProps?.['inheritedProps'];
+    const inheritedProps = resolvedConfigProps?.inheritedProps;
 
     // Let any title in resolvedConfigProps that isn't the default take precedence
     //  but only look in inheritedProps if they exist
@@ -941,17 +937,17 @@ export default function ListView(props /* : ListViewProps */) {
   const onCheckboxClick = (event) => {
     const value = event?.target?.value;
     const checked = event?.target?.checked;
-    const reqObj = {};
+    const reqObj:any = {};
     if (compositeKeys?.length > 1) {
       const index = response.findIndex((element) => element[rowID] === value);
       const selectedRow = response[index];
       compositeKeys.forEach((element) => {
         reqObj[element] = selectedRow[element];
       });
-      reqObj['$selected'] = checked;
+      reqObj.$selected = checked;
     } else {
       reqObj[rowID] = value;
-      reqObj['$selected'] = checked;
+      reqObj.$selected = checked;
     }
     getPConnect()?.getListActions()?.setSelectedRows([reqObj]);
   };
@@ -1073,7 +1069,7 @@ export default function ListView(props /* : ListViewProps */) {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      {(selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) && <TableCell></TableCell>}
+                      {(selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) && <TableCell />}
                       {arColumns.map((column) => {
                         return (
                           <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
@@ -1108,12 +1104,12 @@ export default function ListView(props /* : ListViewProps */) {
                                     name="radio-buttons"
                                     inputProps={{ 'aria-label': 'A' }}
                                     checked={selectedValue === row[rowID]}
-                                  ></Radio>
+                                   />
                                 </TableCell>
                               )}
                               {selectionMode === SELECTION_MODE.MULTI && (
                                 <TableCell>
-                                  <Checkbox onChange={onCheckboxClick} checked={selectedValues.some(selectedValue => selectedValue[rowID] === row[rowID])} value={row[rowID]}></Checkbox>
+                                  <Checkbox onChange={onCheckboxClick} checked={selectedValues.some(selectedValue => selectedValue[rowID] === row[rowID])} value={row[rowID]} />
                                 </TableCell>
                               )}
                               {arColumns.map((column) => {

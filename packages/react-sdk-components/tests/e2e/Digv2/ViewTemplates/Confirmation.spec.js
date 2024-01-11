@@ -36,23 +36,22 @@ test.describe('E2E test', () => {
     /** Entering some data that will be verified on the Confirmation screen */
     const firstNameInput = page.locator('input[data-test-id="BC910F8BDF70F29374F496F05BE0330C"]');
     await firstNameInput.click();
-    await firstNameInput.type('John');
+    await firstNameInput.fill('John');
 
     const lastNameInput = page.locator('input[data-test-id="77587239BF4C54EA493C7033E1DBF636"]');
     await lastNameInput.click();
-    await lastNameInput.type('Doe');
+    await lastNameInput.fill('Doe');
 
     const cityInput = page.locator('input[data-test-id="57D056ED0984166336B7879C2AF3657F"]');
     await cityInput.click();
-    await cityInput.type('Cambridge');
+    await cityInput.fill('Cambridge');
 
     const phone = page.locator('div[data-test-id="1F8261D17452A959E013666C5DF45E07"]');
     const countrySelector = phone.locator('button');
     await countrySelector.click();
     await page.locator('text=United States+1 >> nth=0').click();
     const phoneInput = phone.locator('input');
-    await phoneInput.click();
-    await phoneInput.type('6175551212');
+    await phoneInput.fill('6175551212');
 
     await page.locator('button:has-text("submit")').click();
 

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TextField from '@material-ui/core/TextField';
+
 import { Utils } from '../../../helpers/utils';
+
 import download from "downloadjs";
 // import SummaryList from '../../SummaryList';
 // import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
 import './FileUtility.css';
-import  { IconButton, Menu, MenuItem } from '@material-ui/core';
+import  { IconButton, Menu, MenuItem , Button , CircularProgress } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Button } from '@material-ui/core';
-import { validateMaxSize } from '../../../helpers/attachmentHelpers';
-import { CircularProgress } from "@material-ui/core";
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
+import { validateMaxSize } from '../../../helpers/attachmentHelpers';
+import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../../types/PConnProps';
 
 
@@ -65,7 +65,7 @@ export default function FileUtility(props:FileUtilityProps) {
   const [showViewAllModal, setViewAll] = useState(false);
   const [vaItems, setFullAttachments] = useState([]);
 
-  function addAttachments(attsFromResp: Array<any> = []) {
+  function addAttachments(attsFromResp: any[] = []) {
      attsFromResp = attsFromResp.map((respAtt) => {
        const updatedAtt = {
          ...respAtt,
@@ -271,7 +271,7 @@ export default function FileUtility(props:FileUtilityProps) {
     return arFiles;
   }
 
-  function getFiles(arFiles: Array<any>): Array<any> {
+  function getFiles(arFiles: any[]): any[] {
     return setNewFiles(arFiles);
   }
 
@@ -485,10 +485,10 @@ export default function FileUtility(props:FileUtilityProps) {
     <div className="psdk-utility">
       {inProgress && (<div className="progress-div"><CircularProgress /></div>)}
       <div className="psdk-header">
-        <img className="psdk-file-utility-card-svg-icon" src={headerSvgIcon$}></img>
+        <img className="psdk-file-utility-card-svg-icon" src={headerSvgIcon$} />
         <div className="header-text">{header}</div>
         <div className="psdk-utility-count" id="attachments-count">{list.count}</div>
-        <div style={{flexGrow: 1}}></div>
+        <div style={{flexGrow: 1}} />
         <div>
           <IconButton
             id="long-button"
@@ -512,7 +512,7 @@ export default function FileUtility(props:FileUtilityProps) {
         </div>
       </div>
       {list.data.length > 0 && (<div style={{marginTop: '1rem'}}>
-        <SummaryList arItems$={list.data}></SummaryList>
+        <SummaryList arItems$={list.data} />
       </div>)}
       {list.count > 3 && (<div className="psdk-utility-view-all">
         <Button style={{textTransform: 'none'}} color="primary" onClick = {() => setViewAll(true)}>View all</Button>
@@ -529,11 +529,11 @@ export default function FileUtility(props:FileUtilityProps) {
               </label>
             </div>
             {fileData.fileList.length > 0 && (<div style={{marginTop: '1rem'}}>
-              <SummaryList menuIconOverride$='trash' arItems$={fileData.fileList} menuIconOverrideAction$={removeFileFromList}></SummaryList>
+              <SummaryList menuIconOverride$='trash' arItems$={fileData.fileList} menuIconOverrideAction$={removeFileFromList} />
             </div>)}
-            {fileData.fileList.length === 0 && (<div></div>)}
+            {fileData.fileList.length === 0 && (<div />)}
             <ActionButtonsForFileUtil arMainButtons={fileData.fileMainButtons} arSecondaryButtons={fileData.fileSecondaryButtons}
-             primaryAction={onAttachFiles} secondaryAction={closeFilePopup}></ActionButtonsForFileUtil>
+             primaryAction={onAttachFiles} secondaryAction={closeFilePopup} />
           </div>
         </div>
       </div>
@@ -557,10 +557,10 @@ export default function FileUtility(props:FileUtilityProps) {
                   </div>
                 </div>
                 {linkData.linksList.length > 0 && (<div style={{marginTop: '1rem'}}>
-                  <SummaryList menuIconOverride$='trash' arItems$={linkData.linksList} menuIconOverrideAction$={removeLinksFromList}></SummaryList>
+                  <SummaryList menuIconOverride$='trash' arItems$={linkData.linksList} menuIconOverrideAction$={removeLinksFromList} />
                 </div>)}
                 <ActionButtonsForFileUtil arMainButtons={linkData.linkMainButtons} arSecondaryButtons={linkData.linkSecondaryButtons}
-                primaryAction={onAttachLinks} secondaryAction={closeAddLinksPopup}></ActionButtonsForFileUtil>
+                primaryAction={onAttachLinks} secondaryAction={closeAddLinksPopup} />
             </div>
           </div>
         </div>
@@ -570,9 +570,9 @@ export default function FileUtility(props:FileUtilityProps) {
           <div className="psdk-view-all-header">
               <h3>{thePConn.getLocalizedValue('Attachments', '', '')}</h3> {/* 2nd and 3rd args empty string until typedef marked correctly */}
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-              <button type="button" className="psdk-close-button" onClick = {() => setViewAll(false)}><img className="psdk-utility-card-actions-svg-icon" src={closeSvgIcon}></img></button>
+              <button type="button" className="psdk-close-button" onClick = {() => setViewAll(false)}><img className="psdk-utility-card-actions-svg-icon" src={closeSvgIcon} /></button>
           </div>
-          <div className="psdk-view-all-body"><SummaryList arItems$={vaItems}></SummaryList></div>
+          <div className="psdk-view-all-body"><SummaryList arItems$={vaItems} /></div>
         </div>
       </div>)}
     </div>

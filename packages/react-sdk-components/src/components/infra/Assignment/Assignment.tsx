@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 // import type { PConnProps } from '../../../types/PConnProps';
@@ -30,8 +31,8 @@ export default function Assignment(props /* : AssignmentProps */) {
   const [bHasNavigation, setHasNavigation] = useState(false);
   const [actionButtons, setActionButtons] = useState([]);
   const [bIsVertical, setIsVertical] = useState(false);
-  const [arCurrentStepIndicies, setArCurrentStepIndicies] = useState<Array<any>>([]);
-  const [arNavigationSteps, setArNavigationSteps] = useState<Array<any>>([]);
+  const [arCurrentStepIndicies, setArCurrentStepIndicies] = useState<any[]>([]);
+  const [arNavigationSteps, setArNavigationSteps] = useState<any[]>([]);
 
   const actionsAPI = thePConn.getActionsApi();
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
@@ -49,14 +50,14 @@ export default function Assignment(props /* : AssignmentProps */) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  function findCurrentIndicies(arStepperSteps: Array<any>, arIndicies: Array<number>, depth: number): Array<number> {
+  function findCurrentIndicies(arStepperSteps: any[], arIndicies: number[], depth: number): number[] {
     let count = 0;
     arStepperSteps.forEach((step) => {
       if (step.visited_status === 'current') {
         arIndicies[depth] = count;
 
         // add in
-        step['step_status'] = '';
+        step.step_status = '';
       } else if (step.visited_status === 'success') {
         count += 1;
         step.step_status = 'completed';
@@ -82,7 +83,7 @@ export default function Assignment(props /* : AssignmentProps */) {
       const oData = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
-        const oCaseInfo = oData['caseInfo'];
+        const oCaseInfo = oData.caseInfo;
 
         if (oCaseInfo && oCaseInfo.actionButtons) {
           setActionButtons(oCaseInfo.actionButtons);
@@ -262,7 +263,7 @@ export default function Assignment(props /* : AssignmentProps */) {
     <div id="Assignment">
       {banners}
       {bHasNavigation ? (
-        <React.Fragment>
+        <>
           <MultiStep
             getPConnect={getPConnect}
             itemKey={itemKey}
@@ -285,9 +286,9 @@ export default function Assignment(props /* : AssignmentProps */) {
               </IconButton>
             }
           />
-        </React.Fragment>
+        </>
       ) : (
-        <React.Fragment>
+        <>
           <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
             {children}
           </AssignmentCard>
@@ -302,7 +303,7 @@ export default function Assignment(props /* : AssignmentProps */) {
               </IconButton>
             }
           />
-        </React.Fragment>
+        </>
       )}
     </div>
   );

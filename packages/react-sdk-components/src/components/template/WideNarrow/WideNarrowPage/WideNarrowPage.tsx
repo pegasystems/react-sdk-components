@@ -1,10 +1,11 @@
-import React, { Children } from "react";
+import { Children } from "react";
+
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // WideNarrowPage does NOT have getPConnect. So, no need to extend from PConnProps
 interface WideNarrowPageProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
+  children: any[],
   title: string,
   templateCol?: string,
   icon?: string

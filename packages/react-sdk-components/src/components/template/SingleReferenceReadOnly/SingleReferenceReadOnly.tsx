@@ -1,4 +1,3 @@
-import React from "react";
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface SingleReferenceReadOnlyProps extends PConnProps {
@@ -58,6 +57,6 @@ export default function SingleReferenceReadOnly(props: SingleReferenceReadOnlyPr
   '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
 
   return (
-    <React.Fragment>{component}</React.Fragment>
+    <>{component}</>
   )
 }

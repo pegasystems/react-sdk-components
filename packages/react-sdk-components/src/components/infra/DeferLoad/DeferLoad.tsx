@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createElement } from 'react';
+import { useState, useEffect, createElement } from 'react';
 import { Box, Card, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -159,11 +159,11 @@ export default function DeferLoad(props /* : DeferLoadProps */) {
   } else {
     deferLoadContent = !isTab ? (
       <div className={classes.root}>
-        <React.Fragment>{content}</React.Fragment>
+        {content}
       </div>
     ) : (
       <Card id='DeferLoad' className={classes.root}>
-        <React.Fragment>{content}</React.Fragment>
+        <>{content}</>
       </Card>
     );
   }

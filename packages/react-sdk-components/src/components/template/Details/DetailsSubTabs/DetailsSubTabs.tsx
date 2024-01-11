@@ -1,14 +1,14 @@
-import { useState, useEffect, Fragment } from 'react';
-import { getTransientTabs, getVisibleTabs, tabClick } from '../../SubTabs/tabUtils';
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Tab, Tabs, TextField } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
+
+import { getTransientTabs, getVisibleTabs, tabClick } from '../../SubTabs/tabUtils';
 import type { PConnProps } from '../../../../types/PConnProps';
 
 
 interface DetailsSubTabsProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
+  children: any[],
   showLabel: boolean,
   label: string
 
@@ -42,7 +42,7 @@ export default function DetailsSubTabs(props: DetailsSubTabsProps) {
   };
 
   return (
-    <Fragment>
+    <>
       {propsToUse.showLabel && <TextField>{propsToUse.label}</TextField>}
       <TabContext value={currentTabId.toString()}>
         <Tabs onChange={handleTabClick} value={currentTabId}>
@@ -57,6 +57,6 @@ export default function DetailsSubTabs(props: DetailsSubTabsProps) {
           </TabPanel>
         ))}
       </TabContext>
-    </Fragment>
+    </>
   );
 }

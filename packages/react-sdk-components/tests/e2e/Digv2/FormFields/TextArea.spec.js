@@ -42,7 +42,7 @@ test.describe('E2E test', () => {
 
     /** Required tests */
     const requiredTextArea = page.locator('textarea[data-test-id="b82763ad8469c6be8d3303a773fc3337"]');
-    requiredTextArea.type('This is a textarea');
+    requiredTextArea.fill('This is a textarea');
     attributes = await common.getAttributes(requiredTextArea);
     await expect(attributes.includes('required')).toBeTruthy();
 
@@ -83,7 +83,7 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeTruthy();
 
     const editableTextArea = page.locator('textarea[data-test-id="66e97bb54e9e0ad5860ed79bb7b8e8d4"]');
-    editableTextArea.type('This is a TextArea');
+    editableTextArea.fill('This is a TextArea');
 
     attributes = await common.getAttributes(editableTextArea);
     await expect(attributes.includes('readonly')).toBeFalsy();

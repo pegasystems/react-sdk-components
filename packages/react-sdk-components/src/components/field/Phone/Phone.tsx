@@ -1,5 +1,5 @@
-import React from 'react';
 import MuiPhoneNumber from 'material-ui-phone-number';
+
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 

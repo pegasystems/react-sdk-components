@@ -1,6 +1,4 @@
-import React from "react";
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface ListPageProps extends PConnProps {
@@ -16,6 +14,6 @@ export default function ListPage(props: ListPageProps) {
  // special case for ListView - add in a prop
  const listViewProps = {...props, bInForm: false};
   return (
-    <ListView  {...listViewProps}></ListView>
+    <ListView  {...listViewProps} />
   )
 }

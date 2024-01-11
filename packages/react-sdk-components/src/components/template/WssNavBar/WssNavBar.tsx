@@ -4,8 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Toolbar from '@material-ui/core/Toolbar';
 import Container from '@material-ui/core/Container';
-import { IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
-import { Button } from '@material-ui/core';
+import { IconButton, Menu, MenuItem, Typography , Button } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import MenuIcon from '@material-ui/icons/Menu';
 import { logout } from '@pega/auth/lib/sdk-auth-manager';
@@ -16,7 +15,7 @@ import './WssNavBar.css';
 interface WssNavBarProps {
   // If any, enter additional props that only exist on this component
   appInfo: any,
-  navLinks: Array<any>
+  navLinks: any[]
   operator: { currentUserInitials: string },
   navDisplayOptions: { alignment: string, position: string},
   // eslint-disable-next-line react/no-unused-prop-types

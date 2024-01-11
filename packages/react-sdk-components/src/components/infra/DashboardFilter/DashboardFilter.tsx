@@ -1,11 +1,12 @@
-/* eslint-disable no-shadow */
+
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable operator-assignment */
-import { useRef, useEffect, useState, Fragment, forwardRef } from 'react';
+import { useRef, useEffect, useState, forwardRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'throttle-debounce';
-import { createFilter, combineFilters, getFormattedDate } from './filterUtils';
-import { getFilterExpression } from './filterUtils';
+
+import { createFilter, combineFilters, getFormattedDate , getFilterExpression } from './filterUtils';
+
 import { TextField } from '@material-ui/core';
 import React from 'react';
 import DatePicker from 'react-datepicker';
@@ -16,7 +17,7 @@ import type { PConnProps } from '../../../types/PConnProps';
 
 interface DashboardFilterProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children?: Array<any>,
+  children?: any[],
   name: string,
   filterProp: string,
   type?: string,
@@ -123,6 +124,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
 
   const label = metadata.config.label.substring(3);
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const CustomDateInput = forwardRef<HTMLInputElement, TextProps>(
     ({ value, onClick }, ref: any) => (
       <TextField
@@ -140,7 +142,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
   );
 
   return (
-    <Fragment>
+    <>
       {type === 'DateTime' && (
         <DatePicker
           onChange={onChange}
@@ -171,6 +173,6 @@ export default function DashboardFilter(props: DashboardFilterProps) {
           {children}
         </span>
       )}
-    </Fragment>
+    </>
   );
 }

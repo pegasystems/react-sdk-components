@@ -1,9 +1,7 @@
-import React from 'react';
 // import { FieldGroup } from "@pega/cosmos-react-core";
 // import { LazyMap as LazyComponentMap } from "../../components_map";
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-
 import { getAllFields } from '../../helpers/template-utils';
 
 // Need to import any templates that we might render
@@ -15,7 +13,7 @@ import type { PConnProps } from '../../../types/PConnProps';
 
 interface ViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
+  children: any[],
   template?: string,
   label?: string,
   showLabel: boolean,

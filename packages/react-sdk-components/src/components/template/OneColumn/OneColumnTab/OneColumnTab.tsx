@@ -1,8 +1,6 @@
-import React from "react";
-
 interface OneColumnTabProps{
   // If any, enter additional props that only exist on this component
-  children: Array<any>
+  children: any[]
 }
 export default function OneColumnTab(props: OneColumnTabProps) {
   const { children} = props;

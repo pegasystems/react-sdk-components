@@ -20,8 +20,8 @@ const launchSelfServicePortal = async ({ page }) => {
 };
 
 const login = async (username, password, page) => {
-  await page.locator('input[id="txtUserID"]').type(username);
-  await page.locator('input[id="txtPassword"]').type(password);
+  await page.locator('input[id="txtUserID"]').fill(username);
+  await page.locator('input[id="txtPassword"]').fill(password);
   await page.locator('#submit_row .loginButton').click();
 };
 

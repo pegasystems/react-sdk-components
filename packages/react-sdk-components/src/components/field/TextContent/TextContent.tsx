@@ -1,5 +1,5 @@
-import React from 'react';
 import { Typography } from '@material-ui/core';
+
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface TextContentProps extends PConnProps {

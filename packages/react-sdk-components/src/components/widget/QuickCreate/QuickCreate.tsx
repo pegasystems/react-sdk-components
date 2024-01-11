@@ -1,4 +1,3 @@
-import React from "react";
 import { Utils } from '../../helpers/utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 // import type { PConnProps } from '../../../types/PConnProps';
@@ -57,7 +56,7 @@ export default function QuickCreate(props /* : QuickCreateProps */) {
 
   return (
       <div>
-        <WssQuickCreate heading={heading} actions={cases}></WssQuickCreate>
+        <WssQuickCreate heading={heading} actions={cases} />
       </div>
     );
 }

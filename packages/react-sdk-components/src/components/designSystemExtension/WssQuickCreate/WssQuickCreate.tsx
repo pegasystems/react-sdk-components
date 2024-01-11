@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@material-ui/core';
 import './WssQuickCreate.css';
 
@@ -7,7 +6,7 @@ import './WssQuickCreate.css';
 interface WssQuickCreateProps {
   // If any, enter additional props that only exist on this component
   heading: string,
-  actions?: Array<any>
+  actions?: any[]
 }
 
 

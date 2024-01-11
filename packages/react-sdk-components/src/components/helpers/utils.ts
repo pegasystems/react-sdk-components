@@ -9,7 +9,7 @@ dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 
 export class Utils {
-  static lastControlID: number = 0;
+  static lastControlID = 0;
 
   static getSDKStaticConentUrl() {
     const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
@@ -30,9 +30,9 @@ export class Utils {
     return sPrefix + this.lastControlID.toString();
   }
 
-  static getOptionList(configProps: any, dataObject: any): Array<any> {
+  static getOptionList(configProps: any, dataObject: any): any[] {
     const listType = configProps.listType;
-    let arReturn: Array<any> = [];
+    let arReturn: any[] = [];
 
     if (listType) {
       switch (listType.toLowerCase()) {

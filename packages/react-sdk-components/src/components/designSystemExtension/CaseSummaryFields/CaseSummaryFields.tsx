@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import isDeepEqual from 'fast-deep-equal/react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getCurrencyOptions } from '../../field/Currency/currency-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -16,7 +17,7 @@ interface CaseSummaryFieldsProps{
   // If any, enter additional props that only exist on this component
   status?: string,
   showStatus?: boolean,
-  theFields: Array<any> | any | never
+  theFields: any[] | any | never
 }
 
 
@@ -27,7 +28,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   const { status, showStatus, theFields } = props;
 
   const [theFieldsToRender, setFieldsToRender] = useState([]);
-  const [theFieldsAsGridItems, setFieldsAsGridItems] = useState<Array<any>>([]);
+  const [theFieldsAsGridItems, setFieldsAsGridItems] = useState<any[]>([]);
 
   function getFieldValue(field: any): any {
     const fieldTypeLower = field.type.toLowerCase();
@@ -231,10 +232,8 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   }
 
   return (
-    <React.Fragment>
-      <Grid container className='psdk-case-summary-fields'>
+    <Grid container className='psdk-case-summary-fields'>
         {theFieldsAsGridItems}
       </Grid>
-    </React.Fragment>
   );
 }

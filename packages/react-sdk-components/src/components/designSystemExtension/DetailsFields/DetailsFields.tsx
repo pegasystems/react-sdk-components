@@ -5,14 +5,13 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
-
 import { format } from '../../helpers/formatters';
 
 // DetailsFields is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
 interface DetailsFieldsProps{
   // If any, enter additional props that only exist on this component
-  fields: Array<any>
+  fields: any[]
 }
 
 
@@ -42,7 +41,7 @@ export default function DetailsFields(props: DetailsFieldsProps) {
   // const componentName = "DetailsFields";
   const { fields = [] } = props;
   const classes = useStyles();
-  const fieldComponents: Array<any> = [];
+  const fieldComponents: any[] = [];
 
   fields?.forEach((field, index) => {
     const thePConn = field.getPConnect();
@@ -122,26 +121,27 @@ export default function DetailsFields(props: DetailsFieldsProps) {
   }
 
   function getGridItems() {
-    const gridItems: Array<any> = fieldComponents.map((field, index) => {
+    const gridItems: any[] = fieldComponents.map((field, index) => {
       if (field?.type === 'reference') {
         return field?.value;
-      } else if (isValidElement(field?.value)) {
+      }
+      if (isValidElement(field?.value)) {
         return (
           <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
             {getGridItem(field, `${index}-item`)}
           </Grid>
         );
-      } else {
+      }
         return (
           <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
             {getGridItemLabel(field, `${index}-label`)}
             {getGridItemValue(field, `${index}-value`)}
           </Grid>
         );
-      }
+
     });
     return gridItems;
   }
 
-  return <React.Fragment>{getGridItems()}</React.Fragment>;
+  return <>{getGridItems()}</>;
 }

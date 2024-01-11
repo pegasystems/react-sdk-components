@@ -1,22 +1,21 @@
 /* eslint-disable react/jsx-boolean-value */
 
-import React, { useState, useEffect, useContext } from 'react';
-import { Utils } from '../../helpers/utils';
+import { useState, useEffect, useContext } from 'react';
 import { Card, CardHeader, Avatar, Typography, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
+import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   icon: string,
-  children: Array<any>,
+  children: any[],
   subheader: string,
   header: string,
   showIconInHeader: boolean,
@@ -67,7 +66,7 @@ export default function CaseView(props: CaseViewProps) {
     header,
     subheader,
     children = [],
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showIconInHeader = true,
     caseInfo: {
       availableActions = [],
@@ -101,11 +100,11 @@ export default function CaseView(props: CaseViewProps) {
       const theMetadataType: string = child.props
         .getPConnect()
         .getRawMetadata()
-        ['type'].toLowerCase();
+        .type.toLowerCase();
       const theMetadataName: string = child.props
         .getPConnect()
         .getRawMetadata()
-        ['name'].toLowerCase();
+        .name.toLowerCase();
 
       if (theMetadataType === 'region' && theMetadataName === inName) {
         return child;
@@ -132,10 +131,10 @@ export default function CaseView(props: CaseViewProps) {
   const theTabsRegionChildren = theTabsRegion.props.getPConnect().getChildren();
 
   // vertTabInfo is sent to VerticalTabs component
-  const vertTabInfo: Array<Object> = [];
+  const vertTabInfo: Object[] = [];
 
   // deferLoadInfo is sent to DeferLoad component (currently selected entry)
-  const deferLoadInfo: Array<any> = [];
+  const deferLoadInfo: any[] = [];
 
   if (theTabsRegionChildren) {
     // populate vertTabInfo and deferLoadInfo
@@ -202,8 +201,7 @@ export default function CaseView(props: CaseViewProps) {
   }
 
   function getActionButtonsHtml(): any {
-    const aBHtml = (
-      <Box>
+    return <Box>
         {editAction && (
           <Button
             onClick={() => {
@@ -220,10 +218,7 @@ export default function CaseView(props: CaseViewProps) {
           caseTypeName={caseTypeName}
           caseTypeID={caseTypeID}
         />
-      </Box>
-    );
-
-    return aBHtml;
+      </Box>;
   }
 
   function getContainerContents() {
@@ -279,7 +274,7 @@ export default function CaseView(props: CaseViewProps) {
           </Grid>
         </Grid>
       );
-    } else {
+    } 
       // displayOnlyFA - only show the "todo" region
       return (
         <Grid container>
@@ -288,7 +283,7 @@ export default function CaseView(props: CaseViewProps) {
           </Grid>
         </Grid>
       );
-    }
+    
   }
 
   return getContainerContents();

@@ -1,13 +1,14 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Tab, Tabs } from "@material-ui/core";
 import { TabContext, TabPanel } from '@material-ui/lab';
+
 import { getTransientTabs, getVisibleTabs, tabClick } from './tabUtils';
 
 // SubTabs does NOT have getPConnect. So, no need to extend from PConnProps
 
 interface SubTabsProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>
+  children: any[]
 }
 
 
@@ -19,7 +20,7 @@ export default function SubTabs(props: SubTabsProps) {
   const availableTabs = getVisibleTabs(deferLoadedTabs, "tabsSubs");
   const [currentTabId, setCurrentTabId] = useState(defaultTabIndex.toString());
 
-  const [tabItems, setTabitem] = useState<Array<any>>([]);
+  const [tabItems, setTabitem] = useState<any[]>([]);
   useEffect(() => {
     const tempTabItems = getTransientTabs(
       availableTabs,
@@ -36,8 +37,7 @@ export default function SubTabs(props: SubTabsProps) {
   };
 
   return (
-    <Fragment>
-      <TabContext value={currentTabId.toString()}>
+    <TabContext value={currentTabId.toString()}>
       <Tabs
         onChange={handleTabClick}
         value={currentTabId}
@@ -59,6 +59,5 @@ export default function SubTabs(props: SubTabsProps) {
           </TabPanel>
         ))}
       </TabContext>
-    </Fragment>
   );
 }

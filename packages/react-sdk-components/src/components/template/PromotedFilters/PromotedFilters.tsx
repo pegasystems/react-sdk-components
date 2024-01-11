@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, createElement, Fragment } from 'react';
+import React, { useCallback, useMemo, useState, createElement } from 'react';
 import Button from '@material-ui/core/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
@@ -143,7 +143,7 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
   }, [transientItemID]);
 
   return (
-    <Fragment>
+    <>
       <div>{listViewProps.title}</div>
       <div className="psdk-grid-filter">
         <Filters filters={filters} transientItemID={transientItemID} localeReference={listViewProps.localeReference}/>
@@ -162,6 +162,6 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
            show: initTable
          }}
        />}
-    </Fragment>
+    </>
   );
 }

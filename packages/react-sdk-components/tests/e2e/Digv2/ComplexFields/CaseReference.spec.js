@@ -29,7 +29,7 @@ test.describe('E2E test', () => {
     /** Value to be typed in the Name input */
     const name = 'John Doe';
 
-    await modal.locator('input').type(name);
+    await modal.locator('input').fill(name);
     await modal.locator('button:has-text("submit")').click();
 
     /** Storing case-id of the newly created Query case-type(s), will be used later */
@@ -44,7 +44,7 @@ test.describe('E2E test', () => {
 
     modal = page.locator('div[role="dialog"]');
 
-    await modal.locator('input').type(name);
+    await modal.locator('input').fill(name);
     await modal.locator('button:has-text("submit")').click();
 
     /** Wait until modal closes */
@@ -120,7 +120,7 @@ test.describe('E2E test', () => {
     await selectedTestName.click();
     await page.locator('li:has-text("SingleRecord")').click();
 
-    await page.locator('input[id="search"]').type(caseID[0]);
+    await page.locator('input[id="search"]').fill(caseID[0]);
 
     const selectedRow = await page.locator(`tr:has-text("${caseID[0]}")`);
     await selectedRow.locator('td >> span >> nth=0').click();
@@ -136,7 +136,7 @@ test.describe('E2E test', () => {
     await selectedTestName.click();
     await page.locator('li:has-text("ListOfRecords")').click();
 
-    await page.locator('input[id="search"]').type(caseID[0]);
+    await page.locator('input[id="search"]').fill(caseID[0]);
 
     const selectedRow1 = await page.locator(`tr:has-text("${caseID[0]}")`);
     await selectedRow1.locator('td >> input >> nth=0').click();
