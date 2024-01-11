@@ -14,18 +14,16 @@ import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  icon: string,
-  children: any[],
-  subheader: string,
-  header: string,
-  showIconInHeader: boolean,
-  caseInfo: any,
+  icon: string;
+  children: any[];
+  subheader: string;
+  header: string;
+  showIconInHeader: boolean;
+  caseInfo: any;
 }
-
 
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,9 +54,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function CaseView(props: CaseViewProps) {
   // Get emitted components from map (so we can get any override that may exist)
-  const CaseViewActionsMenu = getComponentFromMap("CaseViewActionsMenu");
-  const VerticalTabs = getComponentFromMap("VerticalTabs");
-  const DeferLoad = getComponentFromMap("DeferLoad");
+  const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
+  const VerticalTabs = getComponentFromMap('VerticalTabs');
+  const DeferLoad = getComponentFromMap('DeferLoad');
 
   const {
     getPConnect,
@@ -68,13 +66,7 @@ export default function CaseView(props: CaseViewProps) {
     children = [],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showIconInHeader = true,
-    caseInfo: {
-      availableActions = [],
-      availableProcesses = [],
-      hasNewAttachments,
-      caseTypeID = '',
-      caseTypeName = ''
-    }
+    caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
@@ -97,14 +89,8 @@ export default function CaseView(props: CaseViewProps) {
    */
   function getChildRegionByName(inName: string): any {
     for (const child of children) {
-      const theMetadataType: string = child.props
-        .getPConnect()
-        .getRawMetadata()
-        .type.toLowerCase();
-      const theMetadataName: string = child.props
-        .getPConnect()
-        .getRawMetadata()
-        .name.toLowerCase();
+      const theMetadataType: string = child.props.getPConnect().getRawMetadata().type.toLowerCase();
+      const theMetadataName: string = child.props.getPConnect().getRawMetadata().name.toLowerCase();
 
       if (theMetadataType === 'region' && theMetadataName === inName) {
         return child;
@@ -186,10 +172,7 @@ export default function CaseView(props: CaseViewProps) {
 
   useEffect(() => {
     if (hasNewAttachments) {
-      PCore.getPubSubUtils().publish(
-        PCore.getEvents().getCaseEvent().CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
-        true
-      );
+      PCore.getPubSubUtils().publish(PCore.getEvents().getCaseEvent().CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW, true);
     }
   }, [hasNewAttachments]);
 
@@ -201,7 +184,8 @@ export default function CaseView(props: CaseViewProps) {
   }
 
   function getActionButtonsHtml(): any {
-    return <Box>
+    return (
+      <Box>
         {editAction && (
           <Button
             onClick={() => {
@@ -218,7 +202,8 @@ export default function CaseView(props: CaseViewProps) {
           caseTypeName={caseTypeName}
           caseTypeID={caseTypeID}
         />
-      </Box>;
+      </Box>
+    );
   }
 
   function getContainerContents() {
@@ -260,13 +245,7 @@ export default function CaseView(props: CaseViewProps) {
           <Grid item xs={6}>
             {theStagesRegion}
             {theTodoRegion}
-            {deferLoadInfo.length > 0 && (
-              <DeferLoad
-                getPConnect={getPConnect}
-                name={deferLoadInfo[activeVertTab].config.name}
-                isTab
-              />
-            )}
+            {deferLoadInfo.length > 0 && <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab />}
           </Grid>
 
           <Grid item xs={3}>
@@ -274,16 +253,15 @@ export default function CaseView(props: CaseViewProps) {
           </Grid>
         </Grid>
       );
-    } 
-      // displayOnlyFA - only show the "todo" region
-      return (
-        <Grid container>
-          <Grid item xs={12}>
-            {theTodoRegion}
-          </Grid>
+    }
+    // displayOnlyFA - only show the "todo" region
+    return (
+      <Grid container>
+        <Grid item xs={12}>
+          {theTodoRegion}
         </Grid>
-      );
-    
+      </Grid>
+    );
   }
 
   return getContainerContents();

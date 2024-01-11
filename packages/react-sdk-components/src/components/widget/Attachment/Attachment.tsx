@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/no-array-index-key */
 import { useState, useEffect, useCallback } from 'react';
-import { CircularProgress , IconButton, Menu, MenuItem , Button } from '@material-ui/core';
+import { CircularProgress, IconButton, Menu, MenuItem, Button } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import download from 'downloadjs';
 
@@ -24,7 +24,7 @@ const getAttachmentKey = (name = '') => (name ? `attachmentsList.${name}` : 'att
 
 const getCurrentAttachmentsList = (key, context) => {
   return PCore.getStoreValue(`.${key}`, 'context_data', context) || [];
-}
+};
 
 const updateAttachmentState = (pConn, key, attachments) => {
   PCore.getStateUtils().updateState(pConn.getContextName(), key, attachments, {
@@ -38,7 +38,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   const { value, getPConnect, label, validatemessage, allowMultiple, extensions, displayMode } = props;
   /* this is a temporary fix because required is supposed to be passed as a boolean and NOT as a string */
   let { required, disabled } = props;
-  [required, disabled] = [required, disabled].map((prop) => prop === true || (typeof prop === 'string' && prop === 'true'));
+  [required, disabled] = [required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
   const pConn = getPConnect();
   const caseID = PCore.getStoreValue('.pyID', 'caseInfo.content', pConn.getContextName());
 
@@ -53,7 +53,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [files, setFiles] = useState<any[]>(() =>
-    value?.pxResults && +value.pyCount > 0 ? value.pxResults.map((f) => buildFilePropsFromResponse(f)) : []
+    value?.pxResults && +value.pyCount > 0 ? value.pxResults.map(f => buildFilePropsFromResponse(f)) : []
   );
   const [filesWithError, setFilesWithError] = useState<any[]>([]);
   const [toggleUploadBegin, setToggleUploadBegin] = useState(false);
@@ -74,15 +74,15 @@ export default function Attachment(props /* :AttachmentProps */) {
     setAnchorEl(null);
     PCore.getAttachmentUtils()
       .downloadAttachment(fileObj.pzInsKey, pConn.getContextName())
-      .then((content) => {
+      .then(content => {
         const extension = fileObj.pyAttachName.split('.').pop();
         fileDownload(content.data, fileObj.pyFileName, extension);
       })
       .catch(() => {});
-  }
+  };
 
   const deleteFile = useCallback(
-    (file) => {
+    file => {
       setAnchorEl(null);
       let attachmentsList: any[] = [];
       let currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef), pConn.getContextName());
@@ -91,7 +91,7 @@ export default function Attachment(props /* :AttachmentProps */) {
       // no need to filter currentAttachmentList as we will get another entry of file in redux with delete & label
       // eslint-disable-next-line no-unsafe-optional-chaining
       if (value && value?.pxResults && +value?.pyCount > 0 && file.responseProps && file?.responseProps?.pzInsKey !== 'temp') {
-        const updatedAttachments = files.map((f) => {
+        const updatedAttachments = files.map(f => {
           if (f.responseProps && f.responseProps.pzInsKey === file.responseProps.pzInsKey) {
             return { ...f, delete: true, label: valueRef };
           }
@@ -100,10 +100,10 @@ export default function Attachment(props /* :AttachmentProps */) {
 
         // updating the redux store to help form-handler in passing the data to delete the file from server
         updateAttachmentState(pConn, getAttachmentKey(valueRef), [...updatedAttachments]);
-        setFiles((current) => {
-          const newlyAddedFiles = current.filter((f) => !!f.ID);
+        setFiles(current => {
+          const newlyAddedFiles = current.filter(f => !!f.ID);
           const filesPostDelete = current.filter(
-            (f) => f.responseProps?.pzInsKey !== 'temp' && f.responseProps?.pzInsKey !== file.responseProps?.pzInsKey
+            f => f.responseProps?.pzInsKey !== 'temp' && f.responseProps?.pzInsKey !== file.responseProps?.pzInsKey
           );
           attachmentsList = [...filesPostDelete, ...newlyAddedFiles];
           return attachmentsList;
@@ -111,9 +111,9 @@ export default function Attachment(props /* :AttachmentProps */) {
       } //  if the file being deleted is the added in this stage  i.e. whose data is not yet created in server
       else {
         // filter newly added files in this stage, later the updated current stage files will be added to redux once files state is updated in below setFiles()
-        currentAttachmentList = currentAttachmentList.filter((f) => f.label !== valueRef);
-        setFiles((current) => {
-          attachmentsList = current.filter((f) => f.ID !== file.ID);
+        currentAttachmentList = currentAttachmentList.filter(f => f.label !== valueRef);
+        setFiles(current => {
+          attachmentsList = current.filter(f => f.ID !== file.ID);
           return attachmentsList;
         });
         updateAttachmentState(pConn, getAttachmentKey(valueRef), [...currentAttachmentList, ...attachmentsList]);
@@ -123,8 +123,8 @@ export default function Attachment(props /* :AttachmentProps */) {
       }
 
       setToggleUploadBegin(false);
-      setFilesWithError((prevFilesWithError) => {
-        return prevFilesWithError.filter((f) => f.ID !== file.ID);
+      setFilesWithError(prevFilesWithError => {
+        return prevFilesWithError.filter(f => f.ID !== file.ID);
       });
     },
     [pConn, value, valueRef, filesWithError]
@@ -133,14 +133,14 @@ export default function Attachment(props /* :AttachmentProps */) {
   const onUploadProgress = () => {};
 
   const errorHandler = (isFetchCanceled, attachedFile) => {
-    return (error) => {
+    return error => {
       if (!isFetchCanceled(error)) {
         let uploadFailMsg = pConn.getLocalizedValue('Something went wrong');
         if (error.response && error.response.data && error.response.data.errorDetails) {
           uploadFailMsg = pConn.getLocalizedValue(error.response.data.errorDetails[0].localizedValue);
         }
-        setFiles((current) => {
-          return current.map((f) => {
+        setFiles(current => {
+          return current.map(f => {
             if (f.ID === attachedFile.ID) {
               f.props.meta = uploadFailMsg;
               f.props.error = true;
@@ -179,7 +179,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     const allowedExtensionList = allowedExtensions
       .toLowerCase()
       .split(',')
-      .map((item) => item.replaceAll('.', '').trim());
+      .map(item => item.replaceAll('.', '').trim());
     const extension = fileObj.name.split('.').pop().toLowerCase();
     return allowedExtensionList.includes(extension);
   };
@@ -195,7 +195,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     });
   };
 
-  const onFileAdded = (event) => {
+  const onFileAdded = event => {
     let addedFiles = Array.from(event.target.files);
     addedFiles = allowMultiple === 'true' ? addedFiles : [addedFiles[0]];
     const maxAttachmentSize = PCore.getEnvironmentInfo().getMaxAttachmentSize() || 5;
@@ -234,29 +234,29 @@ export default function Attachment(props /* :AttachmentProps */) {
         return f;
       })
     ];
-    const tempFilesWithError = tempFilesToBeUploaded.filter((f) => f.props.error);
+    const tempFilesWithError = tempFilesToBeUploaded.filter(f => f.props.error);
     if (tempFilesWithError.length > 0) {
       setFilesWithError(tempFilesWithError);
     }
-    setFiles((current) => (allowMultiple !== 'true' ? [...tempFilesToBeUploaded] : [...current, ...tempFilesToBeUploaded]));
+    setFiles(current => (allowMultiple !== 'true' ? [...tempFilesToBeUploaded] : [...current, ...tempFilesToBeUploaded]));
     setToggleUploadBegin(true);
   };
 
   const uploadFiles = useCallback(() => {
     const filesToBeUploaded = files
-      .filter((e) => {
+      .filter(e => {
         const isFileUploaded = e.props && e.props.progress === 100;
         const fileHasError = e.props && e.props.error;
         const isFileUploadedinLastStep = e.responseProps && e.responseProps.pzInsKey;
         return !isFileUploaded && !fileHasError && !isFileUploadedinLastStep;
       })
-      .map((f) =>
+      .map(f =>
         window.PCore.getAttachmentUtils().uploadAttachment(
           f,
           () => {
             onUploadProgress();
           },
-          (isFetchCanceled) => {
+          isFetchCanceled => {
             return errorHandler(isFetchCanceled, f);
           },
           pConn.getContextName()
@@ -264,11 +264,11 @@ export default function Attachment(props /* :AttachmentProps */) {
       );
     Promise.allSettled(filesToBeUploaded)
       .then((fileResponses: any) => {
-        fileResponses = fileResponses.filter((fr) => fr.status !== 'rejected'); // in case of deleting an in progress file, promise gets cancelled but still enters then block
+        fileResponses = fileResponses.filter(fr => fr.status !== 'rejected'); // in case of deleting an in progress file, promise gets cancelled but still enters then block
         if (fileResponses.length > 0) {
-          setFiles((current) => {
+          setFiles(current => {
             const tempFilesUploaded = [...current];
-            tempFilesUploaded.forEach((f) => {
+            tempFilesUploaded.forEach(f => {
               const index = fileResponses.findIndex((fr: any) => fr.value.clientFileID === f.ID);
               if (index >= 0) {
                 f.props.meta = pConn.getLocalizedValue('Uploaded successfully');
@@ -292,7 +292,7 @@ export default function Attachment(props /* :AttachmentProps */) {
         }
         setToggleUploadBegin(false);
       })
-      .catch((error) => {
+      .catch(error => {
         // eslint-disable-next-line no-console
         console.log(error);
         setToggleUploadBegin(false);
@@ -309,7 +309,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     if (files.length > 0 && displayMode !== 'DISPLAY_ONLY') {
       const currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef), pConn.getContextName());
       // block duplicate files to redux store when added 1 after another to prevent multiple duplicates being added to the case on submit
-      const tempFiles = files.filter((f) => currentAttachmentList.findIndex((fr) => fr.ID === f.ID) === -1 && !f.inProgress && f.responseProps);
+      const tempFiles = files.filter(f => currentAttachmentList.findIndex(fr => fr.ID === f.ID) === -1 && !f.inProgress && f.responseProps);
 
       const updatedAttList = [...currentAttachmentList, ...tempFiles];
       updateAttachmentState(pConn, getAttachmentKey(valueRef), updatedAttList);
@@ -324,10 +324,10 @@ export default function Attachment(props /* :AttachmentProps */) {
 
   useEffect(() => {
     let tempUploadedFiles = getCurrentAttachmentsList(getAttachmentKey(valueRef), pConn.getContextName());
-    tempUploadedFiles = tempUploadedFiles.filter((f) => f.label === valueRef);
-    setFiles((current) => {
+    tempUploadedFiles = tempUploadedFiles.filter(f => f.label === valueRef);
+    setFiles(current => {
       return [
-        ...current.map((f) => {
+        ...current.map(f => {
           return f.responseProps.pzInsKey && !f.responseProps.pzInsKey.includes('temp')
             ? {
                 ...f,
@@ -347,7 +347,7 @@ export default function Attachment(props /* :AttachmentProps */) {
     };
   }, []);
 
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -358,21 +358,21 @@ export default function Attachment(props /* :AttachmentProps */) {
   const content = (
     <div style={{ marginBottom: '8px' }}>
       <div className={`${disabled ? 'file-disabled' : ''} ${validatemessage === '' ? 'file-div' : 'file-div-error'}`}>
-        <div hidden={true} id="attachment-ID">
+        <div hidden={true} id='attachment-ID'>
           {valueRef}
         </div>
         <label htmlFor={valueRef}>
           <input
             style={{ display: 'none' }}
             id={valueRef}
-            name="upload-photo"
-            type="file"
+            name='upload-photo'
+            type='file'
             multiple={allowMultiple === 'true'}
             required={required}
             disabled={disabled}
             onChange={onFileAdded}
           />
-          <Button style={{textTransform: 'none'}} variant="outlined" color="primary" component="span">
+          <Button style={{ textTransform: 'none' }} variant='outlined' color='primary' component='span'>
             {allowMultiple === 'true' ? 'Upload files' : 'Upload a file'}
           </Button>
         </label>
@@ -386,41 +386,45 @@ export default function Attachment(props /* :AttachmentProps */) {
         files.length > 0 &&
         files.map((item, index) => {
           return (
-            <div key={index} className="psdk-utility-card">
-              <div className="psdk-utility-card-icon">
-                {!item.inProgress && <img className="psdk-utility-card-svg-icon" src={srcImg} />}
-                {item.inProgress && <div><CircularProgress /></div>}
+            <div key={index} className='psdk-utility-card'>
+              <div className='psdk-utility-card-icon'>
+                {!item.inProgress && <img className='psdk-utility-card-svg-icon' src={srcImg} />}
+                {item.inProgress && (
+                  <div>
+                    <CircularProgress />
+                  </div>
+                )}
               </div>
-              <div className="psdk-utility-card-main">
-                <div className="psdk-utility-card-main-primary-label">{item.props.name}</div>
+              <div className='psdk-utility-card-main'>
+                <div className='psdk-utility-card-main-primary-label'>{item.props.name}</div>
                 {item.props.meta && <div style={{ color: item.props.error ? 'red' : undefined }}>{item.props.meta}</div>}
               </div>
-              <div className="psdk-utility-action">
+              <div className='psdk-utility-action'>
                 {item.ID && (
-                  <button type="button" className="psdk-utility-button" aria-label="Delete Attachment" onClick={() => deleteFile(item)}>
-                    <img className="psdk-utility-card-action-svg-icon" src={deleteIcon} />
+                  <button type='button' className='psdk-utility-button' aria-label='Delete Attachment' onClick={() => deleteFile(item)}>
+                    <img className='psdk-utility-card-action-svg-icon' src={deleteIcon} />
                   </button>
                 )}
                 {!item.ID && (
                   <div>
                     <IconButton
-                      id="setting-button"
+                      id='setting-button'
                       aria-controls={open ? 'file-menu' : undefined}
                       aria-expanded={open ? 'true' : undefined}
-                      aria-haspopup="true"
+                      aria-haspopup='true'
                       onClick={handleClick}
                     >
                       <MoreVertIcon />
                     </IconButton>
-                    <Menu style={{ marginTop: '3rem' }} id="file-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                    <Menu style={{ marginTop: '3rem' }} id='file-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
                       <MenuItem
                         style={{ fontSize: '14px' }}
-                        key="download"
+                        key='download'
                         onClick={() => downloadFile(item.responseProps ? item.responseProps : {})}
                       >
                         Download
                       </MenuItem>
-                      <MenuItem style={{ fontSize: '14px' }} key="delete" onClick={() => deleteFile(item)}>
+                      <MenuItem style={{ fontSize: '14px' }} key='delete' onClick={() => deleteFile(item)}>
                         Delete
                       </MenuItem>
                     </Menu>
@@ -434,10 +438,10 @@ export default function Attachment(props /* :AttachmentProps */) {
   );
 
   return (
-    <div className="file-upload-container">
+    <div className='file-upload-container'>
       <span className={`label ${required ? 'file-label' : ''}`}>{label}</span>
       {((files.length === 0 && allowMultiple !== 'true') || allowMultiple === 'true') && <section>{content}</section>}
-      {validatemessage !== '' ? <span className="file-error">{validatemessage}</span> : ''}
+      {validatemessage !== '' ? <span className='file-error'>{validatemessage}</span> : ''}
       {files && files.length > 0 && <section>{fileDisplay}</section>}
     </div>
   );

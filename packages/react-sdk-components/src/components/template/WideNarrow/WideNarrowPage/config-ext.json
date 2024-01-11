@@ -4,6 +4,5 @@
   "description": "Wide-narrow Page Template",
   "type": "Template",
   "subtype": "PAGE",
-  "properties": [
-  ]
+  "properties": []
 }

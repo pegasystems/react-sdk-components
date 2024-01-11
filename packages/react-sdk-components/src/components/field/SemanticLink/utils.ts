@@ -3,10 +3,10 @@ declare const PCore: any;
 
 function getDataReferenceInfo(pConnect, dataRelationshipContext) {
   if (!pConnect) {
-    throw Error("PConnect parameter is required");
+    throw Error('PConnect parameter is required');
   }
 
-  let dataContext = "";
+  let dataContext = '';
   const payload = {};
   const pageReference = pConnect.getPageReference();
   const annotationUtils = PCore.getAnnotationUtils();
@@ -17,7 +17,7 @@ function getDataReferenceInfo(pConnect, dataRelationshipContext) {
     For page list the page refernce will be something like caseInfo.content.EmployeeRef[1].
     Need to extract EmployeeRef from caseInfo.content.EmployeeRef[1]
     */
-    const propertySplit = pageReference.split(".");
+    const propertySplit = pageReference.split('.');
 
     // Regex to match if the property is list type. Eg: EmployeeRef[1]
     const listPropertyRegex = /([a-z|A-Z]*[[][\d]*)[\]]$/gm;
@@ -26,9 +26,7 @@ function getDataReferenceInfo(pConnect, dataRelationshipContext) {
 
     let contextProperty = dataRelationshipContext !== null ? dataRelationshipContext : propertySplit.pop();
     const isListProperty = listPropertyRegex.test(contextProperty);
-    contextProperty = isListProperty
-      ? contextProperty.replace(indexRegex, "")
-      : contextProperty;
+    contextProperty = isListProperty ? contextProperty.replace(indexRegex, '') : contextProperty;
     fieldMetadata = pConnect.getFieldMetadata(contextProperty);
   }
 
@@ -36,7 +34,7 @@ function getDataReferenceInfo(pConnect, dataRelationshipContext) {
     const { name, parameters } = fieldMetadata.datasource;
     dataContext = name;
     for (const [key, value] of Object.entries(parameters)) {
-      const property = dataRelationshipContext !== null ? annotationUtils.getPropertyName(value) : annotationUtils.getLeafPropertyName(value)
+      const property = dataRelationshipContext !== null ? annotationUtils.getPropertyName(value) : annotationUtils.getLeafPropertyName(value);
       payload[key] = pConnect.getValue(`.${property}`);
     }
     return { dataContext, dataContextParameters: payload };
@@ -46,7 +44,7 @@ function getDataReferenceInfo(pConnect, dataRelationshipContext) {
 }
 
 function isLinkTextEmpty(text) {
-  return text === "" || text === undefined || text === null;
+  return text === '' || text === undefined || text === null;
 }
 
 export default { getDataReferenceInfo, isLinkTextEmpty };

@@ -4,6 +4,5 @@
   "description": "URL",
   "type": "Field",
   "subtype": "Text-URL",
-  "properties": [
-  ]
+  "properties": []
 }

@@ -4,6 +4,5 @@
   "description": "Standard case page",
   "type": "Template",
   "subtype": "CASEVIEW",
-  "properties": [
-  ]
+  "properties": []
 }

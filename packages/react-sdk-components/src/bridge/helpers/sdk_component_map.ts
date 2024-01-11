@@ -13,58 +13,56 @@ export let SdkComponentMap;
 let SdkComponentMapCreateInProgress = false;
 
 interface ISdkComponentMap {
-  localComponentMap: Object,
-  pegaProvidedComponentMap: Object
+  localComponentMap: Object;
+  pegaProvidedComponentMap: Object;
 }
 
 class ComponentMap {
-  sdkComponentMap: ISdkComponentMap;            // Top level object
+  sdkComponentMap: ISdkComponentMap; // Top level object
   isComponentMapLoaded: boolean;
 
   constructor() {
     // sdkComponentMap is top-level object
-    this.sdkComponentMap = { localComponentMap: {}, pegaProvidedComponentMap: {} };
+    this.sdkComponentMap = {
+      localComponentMap: {},
+      pegaProvidedComponentMap: {}
+    };
 
     // isCoComponentMapLoaded will be updated to true after the async load is complete
     this.isComponentMapLoaded = false;
 
     // pegaSdkComponents.local is the JSON object where we'll store the components that are
     // found locally or can be found in the Pega-provided repo
-    this.sdkComponentMap.localComponentMap = { };
+    this.sdkComponentMap.localComponentMap = {};
 
-    this.sdkComponentMap.pegaProvidedComponentMap = { };
+    this.sdkComponentMap.pegaProvidedComponentMap = {};
 
     // The "work" to load the config file is done (asynchronously) via the initialize
     //  (Factory function) below)
-
   }
 
   /**
    * Asynchronous initialization of the config file contents.
    * @returns Promise of config file fetch
    */
-   async readSdkComponentMap(inLocalSdkComponentMap = {}) {
+  async readSdkComponentMap(inLocalSdkComponentMap = {}) {
     // debugger;
-    if( Object.keys(this.sdkComponentMap.localComponentMap).length === 0 && Object.keys(this.sdkComponentMap.pegaProvidedComponentMap).length === 0) {
-
+    if (Object.keys(this.sdkComponentMap.localComponentMap).length === 0 && Object.keys(this.sdkComponentMap.pegaProvidedComponentMap).length === 0) {
       const theLocalCompPromise = this.readLocalSdkComponentMap(inLocalSdkComponentMap);
       const thePegaCompPromise = this.readPegaSdkComponentMap(pegaSdkComponentMap);
 
-
-      Promise.all([theLocalCompPromise, thePegaCompPromise]).then((/* results */) => {
-        return this.sdkComponentMap;
-      }).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(`Error in readSdkComponentMap: ${error}`);
-      })
-
+      Promise.all([theLocalCompPromise, thePegaCompPromise])
+        .then(() => this.sdkComponentMap)
+        .catch(error => {
+          // eslint-disable-next-line no-console
+          console.error(`Error in readSdkComponentMap: ${error}`);
+        });
     } else {
       return Promise.resolve(this.sdkComponentMap);
     }
   }
 
   async readLocalSdkComponentMap(inLocalSdkComponentMap = {}) {
-
     // debugger;
     if (Object.entries(this.getLocalComponentMap()).length === 0) {
       this.sdkComponentMap.localComponentMap = inLocalSdkComponentMap;
@@ -73,7 +71,6 @@ class ComponentMap {
   }
 
   async readPegaSdkComponentMap(inPegaSdkComponentMap = {}) {
-
     // debugger;
     if (Object.entries(this.getPegaProvidedComponentMap()).length === 0) {
       this.sdkComponentMap.pegaProvidedComponentMap = inPegaSdkComponentMap;
@@ -81,10 +78,9 @@ class ComponentMap {
     return Promise.resolve(this);
   }
 
-
   getLocalComponentMap = () => {
     return this.sdkComponentMap.localComponentMap;
-  }
+  };
 
   setLocalComponentMap(inLocalSdkComponentMap) {
     this.sdkComponentMap.localComponentMap = inLocalSdkComponentMap;
@@ -93,13 +89,12 @@ class ComponentMap {
 
   getPegaProvidedComponentMap = () => {
     return this.sdkComponentMap.pegaProvidedComponentMap;
-  }
+  };
 
-  setPegaProvidedComponentMap = (inPegaProvidedComponentMap) => {
-    this.sdkComponentMap.pegaProvidedComponentMap = inPegaProvidedComponentMap
+  setPegaProvidedComponentMap = inPegaProvidedComponentMap => {
+    this.sdkComponentMap.pegaProvidedComponentMap = inPegaProvidedComponentMap;
     return this.sdkComponentMap.pegaProvidedComponentMap;
-  }
-
+  };
 }
 
 export function getComponentFromMap(inComponentName: string): any {
@@ -117,12 +112,11 @@ export function getComponentFromMap(inComponentName: string): any {
     } else {
       // eslint-disable-next-line no-console
       console.error(`Requested component has neither Local nor Pega-provided implementation: ${inComponentName}`);
-      theComponentImplementation = getComponentFromMap("ErrorBoundary");
+      theComponentImplementation = getComponentFromMap('ErrorBoundary');
     }
   }
   return theComponentImplementation;
 }
-
 
 // Implement Factory function to allow async load
 //  See https://stackoverflow.com/questions/49905178/asynchronous-operations-in-constructor/49906064#49906064 for inspiration
@@ -135,11 +129,11 @@ async function createSdkComponentMap(inLocalComponentMap = {}) {
 
 // Initialize exported SdkComponentMap structure
 export async function getSdkComponentMap(inLocalComponentMap = {}) {
-  return new Promise( (resolve) => {
+  return new Promise(resolve => {
     let idNextCheck;
-    if( !SdkComponentMap && !SdkComponentMapCreateInProgress ) {
+    if (!SdkComponentMap && !SdkComponentMapCreateInProgress) {
       SdkComponentMapCreateInProgress = true;
-      createSdkComponentMap(inLocalComponentMap).then( theComponentMap => {
+      createSdkComponentMap(inLocalComponentMap).then(theComponentMap => {
         // debugger;
         // Key initialization of SdkComponentMap
         SdkComponentMap = theComponentMap;
@@ -148,26 +142,25 @@ export async function getSdkComponentMap(inLocalComponentMap = {}) {
         console.log(`getSdkComponentMap: created SdkComponentMap singleton`);
         // Create and dispatch the SdkConfigAccessReady event
         //  Not used anyplace yet but putting it in place in case we need it.
-        const event = new CustomEvent("SdkComponentMapReady", { });
+        const event = new CustomEvent('SdkComponentMapReady', {});
         document.dispatchEvent(event);
-        return resolve( SdkComponentMap /* .sdkComponentMap */ );
+        return resolve(SdkComponentMap /* .sdkComponentMap */);
       });
     } else {
       const fnCheckForConfig = () => {
-        if( SdkComponentMap ) {
-          if( idNextCheck ) {
+        if (SdkComponentMap) {
+          if (idNextCheck) {
             clearInterval(idNextCheck);
           }
-          return resolve( SdkComponentMap.sdkComponentMap );
+          return resolve(SdkComponentMap.sdkComponentMap);
         }
         idNextCheck = setInterval(fnCheckForConfig, 500);
       };
-      if( SdkComponentMap ) {
+      if (SdkComponentMap) {
         // eslint-disable-next-line no-promise-executor-return
-        return resolve( SdkComponentMap.sdkComponentMap );
+        return resolve(SdkComponentMap.sdkComponentMap);
       }
-        idNextCheck = setInterval(fnCheckForConfig, 500);
-
+      idNextCheck = setInterval(fnCheckForConfig, 500);
     }
   });
 }

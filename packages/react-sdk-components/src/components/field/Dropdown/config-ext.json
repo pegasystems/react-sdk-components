@@ -4,6 +4,5 @@
   "description": "Picklist",
   "type": "Field",
   "subtype": "Picklist",
-  "properties": [
-  ]
+  "properties": []
 }

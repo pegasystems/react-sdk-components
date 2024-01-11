@@ -3,11 +3,11 @@
   "include": [],
   "references": [
     {
-      "path":"./packages/react-sdk-components/tsconfig.build.json"
-    },
+      "path": "./packages/react-sdk-components/tsconfig.build.json"
+    }
   ],
   "compilerOptions": {
     // Must be true in order to not see errors in the @pega/pcore-pconnect-typedefs files themselves
-    "skipLibCheck": true,
-  },
+    "skipLibCheck": true
+  }
 }

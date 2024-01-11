@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { useState } from 'react';
 import {
@@ -19,7 +18,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
-import { makeStyles , useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { Utils } from '../../helpers/utils';
@@ -44,7 +43,7 @@ interface ToDoProps extends PConnProps {
   isConfirm?: boolean;
 }
 
-const isChildCase = (assignment) => {
+const isChildCase = assignment => {
   return assignment.isChild;
 };
 
@@ -57,13 +56,12 @@ function getID(assignment: any) {
     const refKey = assignment.value;
     return refKey.substring(refKey.lastIndexOf(' ') + 1);
   }
-    const refKey = assignment.ID;
-    const arKeys = refKey.split('!')[0].split(' ');
-    return arKeys[2];
-
+  const refKey = assignment.ID;
+  const arKeys = refKey.split('!')[0].split(' ');
+  return arKeys[2];
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -108,7 +106,7 @@ export default function ToDo(props: ToDoProps) {
   const localeCategory = 'Todo';
   const showlessLocalizedValue = localizedVal('show_less', 'CosmosFields');
   const showMoreLocalizedValue = localizedVal('show_more', 'CosmosFields');
-  const canPerform = assignments?.[0]?.canPerform === "true" || assignments?.[0]?.canPerform === true;
+  const canPerform = assignments?.[0]?.canPerform === 'true' || assignments?.[0]?.canPerform === true;
   // const { setOpen } = useNavBar();
 
   function initAssignments(): any[] {
@@ -116,20 +114,19 @@ export default function ToDo(props: ToDoProps) {
       assignmentCount = assignmentsSource.length;
       return topThreeAssignments(assignmentsSource);
     }
-      // turn off todolist
-      return [];
-
+    // turn off todolist
+    return [];
   }
 
-  const getAssignmentId = (assignment) => {
+  const getAssignmentId = assignment => {
     return type === CONSTS.TODO ? assignment.ID : assignment.id;
   };
 
-  const getPriority = (assignment) => {
+  const getPriority = assignment => {
     return type === CONSTS.TODO ? assignment.urgency : assignment.priority;
   };
 
-  const getAssignmentName = (assignment) => {
+  const getAssignmentName = assignment => {
     return type === CONSTS.TODO ? assignment.name : assignment.stepName;
   };
 
@@ -164,7 +161,10 @@ export default function ToDo(props: ToDoProps) {
     const sTarget = thePConn.getContainerName();
     const sTargetContainerName = sTarget;
 
-    const options:any = { containerName: sTargetContainerName, channelName: '' };
+    const options: any = {
+      containerName: sTargetContainerName,
+      channelName: ''
+    };
 
     if (classname === null || classname === '') {
       classname = thePConn.getCaseInfo().getClassName();
@@ -199,26 +199,26 @@ export default function ToDo(props: ToDoProps) {
 
     if ((showTodoList && type !== CONSTS.TODO) || assignment.isChild === true) {
       /* Supress link for todo inside flow step */
-      return <Button size="small" color="primary">{`${assignment.name} ${getID(assignment)}`}</Button>;
+      return <Button size='small' color='primary'>{`${assignment.name} ${getID(assignment)}`}</Button>;
     }
     return displayID;
   };
 
-  const getListItemComponent = (assignment) => {
+  const getListItemComponent = assignment => {
     if (isDesktop) {
       return (
         <>
           {localizedVal('Task in', localeCategory)}
           {renderTaskId(type, getPConnect, showTodoList, assignment)}
           {type === CONSTS.WORKLIST && assignment.status ? `\u2022 ` : undefined}
-          {type === CONSTS.WORKLIST && assignment.status ? <span className="psdk-todo-assignment-status">{assignment.status}</span> : undefined}
+          {type === CONSTS.WORKLIST && assignment.status ? <span className='psdk-todo-assignment-status'>{assignment.status}</span> : undefined}
           {` \u2022  ${localizedVal('Urgency', localeCategory)}  ${getPriority(assignment)}`}
         </>
       );
     }
     return (
       <>
-        <Button size="small" color="primary">{`${assignment.name} ${getID(assignment)}`}</Button>
+        <Button size='small' color='primary'>{`${assignment.name} ${getID(assignment)}`}</Button>
         {` \u2022 ${localizedVal('Urgency', localeCategory)}  ${getPriority(assignment)}`}
       </>
     );
@@ -229,20 +229,20 @@ export default function ToDo(props: ToDoProps) {
       {showTodoList && (
         <CardHeader
           title={
-            <Badge badgeContent={assignmentCount} overlap="rectangular" color="primary">
-              <Typography variant="h6">{headerText}&nbsp;&nbsp;&nbsp;</Typography>
+            <Badge badgeContent={assignmentCount} overlap='rectangular' color='primary'>
+              <Typography variant='h6'>{headerText}&nbsp;&nbsp;&nbsp;</Typography>
             </Badge>
           }
-         />
+        />
       )}
       <List>
-        {assignments.map((assignment) => (
-          <div className="psdk-todo-avatar-header" key={getAssignmentId(assignment)}>
+        {assignments.map(assignment => (
+          <div className='psdk-todo-avatar-header' key={getAssignmentId(assignment)}>
             <Avatar className={classes.avatar} style={{ marginRight: '16px' }}>
               {currentUserInitials}
             </Avatar>
             <div style={{ display: 'block' }}>
-              <Typography variant="h6">{assignment?.name}</Typography>
+              <Typography variant='h6'>{assignment?.name}</Typography>
               {`${localizedVal('Task in', localeCategory)} ${renderTaskId(type, getPConnect, showTodoList, assignment)} \u2022  ${localizedVal(
                 'Urgency',
                 localeCategory
@@ -268,16 +268,16 @@ export default function ToDo(props: ToDoProps) {
           {showTodoList && (
             <CardHeader
               title={
-                <Badge badgeContent={assignmentCount} overlap="rectangular" color="primary">
-                  <Typography variant="h6">{headerText}&nbsp;&nbsp;&nbsp;</Typography>
+                <Badge badgeContent={assignmentCount} overlap='rectangular' color='primary'>
+                  <Typography variant='h6'>{headerText}&nbsp;&nbsp;&nbsp;</Typography>
                 </Badge>
               }
               avatar={<Avatar className={classes.avatar}>{currentUserInitials}</Avatar>}
-             />
+            />
           )}
           <CardContent>
             <List>
-              {assignments.map((assignment) => (
+              {assignments.map(assignment => (
                 <ListItem key={getAssignmentId(assignment)} dense divider onClick={() => clickGo(assignment)}>
                   <ListItemText primary={getAssignmentName(assignment)} secondary={getListItemComponent(assignment)} />
                   <ListItemSecondaryAction>
@@ -296,9 +296,9 @@ export default function ToDo(props: ToDoProps) {
       {type === CONSTS.TODO && isConfirm && <>{toDoContent}</>}
 
       {assignmentCount > 3 && (
-        <Box display="flex" justifyContent="center">
+        <Box display='flex' justifyContent='center'>
           {bShowMore ? (
-            <Button color="primary" onClick={_showMore}>
+            <Button color='primary' onClick={_showMore}>
               {showMoreLocalizedValue === 'show_more' ? 'Show more' : showMoreLocalizedValue}
             </Button>
           ) : (
@@ -313,8 +313,8 @@ export default function ToDo(props: ToDoProps) {
         onClose={handleSnackbarClose}
         message={snackbarMessage}
         action={
-          <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
-            <CloseIcon fontSize="small" />
+          <IconButton size='small' aria-label='close' color='inherit' onClick={handleSnackbarClose}>
+            <CloseIcon fontSize='small' />
           </IconButton>
         }
       />

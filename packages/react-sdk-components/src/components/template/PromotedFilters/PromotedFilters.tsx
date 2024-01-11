@@ -19,7 +19,6 @@ import './PromotedFilters.css';
 //   parameters?: object
 // }
 
-
 const localeCategory = 'SimpleTable';
 const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
   'TextInput',
@@ -64,7 +63,7 @@ function Filters({ filters, transientItemID, localeReference }) {
 }
 
 function isValidInput(input) {
-  return Object.values(input).findIndex((v) => v) >= 0;
+  return Object.values(input).findIndex(v => v) >= 0;
 }
 
 export default function PromotedFilters(props /* : PromotedFilterProps */) {
@@ -77,7 +76,7 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
   const [payload, setPayload] = useState({});
   const filtersProperties = {};
 
-  filters.forEach((filter) => {
+  filters.forEach(filter => {
     filtersProperties[PCore.getAnnotationUtils().getPropertyName(filter.config.value)] = '';
   });
 
@@ -99,7 +98,7 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
           lhs: {
             field
           },
-          comparator: "EQ",
+          comparator: 'EQ',
           rhs: {
             value
           }
@@ -110,12 +109,12 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
   }
 
   const getFilterData = useCallback(
-    (e) => {
+    e => {
       e.preventDefault(); // to prevent un-intended forms submission.
 
       const changes = PCore.getFormUtils().getChanges(transientItemID);
       const formValues = {};
-      Object.keys(changes).forEach((key) => {
+      Object.keys(changes).forEach(key => {
         if (!['context_data', 'pageInstructions'].includes(key)) {
           formValues[key] = changes[key];
         }
@@ -145,23 +144,28 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
   return (
     <>
       <div>{listViewProps.title}</div>
-      <div className="psdk-grid-filter">
-        <Filters filters={filters} transientItemID={transientItemID} localeReference={listViewProps.localeReference}/>
+      <div className='psdk-grid-filter'>
+        <Filters filters={filters} transientItemID={transientItemID} localeReference={listViewProps.localeReference} />
       </div>
       <div>
         <Button key='1' type='button' onClick={clearFilterData} data-testid='clear' variant='contained' color='primary'>
           {localizedVal('Clear', localeCategory)}
         </Button>
-        <Button style={{float: 'right'}} key='2' type='submit' onClick={getFilterData} data-testid='search' variant='contained' color='primary'>
+        <Button style={{ float: 'right' }} key='2' type='submit' onClick={getFilterData} data-testid='search' variant='contained' color='primary'>
           {localizedVal('Search', localeCategory)}
         </Button>
       </div>
-      {initTable && <ListView {...listViewProps} title='' payload={payload}
-         isSearchable
-         tableDisplay={{
-           show: initTable
-         }}
-       />}
+      {initTable && (
+        <ListView
+          {...listViewProps}
+          title=''
+          payload={payload}
+          isSearchable
+          tableDisplay={{
+            show: initTable
+          }}
+        />
+      )}
     </>
   );
 }

@@ -22,7 +22,7 @@ export default function Time(props: TimeProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
@@ -35,14 +35,14 @@ export default function Time(props: TimeProps) {
     'data-test-id': testId
   };
 
-  const handleChange = (date) => {
+  const handleChange = date => {
     const theValue = date && date.isValid() ? date.format('HH:mm') : null;
     onChange({ value: theValue });
   };
 
   let timeValue: any = null;
   if (value) {
-    const timeArray = value.split(':').map((itm) => Number(itm));
+    const timeArray = value.split(':').map(itm => Number(itm));
     timeValue = dayjs().hour(timeArray[0]).minute(timeArray[1]);
   }
 
@@ -53,9 +53,9 @@ export default function Time(props: TimeProps) {
 
   return (
     <KeyboardTimePicker
-      variant="inline"
-      inputVariant="outlined"
-      placeholder="hh:mm am"
+      variant='inline'
+      inputVariant='outlined'
+      placeholder='hh:mm am'
       keyboardIcon={<AccessTimeIcon />}
       fullWidth
       required={required}
@@ -63,11 +63,11 @@ export default function Time(props: TimeProps) {
       error={status === 'error'}
       helperText={helperTextToDisplay}
       minutesStep={5}
-      size="small"
+      size='small'
       label={label}
       autoOk
-      mask="__:__ _m"
-      format="hh:mm a"
+      mask='__:__ _m'
+      format='hh:mm a'
       value={timeValue}
       onChange={handleChange}
       InputProps={{ inputProps: { ...testProp } }}

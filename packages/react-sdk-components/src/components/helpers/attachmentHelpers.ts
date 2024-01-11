@@ -28,8 +28,8 @@ export const getIconFromFileType = (fileType): string => {
     icon = 'document-pdf';
   } else {
     const [, subtype] = fileType.split('/');
-    const foundMatch = (sources) => {
-      return sources.some((key) => subtype.includes(key));
+    const foundMatch = sources => {
+      return sources.some(key => subtype.includes(key));
     };
 
     if (foundMatch(['excel', 'spreadsheet'])) {
@@ -42,22 +42,27 @@ export const getIconFromFileType = (fileType): string => {
   return icon;
 };
 
-export const getIconForAttachment = (inThis:any , attachment:any): string => {
+export const getIconForAttachment = (inThis: any, attachment: any): string => {
   let icon;
   switch (attachment.type) {
-    case "FILE":
+    case 'FILE':
       icon = inThis.getIconFromFileType(attachment.mimeType);
       break;
-    case "URL":
-      icon = "chain";
+    case 'URL':
+      icon = 'chain';
       break;
     default:
-      icon = "document-doc";
+      icon = 'document-doc';
   }
   return icon;
 };
 
-export const buildFilePropsFromResponse = (respObj): { props: { meta: string, name: string, icon: string}, responseProps: any} => {
+export const buildFilePropsFromResponse = (
+  respObj
+): {
+  props: { meta: string; name: string; icon: string };
+  responseProps: any;
+} => {
   return {
     props: {
       meta: `${respObj.pyCategoryName}, ${respObj.pxCreateOperator}`,

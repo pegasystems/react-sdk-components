@@ -4,8 +4,7 @@
   "description": "Picklist",
   "type": "Field",
   "subtype": "Picklist",
-  "componentKey" : "AutoComplete",
+  "componentKey": "AutoComplete",
   "icon": "",
-  "properties": [
-  ]
+  "properties": []
 }

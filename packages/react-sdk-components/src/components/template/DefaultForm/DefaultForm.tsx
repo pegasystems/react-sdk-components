@@ -7,9 +7,7 @@ import connectToState from '../../helpers/state-utils';
 import { getKeyForMappedField, mapStateToProps } from './utils';
 // import type { PConnProps } from '../../../types/PConnProps';
 
-
 import './DefaultForm.css';
-
 
 // Can't use PConn props until proper props for getPConnect().getChildren()[0].getPConnect;
 // interface DefaultFormProps extends PConnProps {
@@ -18,7 +16,6 @@ import './DefaultForm.css';
 //   NumCols: string
 
 // }
-
 
 const Child = connectToState(mapStateToProps)(props => {
   const { key, visibility, ...rest } = props;
@@ -61,8 +58,8 @@ export default function DefaultForm(props /* : DefaultFormProps */) {
       {instructions && (
         <div className='psdk-default-form-instruction-text'>
           {/* server performs sanitization method for instructions html content */}
-          { /* eslint-disable react/no-danger */ }
-          <div key="instructions" id="instruction-text" dangerouslySetInnerHTML={{ __html: instructions }} />
+          {/* eslint-disable react/no-danger */}
+          <div key='instructions' id='instruction-text' dangerouslySetInnerHTML={{ __html: instructions }} />
         </div>
       )}
       <div className={divClass}>{dfChildren}</div>

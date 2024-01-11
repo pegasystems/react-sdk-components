@@ -35,16 +35,14 @@ import { useNavBar } from '../../helpers/reactContextHelpers';
 import { Utils } from '../../helpers/utils';
 import type { PConnProps } from '../../../types/PConnProps';
 
-
 interface NavBarProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   // eslint-disable-next-line react/no-unused-prop-types
-  appName?: string,
-  pages?: any[],
-  caseTypes: any[],
-  pConn?: any
+  appName?: string;
+  pages?: any[];
+  caseTypes: any[];
+  pConn?: any;
 }
-
 
 const iconMap = {
   'pi pi-headline': <HomeOutlinedIcon fontSize='large' />,
@@ -121,9 +119,7 @@ export default function NavBar(props: NavBarProps) {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'AppShell';
 
-  const portalLogoImage = Utils.getIconPath(Utils.getSDKStaticConentUrl()).concat(
-    'pzpega-logo-mark.svg'
-  );
+  const portalLogoImage = Utils.getIconPath(Utils.getSDKStaticConentUrl()).concat('pzpega-logo-mark.svg');
   const portalOperator = PCore.getEnvironmentInfo().getOperatorName();
   const portalApp = PCore.getEnvironmentInfo().getApplicationLabel();
 
@@ -212,22 +208,12 @@ export default function NavBar(props: NavBarProps) {
         </List>
       ) : (
         <div className={classes.appListDiv} onClick={handleDrawerOpen}>
-          <ChevronRightIcon
-            className={classes.appListIcon}
-            id='chevron-right-icon'
-            fontSize='large'
-          />
+          <ChevronRightIcon className={classes.appListIcon} id='chevron-right-icon' fontSize='large' />
         </div>
       )}
       <List>
         <ListItem button onClick={handleCaseItemClick}>
-          <ListItemIcon>
-            {bShowCaseTypes && open ? (
-              <ClearOutlinedIcon fontSize='large' />
-            ) : (
-              <AddIcon fontSize='large' />
-            )}
-          </ListItemIcon>
+          <ListItemIcon>{bShowCaseTypes && open ? <ClearOutlinedIcon fontSize='large' /> : <AddIcon fontSize='large' />}</ListItemIcon>
           <ListItemText primary='Create' />
           {bShowCaseTypes ? <ExpandLess /> : <ExpandMore />}
         </ListItem>

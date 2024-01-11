@@ -16,15 +16,14 @@
 }
 
 .psdk-current-svg-icon {
-  width: 1.0rem;
+  width: 1rem;
   filter: var(--app-primary-color-filter);
 }
 
 .psdk-not-current-svg-icon {
-  width: 1.0rem;
+  width: 1rem;
   filter: var(--app-neutral-color-filter);
 }
-
 
 mat-vertical-stepper {
   background-color: transparent;
@@ -36,17 +35,16 @@ mat-horizontal-stepper {
 .psdk-sub-step-current {
   padding-left: 0.625rem;
   font-weight: bold;
-  color: rgba(0,0,0,.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .psdk-sub-step-not-current {
   padding-left: 0.625rem;
-  color: rgba(0,0,0,.54);
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .psdk-flow-container-top {
   border-radius: 0.3125rem;
-
 }
 .psdk-flow-container {
   padding-left: 2.1875rem;
@@ -56,8 +54,6 @@ mat-horizontal-stepper {
   list-style: none;
   padding-bottom: 0.625rem;
 }
-
-
 
 .psdk-vertical-stepper {
   background-color: transparent;
@@ -112,7 +108,7 @@ mat-horizontal-stepper {
 }
 
 .psdk-vertical-step-label {
-  color: rgba(0,0,0,.54);
+  color: rgba(0, 0, 0, 0.54);
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
@@ -124,7 +120,7 @@ mat-horizontal-stepper {
 }
 
 .psdk-vertical-step-label-selected {
-  color: rgba(0,0,0,.87);
+  color: rgba(0, 0, 0, 0.87);
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
@@ -147,14 +143,14 @@ mat-horizontal-stepper {
 }
 
 .psdk-vertical-step-line::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   border-left-width: 1px;
   border-left-style: solid;
   top: -16px;
   bottom: -16px;
-  border-left-color: rgba(0,0,0,.12);
+  border-left-color: rgba(0, 0, 0, 0.12);
 }
 
 .psdk-horizontal-stepper {
@@ -217,7 +213,7 @@ mat-horizontal-stepper {
 }
 
 .psdk-horizontal-step-label {
-  color: rgba(0,0,0,.54);
+  color: rgba(0, 0, 0, 0.54);
   display: inline-block;
   min-width: 50px;
   vertical-align: middle;
@@ -227,7 +223,7 @@ mat-horizontal-stepper {
 }
 
 .psdk-horizontal-step-label-selected {
-  color: rgba(0,0,0,.87);
+  color: rgba(0, 0, 0, 0.87);
   display: inline-block;
   min-width: 50px;
   vertical-align: middle;
@@ -237,7 +233,7 @@ mat-horizontal-stepper {
 }
 
 .psdk-horizontal-step-line {
-  border-top-color: rgba(0,0,0,.12);
+  border-top-color: rgba(0, 0, 0, 0.12);
   border-top-width: 1px;
   border-top-style: solid;
   flex: auto;

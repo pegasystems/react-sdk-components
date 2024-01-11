@@ -56,7 +56,7 @@ function getConfigObject(item, pConnect) {
   return null;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   dlgTitle: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
@@ -148,7 +148,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
     return bRet;
   }
 
-  const updateAlertState = (modalFlag) => {
+  const updateAlertState = modalFlag => {
     setShowCancelAlert(false);
     setShowModal(modalFlag);
   };
@@ -192,7 +192,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
           const currentItem = currentItems[key];
           const rootView = currentItem.view;
           const { context } = rootView.config;
-          const config:any = { meta: rootView };
+          const config: any = { meta: rootView };
           config.options = {
             context: currentItem.context,
             hasForm: true,
@@ -245,7 +245,12 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
             const headingValue =
               isDataObject || isMultiRecord
                 ? getModalHeading(dataObjectAction)
-                : determineModalHeaderByAction(actionName, caseTypeName, ID, `${theNewCaseInfo?.getClassName()}!CASE!${theNewCaseInfo.getName()}`.toUpperCase());
+                : determineModalHeaderByAction(
+                    actionName,
+                    caseTypeName,
+                    ID,
+                    `${theNewCaseInfo?.getClassName()}!CASE!${theNewCaseInfo.getName()}`.toUpperCase()
+                  );
 
             setTitle(headingValue);
 
@@ -265,10 +270,13 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
               // This is the 8.6 implementation. Leaving it in for reference for now.
               // And create a similar array of the children as React components
               //  passed to Assignment component when rendered
-              arChildrenAsReact = newComp.getChildren().map((child) => {
+              arChildrenAsReact = newComp.getChildren().map(child => {
                 // Use Case Summary ID as the React element's key
                 const caseSummaryID = child.getPConnect().getCaseSummary().ID;
-                return createElement(createPConnectComponent(), { ...child, key: caseSummaryID });
+                return createElement(createPConnectComponent(), {
+                  ...child,
+                  key: caseSummaryID
+                });
               });
             }
 
@@ -314,8 +322,8 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
 
   return (
     <>
-      <Dialog open={bShowModal} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title" className={classes.dlgTitle}>
+      <Dialog open={bShowModal} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title' className={classes.dlgTitle}>
           {title}
         </DialogTitle>
         <DialogContent className={classes.dlgContent}>
@@ -338,7 +346,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
             getPConnect={createdView.configObject.getPConnect}
             context={createdView.latestItem.context}
             closeActionsDialog={closeActionsDialog}
-           />
+          />
         )}
       </Dialog>
       {bShowCancelAlert && <CancelAlert pConn={cancelPConn} showAlert={bShowCancelAlert} updateAlertState={updateAlertState} />}

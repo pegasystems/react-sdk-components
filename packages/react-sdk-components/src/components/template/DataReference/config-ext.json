@@ -4,6 +4,5 @@
   "type": "Template",
   "icon": "DataReference.svg",
   "subtype": "DATAVIEW",
-  "properties": [
-  ]
+  "properties": []
 }

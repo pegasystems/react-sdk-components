@@ -6,14 +6,21 @@ import './Banner.css';
 
 interface BannerProps {
   // If any, enter additional props that only exist on this component
-  a: any,
-  b: any,
-  banner: { variant: any, backgroundColor: any, title: any, message: any, backgroundImage: any, tintImage: any },
-  variant: any
+  a: any;
+  b: any;
+  banner: {
+    variant: any;
+    backgroundColor: any;
+    title: any;
+    message: any;
+    backgroundImage: any;
+    tintImage: any;
+  };
+  variant: any;
 }
 
-export default function Banner(props:Readonly<BannerProps>) {
-  const { a, b, banner, variant} = props;
+export default function Banner(props: BannerProps) {
+  const { a, b, banner, variant } = props;
   const { title, message, backgroundImage } = banner;
   const variantMap = {
     'two-column': [6, 6],
@@ -22,10 +29,7 @@ export default function Banner(props:Readonly<BannerProps>) {
   };
   return (
     <div style={{ marginBottom: '2rem' }}>
-      <div
-        className='background-image-style'
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
+      <div className='background-image-style' style={{ backgroundImage: `url(${backgroundImage})` }}>
         <div className='background-style content'>
           <div>
             <h1 className='title'>{title}</h1>

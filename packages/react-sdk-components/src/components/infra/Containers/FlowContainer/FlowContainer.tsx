@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
- 
+
 import { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
@@ -37,7 +37,7 @@ declare const PCore: any;
 // is totally at your own risk.
 //
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(2),
     paddingLeft: theme.spacing(2),
@@ -173,7 +173,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     const caseActions = ourPConn.getValue(pCoreConstants.CASE_INFO.AVAILABLEACTIONS, ''); // 2nd arg empty string until typedefs properly allow optional
     let bCaseWideAction = false;
     if (caseActions && actionID) {
-      const actionObj = caseActions.find((caseAction) => caseAction.ID === actionID);
+      const actionObj = caseActions.find(caseAction => caseAction.ID === actionID);
       if (actionObj) {
         bCaseWideAction = actionObj.type === 'Case';
       }
@@ -298,22 +298,22 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
 
   const displayPageMessages = () => {
     let hasBanner = false;
-    const messages = pageMessages ? pageMessages.map((msg) => localizedVal(msg.message, 'Messages')) : pageMessages;
+    const messages = pageMessages ? pageMessages.map(msg => localizedVal(msg.message, 'Messages')) : pageMessages;
     hasBanner = messages && messages.length > 0;
-    return hasBanner && <AlertBanner id="flowContainerBanner" variant="urgent" messages={messages} />;
+    return hasBanner && <AlertBanner id='flowContainerBanner' variant='urgent' messages={messages} />;
   };
 
   return (
-    <div style={{ textAlign: 'left' }} id={buildName} className="psdk-flow-container-top">
+    <div style={{ textAlign: 'left' }} id={buildName} className='psdk-flow-container-top'>
       {!bShowConfirm &&
         (!todo_showTodo ? (
           !displayOnlyFA ? (
             <Card className={classes.root}>
               <CardHeader
-                title={<Typography variant="h6">{containerName}</Typography>}
+                title={<Typography variant='h6'>{containerName}</Typography>}
                 subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
                 avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
-               />
+              />
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
@@ -323,7 +323,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
             </Card>
           ) : (
             <Card className={classes.root}>
-              <Typography variant="h6">{containerName}</Typography>
+              <Typography variant='h6'>{containerName}</Typography>
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
@@ -345,12 +345,12 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
               context={todo_context}
               itemKey={itemKey}
               isConfirm
-             />
+            />
           </div>
         ))}
       {bHasCaseMessages && (
         <div className={classes.alert}>
-          <Alert severity="success">{caseMessages}</Alert>
+          <Alert severity='success'>{caseMessages}</Alert>
         </div>
       )}
       {bShowConfirm && bShowBanner && <div>{[rootViewElement]}</div>}

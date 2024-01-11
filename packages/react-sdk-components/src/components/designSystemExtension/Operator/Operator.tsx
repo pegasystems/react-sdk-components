@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
@@ -9,29 +9,27 @@ import Utils from '../../helpers/utils';
 
 // Operator is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
-interface OperatorProps{
+interface OperatorProps {
   // If any, enter additional props that only exist on this component
   caseOpConfig: {
-    label: string,
-    createDateTime: string,
-    createLabel: string,
-    createOperator: { userName: string, userId: string },
-    updateDateTime: string,
-    updateLabel: string,
-    updateOperator: { userName: string, userId: string }
-  }
+    label: string;
+    createDateTime: string;
+    createLabel: string;
+    createOperator: { userName: string; userId: string };
+    updateDateTime: string;
+    updateLabel: string;
+    updateOperator: { userName: string; userId: string };
+  };
 }
 
-
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(1),
-    margin: theme.spacing(1),
+    margin: theme.spacing(1)
   },
   popover: {
     padding: theme.spacing(1),
-    margin: theme.spacing(1),
+    margin: theme.spacing(1)
   }
 }));
 
@@ -41,17 +39,17 @@ export default function Operator(props: OperatorProps) {
   const classes = useStyles();
 
   const fieldLabel = caseOpConfig.label.toLowerCase();
-  let caseOpLabel = "---";
-  let caseOpName = "---";
-  let caseOpId = "";
-  let caseTime = "";
+  let caseOpLabel = '---';
+  let caseOpName = '---';
+  let caseOpId = '';
+  let caseTime = '';
 
-  if (fieldLabel === "create operator") {
+  if (fieldLabel === 'create operator') {
     caseOpLabel = caseOpConfig.createLabel;
     caseOpName = caseOpConfig.createOperator.userName;
     caseTime = caseOpConfig.createDateTime;
     caseOpId = caseOpConfig.createOperator.userId;
-  } else if (fieldLabel === "update operator") {
+  } else if (fieldLabel === 'update operator') {
     caseOpLabel = caseOpConfig.updateLabel;
     caseOpName = caseOpConfig.updateOperator.userName;
     caseTime = caseOpConfig.updateDateTime;
@@ -65,77 +63,82 @@ export default function Operator(props: OperatorProps) {
   const popoverOpen = Boolean(popoverAnchorEl);
   const popoverId = popoverOpen ? 'operator-details-popover' : undefined;
 
-  const handlePopoverClose = (() => {
+  const handlePopoverClose = () => {
     setPopoverAnchorEl(null);
-  })
+  };
 
   function showOperatorDetails(event) {
-
     const operatorPreviewPromise = PCore.getUserApi().getOperatorDetails(caseOpId);
     const localizedVal = PCore.getLocaleUtils().getLocaleValue;
     const localeCategory = 'Operator';
 
-    operatorPreviewPromise.then((res) => {
-      const fillerString = "---";
+    operatorPreviewPromise.then(res => {
+      const fillerString = '---';
       let fields: any = [];
-      if (
-        res.data &&
-        res.data.pyOperatorInfo &&
-        res.data.pyOperatorInfo.pyUserName
-      ) {
+      if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
         fields = [
           {
-            id: "pyPosition",
-            name: localizedVal("Position", localeCategory),
+            id: 'pyPosition',
+            name: localizedVal('Position', localeCategory),
             value: res.data.pyOperatorInfo.pyPosition ? res.data.pyOperatorInfo.pyPosition : fillerString
           },
           {
-            id: "pyOrganization",
-            name: localizedVal("Organization", localeCategory),
+            id: 'pyOrganization',
+            name: localizedVal('Organization', localeCategory),
             value: res.data.pyOperatorInfo.pyOrganization ? res.data.pyOperatorInfo.pyOrganization : fillerString
           },
           {
-            id: "ReportToUserName",
+            id: 'ReportToUserName',
             name: localizedVal('Reports to', localeCategory),
             value: res.data.pyOperatorInfo.pyReportToUserName ? res.data.pyOperatorInfo.pyReportToUserName : fillerString
           },
           {
-            id: "pyTelephone",
+            id: 'pyTelephone',
             name: localizedVal('Telephone', localeCategory),
-            value: res.data.pyOperatorInfo.pyTelephone ? <a href={`tel:${res.data.pyOperatorInfo.pyTelephone}`}>{res.data.pyOperatorInfo.pyTelephone}</a> : fillerString
+            value: res.data.pyOperatorInfo.pyTelephone ? (
+              <a href={`tel:${res.data.pyOperatorInfo.pyTelephone}`}>{res.data.pyOperatorInfo.pyTelephone}</a>
+            ) : (
+              fillerString
+            )
           },
           {
-            id: "pyEmailAddress",
+            id: 'pyEmailAddress',
             name: localizedVal('Email address', localeCategory),
-            value: res.data.pyOperatorInfo.pyEmailAddress ? <a href={`mailto:${res.data.pyOperatorInfo.pyEmailAddress}`}>{res.data.pyOperatorInfo.pyEmailAddress}</a> : fillerString
+            value: res.data.pyOperatorInfo.pyEmailAddress ? (
+              <a href={`mailto:${res.data.pyOperatorInfo.pyEmailAddress}`}>{res.data.pyOperatorInfo.pyEmailAddress}</a>
+            ) : (
+              fillerString
+            )
           }
         ];
       } else {
         // eslint-disable-next-line no-console
-        console.log(`Operator: PCore.getUserApi().getOperatorDetails(${caseOpId}); returned empty res.data.pyOperatorInfo.pyUserName - adding default`);
+        console.log(
+          `Operator: PCore.getUserApi().getOperatorDetails(${caseOpId}); returned empty res.data.pyOperatorInfo.pyUserName - adding default`
+        );
         fields = [
           {
-            id: "pyPosition",
-            name: localizedVal("Position", localeCategory),
+            id: 'pyPosition',
+            name: localizedVal('Position', localeCategory),
             value: fillerString
           },
           {
-            id: "pyOrganization",
-            name: localizedVal("Organization", localeCategory),
+            id: 'pyOrganization',
+            name: localizedVal('Organization', localeCategory),
             value: fillerString
           },
           {
-            id: "ReportToUserName",
+            id: 'ReportToUserName',
             name: localizedVal('Reports to', localeCategory),
             value: fillerString
           },
           {
-            id: "pyTelephone",
+            id: 'pyTelephone',
             name: localizedVal('Telephone', localeCategory),
             value: fillerString
           },
           {
-            id: "pyEmailAddress",
+            id: 'pyEmailAddress',
             name: localizedVal('Email address', localeCategory),
             value: fillerString
           }
@@ -158,23 +161,33 @@ export default function Operator(props: OperatorProps) {
     }
 
     // There are fields, so build the grid.
-    return <Grid container className={classes.popover} spacing={1}>
-      <Grid item xs={12}><Typography variant="h6">{caseOpName}</Typography></Grid>
-      {popoverFields.map((field) => {
-        return <React.Fragment key={field.id}>
-          <Grid container item xs={12} spacing={1}>
-            <Grid item xs={6}><Typography variant="caption">{field.name}</Typography></Grid>
-            <Grid item xs={6}><Typography variant="subtitle2">{field.value}</Typography></Grid>
-          </Grid>
-        </React.Fragment>
-      })}
-    </Grid>
-
+    return (
+      <Grid container className={classes.popover} spacing={1}>
+        <Grid item xs={12}>
+          <Typography variant='h6'>{caseOpName}</Typography>
+        </Grid>
+        {popoverFields.map(field => {
+          return (
+            <React.Fragment key={field.id}>
+              <Grid container item xs={12} spacing={1}>
+                <Grid item xs={6}>
+                  <Typography variant='caption'>{field.name}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant='subtitle2'>{field.value}</Typography>
+                </Grid>
+              </Grid>
+            </React.Fragment>
+          );
+        })}
+      </Grid>
+    );
   }
 
   // End of popover-related
 
-  return <>
+  return (
+    <>
       <TextField
         defaultValue={caseOpName}
         label={caseOpLabel}
@@ -182,23 +195,23 @@ export default function Operator(props: OperatorProps) {
         InputProps={{
           readOnly: true,
           disableUnderline: true,
-          inputProps: {style: {cursor: 'pointer'}}
+          inputProps: { style: { cursor: 'pointer' } }
         }}
       />
       <br />
-      {Utils.generateDateTime(caseTime, "DateTime-Since")}
+      {Utils.generateDateTime(caseTime, 'DateTime-Since')}
 
       <Popover
         id={popoverId}
         open={popoverOpen}
         anchorEl={popoverAnchorEl}
         onClose={handlePopoverClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center'}}
-        transformOrigin={{ vertical: 'top', horizontal: 'center'}}
-        PaperProps={{ style: {maxWidth: '45ch'}}}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        PaperProps={{ style: { maxWidth: '45ch' } }}
       >
         {getPopoverGrid()}
       </Popover>
-    </>;
-
+    </>
+  );
 }

@@ -4,6 +4,5 @@
   "description": "App announcement widget",
   "type": "Widget",
   "subtype": "PAGE",
-  "properties": [
-  ]
+  "properties": []
 }

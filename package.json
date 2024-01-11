@@ -39,7 +39,8 @@
     "test:headed": "playwright test --headed --project=chromium MediaCo/portal MediaCo/embedded",
     "test-report": "playwright show-report tests/playwright-report",
     "test-jest": "jest --watchAll",
-    "test-jest-coverage": "jest --watchAll --coverage"
+    "test-jest-coverage": "jest --watchAll --coverage",
+    "prettier": "prettier . --write .prettierrc"
   },
   "author": "Pegasystems",
   "license": "SEE LICENSE IN LICENSE",

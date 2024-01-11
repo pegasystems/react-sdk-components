@@ -8,7 +8,6 @@ import DashboardFilter from './DashboardFilter';
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
 declare const PCore: any;
 
-
 export const createFilter = (value, fieldId, comparator = 'EQ') => {
   return {
     condition: {
@@ -48,10 +47,7 @@ export const createFilterComponent = (getPConnect, filterMeta, index) => {
   if (name.indexOf('.') !== -1) {
     cleanedName = name.substring(name.indexOf('.') + 1);
   }
-  let propInfo = PCore.getMetadataUtils().getPropertyMetadata(
-    cleanedName,
-    filterMeta.config.ruleClass
-  );
+  let propInfo = PCore.getMetadataUtils().getPropertyMetadata(cleanedName, filterMeta.config.ruleClass);
   if (!propInfo) {
     propInfo = PCore.getMetadataUtils().getPropertyMetadata(cleanedName);
   }
@@ -62,16 +58,7 @@ export const createFilterComponent = (getPConnect, filterMeta, index) => {
   const type = filterType || filterMeta.type;
   const filterProp = `.pyDashboardFilter${index}`;
   if (type === 'DateTime') {
-    return (
-      <DashboardFilter
-        key={name}
-        getPConnect={getPConnect}
-        name={name}
-        filterProp={filterProp}
-        metadata={filterMeta}
-        type={filterMeta.type}
-       />
-    );
+    return <DashboardFilter key={name} getPConnect={getPConnect} name={name} filterProp={filterProp} metadata={filterMeta} type={filterMeta.type} />;
   }
   if (datasource && datasource.fields) {
     datasource.fields.key = datasource.fields.value;
@@ -83,33 +70,21 @@ export const createFilterComponent = (getPConnect, filterMeta, index) => {
   filterMeta.type = filterMeta.config.displayAs || type;
   filterMeta.config.placeholder = 'ALL';
   return (
-    <DashboardFilter
-      key={name}
-      getPConnect={getPConnect}
-      name={name}
-      filterProp={filterProp}
-      metadata={filterMeta}
-      type={filterMeta.type}
-    >
-      {getPConnect().createComponent(filterMeta,
-        '', '', {})}
+    <DashboardFilter key={name} getPConnect={getPConnect} name={name} filterProp={filterProp} metadata={filterMeta} type={filterMeta.type}>
+      {getPConnect().createComponent(filterMeta, '', '', {})}
     </DashboardFilter>
   );
 };
 
 export const buildFilterComponents = (getPConnect, allFilters) => {
-  const filterComponents = allFilters.children.map((filter, index) =>
-    createFilterComponent(getPConnect, filter, index)
-  );
+  const filterComponents = allFilters.children.map((filter, index) => createFilterComponent(getPConnect, filter, index));
   if (filterComponents && filterComponents.length > 0) {
     filterComponents.push(
       <Grid>
         <Link
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            PCore.getPubSubUtils().publish(
-              PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL
-            );
+            PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL);
           }}
         >
           Clear All
@@ -168,9 +143,7 @@ export function getLayoutDataFromRegion(regionData) {
       const itemPConnect = item?.getPConnect();
 
       return {
-        id: itemPConnect?.getComponentName()
-          ? `${itemPConnect.getComponentName()}--${index}`
-          : `item--${index}`,
+        id: itemPConnect?.getComponentName() ? `${itemPConnect.getComponentName()}--${index}` : `item--${index}`,
         content: itemPConnect?.getComponent(),
         layoutConfig: {
           ...defaultLayoutConfig,
@@ -184,7 +157,5 @@ export const getFormattedDate = date => {
   if (!date) {
     return date;
   }
-  return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${(
-    '0' + date.getDate()
-  ).slice(-2)}`;
+  return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
 };

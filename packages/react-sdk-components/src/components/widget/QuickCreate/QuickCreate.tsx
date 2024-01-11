@@ -8,20 +8,19 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 //   // If any, enter additional props that only exist on this component
 // }
 
-
 export default function QuickCreate(props /* : QuickCreateProps */) {
   // Get emitted components from map (so we can get any override that may exist)
   const WssQuickCreate = getComponentFromMap('WssQuickCreate');
 
   const { getPConnect, heading, showCaseIcons, classFilter } = props;
   const pConn = getPConnect();
-  const createCase = (className) => {
+  const createCase = className => {
     pConn
       .getActionsApi()
-      .createWork(className, { })
-      .catch((error) => {
+      .createWork(className, {})
+      .catch(error => {
         // eslint-disable-next-line no-console
-        console.log('Error in case creation: ', error?.message)
+        console.log('Error in case creation: ', error?.message);
       });
   };
 
@@ -33,10 +32,10 @@ export default function QuickCreate(props /* : QuickCreateProps */) {
     envInfo.environmentInfoObject.pyCaseTypeList &&
     envInfo.environmentInfoObject.pyCaseTypeList.length > 0
   ) {
-    classFilter.forEach((item) => {
+    classFilter.forEach(item => {
       let icon = Utils.getImageSrc('polaris-solid', Utils.getSDKStaticConentUrl());
       let label = '';
-      envInfo.environmentInfoObject.pyCaseTypeList.forEach((casetype) => {
+      envInfo.environmentInfoObject.pyCaseTypeList.forEach(casetype => {
         if (casetype.pyWorkTypeImplementationClassName === item) {
           icon = casetype.pxIcon && Utils.getImageSrc(casetype?.pxIcon, Utils.getSDKStaticConentUrl());
           label = casetype.pyWorkTypeName ?? '';
@@ -55,8 +54,8 @@ export default function QuickCreate(props /* : QuickCreateProps */) {
   }
 
   return (
-      <div>
-        <WssQuickCreate heading={heading} actions={cases} />
-      </div>
-    );
+    <div>
+      <WssQuickCreate heading={heading} actions={cases} />
+    </div>
+  );
 }

@@ -6,14 +6,14 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 interface BannerPageProps {
   // If any, enter additional props that only exist on this component
-  children: any[],
-  layout?: string,
-  heading?: string,
-  message?: string,
-  imageTheme?: string,
-  backgroundImage?: string,
-  backgroundColor?: string,
-  tintImage?: boolean
+  children: any[];
+  layout?: string;
+  heading?: string;
+  message?: string;
+  imageTheme?: string;
+  backgroundImage?: string;
+  backgroundColor?: string;
+  tintImage?: boolean;
 }
 
 /*

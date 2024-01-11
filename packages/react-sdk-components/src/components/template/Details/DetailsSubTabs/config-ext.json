@@ -4,6 +4,5 @@
   "description": "Details (Sub tabs)",
   "type": "Template",
   "subtype": "DETAILS",
-  "properties": [
-  ]
+  "properties": []
 }

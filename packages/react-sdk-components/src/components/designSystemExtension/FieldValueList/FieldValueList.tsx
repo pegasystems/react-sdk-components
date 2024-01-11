@@ -4,13 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // FieldValueList is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
-interface FieldValueListProps{
+interface FieldValueListProps {
   // If any, enter additional props that only exist on this component
-  name?: string,
-  value: any,
-  variant?: string
+  name?: string;
+  value: any;
+  variant?: string;
 }
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,11 +50,7 @@ export default function FieldValueList(props: FieldValueListProps) {
 
   function getGridItemLabel() {
     return (
-      <Grid
-        item
-        xs={variant === 'stacked' ? 12 : 6}
-        className={variant === 'stacked' ? classes.noPaddingBottom : ''}
-      >
+      <Grid item xs={variant === 'stacked' ? 12 : 6} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
         <Typography variant='body2' component='span' className={`${classes.fieldLabel}`}>
           {name}
         </Typography>
@@ -67,16 +62,8 @@ export default function FieldValueList(props: FieldValueListProps) {
     const formattedValue = formatItemValue(value);
 
     return (
-      <Grid
-        item
-        xs={variant === 'stacked' ? 12 : 6}
-        className={variant === 'stacked' ? classes.noPaddingTop : ''}
-      >
-        <Typography
-          variant={variant === 'stacked' ? 'h6' : 'body2'}
-          component='span'
-          className={classes.fieldValue}
-        >
+      <Grid item xs={variant === 'stacked' ? 12 : 6} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
+        <Typography variant={variant === 'stacked' ? 'h6' : 'body2'} component='span' className={classes.fieldValue}>
           {formattedValue}
         </Typography>
       </Grid>
@@ -85,8 +72,8 @@ export default function FieldValueList(props: FieldValueListProps) {
 
   return (
     <Grid container spacing={4} justifyContent='space-between'>
-        {getGridItemLabel()}
-        {getGridItemValue()}
-      </Grid>
+      {getGridItemLabel()}
+      {getGridItemValue()}
+    </Grid>
   );
-};
+}

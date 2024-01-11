@@ -6,11 +6,10 @@ import type { PConnProps } from '../../../types/PConnProps';
 // InlineDashboard does NOT have getPConnect. So, no need to extend from PConnProps
 interface InlineDashboardProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: any[],
-  title: string,
-  filterPosition?: string
+  children: any[];
+  title: string;
+  filterPosition?: string;
 }
-
 
 const useStyles = makeStyles((/* theme */) => ({
   headerStyles: {
@@ -56,7 +55,7 @@ export default function InlineDashboard(props: InlineDashboardProps) {
           <Grid item xs={12} className={classes.colStyles}>
             {children[0]}
           </Grid>
-          <Grid id="filters" item xs={12} className={classes.filterContainerStyles}>
+          <Grid id='filters' item xs={12} className={classes.filterContainerStyles}>
             {children[1]}
           </Grid>
         </Grid>
@@ -66,7 +65,7 @@ export default function InlineDashboard(props: InlineDashboardProps) {
           <Grid item xs={9}>
             {children[0]}
           </Grid>
-          <Grid id="filters" item xs={3} className={classes.inlineStyles}>
+          <Grid id='filters' item xs={3} className={classes.inlineStyles}>
             {children[1]}
           </Grid>
         </Grid>

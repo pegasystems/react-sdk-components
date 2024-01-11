@@ -44,7 +44,7 @@ export default function useInit(props) {
         });
       promisesArray.push(reportColumnsPromise);
 
-      const fetchEditDetails = async (metadata) => {
+      const fetchEditDetails = async metadata => {
         const {
           data: { isQueryable }
         } = metadata;
@@ -65,7 +65,7 @@ export default function useInit(props) {
         return Promise.resolve();
       };
 
-      const editPromise = metaDataPromise.then((metadata) => fetchEditDetails(metadata));
+      const editPromise = metaDataPromise.then(metadata => fetchEditDetails(metadata));
       promisesArray.push(editPromise);
       getContext({
         tableSource: referenceList,
@@ -77,20 +77,19 @@ export default function useInit(props) {
         isSearchable,
         isCacheable: true,
         xRayUid
-      })
-        .then(async (context) => {
-          if (isCompStillMounted) {
-            return readContextResponse(context, {
-              ...props,
-              editing,
-              selectionCountThreshold,
-              ref,
-              selectionMode,
-              xRayUid,
-              cosmosTableRef
-            });
-          }
-        });
+      }).then(async context => {
+        if (isCompStillMounted) {
+          return readContextResponse(context, {
+            ...props,
+            editing,
+            selectionCountThreshold,
+            ref,
+            selectionMode,
+            xRayUid,
+            cosmosTableRef
+          });
+        }
+      });
     })();
 
     return () => {

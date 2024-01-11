@@ -4,6 +4,5 @@
   "description": "Date & time",
   "type": "Field",
   "subtype": "DateTime",
-  "properties": [
-  ]
+  "properties": []
 }

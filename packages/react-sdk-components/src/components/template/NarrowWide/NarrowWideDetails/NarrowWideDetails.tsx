@@ -14,7 +14,6 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 //   showHighlightedData?: boolean
 // }
 
-
 const COLUMN_WIDTHS = [4, 8];
 
 export default function NarrowWideDetails(props /* : NarrowWideDetailsProps */) {
@@ -53,8 +52,7 @@ export default function NarrowWideDetails(props /* : NarrowWideDetailsProps */) 
         field.config.displayAsStatus = true;
       }
 
-      return getPConnect().createComponent(field,
-        '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
+      return getPConnect().createComponent(field, '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
     });
   }
 

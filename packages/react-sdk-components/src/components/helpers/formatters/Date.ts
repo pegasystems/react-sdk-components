@@ -1,21 +1,18 @@
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import utc from "dayjs/plugin/utc";
-import tzone from "dayjs/plugin/timezone";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import utc from 'dayjs/plugin/utc';
+import tzone from 'dayjs/plugin/timezone';
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
 dayjs.extend(utc);
 dayjs.extend(tzone);
 
-const types = ["fromNow", "customFormat"];
+const types = ['fromNow', 'customFormat'];
 
 // value should be in ISO 8601 format.
-function DateFormatter(
-  value: string,
-  { type = types[1], format = "DD/MM/YYYY", timezone = "America/New_York" } = {}
-) {
+function DateFormatter(value: string, { type = types[1], format = 'DD/MM/YYYY', timezone = 'America/New_York' } = {}) {
   if (!value) return value;
   switch (type) {
     case types[1]:
@@ -30,7 +27,7 @@ function DateFormatter(
 // value should be in hh:mm:ss format (00:00:00 - 23:59:59).
 function TimeFormatter(value, options) {
   if (!value) return value;
-  const { locale = "en-US" } = options;
+  const { locale = 'en-US' } = options;
   const timeOnlyRegex = /^(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)$/;
   if (value.length === 8 && timeOnlyRegex.test(value)) {
     const tempDate = new Date();
@@ -46,32 +43,29 @@ function TimeFormatter(value, options) {
 }
 
 export default {
-  "DateTime-Long": (value, options) =>
-    DateFormatter(value, { ...options, type: "customFormat", format: "LLL" }),
-  "DateTime-Short": (value, options) =>
+  'DateTime-Long': (value, options) => DateFormatter(value, { ...options, type: 'customFormat', format: 'LLL' }),
+  'DateTime-Short': (value, options) =>
     DateFormatter(value, {
       ...options,
-      type: "customFormat",
-      format: "MMM DD, YYYY"
+      type: 'customFormat',
+      format: 'MMM DD, YYYY'
     }),
-  "DateTime-Since": (value) => DateFormatter(value, { type: "fromNow" }),
-  "Time-Only": (value, options) =>
+  'DateTime-Since': value => DateFormatter(value, { type: 'fromNow' }),
+  'Time-Only': (value, options) =>
     TimeFormatter(value, {
       ...options,
-      type: "customFormat",
-      format: "hh:mm:ss A"
+      type: 'customFormat',
+      format: 'hh:mm:ss A'
     }),
   convertToTimezone: (value, options) => {
     return value && options && options.timezone
       ? DateFormatter(value, {
           ...options,
-          type: "customFormat",
-          format: "YYYY-MM-DDTHH:mm:ss"
+          type: 'customFormat',
+          format: 'YYYY-MM-DDTHH:mm:ss'
         })
       : value;
   },
-  convertFromTimezone: (value, timezone) =>
-    value && timezone ? dayjs.tz(value, timezone).utc().format() : value,
-  Date: (value, options) =>
-    DateFormatter(value, { type: "customFormat", ...options })
+  convertFromTimezone: (value, timezone) => (value && timezone ? dayjs.tz(value, timezone).utc().format() : value),
+  Date: (value, options) => DateFormatter(value, { type: 'customFormat', ...options })
 };

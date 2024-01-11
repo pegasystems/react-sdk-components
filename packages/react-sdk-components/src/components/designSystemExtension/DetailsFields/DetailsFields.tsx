@@ -9,11 +9,10 @@ import { format } from '../../helpers/formatters';
 
 // DetailsFields is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
-interface DetailsFieldsProps{
+interface DetailsFieldsProps {
   // If any, enter additional props that only exist on this component
-  fields: any[]
+  fields: any[];
 }
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,11 +54,7 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     fieldComponents.push({
       type: theCompType,
       label,
-      value: (
-        <React.Fragment key={index}>
-          {createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}
-        </React.Fragment>
-      )
+      value: <React.Fragment key={index}>{createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}</React.Fragment>
     });
   });
 
@@ -132,13 +127,12 @@ export default function DetailsFields(props: DetailsFieldsProps) {
           </Grid>
         );
       }
-        return (
-          <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
-            {getGridItemLabel(field, `${index}-label`)}
-            {getGridItemValue(field, `${index}-value`)}
-          </Grid>
-        );
-
+      return (
+        <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
+          {getGridItemLabel(field, `${index}-label`)}
+          {getGridItemValue(field, `${index}-value`)}
+        </Grid>
+      );
     });
     return gridItems;
   }

@@ -40,7 +40,7 @@ export default function TextArea(props: TextAreaProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
@@ -64,7 +64,7 @@ export default function TextArea(props: TextAreaProps) {
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
+      size='small'
       required={required}
       disabled={disabled}
       onChange={onChange}

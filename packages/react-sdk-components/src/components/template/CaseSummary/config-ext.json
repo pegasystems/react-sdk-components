@@ -4,6 +4,5 @@
   "description": "Case summary template",
   "type": "Template",
   "subtype": "SUMMARY",
-  "properties": [
-  ]
+  "properties": []
 }
