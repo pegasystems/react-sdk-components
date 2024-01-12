@@ -3,17 +3,16 @@ import './WideNarrow.css';
 // WideNarrow does NOT have getPConnect. So, no need to extend from PConnProps
 interface WideNarrowProps {
   // If any, enter additional props that only exist on this component
-  a: any,
-  b: any,
-  children?: any[],
+  a: any;
+  b: any;
+  children?: any[];
   // eslint-disable-next-line react/no-unused-prop-types
-  title?: string,
+  title?: string;
   // eslint-disable-next-line react/no-unused-prop-types
-  cols?: string,
+  cols?: string;
   // eslint-disable-next-line react/no-unused-prop-types
-  icon?: string
+  icon?: string;
 }
-
 
 export default function WideNarrow(props: WideNarrowProps) {
   // const {a, b /*, cols, icon, title */ } = props;
@@ -21,28 +20,18 @@ export default function WideNarrow(props: WideNarrowProps) {
 
   return (
     <>
-    {children && children.length === 2 &&
-      <div className="psdk-wide-narrow-column">
-        <div className="psdk-wide-column-column">
-          {children[0]}
+      {children && children.length === 2 && (
+        <div className='psdk-wide-narrow-column'>
+          <div className='psdk-wide-column-column'>{children[0]}</div>
+          <div className='psdk-narrow-column-column'>{children[1]}</div>
         </div>
-        <div className="psdk-narrow-column-column">
-          {children[1]}
+      )}
+      {a && b && (
+        <div className='psdk-wide-narrow-column'>
+          <div className='psdk-wide-column-column'>{a}</div>
+          <div className='psdk-narrow-column-column'>{b}</div>
         </div>
-      </div>
-    }
-    {a && b &&
-      <div className="psdk-wide-narrow-column">
-        <div className="psdk-wide-column-column">
-          {a}
-        </div>
-        <div className="psdk-narrow-column-column">
-          {b}
-        </div>
-      </div>
-    }
+      )}
     </>
-
-  )
-
+  );
 }

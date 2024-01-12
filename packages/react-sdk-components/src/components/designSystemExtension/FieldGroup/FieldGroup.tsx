@@ -5,10 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 //  So, no need to extend PConnProps
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
-  children: any[] | any,
-  name: string | object,
+  children: any[] | any;
+  name: string | object;
 }
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,14 +38,14 @@ export default function FieldGroup(props: FieldGroupProps) {
 
   return (
     <Grid container spacing={4} justifyContent='space-between'>
-        <Grid item style={{ width: '100%' }}>
-          {name && (
-            <div className={classes.fieldMargin}>
-              <b>{props.name}</b>
-            </div>
-          )}
-          {descAndChildren}
-        </Grid>
+      <Grid item style={{ width: '100%' }}>
+        {name && (
+          <div className={classes.fieldMargin}>
+            <b>{props.name}</b>
+          </div>
+        )}
+        {descAndChildren}
       </Grid>
+    </Grid>
   );
-};
+}

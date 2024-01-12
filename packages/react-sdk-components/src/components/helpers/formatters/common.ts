@@ -1,4 +1,3 @@
-
 export function getLocale(locale: string = '') {
   // use locale if specified
   if (locale) return locale;
@@ -8,7 +7,7 @@ export function getLocale(locale: string = '') {
   return Intl.DateTimeFormat().resolvedOptions().locale;
 }
 
-export function getCurrentTimezone(timezone: string = "America/New_York" ) {
+export function getCurrentTimezone(timezone: string = 'America/New_York') {
   if (timezone) return timezone;
   return PCore?.getLocaleUtils?.().getTimeZoneInUse?.();
 }

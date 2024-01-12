@@ -4,6 +4,5 @@
   "description": "Integer",
   "type": "Field",
   "subtype": "Integer",
-  "properties": [
-  ]
+  "properties": []
 }

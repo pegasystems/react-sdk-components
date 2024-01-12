@@ -1,18 +1,16 @@
-import { Children } from "react";
+import { Children } from 'react';
 
 // import { TwoColumnPage as TwoColumn } from "@pega/cosmos-react-core";
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-
 // NarrowWidePage does NOT have getPConnect. So, no need to extend from PConnProps
 interface NarrowWidePageProps {
   // If any, enter additional props that only exist on this component
-  children: any[],
-  title: string,
-  templateCol: string,
-  icon: string
+  children: any[];
+  title: string;
+  templateCol: string;
+  icon: string;
 }
-
 
 /*
  * The wrapper handles knowing how to take in just children and mapping
@@ -27,13 +25,7 @@ export default function NarrowWidePage(props: NarrowWidePageProps) {
 
   return (
     <div>
-    <NarrowWide
-        a={childArray[0]}
-        b={childArray[1]}
-        title={title}
-        cols={templateCol}
-        icon={icon?.replace("pi pi-", "")}
-      />
+      <NarrowWide a={childArray[0]} b={childArray[1]} title={title} cols={templateCol} icon={icon?.replace('pi pi-', '')} />
     </div>
   );
 }

@@ -4,6 +4,5 @@
   "description": "Case history widget",
   "type": "Widget",
   "subtype": "CASE",
-  "properties": [
-  ]
+  "properties": []
 }

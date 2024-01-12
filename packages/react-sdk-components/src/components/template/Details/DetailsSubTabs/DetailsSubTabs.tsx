@@ -5,15 +5,12 @@ import { TabContext, TabPanel } from '@material-ui/lab';
 import { getTransientTabs, getVisibleTabs, tabClick } from '../../SubTabs/tabUtils';
 import type { PConnProps } from '../../../../types/PConnProps';
 
-
 interface DetailsSubTabsProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: any[],
-  showLabel: boolean,
-  label: string
-
+  children: any[];
+  showLabel: boolean;
+  label: string;
 }
-
 
 export default function DetailsSubTabs(props: DetailsSubTabsProps) {
   const { children = [], label, showLabel = true, getPConnect } = props;

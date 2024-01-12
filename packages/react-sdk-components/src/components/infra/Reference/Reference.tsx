@@ -9,7 +9,6 @@
 //   displayMode?: string
 // }
 
-
 export default function Reference(props /*: ReferenceProps */) {
   const { visibility = true, context = '', getPConnect, readOnly = false, displayMode = '' } = props;
 

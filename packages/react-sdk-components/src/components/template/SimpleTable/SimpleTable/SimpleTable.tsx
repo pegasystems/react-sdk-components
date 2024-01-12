@@ -59,11 +59,7 @@ export default function SimpleTable(props /* : SimpleTableProps */) {
   const propsToUse = { label, ...getPConnect().getInheritedProps() };
   const isDisplayModeEnabled = displayMode === 'DISPLAY_ONLY';
 
-  if (
-    fieldMetadata &&
-    fieldMetadata.type === 'Page List' &&
-    fieldMetadata.dataRetrievalType === 'refer'
-  ) {
+  if (fieldMetadata && fieldMetadata.type === 'Page List' && fieldMetadata.dataRetrievalType === 'refer') {
     const {
       children: [{ children: rawFields }],
       parameters: rawParams
@@ -84,8 +80,7 @@ export default function SimpleTable(props /* : SimpleTableProps */) {
     );
 
     const metaForPConnect = JSON.parse(JSON.stringify(metaForListView));
-    metaForPConnect.config.parameters =
-      rawParams ?? PCore.getMetadataUtils().getPropertyMetadata(name)?.datasource?.parameters;
+    metaForPConnect.config.parameters = rawParams ?? PCore.getMetadataUtils().getPropertyMetadata(name)?.datasource?.parameters;
 
     const { referenceListStr: referenceList } = getContext(getPConnect());
     let requiredContextForQueryInDisplayMode = {};
@@ -100,9 +95,7 @@ export default function SimpleTable(props /* : SimpleTableProps */) {
       ...requiredContextForQueryInDisplayMode
     };
 
-    const refToPConnect = useRef(
-      PCore.createPConnect({ meta: metaForPConnect, options }).getPConnect
-    ).current; // getPConnect should be created only once.
+    const refToPConnect = useRef(PCore.createPConnect({ meta: metaForPConnect, options }).getPConnect).current; // getPConnect should be created only once.
     /* BUG-637178 : need to send context */
     const listViewProps = {
       ...metaForListView.config,
@@ -112,13 +105,12 @@ export default function SimpleTable(props /* : SimpleTableProps */) {
       bInForm: true
     };
     return <ListView {...listViewProps} />;
-  } 
-    const simpleTableManualProps = { ...props, contextClass };
-    if (allowTableEdit === false) {
-      simpleTableManualProps.hideAddRow = true;
-      simpleTableManualProps.hideDeleteRow = true;
-      simpleTableManualProps.disableDragDrop = true;
-    }
-    return <SimpleTableManual {...simpleTableManualProps} />;
-  
+  }
+  const simpleTableManualProps = { ...props, contextClass };
+  if (allowTableEdit === false) {
+    simpleTableManualProps.hideAddRow = true;
+    simpleTableManualProps.hideDeleteRow = true;
+    simpleTableManualProps.disableDragDrop = true;
+  }
+  return <SimpleTableManual {...simpleTableManualProps} />;
 }

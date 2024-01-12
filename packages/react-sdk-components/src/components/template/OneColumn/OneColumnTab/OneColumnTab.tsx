@@ -1,13 +1,9 @@
-interface OneColumnTabProps{
+interface OneColumnTabProps {
   // If any, enter additional props that only exist on this component
-  children: any[]
+  children: any[];
 }
 export default function OneColumnTab(props: OneColumnTabProps) {
-  const { children} = props;
+  const { children } = props;
 
-  return (
-    <div id="OneColumnTab">
-      {children}
-    </div>
-  )
+  return <div id='OneColumnTab'>{children}</div>;
 }

@@ -52,7 +52,7 @@ export default function TextInput(props: TextInputProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
@@ -80,7 +80,7 @@ export default function TextInput(props: TextInputProps) {
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
+      size='small'
       required={required}
       disabled={disabled}
       onChange={handleChange}

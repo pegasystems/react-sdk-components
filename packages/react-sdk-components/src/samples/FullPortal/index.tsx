@@ -13,7 +13,6 @@ import localSdkComponentMap from '../../../sdk-local-component-map';
 
 import InvalidPortal from './InvalidPortal';
 
-
 declare const myLoadPortal: any;
 declare const myLoadDefaultPortal: any;
 
@@ -64,13 +63,15 @@ export default function FullPortal() {
     // const thePConnObj = <div>the RootComponent</div>;
     const thePConnObj = <PegaConnectObj {...props} />;
 
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
-    return <StoreContext.Provider value={{ store: PCore.getStore() }}>
+    return (
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
+      <StoreContext.Provider value={{ store: PCore.getStore() }}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {thePConnObj}
         </ThemeProvider>
-      </StoreContext.Provider>;
+      </StoreContext.Provider>
+    );
   }
 
   /**
@@ -80,13 +81,7 @@ export default function FullPortal() {
    */
   function initialRender(inRenderObj) {
     // modified from react_root.js render
-    const {
-      props,
-      domContainerID = null,
-      componentName,
-      portalTarget,
-      styleSheetTarget
-    } = inRenderObj;
+    const { props, domContainerID = null, componentName, portalTarget, styleSheetTarget } = inRenderObj;
     let target: any = null;
     if (domContainerID !== null) {
       target = document.getElementById(domContainerID);
@@ -116,9 +111,7 @@ export default function FullPortal() {
     ReactDOM.render(
       // was <Component
       theComponent,
-      target ||
-        document.getElementById('pega-root') ||
-        document.getElementsByTagName(domContainerID)[0]
+      target || document.getElementById('pega-root') || document.getElementsByTagName(domContainerID)[0]
     );
   }
 
@@ -166,7 +159,7 @@ export default function FullPortal() {
       setPortalSelectionScreen(true);
       setDefaultPortalName(defaultPortal);
       // Getting current user's access group's available portals list other than excluded portals (relies on Traditional DX APIs)
-      getAvailablePortals().then((portals) => {
+      getAvailablePortals().then(portals => {
         setAvailablePortals(portals as string[]);
       });
     }
@@ -177,29 +170,28 @@ export default function FullPortal() {
     myLoadPortal('app-root', portal, []); // this is defined in bootstrap shell that's been loaded already
   }
 
-
   function doRedirectDone() {
     history.push(window.location.pathname);
     // appName and mainRedirect params have to be same as earlier invocation
-    loginIfNecessary({appName:'portal', mainRedirect:true});
+    loginIfNecessary({ appName: 'portal', mainRedirect: true });
   }
 
   // One time (initialization)
   useEffect(() => {
-     document.addEventListener('SdkConstellationReady', () => {
+    document.addEventListener('SdkConstellationReady', () => {
       // start the portal
       startPortal();
     });
     // Login if needed, doing an initial main window redirect
-    loginIfNecessary({appName:'portal', mainRedirect:true, redirectDoneCB:doRedirectDone});
+    loginIfNecessary({
+      appName: 'portal',
+      mainRedirect: true,
+      redirectDoneCB: doRedirectDone
+    });
   }, []);
 
   return portalSelectionScreen ? (
-    <InvalidPortal
-      defaultPortal={defaultPortalName}
-      portals={availablePortals}
-      onSelect={loadSelectedPortal}
-    />
+    <InvalidPortal defaultPortal={defaultPortalName} portals={availablePortals} onSelect={loadSelectedPortal} />
   ) : (
     <div>
       <div id='pega-root' />

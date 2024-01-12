@@ -1,6 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
-
 const { test, expect } = require('@playwright/test');
 
 const config = require('../../../config');
@@ -109,5 +106,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-const outputDir = './test-reports/e2e/DigV2/FormFields/Currency'
+const outputDir = './test-reports/e2e/DigV2/FormFields/Currency';
 test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

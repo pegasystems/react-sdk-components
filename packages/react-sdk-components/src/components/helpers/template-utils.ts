@@ -1,6 +1,5 @@
 //  This file is adapted from React DX components/template/utils.js
 
-
 export function getAllFields(pConnect: any) {
   const metadata = pConnect.getRawMetadata();
   let allFields: any[] = [];
@@ -47,9 +46,7 @@ export function getIsAssignmentView(pConnect) {
  * @param {string} [instructions="casestep"] 'casestep', 'none', or the html content of a Rule-UI-Paragraph rule (processed via core's paragraph annotation handler)
  */
 export function getInstructions(pConnect, instructions: string = 'casestep'): string | undefined {
-  const caseStepInstructions =
-    PCore.getConstants().CASE_INFO.INSTRUCTIONS &&
-    pConnect.getValue(PCore.getConstants().CASE_INFO.INSTRUCTIONS);
+  const caseStepInstructions = PCore.getConstants().CASE_INFO.INSTRUCTIONS && pConnect.getValue(PCore.getConstants().CASE_INFO.INSTRUCTIONS);
 
   // Determine if this view is the current assignment/step view
   const isCurrentAssignmentView = getIsAssignmentView(pConnect);

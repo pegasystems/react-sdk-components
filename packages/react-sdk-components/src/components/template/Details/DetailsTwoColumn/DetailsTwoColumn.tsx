@@ -6,7 +6,6 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 
 // import type { PConnProps } from '../../../../types/PConnProps';
 
-
 // Can't use PConnProps until getPConnect().getChildren() type is ok
 // interface DetailsTwoColumnProps extends PConnProps {
 //   // If any, enter additional props that only exist on this component
@@ -14,7 +13,6 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 //   label: string,
 //   showHighlightedData: boolean
 // }
-
 
 export default function DetailsTwoColumn(props /* : DetailsTwoColumnProps */) {
   // Get emitted components from map (so we can get any override that may exist)
@@ -52,8 +50,7 @@ export default function DetailsTwoColumn(props /* : DetailsTwoColumnProps */) {
         field.config.displayAsStatus = true;
       }
 
-      return getPConnect().createComponent(field,
-        '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
+      return getPConnect().createComponent(field, '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
     });
   }
 

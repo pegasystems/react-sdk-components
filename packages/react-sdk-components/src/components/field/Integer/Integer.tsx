@@ -37,7 +37,7 @@ export default function Integer(props: IntegerProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
@@ -73,7 +73,7 @@ export default function Integer(props: IntegerProps) {
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
+      size='small'
       required={required}
       disabled={disabled}
       onChange={intOnChange}
@@ -81,7 +81,7 @@ export default function Integer(props: IntegerProps) {
       error={status === 'error'}
       label={label}
       value={value}
-      type="text"
+      type='text'
       inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', ...testProp }}
     />
   );

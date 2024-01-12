@@ -1,11 +1,10 @@
-
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable operator-assignment */
 import { useRef, useEffect, useState, forwardRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'throttle-debounce';
 
-import { createFilter, combineFilters, getFormattedDate , getFilterExpression } from './filterUtils';
+import { createFilter, combineFilters, getFormattedDate, getFilterExpression } from './filterUtils';
 
 import { TextField } from '@material-ui/core';
 import React from 'react';
@@ -17,13 +16,12 @@ import type { PConnProps } from '../../../types/PConnProps';
 
 interface DashboardFilterProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children?: any[],
-  name: string,
-  filterProp: string,
-  type?: string,
-  metadata?: any
+  children?: any[];
+  name: string;
+  filterProp: string;
+  type?: string;
+  metadata?: any;
 }
-
 
 export default function DashboardFilter(props: DashboardFilterProps) {
   const { children = [], name, filterProp, type = '', metadata = null, getPConnect } = props;
@@ -75,10 +73,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
       filterExpression: getFilterExpression(filterValue, name, metadata)
     };
 
-    PCore.getPubSubUtils().publish(
-      PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
-      filterData
-    );
+    PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE, filterData);
   };
 
   const fireFilterChangeDebounced = debounce(500, fireFilterChange);
@@ -98,10 +93,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
         filterId,
         filterExpression: combineFilters([startFilter, endFilter], null)
       };
-      PCore.getPubSubUtils().publish(
-        PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
-        filterData
-      );
+      PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE, filterData);
     }
   };
 
@@ -109,8 +101,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
     metadata.config.onRecordChange = e => {
       fireFilterChange(e.id);
     };
-    return getPConnect().createComponent(metadata,
-      '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
+    return getPConnect().createComponent(metadata, '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
   };
 
   const onChange = dates => {
@@ -125,21 +116,11 @@ export default function DashboardFilter(props: DashboardFilterProps) {
   const label = metadata.config.label.substring(3);
 
   // eslint-disable-next-line react/no-unstable-nested-components
-  const CustomDateInput = forwardRef<HTMLInputElement, TextProps>(
-    ({ value, onClick }, ref: any) => (
-      <TextField
-        label={label}
-        variant='outlined'
-        fullWidth
-        value={value}
-        size='small'
-        onClick={onClick}
-        ref={ref}
-      >
-        {value}
-      </TextField>
-    )
-  );
+  const CustomDateInput = forwardRef<HTMLInputElement, TextProps>(({ value, onClick }, ref: any) => (
+    <TextField label={label} variant='outlined' fullWidth value={value} size='small' onClick={onClick} ref={ref}>
+      {value}
+    </TextField>
+  ));
 
   return (
     <>

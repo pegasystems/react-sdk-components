@@ -34,7 +34,7 @@ export default function WideNarrowDetails(props /* : WideNarrowDetailsProps */) 
     ?.map((configObject, index) => {
       let theConfigObject: object = configObject;
       if (!theConfigObject) {
-        theConfigObject = {}
+        theConfigObject = {};
       }
 
       return createElement(createPConnectComponent(), {
@@ -57,13 +57,12 @@ export default function WideNarrowDetails(props /* : WideNarrowDetailsProps */) 
         field.config.displayAsStatus = true;
       }
 
-      return getPConnect().createComponent(field,
-        '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
+      return getPConnect().createComponent(field, '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
     });
   }
 
   let theName = '';
-  if (propsToUse?.showLabel && propsToUse.label ) {
+  if (propsToUse?.showLabel && propsToUse.label) {
     theName = propsToUse.label;
   }
 

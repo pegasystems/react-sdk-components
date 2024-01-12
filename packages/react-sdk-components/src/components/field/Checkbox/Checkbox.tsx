@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText
-} from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@material-ui/core';
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -74,9 +68,7 @@ export default function CheckboxComponent(props /* : CheckboxProps */) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return (
-      <FieldValueList name={hideLabel ? '' : label} value={value.toString()} variant='stacked' />
-    );
+    return <FieldValueList name={hideLabel ? '' : label} value={value.toString()} variant='stacked' />;
   }
 
   const handleChange = event => {

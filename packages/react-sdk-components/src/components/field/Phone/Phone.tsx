@@ -40,7 +40,7 @@ export default function Phone(props: PhoneProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
@@ -51,7 +51,7 @@ export default function Phone(props: PhoneProps) {
           fullWidth
           helperText={helperTextToDisplay}
           placeholder={placeholder ?? ''}
-          size="small"
+          size='small'
           required={required}
           disabled={disabled}
           onChange={onChange}
@@ -68,13 +68,13 @@ export default function Phone(props: PhoneProps) {
     );
   }
 
-  const handleChange = (inputVal) => {
+  const handleChange = inputVal => {
     let phoneValue = inputVal && inputVal.replace(/\D+/g, '');
     phoneValue = `+${phoneValue}`;
     onChange({ value: phoneValue });
   };
 
-  const handleBlur = (event) => {
+  const handleBlur = event => {
     const phoneValue = event?.target?.value;
     event.target.value = `+${phoneValue && phoneValue.replace(/\D+/g, '')}`;
     onBlur(event);
@@ -83,11 +83,11 @@ export default function Phone(props: PhoneProps) {
   return (
     <MuiPhoneNumber
       fullWidth
-      variant="outlined"
+      variant='outlined'
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
-      defaultCountry="us"
+      size='small'
+      defaultCountry='us'
       required={required}
       disabled={disabled}
       onChange={handleChange}

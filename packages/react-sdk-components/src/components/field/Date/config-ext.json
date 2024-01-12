@@ -4,7 +4,6 @@
   "description": "Date only",
   "type": "Field",
   "subtype": "Date",
-  "componentKey" : "Date",
-  "properties": [
-  ]
+  "componentKey": "Date",
+  "properties": []
 }

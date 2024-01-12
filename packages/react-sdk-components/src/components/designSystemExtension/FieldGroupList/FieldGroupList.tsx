@@ -8,19 +8,15 @@ import { Utils } from '../../helpers/utils';
 //  So, no need to extend PConnProps
 interface FieldGroupListProps {
   // If any, enter additional props that only exist on this component
-  items: any[] | any,
-  onDelete: any,
-  onAdd: any
+  items: any[] | any;
+  onDelete: any;
+  onAdd: any;
 }
-
 
 export default function FieldGroupList(props: FieldGroupListProps) {
   let menuIconOverride$ = 'trash';
   if (menuIconOverride$) {
-    menuIconOverride$ = Utils.getImageSrc(
-      menuIconOverride$,
-      Utils.getSDKStaticConentUrl()
-    );
+    menuIconOverride$ = Utils.getImageSrc(menuIconOverride$, Utils.getSDKStaticConentUrl());
   }
 
   return (
@@ -59,4 +55,4 @@ export default function FieldGroupList(props: FieldGroupListProps) {
       </Grid>
     </Grid>
   );
-};
+}

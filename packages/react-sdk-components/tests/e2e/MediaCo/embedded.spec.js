@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 const { test } = require('@playwright/test');
 
 const common = require('../../common');

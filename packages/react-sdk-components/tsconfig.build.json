@@ -1,11 +1,6 @@
 {
   "extends": "../../tsconfig.build.json",
-  "include": [
-    "./src/**/*.js",
-    "./src/**/*.jsx",
-    "./src/**/*.ts",
-    "./src/**/*.tsx",
-  ],
+  "include": ["./src/**/*.js", "./src/**/*.jsx", "./src/**/*.ts", "./src/**/*.tsx"],
   "exclude": [
     "./src/**/*.test.ts",
     "./src/**/*.test.tsx",
@@ -17,7 +12,7 @@
     "./src/docs/**",
     "./src/**/mocks/**",
     "./node_modules/**",
-    "./src/samples/**",
+    "./src/samples/**"
   ],
   "compilerOptions": {
     "composite": true,

@@ -4,6 +4,5 @@
   "description": "Text (paragraph)",
   "type": "Field",
   "subtype": "Text-Paragraph",
-  "properties": [
-  ]
+  "properties": []
 }

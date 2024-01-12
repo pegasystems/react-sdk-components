@@ -7,16 +7,15 @@ import type { PConnProps } from '../../../types/PConnProps';
 
 interface FieldGroupTemplateProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  referenceList?: any[],
-  contextClass: string,
-  renderMode?: string,
-  heading?: string,
-  lookForChildInConfig?: boolean,
-  displayMode?: string,
-  fieldHeader?: string,
-  allowTableEdit: boolean
+  referenceList?: any[];
+  contextClass: string;
+  renderMode?: string;
+  heading?: string;
+  lookForChildInConfig?: boolean;
+  displayMode?: string;
+  fieldHeader?: string;
+  allowTableEdit: boolean;
 }
-
 
 export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   // Get emitted components from map (so we can get any override that may exist)
@@ -52,7 +51,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
     } else {
-      pConn.getListActions().insert({}, referenceList.length, null);  // 3rd arg null until typedef marked correctly as optional
+      pConn.getListActions().insert({}, referenceList.length, null); // 3rd arg null until typedef marked correctly as optional
     }
   };
 
@@ -64,7 +63,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
       if (PCore.getPCoreVersion()?.includes('8.7')) {
         pConn.getListActions().deleteEntry(index, pageReference);
       } else {
-        pConn.getListActions().deleteEntry(index, null);  // 2nd arg null until typedef marked correctly as optional
+        pConn.getListActions().deleteEntry(index, null); // 2nd arg null until typedef marked correctly as optional
       }
     };
     if (referenceList.length === 0 && allowAddEdit !== false) {
@@ -74,10 +73,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     const MemoisedChildren = useMemo(() => {
       return referenceList.map((item, index) => ({
         id: index,
-        name:
-          fieldHeader === 'propertyRef'
-            ? getDynamicHeaderProp(item, index)
-            : `${HEADING} ${index + 1}`,
+        name: fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`,
         children: buildView(pConn, index, lookForChildInConfig)
       }));
     }, [referenceList?.length]);
@@ -96,10 +92,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     return referenceList.map((item, index) => {
       const key = item[heading] || `field-group-row-${index}`;
       return (
-        <FieldGroup
-          key={key}
-          name={fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`}
-        >
+        <FieldGroup key={key} name={fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`}>
           {buildView(pConn, index, lookForChildInConfig)}
         </FieldGroup>
       );

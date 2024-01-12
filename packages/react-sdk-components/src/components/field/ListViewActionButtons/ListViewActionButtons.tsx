@@ -24,8 +24,8 @@ function ListViewActionButtons(props) {
     <div className={classes.div}>
       <Button
         className={classes.button}
-        variant="contained"
-        color="secondary"
+        variant='contained'
+        color='secondary'
         onClick={() => {
           closeActionsDialog();
           getPConnect().getActionsApi().cancelDataObject(context);
@@ -35,8 +35,8 @@ function ListViewActionButtons(props) {
       </Button>
       <Button
         className={classes.button}
-        variant="contained"
-        color="primary"
+        variant='contained'
+        color='primary'
         disabled={isDisabled}
         onClick={() => {
           setIsDisabled(true);

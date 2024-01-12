@@ -14,7 +14,6 @@ import StoreContext from './Context/StoreContext';
 // As we add components, we'll need to import them here and add to the switch statement
 //    below in getComponent!
 
-
 import { SdkComponentMap } from './helpers/sdk_component_map';
 
 const isClassIDCompare = (key, prev) => {
@@ -22,11 +21,7 @@ const isClassIDCompare = (key, prev) => {
 };
 
 const routingInfoCompare = (next, prev) => {
-  return (
-    'routingInfo' in next &&
-    (!shallowEqual(next.routingInfo, prev.routingInfo) ||
-      !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
-  );
+  return 'routingInfo' in next && (!shallowEqual(next.routingInfo, prev.routingInfo) || !PCore.isDeepEqual(next.routingInfo, prev.routingInfo));
 };
 
 /** Generate unique id for elements */
@@ -37,10 +32,7 @@ const createUID = () => {
 export const setVisibilityForList = (c11nEnv, visibility) => {
   const { selectionMode, selectionList, renderMode, referenceList } = c11nEnv.getComponentConfig();
   // usecase:multiselect, fieldgroup, editable table
-  if (
-    (selectionMode === PCore.getConstants().LIST_SELECTION_MODE.MULTI && selectionList) ||
-    (renderMode === 'Editable' && referenceList)
-  ) {
+  if ((selectionMode === PCore.getConstants().LIST_SELECTION_MODE.MULTI && selectionList) || (renderMode === 'Editable' && referenceList)) {
     c11nEnv.getListActions().setVisibility(visibility);
   }
 };
@@ -75,9 +67,7 @@ const connectRedux = (component, c11nEnv) => {
       if (typeof component.additionalProps === 'object') {
         addProps = c11nEnv.resolveConfigProps(component.additionalProps);
       } else if (typeof component.additionalProps === 'function') {
-        addProps = c11nEnv.resolveConfigProps(
-          component.additionalProps(state, ownProps.getPConnect)
-        );
+        addProps = c11nEnv.resolveConfigProps(component.additionalProps(state, ownProps.getPConnect));
       }
 
       c11nEnv.getConfigProps(obj);
@@ -143,8 +133,7 @@ const getComponent = c11nEnv => {
         console.log(`react_pconnect getComponent found ${componentType}: Local`);
         component = theLocalComponent;
       } else {
-        const thePegaProvidedComponent =
-          SdkComponentMap.getPegaProvidedComponentMap()[componentType];
+        const thePegaProvidedComponent = SdkComponentMap.getPegaProvidedComponentMap()[componentType];
         if (thePegaProvidedComponent !== undefined) {
           // console.log(`react_pconnect getComponent found ${componentType}: Pega-provided`);
           component = thePegaProvidedComponent;
@@ -224,11 +213,7 @@ const createPConnectComponent = () => {
 
     componentDidCatch(error, info) {
       // eslint-disable-next-line no-console
-      console.error(
-        `Error while Rendering the component ${this.componentName} : `,
-        error,
-        info.componentStack
-      );
+      console.error(`Error while Rendering the component ${this.componentName} : `, error, info.componentStack);
     }
 
     componentWillUnmount() {
@@ -273,9 +258,7 @@ const createPConnectComponent = () => {
     getKey() {
       const { getPConnect } = this.props;
       const viewName = getPConnect().getConfigProps().name || getPConnect().getCurrentView();
-      let key = !viewName
-        ? createUID()
-        : `${viewName}!${getPConnect().getCurrentClassID() || createUID()}`;
+      let key = !viewName ? createUID() : `${viewName}!${getPConnect().getCurrentClassID() || createUID()}`;
 
       // In the case of pyDetails the key must be unigue for each instance
       if (viewName && viewName.toUpperCase() === 'PYDETAILS') {
@@ -365,9 +348,7 @@ document.addEventListener('SdkConstellationReady', () => {
           }
           if (ComponentMap[comp].scripts && ComponentMap[comp].scripts.length) {
             ComponentMap[comp].scripts.forEach(script => {
-              promises.push(
-                PCore.getAssetLoader().getLoader()(script, 'script')
-              );
+              promises.push(PCore.getAssetLoader().getLoader()(script, 'script'));
             });
           }
         }

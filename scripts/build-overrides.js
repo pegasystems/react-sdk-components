@@ -4,8 +4,8 @@
 
 'use strict';
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 const replaceInFile = require('replace-in-file');
 const overrideConstants = require('./override-constants');
 
@@ -36,24 +36,22 @@ let iMayNeedPathReplacement = 0;
  * @param {*} arrFiles array of files so far. Start with empty array
  * @returns list of all files (recursive descent) in the given directory
  */
-const getAllFilesInDir = function(dirPath, arrFiles) {
-
+const getAllFilesInDir = function (dirPath, arrFiles) {
   const files = fs.readdirSync(dirPath);
   arrFiles = arrFiles || [];
 
-  files.forEach(function(file) {
-    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+  files.forEach(function (file) {
+    if (fs.statSync(dirPath + '/' + file).isDirectory()) {
       // console.log(`about to iterate over: ${file}`);
-      arrFiles = getAllFilesInDir(dirPath + "/" + file, arrFiles)
+      arrFiles = getAllFilesInDir(dirPath + '/' + file, arrFiles);
     } else {
       // console.log(` --> about to push: ${file}`);
-      arrFiles.push(path.join(dirPath, "/", file))
+      arrFiles.push(path.join(dirPath, '/', file));
     }
-  })
+  });
 
   return arrFiles;
-}
-
+};
 
 /**
  * hasRelativeDir
@@ -76,8 +74,7 @@ const hasRelativeDir = function (inMatch, splitSep, arrDirNames) {
     }
   }
   return bFound;
-}
-
+};
 
 /**
  * hasRelativeComponent
@@ -114,7 +111,7 @@ const hasRelativeComponent = function (inMatch, splitSep, compLocMap) {
 
   // console.log(`hasRelativeComponent: ${importPrelude} <more path info> ${relativeImportDetail}`);
 
-  const matchDetails = relativeImportDetail.split(/\W/);  // split by non alphanumerics (\W regex)
+  const matchDetails = relativeImportDetail.split(/\W/); // split by non alphanumerics (\W regex)
   const possibleComponent = matchDetails[0];
   // console.log(`  possibleComponent: ${possibleComponent}`);
 
@@ -123,8 +120,7 @@ const hasRelativeComponent = function (inMatch, splitSep, compLocMap) {
     bFound = true;
   }
   return bFound;
-}
-
+};
 
 const startsWithOneOf = function (inStr, arrDirNames) {
   let bFound = false;
@@ -136,8 +132,7 @@ const startsWithOneOf = function (inStr, arrDirNames) {
     }
   }
   return bFound;
-}
-
+};
 
 /**
  * processRelativeRef
@@ -147,8 +142,8 @@ const startsWithOneOf = function (inStr, arrDirNames) {
  * @param {*} arrTerms an array of terms that we're looking for after a splitSep
  * @returns {string} string that should replace inMatch (with relative path replacements)
  */
-const processRelativeRef = function(inMatch, splitSep, arrTerms) {
-  let retString = "";
+const processRelativeRef = function (inMatch, splitSep, arrTerms) {
+  let retString = '';
 
   // console.log(`    in processRelativeRef`);
 
@@ -163,7 +158,7 @@ const processRelativeRef = function(inMatch, splitSep, arrTerms) {
   //  becomes:  import NavBar from '@pega/react-sdk-components/lib/components/infra/NavBar';
 
   if (!hasRelativeDir(inMatch, splitSep, arrTerms)) {
-    throw(`!!!! -> Can't process relative reference when there isn't one! ${inMatch}`);
+    throw `!!!! -> Can't process relative reference when there isn't one! ${inMatch}`;
   }
 
   const matchFragments = inMatch.split(splitSep);
@@ -172,18 +167,17 @@ const processRelativeRef = function(inMatch, splitSep, arrTerms) {
   // Clear out retString. We're building it up from the matchFragments
   retString = '';
 
-  matchFragments.forEach( (frag, index, origArray) => {
+  matchFragments.forEach((frag, index, origArray) => {
     // initial fragment should be non-empty
     if (frag.length !== 0 && index == 0) {
       retString = `${retString}${frag}`;
-
     } else if (frag.length !== 0 && startsWithOneOf(frag, origArray)) {
       // Working on fragments that are NOT the first fragment - so should be at/beyond first '../'
       //  This algorithm skips any empty fragments (which would be where '../' are)
       // if this fragment not empty and starts with one of our dir names,
       //  concatenate retString depending on which arrTerms we have
 
-      switch(arrTerms) {
+      switch (arrTerms) {
         case overrideConstants.SDK_BRIDGE_DIR:
           // if this fragment not empty and starts with one of our dir names,
           //  concatenate retString and frag (the frag will already start with 'bridge')
@@ -215,8 +209,8 @@ const processRelativeRef = function(inMatch, splitSep, arrTerms) {
           break;
 
         default:
-        console.error(`processRelativeRef failed: inMatch: ${inMatch}`);
-        break;
+          console.error(`processRelativeRef failed: inMatch: ${inMatch}`);
+          break;
       }
     }
   });
@@ -224,8 +218,7 @@ const processRelativeRef = function(inMatch, splitSep, arrTerms) {
   // console.log(`retString: ${retString}`);
   // return that string that the import line should be replaced with
   return retString;
-}
-
+};
 
 /**
  * processRelativeComponentRef
@@ -236,13 +229,13 @@ const processRelativeRef = function(inMatch, splitSep, arrTerms) {
  *              Used to test whether a string is a component and, if so where to find it
  * @returns {string} string that should replace inMatch (with relative path replacements)
  */
-const processRelativeComponentRef = function(inMatch, splitSep, compLocMap) {
-  let retString = "";
+const processRelativeComponentRef = function (inMatch, splitSep, compLocMap) {
+  let retString = '';
 
   // console.log(`    in processRelativeComponentRef`);
 
   if (!hasRelativeComponent(inMatch, splitSep, compLocMap)) {
-    throw(`!!!! -> Can't process relative component when there isn't one! ${inMatch}`);
+    throw `!!!! -> Can't process relative component when there isn't one! ${inMatch}`;
   }
 
   // There are 2 cases:
@@ -266,7 +259,7 @@ const processRelativeComponentRef = function(inMatch, splitSep, compLocMap) {
 
   // console.log(`processRelativeComponentRef: ${importPrelude} <more path info> ${relativeImportDetail}`);
 
-  const matchDetails = relativeImportDetail.split(/\W/);  // split by non alphanumerics (\W regex)
+  const matchDetails = relativeImportDetail.split(/\W/); // split by non alphanumerics (\W regex)
   const possibleComponent = matchDetails[0];
   // console.log(`  possibleComponent: ${possibleComponent}`);
 
@@ -278,8 +271,7 @@ const processRelativeComponentRef = function(inMatch, splitSep, compLocMap) {
   // console.log(`retString: ${retString}`);
   // return that string that the import line should be replaced with
   return retString;
-}
-
+};
 
 /**
  * processImportLine
@@ -290,7 +282,7 @@ const processRelativeComponentRef = function(inMatch, splitSep, compLocMap) {
 const processImportLine = function (inMatch) {
   // console.log(`  in processImportLine: |${inMatch}|`);
 
-  let retString = inMatch;    // default to return incoming matched string
+  let retString = inMatch; // default to return incoming matched string
   const splitWith = '../';
 
   // pseudocode:
@@ -364,8 +356,7 @@ const processImportLine = function (inMatch) {
   console.log(` ----> More work to do: ${inMatch}`);
   iMayNeedPathReplacement = iMayNeedPathReplacement + 1;
   return retString;
-}
-
+};
 
 /**
  * processOverrideFile
@@ -379,19 +370,18 @@ const processImportLine = function (inMatch) {
  * and updates those to the appropriate @pega/react-sdk-components path
  * (ex: import FieldValueList from '@pega/react-sdk-components/lib/components/designSystemExtension/FieldValueList';)
  */
-const processOverrideFile = function(filePath) {
-
+const processOverrideFile = function (filePath) {
   // trim off the directory info from the string to make it shorter
-  console.log( `\nProcessing override file: ${filePath.slice(overridesLibDir.length)}`);
+  console.log(`\nProcessing override file: ${filePath.slice(overridesLibDir.length)}`);
 
   // The regex gets any complete line starting with 'import '. We then process it in the processImportLine function
   //  the 'gm' (m for multiline) makes sure we get the matches for EVERY line in the file that starts with import
   const options = {
     files: filePath,
     from: /^import .+/gm,
-    to: (match) => processImportLine(match),
+    to: match => processImportLine(match),
     countMatches: true
-  }
+  };
 
   const theResults = replaceInFile.sync(options);
 
@@ -403,18 +393,16 @@ const processOverrideFile = function(filePath) {
   } else {
     // console.log(`NOT edited: ${file}: found ${numMatches} | replaced ${numReplacements}`);
   }
-
-}
-
+};
 
 const processSdkOverrides = async () => {
   console.log(`in processSdkOverrides`);
   iPathReplacements = 0;
   iMayNeedPathReplacement = 0;
   const allFilesInDir = getAllFilesInDir(overridesLibDir, []);
-  allFilesInDir.forEach( file => {
+  allFilesInDir.forEach(file => {
     processOverrideFile(file);
-  })
+  });
   console.log(`Processed ${allFilesInDir.length} files in ${overridesPkgDir}`);
   console.log(`  paths replaced: ${iPathReplacements}`);
   console.log(`  paths needing work: ${iMayNeedPathReplacement}`);

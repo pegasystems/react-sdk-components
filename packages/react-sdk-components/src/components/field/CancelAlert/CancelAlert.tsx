@@ -8,13 +8,11 @@ import './CancelAlert.css';
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
 declare const PCore: any;
 
-
 interface CancelAlertProps extends PConnFieldProps {
   // If any, enter additional props that only exist on CancelAlert here
-  pConn: any,
-  updateAlertState: any
+  pConn: any;
+  updateAlertState: any;
 }
-
 
 export default function CancelAlert(props: CancelAlertProps) {
   const { pConn, updateAlertState } = props;
@@ -60,9 +58,7 @@ export default function CancelAlert(props: CancelAlertProps) {
           .then(() => {
             dismissModal();
 
-            PCore.getPubSubUtils().publish(
-              PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CASE_CREATED
-            );
+            PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CASE_CREATED);
           })
           .catch(() => {
             showToast(localizedVal('Save failed', localeCategory));
@@ -133,4 +129,4 @@ export default function CancelAlert(props: CancelAlertProps) {
       />
     </>
   );
-};
+}

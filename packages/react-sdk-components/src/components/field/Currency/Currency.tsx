@@ -69,7 +69,7 @@ export default function Currency(props: CurrrencyProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
   }
 
   function currOnChange(event) {
@@ -92,16 +92,16 @@ export default function Currency(props: CurrrencyProps) {
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
+      size='small'
       required={required}
       disabled={disabled}
       readOnly={!!readOnly}
       error={status === 'error'}
       label={label}
       value={currValue}
-      type="text"
-      outputFormat="number"
-      textAlign="left"
+      type='text'
+      outputFormat='number'
+      textAlign='left'
       InputProps={{ inputProps: { ...testProp, value: currValue } }}
       currencySymbol={theCurrSym}
       decimalCharacter={theCurrDec}

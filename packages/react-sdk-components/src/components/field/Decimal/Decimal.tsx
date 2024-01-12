@@ -67,7 +67,7 @@ export default function Decimal(props: DecimalProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
   }
 
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly
@@ -97,7 +97,7 @@ export default function Decimal(props: DecimalProps) {
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
+      size='small'
       required={required}
       disabled={disabled}
       onChange={decimalOnChange}
@@ -105,11 +105,14 @@ export default function Decimal(props: DecimalProps) {
       error={status === 'error'}
       label={label}
       value={decValue}
-      type="text"
-      outputFormat="number"
-      textAlign="left"
-      InputProps={{ ...readOnlyProp, inputProps: { ...testProp, value: decValue } }}
-      currencySymbol=""
+      type='text'
+      outputFormat='number'
+      textAlign='left'
+      InputProps={{
+        ...readOnlyProp,
+        inputProps: { ...testProp, value: decValue }
+      }}
+      currencySymbol=''
       decimalCharacter={theCurrDec}
       digitGroupSeparator={showGroupSeparators ? theCurrSep : ''}
       decimalPlaces={decimalPrecision}

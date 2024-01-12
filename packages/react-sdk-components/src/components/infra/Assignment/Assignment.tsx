@@ -52,7 +52,7 @@ export default function Assignment(props /* : AssignmentProps */) {
 
   function findCurrentIndicies(arStepperSteps: any[], arIndicies: number[], depth: number): number[] {
     let count = 0;
-    arStepperSteps.forEach((step) => {
+    arStepperSteps.forEach(step => {
       if (step.visited_status === 'current') {
         arIndicies[depth] = count;
 
@@ -103,7 +103,7 @@ export default function Assignment(props /* : AssignmentProps */) {
             setIsVertical(false);
           }
           const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
-          steps.forEach((step) => {
+          steps.forEach(step => {
             if (step.name) {
               step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
             }
@@ -180,7 +180,7 @@ export default function Assignment(props /* : AssignmentProps */) {
             const cancelPromise = cancelCreateStageAssignment(itemKey);
 
             cancelPromise
-              .then((data) => {
+              .then(data => {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
@@ -190,7 +190,7 @@ export default function Assignment(props /* : AssignmentProps */) {
             const cancelPromise = cancelAssignment(itemKey);
 
             cancelPromise
-              .then((data) => {
+              .then(data => {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
@@ -229,7 +229,7 @@ export default function Assignment(props /* : AssignmentProps */) {
     if (!refreshConditions) {
       return [];
     }
-    return refreshConditions.filter((item) => item.event && item.event === 'Changes').map((item) => [item.field, item.field?.substring(1)]) || [];
+    return refreshConditions.filter(item => item.event && item.event === 'Changes').map(item => [item.field, item.field?.substring(1)]) || [];
   }
 
   // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
@@ -243,9 +243,12 @@ export default function Assignment(props /* : AssignmentProps */) {
   // refresh api registration
   const refreshProps = getRefreshProps(refreshConditions);
   const caseKey = thePConn.getCaseInfo().getKey();
-  const refreshOptions = { autoDetectRefresh: true, preserveClientChanges: false };
+  const refreshOptions = {
+    autoDetectRefresh: true,
+    preserveClientChanges: false
+  };
   if (refreshProps.length > 0) {
-    refreshProps.forEach((prop) => {
+    refreshProps.forEach(prop => {
       PCore.getRefreshManager().registerForRefresh(
         'PROP_CHANGE',
         thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, null, pageReference, {
@@ -260,7 +263,7 @@ export default function Assignment(props /* : AssignmentProps */) {
   }
 
   return (
-    <div id="Assignment">
+    <div id='Assignment'>
       {banners}
       {bHasNavigation ? (
         <>
@@ -281,8 +284,8 @@ export default function Assignment(props /* : AssignmentProps */) {
             onClose={handleSnackbarClose}
             message={snackbarMessage}
             action={
-              <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
-                <CloseIcon fontSize="small" />
+              <IconButton size='small' aria-label='close' color='inherit' onClick={handleSnackbarClose}>
+                <CloseIcon fontSize='small' />
               </IconButton>
             }
           />
@@ -298,8 +301,8 @@ export default function Assignment(props /* : AssignmentProps */) {
             onClose={handleSnackbarClose}
             message={snackbarMessage}
             action={
-              <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
-                <CloseIcon fontSize="small" />
+              <IconButton size='small' aria-label='close' color='inherit' onClick={handleSnackbarClose}>
+                <CloseIcon fontSize='small' />
               </IconButton>
             }
           />

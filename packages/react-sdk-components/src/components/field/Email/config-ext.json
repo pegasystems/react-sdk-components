@@ -4,6 +4,5 @@
   "description": "Email",
   "type": "Field",
   "subtype": "Text-Email",
-  "properties": [
-  ]
+  "properties": []
 }

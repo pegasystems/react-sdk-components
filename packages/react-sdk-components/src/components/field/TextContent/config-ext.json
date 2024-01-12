@@ -3,6 +3,5 @@
   "description": "Text",
   "type": "Field",
   "subtype": "DATA_CAPTURE",
-  "properties": [
-  ]
+  "properties": []
 }

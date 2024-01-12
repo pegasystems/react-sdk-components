@@ -55,7 +55,7 @@ export default function DateTime(props: DateTimeProps) {
     const formattedDateTime = format(props.value, 'datetime', {
       format: `${dateFormatInfo.dateFormatString} hh:mm a`
     });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant='stacked' />;
   }
 
   if (readOnly) {
@@ -63,12 +63,12 @@ export default function DateTime(props: DateTimeProps) {
     return <TextInput {...props} value={formattedDateTime} />;
   }
 
-  const handleChange = (date) => {
+  const handleChange = date => {
     const changeValue = date && date.isValid() ? date.toISOString() : null;
     onChange({ value: changeValue });
   };
 
-  const handleAccept = (date) => {
+  const handleAccept = date => {
     const changeValue = date && date.isValid() ? date.toISOString() : null;
     handleEvent(actions, 'changeNblur', propName, changeValue);
   };
@@ -80,8 +80,8 @@ export default function DateTime(props: DateTimeProps) {
 
   return (
     <KeyboardDateTimePicker
-      variant="inline"
-      inputVariant="outlined"
+      variant='inline'
+      inputVariant='outlined'
       fullWidth
       autoOk
       required={required}
@@ -92,7 +92,7 @@ export default function DateTime(props: DateTimeProps) {
       minutesStep={5}
       error={status === 'error'}
       helperText={helperTextToDisplay}
-      size="small"
+      size='small'
       label={label}
       value={value || null}
       onChange={handleChange}

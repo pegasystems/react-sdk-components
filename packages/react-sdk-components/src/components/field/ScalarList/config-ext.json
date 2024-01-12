@@ -3,6 +3,5 @@
   "componentKey": "ScalarList",
   "name": "ScalarList",
   "type": "Field",
-  "properties": [
-  ]
+  "properties": []
 }

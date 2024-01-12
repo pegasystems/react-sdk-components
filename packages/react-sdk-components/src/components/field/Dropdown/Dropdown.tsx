@@ -24,7 +24,6 @@ interface IOption {
 //   additionalProps?: object
 // }
 
-
 export default function Dropdown(props /* : DropdownProps */) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldValueList = getComponentFromMap('FieldValueList');
@@ -46,7 +45,7 @@ export default function Dropdown(props /* : DropdownProps */) {
     onRecordChange,
     fieldMetadata
   } = props;
-  let { placeholder = "" } = props;
+  let { placeholder = '' } = props;
   placeholder = placeholder || 'Select...';
   const [options, setOptions] = useState<IOption[]>([]);
   const helperTextToDisplay = validatemessage || helperText;
@@ -67,7 +66,7 @@ export default function Dropdown(props /* : DropdownProps */) {
     setOptions(optionsList);
   }, [datasource]);
 
-  const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter((field) => field?.classID === className)[0] : fieldMetadata;
+  const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter(field => field?.classID === className)[0] : fieldMetadata;
 
   let displayName = metaData?.datasource?.propertyForDisplayText;
   displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
@@ -92,7 +91,7 @@ export default function Dropdown(props /* : DropdownProps */) {
       <FieldValueList
         name={hideLabel ? '' : label}
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
-        variant="stacked"
+        variant='stacked'
       />
     );
   }
@@ -107,7 +106,7 @@ export default function Dropdown(props /* : DropdownProps */) {
     'data-test-id': testId
   };
 
-  const handleChange = (evt) => {
+  const handleChange = evt => {
     const selectedValue = evt.target.value === placeholder ? '' : evt.target.value;
     handleEvent(actionsApi, 'changeNblur', propName, selectedValue);
     if (onRecordChange) {
@@ -123,7 +122,7 @@ export default function Dropdown(props /* : DropdownProps */) {
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
       placeholder={thePConn.getLocalizedValue(placeholder, '', '')} // 2nd and 3rd args empty string until typedef marked correctly
-      size="small"
+      size='small'
       required={required}
       disabled={disabled}
       onChange={!readOnly ? handleChange : undefined}

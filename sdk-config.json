@@ -33,6 +33,6 @@
     "appMashupCaseType": "",
 
     "excludePortals_comment": "Array of specific portals to avoid attempting to load with SDK",
-    "excludePortals" : ["pxExpress", "Developer", "pxPredictionStudio", "pxAdminStudio", "pyCaseWorker", "pyCaseManager7"]
+    "excludePortals": ["pxExpress", "Developer", "pxPredictionStudio", "pxAdminStudio", "pyCaseWorker", "pyCaseManager7"]
   }
 }

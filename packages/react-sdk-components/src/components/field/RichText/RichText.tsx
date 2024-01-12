@@ -19,7 +19,7 @@ export default function RichText(props: RichTextProps) {
   const editorRef: any = useRef(null);
 
   let { readOnly, required, disabled } = props;
-  [readOnly, required, disabled] = [readOnly, required, disabled].map((prop) => prop === true || (typeof prop === 'string' && prop === 'true'));
+  [readOnly, required, disabled] = [readOnly, required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
 
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -28,7 +28,7 @@ export default function RichText(props: RichTextProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   let richTextComponent;

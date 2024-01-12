@@ -68,7 +68,7 @@ const UserReference = (props: UserReferenceProps) => {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(userId).then((res) => {
+        getOperatorDetails(userId).then(res => {
           if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
             setUserName(res.data.pyOperatorInfo.pyUserName);
           }
@@ -80,14 +80,14 @@ const UserReference = (props: UserReferenceProps) => {
       };
       PCore.getRestClient()
         .invokeRestApi('getListData', { queryPayload })
-        .then((res) => {
-          const ddDataSource = res.data.data.map((listItem) => ({
+        .then(res => {
+          const ddDataSource = res.data.data.map(listItem => ({
             key: listItem.pyUserIdentifier,
             value: listItem.pyUserName
           }));
           setDropDownDataSource(ddDataSource);
         })
-        .catch((err) => {
+        .catch(err => {
           // eslint-disable-next-line no-console
           console.error(err);
         });
@@ -104,8 +104,8 @@ const UserReference = (props: UserReferenceProps) => {
             TODO: This has to be replaced with Operator Component
           */}
           <div>
-            <Typography variant="caption">{label}</Typography>
-            <Typography variant="body1">{userName}</Typography>
+            <Typography variant='caption'>{label}</Typography>
+            <Typography variant='body1'>{userName}</Typography>
           </div>
         </>
       );
@@ -135,7 +135,7 @@ const UserReference = (props: UserReferenceProps) => {
           label={label}
           getPConnect={getPConnect}
           datasource={OPERATORS_DP}
-          listType="datapage"
+          listType='datapage'
           columns={columns}
           testId={testId}
           placeholder={placeholder}
@@ -155,7 +155,7 @@ const UserReference = (props: UserReferenceProps) => {
         <Dropdown
           additionalProps={additionalProps}
           datasource={dropDownDataSource}
-          listType="associated"
+          listType='associated'
           getPConnect={getPConnect}
           label={label}
           value={userId}

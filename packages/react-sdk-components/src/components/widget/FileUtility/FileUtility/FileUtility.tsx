@@ -1,30 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 
 import { Utils } from '../../../helpers/utils';
 
-import download from "downloadjs";
+import download from 'downloadjs';
 // import SummaryList from '../../SummaryList';
 // import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
 import './FileUtility.css';
-import  { IconButton, Menu, MenuItem , Button , CircularProgress } from '@material-ui/core';
+import { IconButton, Menu, MenuItem, Button, CircularProgress } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../../types/PConnProps';
 
-
 interface FileUtilityProps extends PConnProps {
   // If any, enter additional props that only exist on this component
 }
 
-
 // Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
 declare const PCore: any;
 
-
-export default function FileUtility(props:FileUtilityProps) {
+export default function FileUtility(props: FileUtilityProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const SummaryList = getComponentFromMap('SummaryList');
   const ActionButtonsForFileUtil = getComponentFromMap('ActionButtonsForFileUtil');
@@ -38,7 +35,7 @@ export default function FileUtility(props:FileUtilityProps) {
   };
   const [list, setList] = useState(listTemp);
   const headerSvgIcon$ = Utils.getImageSrc('paper-clip', Utils.getSDKStaticConentUrl());
-  const closeSvgIcon = Utils.getImageSrc("times", Utils.getSDKStaticConentUrl());
+  const closeSvgIcon = Utils.getImageSrc('times', Utils.getSDKStaticConentUrl());
   const configProps: any = thePConn.resolveConfigProps(thePConn.getConfigProps());
 
   const header = configProps.label;
@@ -46,78 +43,94 @@ export default function FileUtility(props:FileUtilityProps) {
     showfileModal: false,
     fileList: [],
     attachedFiles: [],
-    fileMainButtons: [{ actionID: "attach", jsAction: "attachFiles", name: thePConn.getLocalizedValue('Attach files', '', '')}],     // 2nd and 3rd args empty string until typedef marked correctly
-    fileSecondaryButtons: [{ actionID: "cancel", jsAction: "cancel", name: thePConn.getLocalizedValue('Cancel', '', '')}]     // 2nd and 3rd args empty string until typedef marked correctly
+    fileMainButtons: [
+      {
+        actionID: 'attach',
+        jsAction: 'attachFiles',
+        name: thePConn.getLocalizedValue('Attach files', '', '')
+      }
+    ], // 2nd and 3rd args empty string until typedef marked correctly
+    fileSecondaryButtons: [
+      {
+        actionID: 'cancel',
+        jsAction: 'cancel',
+        name: thePConn.getLocalizedValue('Cancel', '', '')
+      }
+    ] // 2nd and 3rd args empty string until typedef marked correctly
   };
   const [fileData, setFileData] = useState(fileTemp);
   const linkTemp = {
     showLinkModal: false,
     linksList: [],
     attachedLinks: [],
-    linkMainButtons: [{ actionID: "attach", jsAction: "attachLinks", name: thePConn.getLocalizedValue('Attach links', '', '')}],   // 2nd and 3rd args empty string until typedef marked correctly
-    linkSecondaryButtons: [{ actionID: "cancel", jsAction: "cancel", name: thePConn.getLocalizedValue('Cancel', '', '')}]   // 2nd and 3rd args empty string until typedef marked correctly
+    linkMainButtons: [
+      {
+        actionID: 'attach',
+        jsAction: 'attachLinks',
+        name: thePConn.getLocalizedValue('Attach links', '', '')
+      }
+    ], // 2nd and 3rd args empty string until typedef marked correctly
+    linkSecondaryButtons: [
+      {
+        actionID: 'cancel',
+        jsAction: 'cancel',
+        name: thePConn.getLocalizedValue('Cancel', '', '')
+      }
+    ] // 2nd and 3rd args empty string until typedef marked correctly
   };
   const [linkData, setLinkData] = useState(linkTemp);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [link, setLink] = useState({title: '', url: '', disable: true});
+  const [link, setLink] = useState({ title: '', url: '', disable: true });
   const [inProgress, setProgress] = useState(false);
   const [showViewAllModal, setViewAll] = useState(false);
   const [vaItems, setFullAttachments] = useState([]);
 
   function addAttachments(attsFromResp: any[] = []) {
-     attsFromResp = attsFromResp.map((respAtt) => {
-       const updatedAtt = {
-         ...respAtt,
-         meta: `${respAtt.category} . ${Utils.generateDateTime(respAtt.createTime, "DateTime-Since")}, ${
-           respAtt.createdBy
-         }`
-       };
-       if (updatedAtt.type === "FILE") {
-         updatedAtt.nameWithExt = updatedAtt.fileName;
-       }
-       return updatedAtt;
-     });
-     return attsFromResp;
+    attsFromResp = attsFromResp.map(respAtt => {
+      const updatedAtt = {
+        ...respAtt,
+        meta: `${respAtt.category} . ${Utils.generateDateTime(respAtt.createTime, 'DateTime-Since')}, ${respAtt.createdBy}`
+      };
+      if (updatedAtt.type === 'FILE') {
+        updatedAtt.nameWithExt = updatedAtt.fileName;
+      }
+      return updatedAtt;
+    });
+    return attsFromResp;
   }
 
-  function getListUtilityItemProps({
-    att,
-    cancelFile,
-    downloadFile,
-    deleteFile,
-    removeFile
-  }) {
+  function getListUtilityItemProps({ att, cancelFile, downloadFile, deleteFile, removeFile }) {
     let actions;
 
     if (att.progress && att.progress !== 100) {
       actions = [
         {
           id: `Cancel-${att.ID}`,
-          text: thePConn.getLocalizedValue('Cancel', '', ''),   // 2nd and 3rd args empty string until typedef marked correctly
-          icon: "times",
+          text: thePConn.getLocalizedValue('Cancel', '', ''), // 2nd and 3rd args empty string until typedef marked correctly
+          icon: 'times',
           onClick: cancelFile
         }
       ];
     } else if (att.links) {
-      const isFile = att.type === "FILE";
-      const ID = att.ID.replace(/\s/gi, "");
+      const isFile = att.type === 'FILE';
+      const ID = att.ID.replace(/\s/gi, '');
       const actionsMap = new Map([
         [
-          "download",
+          'download',
           {
             id: `download-${ID}`,
-            text: isFile ? thePConn.getLocalizedValue('Download', '', '') : thePConn.getLocalizedValue('Open', '', ''),   // 2nd and 3rd args empty string until typedef marked correctly
-            icon: isFile ? "download" : "open",
+            text: isFile ? thePConn.getLocalizedValue('Download', '', '') : thePConn.getLocalizedValue('Open', '', ''), // 2nd and 3rd args empty string until typedef marked correctly
+            icon: isFile ? 'download' : 'open',
             onClick: downloadFile
           }
         ],
         [
-          "delete",
+          'delete',
           {
             id: `Delete-${ID}`,
-            text: thePConn.getLocalizedValue('Delete', '', ''),   // 2nd and 3rd args empty string until typedef marked correctly
-            icon: "trash",
+            text: thePConn.getLocalizedValue('Delete', '', ''), // 2nd and 3rd args empty string until typedef marked correctly
+            icon: 'trash',
             onClick: deleteFile
           }
         ]
@@ -132,8 +145,8 @@ export default function FileUtility(props:FileUtilityProps) {
       actions = [
         {
           id: `Remove-${att.ID}`,
-          text: thePConn.getLocalizedValue('Remove', '', ''),   // 2nd and 3rd args empty string until typedef marked correctly
-          icon: "trash",
+          text: thePConn.getLocalizedValue('Remove', '', ''), // 2nd and 3rd args empty string until typedef marked correctly
+          icon: 'trash',
           onClick: removeFile
         }
       ];
@@ -143,13 +156,13 @@ export default function FileUtility(props:FileUtilityProps) {
       id: att.ID,
       visual: {
         icon: Utils.getIconForAttachment(att),
-        progress: att.progress === 100 ? undefined: att.progress,
+        progress: att.progress === 100 ? undefined : att.progress
       },
       primary: {
         type: att.type,
         name: att.name,
-        icon: "open",
-        click: downloadFile,
+        icon: 'open',
+        click: downloadFile
       },
       secondary: {
         text: att.meta
@@ -161,35 +174,36 @@ export default function FileUtility(props:FileUtilityProps) {
   function fileDownload(data, fileName, ext) {
     const file = ext ? `${fileName}.${ext}` : fileName;
     download(atob(data), file);
-  };
+  }
 
   function downloadAttachedFile(att: any) {
     const attachUtils = PCore.getAttachmentUtils();
-    const {ID, name, extension, type} = att;
+    const { ID, name, extension, type } = att;
     const context = thePConn.getContextName();
 
     attachUtils
-    .downloadAttachment(ID, context)
-    .then((content) => {
-      if (type === "FILE") {
-        fileDownload(content.data, name, extension);
-      } else if (type === "URL") {
-        let { data } = content;
-        if (!/^(http|https):\/\//.test(data)) {
-          data = `//${data}`;
+      .downloadAttachment(ID, context)
+      .then(content => {
+        if (type === 'FILE') {
+          fileDownload(content.data, name, extension);
+        } else if (type === 'URL') {
+          let { data } = content;
+          if (!/^(http|https):\/\//.test(data)) {
+            data = `//${data}`;
+          }
+          window.open(content.data, '_blank');
         }
-        window.open(content.data, "_blank");
-      }
-    })
-    .catch();
+      })
+      .catch();
   }
 
   function deleteAttachedFile(att: any) {
     const attachUtils = PCore.getAttachmentUtils();
-    const {ID} = att;
+    const { ID } = att;
     const context = thePConn.getContextName();
 
-    attachUtils.deleteAttachment(ID, context)
+    attachUtils
+      .deleteAttachment(ID, context)
       .then(() => {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         getAttachments();
@@ -198,60 +212,57 @@ export default function FileUtility(props:FileUtilityProps) {
   }
 
   const getAttachments = () => {
-
     const attachmentUtils = PCore.getAttachmentUtils();
-    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, '');  // 2nd arg empty string until typedef marked correctly
+    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, ''); // 2nd arg empty string until typedef marked correctly
 
-    if (caseID && caseID !== "") {
+    if (caseID && caseID !== '') {
       const attPromise = attachmentUtils.getCaseAttachments(caseID, thePConn.getContextName());
 
-      attPromise
-        .then( (resp) => {
-          const arFullListAttachments = addAttachments(resp);
-          const attachmentsCount = arFullListAttachments.length;
-          const arItems: any = arFullListAttachments.slice(0, 3).map((att) => {
-            return getListUtilityItemProps({
-              att,
-              downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
-              cancelFile: null,
-              deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
-              removeFile: null
-            });
+      attPromise.then(resp => {
+        const arFullListAttachments = addAttachments(resp);
+        const attachmentsCount = arFullListAttachments.length;
+        const arItems: any = arFullListAttachments.slice(0, 3).map(att => {
+          return getListUtilityItemProps({
+            att,
+            downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
+            cancelFile: null,
+            deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
+            removeFile: null
           });
-          const viewAllarItems: any = arFullListAttachments.map((att) => {
-            return getListUtilityItemProps({
-              att,
-              downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
-              cancelFile: null,
-              deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
-              removeFile: null
-            });
-          });
-          setProgress(false);
-          setList((current) => {
-            return {...current, count: attachmentsCount, data: arItems}
-          });
-          setFullAttachments(viewAllarItems);
         });
+        const viewAllarItems: any = arFullListAttachments.map(att => {
+          return getListUtilityItemProps({
+            att,
+            downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
+            cancelFile: null,
+            deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
+            removeFile: null
+          });
+        });
+        setProgress(false);
+        setList(current => {
+          return { ...current, count: attachmentsCount, data: arItems };
+        });
+        setFullAttachments(viewAllarItems);
+      });
     }
-  }
+  };
 
   useEffect(() => {
     getAttachments();
   }, []);
 
-
   useEffect(() => {
     PCore.getPubSubUtils().subscribe(
       PCore.getEvents().getCaseEvent().CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
       getAttachments,
-      "caseAttachmentsUpdateFromCaseview"
+      'caseAttachmentsUpdateFromCaseview'
     );
 
     return () => {
       PCore.getPubSubUtils().unsubscribe(
         PCore.getEvents().getCaseEvent().CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
-        "caseAttachmentsUpdateFromCaseview"
+        'caseAttachmentsUpdateFromCaseview'
       );
     };
   }, []);
@@ -261,12 +272,12 @@ export default function FileUtility(props:FileUtilityProps) {
     for (const file of arFiles) {
       if (!validateMaxSize(file, '5')) {
         file.error = true;
-        file.meta = "File is too big. Max allowed size is 5MB.";
+        file.meta = 'File is too big. Max allowed size is 5MB.';
       }
       file.mimeType = file.type;
       file.icon = Utils.getIconFromFileType(file.type);
       file.ID = `${new Date().getTime()}I${index}`;
-      index+=1;
+      index += 1;
     }
     return arFiles;
   }
@@ -290,14 +301,12 @@ export default function FileUtility(props:FileUtilityProps) {
         removeFile: null
       });
     });
-    setFileData((current) => {
-      return {...current, fileList: arFileList$, attachedFiles: myFiles}
+    setFileData(current => {
+      return { ...current, fileList: arFileList$, attachedFiles: myFiles };
     });
   }
 
-
-
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -306,8 +315,8 @@ export default function FileUtility(props:FileUtilityProps) {
   };
 
   function onAddFilesClick() {
-    setFileData((current) => {
-      return {...current, showfileModal: true}
+    setFileData(current => {
+      return { ...current, showfileModal: true };
     });
     setAnchorEl(null);
   }
@@ -318,82 +327,73 @@ export default function FileUtility(props:FileUtilityProps) {
     if (item !== null) {
       attachedFiles = attachedFiles.filter(ele => ele.ID !== item.id);
       fileList = fileList.filter(ele => ele.id !== item.id);
-      setFileData((current) => {
-        return {...current, fileList, attachedFiles}
+      setFileData(current => {
+        return { ...current, fileList, attachedFiles };
       });
     }
   }
 
   function closeFilePopup() {
-    setFileData((current) => {
-      return {...current, showfileModal: false}
+    setFileData(current => {
+      return { ...current, showfileModal: false };
     });
   }
 
   function onAttachFiles() {
     const attachmentUtils = PCore.getAttachmentUtils();
-    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, '');  // 2nd arg empty string until typedef marked correctly
+    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, ''); // 2nd arg empty string until typedef marked correctly
     const onUploadProgress = () => {};
     const errorHandler = () => {};
-    closeFilePopup()
-    if (fileData.attachedFiles && fileData.attachedFiles.length > 0 ) {
+    closeFilePopup();
+    if (fileData.attachedFiles && fileData.attachedFiles.length > 0) {
       setProgress(true);
     }
     for (const file of fileData.attachedFiles) {
       attachmentUtils
-      .uploadAttachment(
-        file,
-        onUploadProgress,
-        errorHandler,
-        thePConn.getContextName()
-      )
-      .then((fileResponse) => {
-        if (fileResponse.type === "File") {
-          attachmentUtils.linkAttachmentsToCase(
-            caseID,
-            [ fileResponse ],
-            "File",
-            thePConn.getContextName()
-          )
-          .then(() => {
-            setFileData((current) => {
-              return {...current, fileList: [], attachedFiles: []};
-            });
-            getAttachments();
-          })
-          .catch();
-        }
-      })
-      .catch();
+        .uploadAttachment(file, onUploadProgress, errorHandler, thePConn.getContextName())
+        .then(fileResponse => {
+          if (fileResponse.type === 'File') {
+            attachmentUtils
+              .linkAttachmentsToCase(caseID, [fileResponse], 'File', thePConn.getContextName())
+              .then(() => {
+                setFileData(current => {
+                  return { ...current, fileList: [], attachedFiles: [] };
+                });
+                getAttachments();
+              })
+              .catch();
+          }
+        })
+        .catch();
     }
   }
 
   function onAddLinksClick() {
-    setLinkData((current) => {
-      return {...current, showLinkModal: true}
+    setLinkData(current => {
+      return { ...current, showLinkModal: true };
     });
     setAnchorEl(null);
   }
 
   function closeAddLinksPopup() {
-    setLinkData((current) => {
-      return {...current, showLinkModal: false}
+    setLinkData(current => {
+      return { ...current, showLinkModal: false };
     });
   }
 
-  const fieldlinkOnChange = (event) => {
+  const fieldlinkOnChange = event => {
     const title = event.target.value;
-    setLink((current) => {
-      const updatedData = {...current, title};
+    setLink(current => {
+      const updatedData = { ...current, title };
       updatedData.disable = !(updatedData.title && updatedData.url);
       return updatedData;
     });
-  }
+  };
 
   function fieldurlOnChange(event) {
     const url = event.target.value;
-    setLink((current) => {
-      const updatedData = {...current, url}
+    setLink(current => {
+      const updatedData = { ...current, url };
       updatedData.disable = !(updatedData.title && updatedData.url);
       return updatedData;
     });
@@ -404,12 +404,12 @@ export default function FileUtility(props:FileUtilityProps) {
     const localList: any = linkData.linksList.slice();
     const url = link.url;
     if (!/^(http|https):\/\//.test(link.url)) {
-      link.url  = `http://${link.url}`;
+      link.url = `http://${link.url}`;
     }
 
     // list for display
     let oLink: any = {};
-    oLink.icon = "chain";
+    oLink.icon = 'chain';
     oLink.ID = `${new Date().getTime()}`;
     oLink = getListUtilityItemProps({
       att: oLink,
@@ -418,11 +418,11 @@ export default function FileUtility(props:FileUtilityProps) {
       deleteFile: null,
       removeFile: null
     });
-    oLink.type = "URL";
+    oLink.type = 'URL';
     oLink.primary.type = oLink.type;
-    oLink.visual.icon = "chain";
+    oLink.visual.icon = 'chain';
     oLink.primary.name = link.title;
-    oLink.primary.icon = "open";
+    oLink.primary.icon = 'open';
     oLink.secondary.text = url;
 
     localList.push(oLink);
@@ -436,11 +436,15 @@ export default function FileUtility(props:FileUtilityProps) {
     attachedLink.url = url;
 
     attachedListTemp.push(attachedLink);
-    setLinkData((current) => {
-      return {...current, linksList: localList, attachedLinks: attachedListTemp}
+    setLinkData(current => {
+      return {
+        ...current,
+        linksList: localList,
+        attachedLinks: attachedListTemp
+      };
     });
     // clear values
-    setLink({title: '', url: '', disable: true});
+    setLink({ title: '', url: '', disable: true });
   }
 
   function removeLinksFromList(item: any) {
@@ -449,20 +453,20 @@ export default function FileUtility(props:FileUtilityProps) {
     if (item !== null) {
       attachedLinks = attachedLinks.filter(ele => ele.id !== item.id);
       linksList = linksList.filter(ele => ele.id !== item.id);
-      setLinkData((current) => {
-        return {...current, linksList, attachedLinks}
+      setLinkData(current => {
+        return { ...current, linksList, attachedLinks };
       });
     }
   }
 
   function onAttachLinks() {
     const attachmentUtils = PCore.getAttachmentUtils();
-    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, '');  // 2nd arg empty string until typedef marked correctly
+    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, ''); // 2nd arg empty string until typedef marked correctly
     const links = linkData.attachedLinks;
     closeAddLinksPopup();
     const linksToAttach = links.map((item: any) => ({
-      type: "URL",
-      category: "URL",
+      type: 'URL',
+      category: 'URL',
       url: item.url,
       name: item.linkTitle
     }));
@@ -470,112 +474,170 @@ export default function FileUtility(props:FileUtilityProps) {
     if (linksToAttach && linksToAttach.length > 0) {
       setProgress(true);
       attachmentUtils
-      .linkAttachmentsToCase(caseID, linksToAttach, "URL", thePConn.getContextName())
-      .then( () => {
-        setLinkData((current) => {
-          return {...current, linksList: [], attachedLinks: []};
-        });
-        getAttachments();
-      })
-      .catch(setProgress(false));
+        .linkAttachmentsToCase(caseID, linksToAttach, 'URL', thePConn.getContextName())
+        .then(() => {
+          setLinkData(current => {
+            return { ...current, linksList: [], attachedLinks: [] };
+          });
+          getAttachments();
+        })
+        .catch(setProgress(false));
     }
   }
 
   return (
-    <div className="psdk-utility">
-      {inProgress && (<div className="progress-div"><CircularProgress /></div>)}
-      <div className="psdk-header">
-        <img className="psdk-file-utility-card-svg-icon" src={headerSvgIcon$} />
-        <div className="header-text">{header}</div>
-        <div className="psdk-utility-count" id="attachments-count">{list.count}</div>
-        <div style={{flexGrow: 1}} />
+    <div className='psdk-utility'>
+      {inProgress && (
+        <div className='progress-div'>
+          <CircularProgress />
+        </div>
+      )}
+      <div className='psdk-header'>
+        <img className='psdk-file-utility-card-svg-icon' src={headerSvgIcon$} />
+        <div className='header-text'>{header}</div>
+        <div className='psdk-utility-count' id='attachments-count'>
+          {list.count}
+        </div>
+        <div style={{ flexGrow: 1 }} />
         <div>
           <IconButton
-            id="long-button"
+            id='long-button'
             aria-controls={open ? 'simple-menu' : undefined}
             aria-expanded={open ? 'true' : undefined}
-            aria-haspopup="true"
+            aria-haspopup='true'
             onClick={handleClick}
           >
-          <MoreVertIcon />
+            <MoreVertIcon />
           </IconButton>
-          <Menu style={{marginTop: '3rem'}}
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem style={{fontSize: '14px'}} onClick={onAddFilesClick}>{thePConn.getLocalizedValue('Add files', '', '')}</MenuItem> {/* 2nd and 3rd args empty string until typedef marked correctly */}
-            <MenuItem style={{fontSize: '14px'}} onClick={onAddLinksClick}>{thePConn.getLocalizedValue('Add links', '', '')}</MenuItem> {/* 2nd and 3rd args empty string until typedef marked correctly */}
+          <Menu style={{ marginTop: '3rem' }} id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+            <MenuItem style={{ fontSize: '14px' }} onClick={onAddFilesClick}>
+              {thePConn.getLocalizedValue('Add files', '', '')}
+            </MenuItem>{' '}
+            {/* 2nd and 3rd args empty string until typedef marked correctly */}
+            <MenuItem style={{ fontSize: '14px' }} onClick={onAddLinksClick}>
+              {thePConn.getLocalizedValue('Add links', '', '')}
+            </MenuItem>{' '}
+            {/* 2nd and 3rd args empty string until typedef marked correctly */}
           </Menu>
         </div>
       </div>
-      {list.data.length > 0 && (<div style={{marginTop: '1rem'}}>
-        <SummaryList arItems$={list.data} />
-      </div>)}
-      {list.count > 3 && (<div className="psdk-utility-view-all">
-        <Button style={{textTransform: 'none'}} color="primary" onClick = {() => setViewAll(true)}>View all</Button>
-      </div>)}
+      {list.data.length > 0 && (
+        <div style={{ marginTop: '1rem' }}>
+          <SummaryList arItems$={list.data} />
+        </div>
+      )}
+      {list.count > 3 && (
+        <div className='psdk-utility-view-all'>
+          <Button style={{ textTransform: 'none' }} color='primary' onClick={() => setViewAll(true)}>
+            View all
+          </Button>
+        </div>
+      )}
       {fileData.showfileModal && (
-        <div className="psdk-dialog-background">
-        <div className="psdk-modal-file-top">
-          <h3>{thePConn.getLocalizedValue('Add local files', '', '')}</h3>
-          <div className="psdk-modal-body">
-            <div className="psdk-modal-file-selector">
-              <label htmlFor='upload-files'>
-                <input style={{ display: 'none' }} id='upload-files' name='upload-files' type='file' multiple onChange={uploadMyFiles}/>
-                <Button variant='outlined' color='primary' component="span">{thePConn.getLocalizedValue('Attach files', '', '')}</Button>  {/* 2nd and 3rd args empty string until typedef marked correctly */}
-              </label>
+        <div className='psdk-dialog-background'>
+          <div className='psdk-modal-file-top'>
+            <h3>{thePConn.getLocalizedValue('Add local files', '', '')}</h3>
+            <div className='psdk-modal-body'>
+              <div className='psdk-modal-file-selector'>
+                <label htmlFor='upload-files'>
+                  <input style={{ display: 'none' }} id='upload-files' name='upload-files' type='file' multiple onChange={uploadMyFiles} />
+                  <Button variant='outlined' color='primary' component='span'>
+                    {thePConn.getLocalizedValue('Attach files', '', '')}
+                  </Button>{' '}
+                  {/* 2nd and 3rd args empty string until typedef marked correctly */}
+                </label>
+              </div>
+              {fileData.fileList.length > 0 && (
+                <div style={{ marginTop: '1rem' }}>
+                  <SummaryList menuIconOverride$='trash' arItems$={fileData.fileList} menuIconOverrideAction$={removeFileFromList} />
+                </div>
+              )}
+              {fileData.fileList.length === 0 && <div />}
+              <ActionButtonsForFileUtil
+                arMainButtons={fileData.fileMainButtons}
+                arSecondaryButtons={fileData.fileSecondaryButtons}
+                primaryAction={onAttachFiles}
+                secondaryAction={closeFilePopup}
+              />
             </div>
-            {fileData.fileList.length > 0 && (<div style={{marginTop: '1rem'}}>
-              <SummaryList menuIconOverride$='trash' arItems$={fileData.fileList} menuIconOverrideAction$={removeFileFromList} />
-            </div>)}
-            {fileData.fileList.length === 0 && (<div />)}
-            <ActionButtonsForFileUtil arMainButtons={fileData.fileMainButtons} arSecondaryButtons={fileData.fileSecondaryButtons}
-             primaryAction={onAttachFiles} secondaryAction={closeFilePopup} />
           </div>
         </div>
-      </div>
       )}
       {linkData.showLinkModal && (
-        <div className="psdk-dialog-background">
-          <div className="psdk-modal-file-top">
+        <div className='psdk-dialog-background'>
+          <div className='psdk-modal-file-top'>
             <h3>{thePConn.getLocalizedValue('Add links', '', '')}</h3> {/* 2nd and 3rd args empty string until typedef marked correctly */}
-            <div className="psdk-modal-body">
-              <div className="psdk-modal-links-row">
-                  <div className="psdk-links-two-column">
-                    <div className="psdk-modal-link-data">
-                      <TextField fullWidth variant="outlined" label="Link title" size="small" required={required} value={link.title} onChange={fieldlinkOnChange}/>
-                    </div>
-                    <div className="psdk-modal-link-data">
-                      <TextField fullWidth variant="outlined" label="URL" size="small" required={required} value={link.url} onChange={fieldurlOnChange}/>
-                    </div>
+            <div className='psdk-modal-body'>
+              <div className='psdk-modal-links-row'>
+                <div className='psdk-links-two-column'>
+                  <div className='psdk-modal-link-data'>
+                    <TextField
+                      fullWidth
+                      variant='outlined'
+                      label='Link title'
+                      size='small'
+                      required={required}
+                      value={link.title}
+                      onChange={fieldlinkOnChange}
+                    />
                   </div>
-                  <div className="psdk-modal-link-add">
-                    <Button className="psdk-add-link-action" color="primary" variant="contained" component="span" onClick={addLink} disabled={link.disable}>{thePConn.getLocalizedValue('Add link', '', '')}</Button> {/* 2nd and 3rd args empty string until typedef marked correctly */}
+                  <div className='psdk-modal-link-data'>
+                    <TextField
+                      fullWidth
+                      variant='outlined'
+                      label='URL'
+                      size='small'
+                      required={required}
+                      value={link.url}
+                      onChange={fieldurlOnChange}
+                    />
                   </div>
                 </div>
-                {linkData.linksList.length > 0 && (<div style={{marginTop: '1rem'}}>
+                <div className='psdk-modal-link-add'>
+                  <Button
+                    className='psdk-add-link-action'
+                    color='primary'
+                    variant='contained'
+                    component='span'
+                    onClick={addLink}
+                    disabled={link.disable}
+                  >
+                    {thePConn.getLocalizedValue('Add link', '', '')}
+                  </Button>{' '}
+                  {/* 2nd and 3rd args empty string until typedef marked correctly */}
+                </div>
+              </div>
+              {linkData.linksList.length > 0 && (
+                <div style={{ marginTop: '1rem' }}>
                   <SummaryList menuIconOverride$='trash' arItems$={linkData.linksList} menuIconOverrideAction$={removeLinksFromList} />
-                </div>)}
-                <ActionButtonsForFileUtil arMainButtons={linkData.linkMainButtons} arSecondaryButtons={linkData.linkSecondaryButtons}
-                primaryAction={onAttachLinks} secondaryAction={closeAddLinksPopup} />
+                </div>
+              )}
+              <ActionButtonsForFileUtil
+                arMainButtons={linkData.linkMainButtons}
+                arSecondaryButtons={linkData.linkSecondaryButtons}
+                primaryAction={onAttachLinks}
+                secondaryAction={closeAddLinksPopup}
+              />
             </div>
           </div>
         </div>
       )}
-      {showViewAllModal && (<div className="psdk-dialog-background">
-        <div className="psdk-modal-file-top">
-          <div className="psdk-view-all-header">
+      {showViewAllModal && (
+        <div className='psdk-dialog-background'>
+          <div className='psdk-modal-file-top'>
+            <div className='psdk-view-all-header'>
               <h3>{thePConn.getLocalizedValue('Attachments', '', '')}</h3> {/* 2nd and 3rd args empty string until typedef marked correctly */}
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-              <button type="button" className="psdk-close-button" onClick = {() => setViewAll(false)}><img className="psdk-utility-card-actions-svg-icon" src={closeSvgIcon} /></button>
+              <button type='button' className='psdk-close-button' onClick={() => setViewAll(false)}>
+                <img className='psdk-utility-card-actions-svg-icon' src={closeSvgIcon} />
+              </button>
+            </div>
+            <div className='psdk-view-all-body'>
+              <SummaryList arItems$={vaItems} />
+            </div>
           </div>
-          <div className="psdk-view-all-body"><SummaryList arItems$={vaItems} /></div>
         </div>
-      </div>)}
+      )}
     </div>
-
-  )
+  );
 }

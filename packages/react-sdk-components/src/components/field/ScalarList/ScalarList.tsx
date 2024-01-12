@@ -29,15 +29,7 @@ export default function ScalarList(props: ScalarListProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldValueList = getComponentFromMap('FieldValueList');
 
-  const {
-    label,
-    getPConnect,
-    componentType,
-    value: scalarValues,
-    displayMode,
-    hideLabel,
-    ...restProps
-  } = props;
+  const { label, getPConnect, componentType, value: scalarValues, displayMode, hideLabel, ...restProps } = props;
 
   const items = scalarValues?.map(scalarValue => {
     return getPConnect().createComponent(
@@ -58,9 +50,11 @@ export default function ScalarList(props: ScalarListProps) {
   });
 
   if (['LABELS_LEFT', 'STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode)) {
-    return <div>
+    return (
+      <div>
         <CommaSeparatedList items={items} />
-      </div>;
+      </div>
+    );
   }
 
   const displayComp = <CommaSeparatedList items={items} />;

@@ -4,17 +4,16 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 interface SummaryListProps {
   // If any, enter additional props that only exist on this component
-  arItems$: any[],
-  menuIconOverride$?: string,
-  menuIconOverrideAction$?: any
+  arItems$: any[];
+  menuIconOverride$?: string;
+  menuIconOverrideAction$?: any;
 }
-
 
 export default function SummaryList(props: SummaryListProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const SummaryItem = getComponentFromMap('SummaryItem');
 
-  const { menuIconOverride$: menuOverride = ""} = props;
+  const { menuIconOverride$: menuOverride = '' } = props;
   return (
     <div>
       {props.arItems$.map(file => (

@@ -16,7 +16,6 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 //   dataRelationshipContext: string
 // }
 
-
 const isSelfReferencedProperty = (param, referenceProp) => {
   const [, parentPropName] = param.split('.');
   return parentPropName === referenceProp;
@@ -65,7 +64,7 @@ export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) 
   const compositeKeys: any[] = [];
   Object.values(fieldParameters).forEach((param: any) => {
     if (isSelfReferencedProperty(param, referenceProp)) {
-     compositeKeys.push(param.substring(param.lastIndexOf('.') + 1));
+      compositeKeys.push(param.substring(param.lastIndexOf('.') + 1));
     }
   });
 

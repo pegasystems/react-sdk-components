@@ -14,18 +14,18 @@ interface IOption {
   value: string;
 }
 
-const preProcessColumns = (columnList) => {
-  return columnList.map((col) => {
+const preProcessColumns = columnList => {
+  return columnList.map(col => {
     const tempColObj = { ...col };
     tempColObj.value = col.value && col.value.startsWith('.') ? col.value.substring(1) : col.value;
     return tempColObj;
   });
 };
 
-const getDisplayFieldsMetaData = (columnList) => {
-  const displayColumns = columnList.filter((col) => col.display === 'true');
+const getDisplayFieldsMetaData = columnList => {
+  const displayColumns = columnList.filter(col => col.display === 'true');
   const metaDataObj: any = { key: '', primary: '', secondary: [] };
-  const keyCol = columnList.filter((col) => col.key === 'true');
+  const keyCol = columnList.filter(col => col.key === 'true');
   metaDataObj.key = keyCol.length > 0 ? keyCol[0].value : 'auto';
   for (let index = 0; index < displayColumns.length; index += 1) {
     if (displayColumns[index].primary === 'true') {
@@ -93,7 +93,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
 
   const flattenParameters = (params = {}) => {
     const flatParams = {};
-    Object.keys(params).forEach((key) => {
+    Object.keys(params).forEach(key => {
       const { name, value: theVal } = params[key];
       flatParams[name] = theVal;
     });
@@ -140,7 +140,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
       getDataPage(datasource, parameters, context).then((results: any) => {
         const optionsData: any[] = [];
         const displayColumn = getDisplayFieldsMetaData(columns);
-        results?.forEach((element) => {
+        results?.forEach(element => {
           const val = element[displayColumn.primary]?.toString();
           const obj = {
             key: element[displayColumn.key] || element.pyGUID,
@@ -158,11 +158,11 @@ export default function AutoComplete(props: AutoCompleteProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (value) {
-    const index = options?.findIndex((element) => element.key === value);
+    const index = options?.findIndex(element => element.key === value);
     if (index > -1) {
       selectedValue = options[index].value;
     } else {
@@ -183,7 +183,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   };
 
   if (readOnly) {
-    const theValAsString = options?.find((opt) => opt.key === value)?.value;
+    const theValAsString = options?.find(opt => opt.key === value)?.value;
     return <TextInput {...props} value={theValAsString} />;
   }
   // Need to use both getOptionLabel and getOptionSelected to map our
@@ -202,14 +202,14 @@ export default function AutoComplete(props: AutoCompleteProps) {
       value={selectedValue}
       inputValue={inputValue || selectedValue}
       onInputChange={handleInputValue}
-      renderInput={(params) => (
+      renderInput={params => (
         <TextField
           {...params}
           fullWidth
-          variant="outlined"
+          variant='outlined'
           helperText={helperTextToDisplay}
           placeholder={placeholder}
-          size="small"
+          size='small'
           required={required}
           error={status === 'error'}
           label={label}
