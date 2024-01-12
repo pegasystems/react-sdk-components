@@ -75,10 +75,9 @@ export default function Assignment(props /* : AssignmentProps */) {
   }
 
   useEffect(() => {
-    if (children && children.length > 0) {
-      // debugger;
-
-      const oWorkItem = children[0].props.getPConnect();
+    if (children) {
+      const firstChild = Array.isArray(children) ? children[0] : children;
+      const oWorkItem = firstChild.props.getPConnect();
       const oWorkData = oWorkItem.getDataObject();
       const oData = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
 

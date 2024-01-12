@@ -248,15 +248,18 @@ const createPConnectComponent = () => {
     createChildren() {
       const { getPConnect } = this.props;
       if (getPConnect().hasChildren() && getPConnect().getChildren()) {
-        return getPConnect()
-          .getChildren()
-          .map(childProps => <PConnect {...childProps} />);
+        return (
+          getPConnect()
+            .getChildren()
+            // eslint-disable-next-line react/no-array-index-key
+            .map((childProps, index) => <PConnect {...childProps} key={`${this.getKey(childProps)}_${index}`} />)
+        );
       }
       return null;
     }
 
-    getKey() {
-      const { getPConnect } = this.props;
+    getKey(props = this.props) {
+      const { getPConnect } = props;
       const viewName = getPConnect().getConfigProps().name || getPConnect().getCurrentView();
       let key = !viewName ? createUID() : `${viewName}!${getPConnect().getCurrentClassID() || createUID()}`;
 
