@@ -2,14 +2,13 @@ import { createElement, ReactElement } from 'react';
 
 import createPConnectComponent from '../../bridge/react_pconnect';
 
-
 /**
  *
  * @param {*} pConn - pConnect object of the view
  * @returns {string} - returns the name of referenceList
  */
 
-export const getReferenceList = pConn => {
+export const getReferenceList = (pConn) => {
   let resolvePage = pConn.getComponentConfig().referenceList.replace('@P ', '');
   if (resolvePage.includes('D_')) {
     resolvePage = pConn.resolveDatasourceReference(resolvePage);
@@ -34,12 +33,11 @@ export function buildView(pConn, index, viewConfigPath): ReactElement {
   const referenceList = getReferenceList(pConn);
 
   const isDatapage = referenceList.startsWith('D_');
-  const pageReference = isDatapage
-    ? `${referenceList}[${index}]`
-    : `${pConn.getPageReference()}${referenceList}[${index}]`;
-  const meta = viewConfigPath
-    ? pConn.getRawMetadata().children[0].children[0]
-    : pConn.getRawMetadata().children[0];
+  const pageReference = isDatapage ? `${referenceList}[${index}]` : `${pConn.getPageReference()}${referenceList}[${index}]`;
+  const meta = viewConfigPath ? pConn.getRawMetadata().children[0].children[0] : pConn.getRawMetadata().children[0];
+
+  delete meta?.config?.ruleClass;
+
   const config = {
     meta,
     options: {
@@ -55,4 +53,4 @@ export function buildView(pConn, index, viewConfigPath): ReactElement {
     view.getPConnect()?.setInheritedProp('displayMode', 'LABELS_LEFT');
   }
   return createElement(createPConnectComponent(), view);
-};
+}

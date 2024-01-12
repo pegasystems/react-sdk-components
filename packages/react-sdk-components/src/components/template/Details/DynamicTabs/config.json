@@ -1,0 +1,36 @@
+{
+  "name": "DynamicTabs",
+  "label": "Dynamic tabs (list)",
+  "description": "Dynamic tabs (list)",
+  "type": "Template",
+  "subtype": "DETAILS",
+  "icon": "DynamicTabs.svg",
+  "hideTemplateEdit": true,
+  "hideFromTemplatePicker": true,
+  "viewHeadingLabel": "Default heading",
+  "properties": [
+    {
+      "name": "referenceList",
+      "label": "Data page",
+      "format": "CONTENTPICKERSOURCE"
+    },
+    {
+      "name": "parameters",
+      "label": "Parameters",
+      "format": "PARAMETERS",
+      "showOverride": false
+    },
+    {
+      "name": "tablabel",
+      "label": "Tab label",
+      "format": "PROPERTY",
+      "ofContextClass": true
+    },
+    {
+      "format": "VIEWPICKER",
+      "name": "Views",
+      "label": "Tab content",
+      "ofContextClass": true
+    }
+  ]
+}

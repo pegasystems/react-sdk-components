@@ -42,7 +42,8 @@ const NO_HEADER_TEMPLATES = [
   'DetailsThreeColumn',
   'NarrowWideDetails',
   'WideNarrowDetails',
-  'Confirmation'
+  'Confirmation',
+  'DynamicTabs'
 ];
 
 export default function View(props: ViewProps) {

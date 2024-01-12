@@ -35,6 +35,7 @@ import DetailsSubTabs from './components/template/Details/DetailsSubTabs';
 import DetailsThreeColumn from './components/template/Details/DetailsThreeColumn';
 import DetailsTwoColumn from './components/template/Details/DetailsTwoColumn/DetailsTwoColumn';
 import Dropdown from './components/field/Dropdown';
+import DynamicTabs from './components/template/Details/DynamicTabs';
 import Email from './components/field/Email/Email';
 import ErrorBoundary from './components/infra/ErrorBoundary';
 import FieldGroup from './components/designSystemExtension/FieldGroup';
@@ -145,6 +146,7 @@ const pegaSdkComponentMap = {
   'DetailsThreeColumn': DetailsThreeColumn,
   'DetailsTwoColumn': DetailsTwoColumn,
   'Dropdown': Dropdown,
+  'DynamicTabs': DynamicTabs,
   'Email': Email,
   'ErrorBoundary': ErrorBoundary,
   'FieldGroup': FieldGroup,
