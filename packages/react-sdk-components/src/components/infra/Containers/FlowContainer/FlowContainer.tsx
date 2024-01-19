@@ -317,7 +317,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                  {[rootViewElement]}
+                  {rootViewElement}
                 </Assignment>
               </MuiPickersUtilsProvider>
             </Card>
@@ -327,7 +327,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                  {[rootViewElement]}
+                  {rootViewElement}
                 </Assignment>
               </MuiPickersUtilsProvider>
             </Card>
@@ -353,7 +353,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
           <Alert severity='success'>{caseMessages}</Alert>
         </div>
       )}
-      {bShowConfirm && bShowBanner && <div>{[rootViewElement]}</div>}
+      {bShowConfirm && bShowBanner && <div>{rootViewElement}</div>}
     </div>
   );
 };
