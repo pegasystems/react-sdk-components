@@ -252,7 +252,7 @@ const createPConnectComponent = () => {
           getPConnect()
             .getChildren()
             // eslint-disable-next-line react/no-array-index-key
-            .map((childProps, index) => <PConnect {...childProps} key={`${this.getKey(childProps)}_${index}`} />)
+            .map((childProps, index) => <PConnect key={`${this.getKey(childProps)}_${index}`} {...childProps} />)
         );
       }
       return null;
