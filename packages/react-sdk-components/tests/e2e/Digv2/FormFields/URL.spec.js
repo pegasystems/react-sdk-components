@@ -78,17 +78,18 @@ test.describe('E2E test', () => {
     attributes = await common.getAttributes(readonlyURL);
     await expect(attributes.includes('readonly')).toBeTruthy();
 
-    const EditableURL = page.locator('input[data-test-id="79504c0d99166c4c0a0749bef59b5e0f"]');
-    attributes = await common.getAttributes(EditableURL);
+    const editableURL = page.locator('input[data-test-id="79504c0d99166c4c0a0749bef59b5e0f"]');
+    attributes = await common.getAttributes(editableURL);
     await expect(attributes.includes('readonly')).toBeFalsy();
 
     /** Validation tests */
     const validationMsg = 'valid URL';
-    await EditableURL.fill('InvalidUrl');
-    await EditableURL.blur();
+    await editableURL.fill('InvalidUrl');
+    await editableURL.blur();
     await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeVisible();
-    await EditableURL.clear();
-    await EditableURL.blur();
+    await editableURL.click();
+    await editableURL.clear();
+    await editableURL.blur();
     await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeHidden();
 
     /** Selecting Visibility from the Sub Category dropdown */

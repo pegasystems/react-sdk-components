@@ -53,10 +53,9 @@ const calculateCoverage = async (page, outputDir) => {
   const coverageData = await page.evaluate(() => window.__coverage__);
   expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
   // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
+  await attachCoverageReport(coverageData, test.info(), {
     outputDir
   });
-  console.log(report.summary);
   await page.close();
 };
 
