@@ -65,8 +65,8 @@ module.exports = (env, argv) => {
           to: './'
         },
         {
-          from: './node_modules/tinymce',
-          to: './tinymce'
+          from: './node_modules/tinymce/tinymce.min.js',
+          to: './tinymce/tinymce.min.js'
         },
         {
           from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
