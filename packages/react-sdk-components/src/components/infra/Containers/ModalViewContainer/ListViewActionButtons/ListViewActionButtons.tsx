@@ -46,8 +46,8 @@ function ListViewActionButtons(props) {
             .then(() => {})
             .finally(() => {
               setIsDisabled(false);
+              closeActionsDialog();
             });
-          closeActionsDialog();
         }}
       >
         {localizedVal('Submit', localeCategory)}
