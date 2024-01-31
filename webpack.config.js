@@ -66,7 +66,11 @@ module.exports = (env, argv) => {
         },
         {
           from: './node_modules/tinymce',
-          to: './tinymce'
+          to: './tinymce',
+          filter: resourcePath => {
+            // Use a regular expression to filter only .min files
+            return /\/[^/]+\.min\./.test(resourcePath);
+          }
         },
         {
           from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
@@ -95,31 +99,33 @@ module.exports = (env, argv) => {
   // Enable gzip and brotli compression
   //  Exclude constellation-core and bootstrap-shell files since
   //    client receives these files in gzip and brotli format
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: '[path][base].gz',
-      algorithm: 'gzip',
-      test: /\.js$|\.ts$|\.css$|\.html$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: '[path][base].br',
-      algorithm: 'brotliCompress',
-      test: /\.(js|ts|css|html|svg)$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      compressionOptions: {
-        params: {
-          [zlib.constants.BROTLI_PARAM_QUALITY]: 11
-        }
-      },
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
+  webpackMode === 'production' &&
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].gz',
+        algorithm: 'gzip',
+        test: /\.js$|\.ts$|\.css$|\.html$/,
+        exclude: /constellation-core.*.js|bootstrap-shell.js/,
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+  webpackMode === 'production' &&
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].br',
+        algorithm: 'brotliCompress',
+        test: /\.(js|ts|css|html|svg)$/,
+        exclude: /constellation-core.*.js|bootstrap-shell.js/,
+        compressionOptions: {
+          params: {
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+          }
+        },
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
 
   if (webpackMode === 'development') {
     // In development mode, add LiveReload plug
