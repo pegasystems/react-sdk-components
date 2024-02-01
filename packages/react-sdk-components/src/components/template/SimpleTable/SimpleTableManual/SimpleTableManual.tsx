@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -131,6 +131,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
   const [displayDialogContainsValue, setDisplayDialogContainsValue] = useState<string>('');
   const [displayDialogDateFilter, setDisplayDialogDateFilter] = useState<string>('notequal');
   const [displayDialogDateValue, setDisplayDialogDateValue] = useState<string>('');
+  const selectedRowIndex = useRef(null);
 
   const parameters = fieldMetadata?.datasource?.parameters;
   const { referenceListStr } = getContext(getPConnect());
@@ -279,27 +280,27 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
     }
   };
 
-  const editRecord = (data, index) => {
+  const editRecord = () => {
     setEditAnchorEl(null);
-    if (data) {
+    if (typeof selectedRowIndex.current === 'number') {
       pConn
         .getActionsApi()
         .openEmbeddedDataModal(
           bUseSeparateViewForEdit ? editView : defaultView,
           pConn,
           referenceListStr,
-          index,
+          selectedRowIndex.current,
           PCore.getConstants().RESOURCE_STATUS.UPDATE
         );
     }
   };
 
-  const deleteRecord = index => {
+  const deleteRecord = () => {
     setEditAnchorEl(null);
     if (PCore.getPCoreVersion()?.includes('8.7')) {
-      pConn.getListActions().deleteEntry(index, pageReference);
+      pConn.getListActions().deleteEntry(selectedRowIndex.current, pageReference);
     } else {
-      pConn.getListActions().deleteEntry(index, ''); // 2nd arg empty string until typedef marked correctly as optional
+      pConn.getListActions().deleteEntry(selectedRowIndex.current, ''); // 2nd arg empty string until typedef marked correctly as optional
     }
   };
 
@@ -381,7 +382,8 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
     setAnchorEl(event.currentTarget);
   }
 
-  function editMenuClick(event) {
+  function editMenuClick(event, index) {
+    selectedRowIndex.current = index;
     setEditAnchorEl(event.currentTarget);
   }
 
@@ -599,7 +601,7 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
                           className='psdk-utility-button'
                           id='delete-button'
                           aria-label='Delete Cell'
-                          onClick={() => deleteRecord(index)}
+                          onClick={() => deleteRecord()}
                         >
                           <img className='psdk-utility-card-action-svg-icon' src={menuIconOverride$} />
                         </button>
@@ -625,12 +627,12 @@ export default function SimpleTableManual(props: SimpleTableManualProps) {
                                   id='table-edit-menu-icon'
                                   className={classes.moreIcon}
                                   onClick={event => {
-                                    editMenuClick(event);
+                                    editMenuClick(event, index);
                                   }}
                                 />
                                 <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
-                                  <MenuItem onClick={() => editRecord(row, index)}>Edit</MenuItem>
-                                  <MenuItem onClick={() => deleteRecord(index)}>Delete</MenuItem>
+                                  <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
+                                  <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
                                 </Menu>
                               </div>
                             ) : typeof row[colKey] === 'boolean' && !row[colKey] ? (
