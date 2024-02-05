@@ -48,7 +48,6 @@ export default function Currency(props: CurrrencyProps) {
     'data-test-id': testId
   };
 
-  const [currValue, setCurrValue] = useState(value.toString());
   const [theCurrSym, setCurrSym] = useState('$');
   const [theCurrDec, setCurrDec] = useState('.');
   const [theCurrSep, setCurrSep] = useState(',');
@@ -72,13 +71,6 @@ export default function Currency(props: CurrrencyProps) {
     return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
   }
 
-  function currOnChange(event) {
-    // console.log(`Currency currOnChange inValue: ${inValue}`);
-
-    // update internal value
-    setCurrValue(event?.target?.value);
-  }
-
   function currOnBlur(event, inValue) {
     // console.log(`Currency currOnBlur inValue: ${inValue}`);
     handleEvent(actions, 'changeNblur', propName, inValue !== '' ? Number(inValue) : inValue);
@@ -98,15 +90,14 @@ export default function Currency(props: CurrrencyProps) {
       readOnly={!!readOnly}
       error={status === 'error'}
       label={label}
-      value={currValue}
+      value={value}
       type='text'
       outputFormat='number'
       textAlign='left'
-      InputProps={{ inputProps: { ...testProp, value: currValue } }}
+      InputProps={{ inputProps: { ...testProp } }}
       currencySymbol={theCurrSym}
       decimalCharacter={theCurrDec}
       digitGroupSeparator={theCurrSep}
-      onChange={currOnChange}
       onBlur={!readOnly ? currOnBlur : undefined}
     />
   );
