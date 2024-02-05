@@ -3,7 +3,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import dayjs from 'dayjs';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface TimeProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Time here

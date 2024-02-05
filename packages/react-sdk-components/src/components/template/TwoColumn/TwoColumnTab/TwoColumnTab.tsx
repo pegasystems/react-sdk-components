@@ -1,10 +1,10 @@
 import { Grid, GridSize } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Children, PropsWithChildren, useMemo } from 'react';
 
 // TwoColumnTab does NOT have getPConnect. So, no need to extend from PConnProps
 interface TwoColumnTabProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   templateCol?: string;
 }
 
@@ -16,14 +16,17 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function TwoColumnTab(props: TwoColumnTabProps) {
+export default function TwoColumnTab(props: PropsWithChildren<TwoColumnTabProps>) {
   const classes = useStyles();
 
   const { children, templateCol = '1fr 1fr' } = props;
+  const childArray = useMemo(() => {
+    return Children.toArray(children);
+  }, [children]);
 
-  if (children.length !== 2) {
+  if (childArray.length !== 2) {
     // eslint-disable-next-line no-console
-    console.error(`TwoColumn template sees more than 2 columns: ${children.length}`);
+    console.error(`TwoColumn template sees more than 2 columns: ${childArray.length}`);
   }
 
   // Calculate the size
@@ -44,10 +47,10 @@ export default function TwoColumnTab(props: TwoColumnTabProps) {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} md={aSize} className={classes.colStyles}>
-        {children[0]}
+        {childArray[0]}
       </Grid>
       <Grid item xs={12} md={bSize} className={classes.colStyles}>
-        {children[1]}
+        {childArray[1]}
       </Grid>
     </Grid>
   );

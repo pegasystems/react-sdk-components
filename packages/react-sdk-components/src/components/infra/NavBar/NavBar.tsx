@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
-import './NavBar.css';
 import {
   Drawer,
   List,
@@ -33,7 +32,9 @@ import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
 import { useNavBar } from '../../helpers/reactContextHelpers';
 import { Utils } from '../../helpers/utils';
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
+
+import './NavBar.css';
 
 interface NavBarProps extends PConnProps {
   // If any, enter additional props that only exist on this component

@@ -5,7 +5,7 @@ import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 // Using control from: https://github.com/unicef/material-ui-currency-textfield
 

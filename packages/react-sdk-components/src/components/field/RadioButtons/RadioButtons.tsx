@@ -4,16 +4,16 @@ import { Radio, RadioGroup, FormControl, FormControlLabel, FormLabel, FormHelper
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-// import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 // Can't use RadioButtonProps until getLocaleRuleNameFromKeys is NOT private
-// interface RadioButtonsProps extends PConnFieldProps {
-//   // If any, enter additional props that only exist on RadioButtons here
-//   inline: boolean,
-//   fieldMetadata?: any
-// }
+interface RadioButtonsProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on RadioButtons here
+  inline: boolean;
+  fieldMetadata?: any;
+}
 
-export default function RadioButtons(props /* : RadioButtonsProps */) {
+export default function RadioButtons(props: RadioButtonsProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldValueList = getComponentFromMap('FieldValueList');
 
@@ -36,11 +36,11 @@ export default function RadioButtons(props /* : RadioButtonsProps */) {
   const thePConn = getPConnect();
   const theConfigProps = thePConn.getConfigProps();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = (thePConn.getStateProps() as any).value;
   const helperTextToDisplay = validatemessage || helperText;
   const className = thePConn.getCaseInfo().getClassName();
 
-  let configProperty = thePConn.getRawMetadata()?.config?.value || '';
+  let configProperty = (thePConn.getRawMetadata() as any)?.config?.value || '';
   configProperty = configProperty.startsWith('@P') ? configProperty.substring(3) : configProperty;
   configProperty = configProperty.startsWith('.') ? configProperty.substring(1) : configProperty;
 
@@ -65,6 +65,7 @@ export default function RadioButtons(props /* : RadioButtonsProps */) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
+        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
       />
     );
@@ -74,6 +75,7 @@ export default function RadioButtons(props /* : RadioButtonsProps */) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
+        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         variant='stacked'
       />
@@ -100,6 +102,7 @@ export default function RadioButtons(props /* : RadioButtonsProps */) {
               label={thePConn.getLocalizedValue(
                 theOption.value,
                 localePath,
+                // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
                 thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
               )}
               control={<Radio key={theOption.key} color='primary' disabled={readOnly} />}

@@ -1,16 +1,21 @@
+import { Children, PropsWithChildren, ReactElement, useMemo } from 'react';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 interface CaseSummaryProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
 }
 
-export default function CaseSummary(props: CaseSummaryProps) {
+export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const CaseSummaryFields = getComponentFromMap('CaseSummaryFields');
 
   const { getPConnect, children } = props;
+
+  const childArray = useMemo(() => {
+    return Children.toArray(children);
+  }, [children]);
+
   const thePConn = getPConnect();
   const theConfigProps: any = thePConn.getConfigProps();
   // const { status, showStatus } = theConfigProps;
@@ -28,8 +33,8 @@ export default function CaseSummary(props: CaseSummaryProps) {
   let arPrimaryFields: any[] = [];
   let arSecondaryFields: any[] = [];
 
-  for (const child of children) {
-    const childPConn = child.props.getPConnect();
+  for (const child of childArray) {
+    const childPConn = (child as ReactElement).props.getPConnect();
     const childPConnData = childPConn.resolveConfigProps(childPConn.getRawMetadata());
     if (childPConnData.name.toLowerCase() === 'primary fields') {
       arPrimaryFields = childPConnData.children;

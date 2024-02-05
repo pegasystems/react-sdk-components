@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -29,16 +29,13 @@ import { Utils } from '../../../helpers/utils';
 import { getReferenceList } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
 import { buildFieldsForTable, filterData, getContext } from '../../../helpers/simpleTableHelpers';
-import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
 interface SimpleTableManualProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   hideAddRow?: boolean;
   hideDeleteRow?: boolean;
-  // eslint-disable-next-line react/no-unused-prop-types
-  disableDragDrop?: boolean;
   referenceList?: any[];
-  children?: any[];
   renderMode?: string;
   presets?: any[];
   label?: string;
@@ -90,7 +87,7 @@ let menuColumnLabel = '';
 const filterByColumns: any[] = [];
 let myRows: any[];
 
-export default function SimpleTableManual(props: SimpleTableManualProps) {
+export default function SimpleTableManual(props: PropsWithChildren<SimpleTableManualProps>) {
   const classes = useStyles();
   const {
     getPConnect,

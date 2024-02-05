@@ -2,12 +2,9 @@ import { memo, useEffect, useState } from 'react';
 import { Typography } from '@material-ui/core';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 errors)
-declare const PCore: any;
 
 const DROPDOWN_LIST = 'Drop-down list';
 const SEARCH_BOX = 'Search box';
@@ -78,7 +75,10 @@ const UserReference = (props: UserReferenceProps) => {
       const queryPayload = {
         dataViewName: OPERATORS_DP
       };
+
       PCore.getRestClient()
+        // @ts-ignore - Argument of type '{ queryPayload: { dataViewName: string; }; }' is not assignable to parameter of type 'RestApiOptionsObject'
+        // @ts-ignore - Expected 3 arguments, but got 2
         .invokeRestApi('getListData', { queryPayload })
         .then(res => {
           const ddDataSource = res.data.data.map(listItem => ({

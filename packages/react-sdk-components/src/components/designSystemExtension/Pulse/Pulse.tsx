@@ -1,3 +1,4 @@
+import { PropsWithChildren } from 'react';
 import { Card, CardContent, CardHeader, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -5,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 //  So, no need to extend PConnProps
 interface PulseProps {
   // If any, enter additional props that only exist on this component
-  children?: any[];
 }
 
 const useStyles = makeStyles(theme => ({
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Pulse(props: PulseProps) {
+export default function Pulse(props: PropsWithChildren<PulseProps>) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { children } = props;
   const classes = useStyles();

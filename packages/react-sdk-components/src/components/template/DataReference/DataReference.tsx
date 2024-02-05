@@ -1,12 +1,11 @@
-import { useMemo, useState, useEffect } from 'react';
+import { Children, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private
 interface DataReferenceProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   label: string;
   showLabel: any;
   displayMode: string;
@@ -21,10 +20,7 @@ interface DataReferenceProps extends PConnProps {
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows ~7 errors)
-declare const PCore: any;
-
-export default function DataReference(props: DataReferenceProps) {
+export default function DataReference(props: PropsWithChildren<DataReferenceProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const SingleReferenceReadonly = getComponentFromMap('SingleReferenceReadOnly');
   const MultiReferenceReadonly = getComponentFromMap('MultiReferenceReadOnly');
@@ -43,7 +39,7 @@ export default function DataReference(props: DataReferenceProps) {
     parameters,
     hideLabel
   } = props;
-  let childrenToRender = children;
+  let childrenToRender = Children.toArray(children);
   const pConn = getPConnect();
   const [dropDownDataSource, setDropDownDataSource] = useState(null);
   const propsToUse: any = { label, showLabel, ...pConn.getInheritedProps() };
@@ -63,10 +59,15 @@ export default function DataReference(props: DataReferenceProps) {
   useEffect(() => {
     if (firstChildMeta?.type === 'Dropdown' && rawViewMetadata.config?.parameters) {
       const { value, key, text } = firstChildMeta.config.datasource.fields;
-      PCore.getDataApiUtils()
-        .getData(refList, {
-          dataViewParameters: parameters
-        })
+      (
+        PCore.getDataApiUtils().getData(
+          refList,
+          {
+            dataViewParameters: parameters
+          } as any,
+          ''
+        ) as Promise<any>
+      )
         .then(res => {
           if (res.data.data !== null) {
             const ddDataSource = res.data.data
@@ -137,37 +138,41 @@ export default function DataReference(props: DataReferenceProps) {
     // AutoComplete sets value on event.id whereas Dropdown sets it on event.target.value
     const propValue = event?.id || event?.target.value;
     if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
-      PCore.getDataApiUtils()
-        .getCaseEditLock(caseKey)
-        .then(caseResponse => {
-          const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
-          let curr = {};
-          const commitData = curr;
+      (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then(caseResponse => {
+        const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
+        let curr = {};
+        const commitData = curr;
 
-          pageTokens.forEach(el => {
-            if (el !== '') {
-              curr[el] = {};
-              curr = curr[el];
-            }
-          });
-
-          // expecting format like {Customer: {pyID:"C-100"}}
-          const propArr = propName.split('.');
-          propArr.forEach((element, idx) => {
-            if (idx + 1 === propArr.length) {
-              curr[element] = propValue;
-            } else {
-              curr[element] = {};
-              curr = curr[element];
-            }
-          });
-
-          PCore.getDataApiUtils()
-            .updateCaseEditFieldsData(caseKey, { [caseKey]: commitData }, caseResponse.headers.etag, pConn.getContextName())
-            .then(response => {
-              PCore.getContainerUtils().updateChildContainersEtag(pConn.getContextName(), response.headers.etag);
-            });
+        pageTokens.forEach(el => {
+          if (el !== '') {
+            curr[el] = {};
+            curr = curr[el];
+          }
         });
+
+        // expecting format like {Customer: {pyID:"C-100"}}
+        const propArr = propName.split('.');
+        propArr.forEach((element, idx) => {
+          if (idx + 1 === propArr.length) {
+            curr[element] = propValue;
+          } else {
+            curr[element] = {};
+            curr = curr[element];
+          }
+        });
+
+        (
+          PCore.getDataApiUtils().updateCaseEditFieldsData(
+            caseKey,
+            { [caseKey]: commitData },
+            caseResponse.headers.etag,
+            pConn.getContextName()
+          ) as Promise<any>
+        ).then(response => {
+          PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
+          PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
+        });
+      });
     }
   };
 
@@ -239,7 +244,7 @@ export default function DataReference(props: DataReferenceProps) {
   if (firstChildMeta?.type !== 'Region') {
     const viewsRegion = rawViewMetadata.children[1];
     if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
-      childrenToRender = [recreatedFirstChild, ...children.slice(1)];
+      childrenToRender = [recreatedFirstChild, ...Children.toArray(children).slice(1)];
     } else {
       childrenToRender = [recreatedFirstChild];
     }

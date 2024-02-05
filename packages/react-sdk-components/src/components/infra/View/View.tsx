@@ -1,18 +1,15 @@
-// import { FieldGroup } from "@pega/cosmos-react-core";
-// import { LazyMap as LazyComponentMap } from "../../components_map";
+import { PropsWithChildren } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { getAllFields } from '../../helpers/template-utils';
+import { PConnProps } from '../../../types/PConnProps';
 
 // Need to import any templates that we might render
 
 import './View.css';
 
-import type { PConnProps } from '../../../types/PConnProps';
-
 interface ViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   template?: string;
   label?: string;
   showLabel: boolean;
@@ -42,7 +39,7 @@ const NO_HEADER_TEMPLATES = [
   'DynamicTabs'
 ];
 
-export default function View(props: ViewProps) {
+export default function View(props: PropsWithChildren<ViewProps>) {
   const { children, template, getPConnect, mode, visibility, name: pageName } = props;
   let { label = '', showLabel = false } = props;
 

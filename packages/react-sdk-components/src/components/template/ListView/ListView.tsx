@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-/* eslint-disable guard-for-in */
+
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-shadow */
 
@@ -44,28 +44,25 @@ import { getCurrencyOptions } from '../../field/Currency/currency-utils';
 import { format } from '../../helpers/formatters';
 
 import useInit from './hooks';
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
-// ListViewProps can't be used until getComponentConfig is NOT private
-// interface ListViewProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   bInForm?: boolean,
-//   globalSearch?: boolean,
-//   referenceList?: Array<any>,
-//   rowClickAction?: any,
-//   selectionMode?: string,
-//   referenceType?: string,
-//   payload?: any,
-//   parameters?: any,
-//   compositeKeys?: any,
-//   showDynamicFields?: boolean,
-//   presets?: any
-// }
+interface ListViewProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  bInForm?: boolean;
+  globalSearch?: boolean;
+  referenceList?: any[];
+  // rowClickAction?: any;
+  selectionMode?: string;
+  referenceType?: string;
+  payload?: any;
+  parameters?: any;
+  compositeKeys?: any;
+  showDynamicFields?: boolean;
+  readonlyContextList?: any;
+  value: any;
+}
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 3 errors)
-declare const PCore: any;
 
 let myRows: any[];
 let myDisplayColumnList: any[];
@@ -78,7 +75,7 @@ let sortColumnId: any;
 
 const filterByColumns: any[] = [];
 
-export default function ListView(props /* : ListViewProps */) {
+export default function ListView(props: ListViewProps) {
   const { getPConnect, bInForm = true } = props;
   const {
     globalSearch,
@@ -111,8 +108,9 @@ export default function ListView(props /* : ListViewProps */) {
   });
 
   const thePConn = getPConnect();
+  // @ts-ignore - Property 'getComponentConfig' is private and only accessible within class 'C11nEnv'.
   const componentConfig = thePConn.getComponentConfig();
-  const resolvedConfigProps = thePConn.getConfigProps();
+  const resolvedConfigProps: any = thePConn.getConfigProps() as ListViewProps;
 
   /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */
   const defRowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
@@ -346,7 +344,7 @@ export default function ListView(props /* : ListViewProps */) {
 
     let index = 1;
     // Iterating over the current filters list to create filter data which will be POSTed
-    for (const filterExp in filters.current) {
+    for (const filterExp of Object.keys(filters.current)) {
       const filter = filters.current[filterExp];
       // If the filter is null then we can skip this iteration
       if (filter === null) {
@@ -413,7 +411,7 @@ export default function ListView(props /* : ListViewProps */) {
     fetchDataFromServer();
   }
 
-  function fetchAllData(fields) {
+  function fetchAllData(fields): any {
     let query: any = null;
     if (payload) {
       query = payload.query;
@@ -432,8 +430,10 @@ export default function ListView(props /* : ListViewProps */) {
     const context = getPConnect().getContextName();
     // getDataAsync isn't returning correct data for the Page(i.e. ListView within a page) case
     return !bInForm
-      ? PCore.getDataApiUtils().getData(referenceList, payload)
-      : PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
+      ? // @ts-ignore - 3rd parameter "context" should be optional in getData method
+        PCore.getDataApiUtils().getData(referenceList, payload)
+      : // @ts-ignore - Argument of type 'null' is not assignable to parameter of type 'object'
+        PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
   }
 
   const buildSelect = (fieldDefs, colId, patchQueryFields = [], compositeKeys = []) => {
@@ -605,7 +605,7 @@ export default function ListView(props /* : ListViewProps */) {
   function searchFilter(value: string, rows: any[]) {
     function filterArray(el: any): boolean {
       const bReturn = false;
-      for (const key in el) {
+      for (const key of Object.keys(el)) {
         // only search columsn that are displayed (pzInsKey and pxRefObjectClass are added and may or may not be displayed)
         if (myDisplayColumnList.includes(key)) {
           let myVal = el[key];
@@ -975,7 +975,7 @@ export default function ListView(props /* : ListViewProps */) {
         break;
 
       case 'Currency':
-        theCurrencyOptions = getCurrencyOptions(PCore?.getEnvironmentInfo()?.getLocale());
+        theCurrencyOptions = getCurrencyOptions(PCore?.getEnvironmentInfo()?.getLocale() as string);
         val = format(value, column.type, theCurrencyOptions);
         break;
 

@@ -1,8 +1,5 @@
 import getDefaultViewMeta from './DefaultViewMeta';
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
-declare const PCore: any;
-
 const USER_REFERENCE = 'UserReference';
 const PAGE = '!P!';
 const PAGELIST = '!PL!';
@@ -121,7 +118,7 @@ export const isPageListInPath = (propertyName, currentClassID) => {
     return false;
   }
   const [first, ...rest] = propertyName.split('.');
-  const metadata = PCore.getMetadataUtils().getPropertyMetadata(first, currentClassID);
+  const metadata: any = PCore.getMetadataUtils().getPropertyMetadata(first, currentClassID);
   if (metadata?.type === 'Page List') {
     return true;
   }
@@ -205,7 +202,8 @@ export function getConfigEmbeddedFieldsMeta(configFields, classID) {
       if (value.includes('[')) {
         value = value.substring(0, value.indexOf('[')) + value.substring(value.indexOf(']') + 1);
       }
-      const meta = PCore.getMetadataUtils().getEmbeddedPropertyMetadata(value, classID);
+      // @ts-ignore - Expected 3 arguments, but got 2.
+      const meta: any = PCore.getMetadataUtils().getEmbeddedPropertyMetadata(value, classID);
       meta.fieldID = field;
       configEmbeddedFieldsMeta.push(meta);
     }
@@ -665,7 +663,7 @@ export const readContextResponse = async (context, params) => {
   } = promisesResponseArray[0];
   // When list is configured with Include all class fields configuration, provide support for Primary fields column
   if (showDynamicFields) {
-    const sourceMetadata = PCore.getMetadataUtils().getDataPageMetadata(referenceList);
+    const sourceMetadata: any = PCore.getMetadataUtils().getDataPageMetadata(referenceList);
     if (sourceMetadata?.primaryFields) {
       primaryFields = sourceMetadata.primaryFields;
     }

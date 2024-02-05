@@ -13,9 +13,6 @@ import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelp
 import { getSdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../../sdk-local-component-map';
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
-declare const PCore: any;
-
 declare const myLoadMashup: any;
 
 const useStyles = makeStyles(theme => ({
@@ -444,7 +441,7 @@ export default function EmbeddedTopLevel() {
         mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
       }
 
-      const options = {
+      const options: any = {
         pageName: 'pyEmbedAssignment',
         startingFields:
           mashupCaseType === 'DIXL-MediaCo-Work-NewService'
@@ -453,12 +450,10 @@ export default function EmbeddedTopLevel() {
               }
             : {}
       };
-      PCore.getMashupApi()
-        .createCase(mashupCaseType, PCore.getConstants().APP.APP, options)
-        .then(() => {
-          // eslint-disable-next-line no-console
-          console.log('createCase rendering is complete');
-        });
+      (PCore.getMashupApi().createCase(mashupCaseType, PCore.getConstants().APP.APP, options) as Promise<any>).then(() => {
+        // eslint-disable-next-line no-console
+        console.log('createCase rendering is complete');
+      });
     });
   }
 

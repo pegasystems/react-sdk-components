@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { PConnProps } from '../../../../../types/PConnProps';
 
 const useStyles = makeStyles((/* theme */) => ({
   button: {
@@ -13,7 +14,13 @@ const useStyles = makeStyles((/* theme */) => ({
   }
 }));
 
-function ListViewActionButtons(props) {
+interface ListViewActionButtonsProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  context: string;
+  closeActionsDialog: Function;
+}
+
+function ListViewActionButtons(props: ListViewActionButtonsProps) {
   const { getPConnect, context, closeActionsDialog } = props;
   const classes = useStyles();
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;

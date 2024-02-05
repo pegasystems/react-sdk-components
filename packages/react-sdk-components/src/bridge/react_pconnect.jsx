@@ -87,7 +87,7 @@ const connectRedux = (component, c11nEnv) => {
       context: StoreContext,
       areStatePropsEqual: (next, prev) => {
         const allStateProps = c11nEnv.getStateProps();
-        for (const key in allStateProps) {
+        for (const key of Object.keys(allStateProps)) {
           if (
             (isClassIDCompare(key, prev) && !shallowEqual(next[key], prev[key])) ||
             (next.routingInfo && !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
@@ -99,7 +99,7 @@ const connectRedux = (component, c11nEnv) => {
         // For CaseSummary (when status === ".pyStatusWork"), we need to compare changes in
         //  primaryFields and secondary Fields
         if (allStateProps.status === '.pyStatusWork') {
-          for (const key in prev) {
+          for (const key of Object.keys(prev)) {
             if (!PCore.isDeepEqual(next[key], prev[key])) {
               return false;
             }

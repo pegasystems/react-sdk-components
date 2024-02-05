@@ -1,25 +1,20 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { PConnProps } from '../../../types/PConnProps';
+
 import './MultiStep.css';
-
-// import { useConstellationContext } from "../../bridge/Context/StoreContext";
-
-import type { PConnProps } from '../../../types/PConnProps';
 
 interface MultiStepProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   itemKey: string;
   actionButtons: any[];
   onButtonPress: any;
   bIsVertical: boolean;
   arNavigationSteps: any[];
-  // eslint-disable-next-line react/no-unused-prop-types
-  arCurrentStepIndicies?: any[];
 }
 
-export default function MultiStep(props: MultiStepProps) {
+export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const AssignmentCard = getComponentFromMap('AssignmentCard');
 

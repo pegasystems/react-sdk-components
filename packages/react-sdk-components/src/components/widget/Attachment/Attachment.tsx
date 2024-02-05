@@ -8,18 +8,16 @@ import download from 'downloadjs';
 import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
 import { Utils } from '../../helpers/utils';
 import { isInfinity23OrHigher } from '../../helpers/common-utils';
+import { PConnFieldProps } from '../../../types/PConnProps';
+
 import './Attachment.css';
-// import type { PConnProps } from '../../../types/PConnProps';
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
-declare const PCore: any;
-
-// NOTE: we can't use PConnProps in this file because the
-//  PConnect type is missing a number of expected properties
-//  such as attachmentsInfo and incorrect type for our use of clearMessages,
-// interface AttachmentProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-// }
+interface AttachmentProps extends Omit<PConnFieldProps, 'value'> {
+  // If any, enter additional props that only exist on this component
+  value: any;
+  allowMultiple: string;
+  extensions: string;
+}
 
 const getAttachmentKey = (name = '') => (name ? `attachmentsList.${name}` : 'attachmentsList');
 
@@ -34,7 +32,7 @@ const updateAttachmentState = (pConn, key, attachments) => {
   });
 };
 
-export default function Attachment(props /* :AttachmentProps */) {
+export default function Attachment(props: AttachmentProps) {
   const { value, getPConnect, label, validatemessage, allowMultiple, extensions, displayMode } = props;
   /* this is a temporary fix because required is supposed to be passed as a boolean and NOT as a string */
   let { required, disabled } = props;
@@ -48,7 +46,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   }
   const deleteIcon = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
   const srcImg = Utils.getImageSrc('document-doc', Utils.getSDKStaticConentUrl());
-  let valueRef = pConn.getStateProps().value;
+  let valueRef = (pConn.getStateProps() as any).value;
   valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -73,6 +71,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   const downloadFile = (fileObj: any) => {
     setAnchorEl(null);
     PCore.getAttachmentUtils()
+      // @ts-ignore - 3rd parameter "responseEncoding" should be optional
       .downloadAttachment(fileObj.pzInsKey, pConn.getContextName())
       .then(content => {
         const extension = fileObj.pyAttachName.split('.').pop();
@@ -118,6 +117,7 @@ export default function Attachment(props /* :AttachmentProps */) {
         });
         updateAttachmentState(pConn, getAttachmentKey(valueRef), [...currentAttachmentList, ...attachmentsList]);
         if (file.inProgress) {
+          // @ts-ignore - 3rd parameter "responseEncoding" should be optional
           PCore.getAttachmentUtils().cancelRequest(file.ID, pConn.getContextName());
         }
       }
@@ -135,9 +135,9 @@ export default function Attachment(props /* :AttachmentProps */) {
   const errorHandler = (isFetchCanceled, attachedFile) => {
     return error => {
       if (!isFetchCanceled(error)) {
-        let uploadFailMsg = pConn.getLocalizedValue('Something went wrong');
+        let uploadFailMsg = pConn.getLocalizedValue('Something went wrong', '', '');
         if (error.response && error.response.data && error.response.data.errorDetails) {
-          uploadFailMsg = pConn.getLocalizedValue(error.response.data.errorDetails[0].localizedValue);
+          uploadFailMsg = pConn.getLocalizedValue(error.response.data.errorDetails[0].localizedValue, '', '');
         }
         setFiles(current => {
           return current.map(f => {
@@ -146,16 +146,17 @@ export default function Attachment(props /* :AttachmentProps */) {
               f.props.error = true;
               f.props.onDelete = () => deleteFile(f);
               f.props.icon = getIconFromFileType(f.type);
-              f.props.name = pConn.getLocalizedValue('Unable to upload file');
+              f.props.name = pConn.getLocalizedValue('Unable to upload file', '', '');
               f.inProgress = false;
-              const fieldName = pConn.getStateProps().value;
+              const fieldName = (pConn.getStateProps() as any).value;
               const context = pConn.getContextName();
               // set errors to property to block submit even on errors in file upload
               PCore.getMessageManager().addMessages({
+                // @ts-ignore
                 messages: [
                   {
                     type: 'error',
-                    message: pConn.getLocalizedValue('Error with one or more files')
+                    message: pConn.getLocalizedValue('Error with one or more files', '', '')
                   }
                 ],
                 property: fieldName,
@@ -185,8 +186,9 @@ export default function Attachment(props /* :AttachmentProps */) {
   };
 
   const clearFieldErrorMessages = () => {
-    const fieldName = pConn.getStateProps().value;
+    const fieldName = (pConn.getStateProps() as any).value;
     const context = pConn.getContextName();
+    // @ts-ignore
     PCore.getMessageManager().clearMessages({
       type: PCore.getConstants().MESSAGES.MESSAGES_TYPE_ERROR,
       property: fieldName,
@@ -198,7 +200,7 @@ export default function Attachment(props /* :AttachmentProps */) {
   const onFileAdded = event => {
     let addedFiles = Array.from(event.target.files);
     addedFiles = allowMultiple === 'true' ? addedFiles : [addedFiles[0]];
-    const maxAttachmentSize = PCore.getEnvironmentInfo().getMaxAttachmentSize() || 5;
+    const maxAttachmentSize = PCore.getEnvironmentInfo().getMaxAttachmentSize() || '5';
     const tempFilesToBeUploaded = [
       ...addedFiles.map((f: any, index) => {
         f.ID = `${new Date().getTime()}I${index}`;
@@ -211,19 +213,23 @@ export default function Attachment(props /* :AttachmentProps */) {
         };
         if (!validateMaxSize(f, maxAttachmentSize)) {
           f.props.error = true;
-          f.props.meta = pConn.getLocalizedValue(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`);
+          f.props.meta = pConn.getLocalizedValue(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`, '', '');
         } else if (!validateFileExtension(f, extensions)) {
           f.props.error = true;
-          f.props.meta = `${pConn.getLocalizedValue('File has invalid extension. Allowed extensions are:')} ${extensions.replaceAll('.', '')}`;
+          f.props.meta = `${pConn.getLocalizedValue('File has invalid extension. Allowed extensions are:', '', '')} ${extensions.replaceAll(
+            '.',
+            ''
+          )}`;
         }
         if (f.props.error) {
-          const fieldName = pConn.getStateProps().value;
+          const fieldName = (pConn.getStateProps() as any).value;
           const context = pConn.getContextName();
           PCore.getMessageManager().addMessages({
+            // @ts-ignore
             messages: [
               {
                 type: 'error',
-                message: pConn.getLocalizedValue('Error with one or more files')
+                message: pConn.getLocalizedValue('Error with one or more files', '', '')
               }
             ],
             property: fieldName,
@@ -271,7 +277,7 @@ export default function Attachment(props /* :AttachmentProps */) {
             tempFilesUploaded.forEach(f => {
               const index = fileResponses.findIndex((fr: any) => fr.value.clientFileID === f.ID);
               if (index >= 0) {
-                f.props.meta = pConn.getLocalizedValue('Uploaded successfully');
+                f.props.meta = pConn.getLocalizedValue('Uploaded successfully', '', '');
                 f.props.progress = 100;
                 f.inProgress = false;
                 f.handle = fileResponses[index].value.ID;

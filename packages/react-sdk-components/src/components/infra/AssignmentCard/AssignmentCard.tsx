@@ -1,18 +1,15 @@
-import { useState, useEffect } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 interface AssignmentCardProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   actionButtons: any;
   onButtonPress: any;
-  // eslint-disable-next-line react/no-unused-prop-types
-  itemKey?: string;
 }
 
-export default function AssignmentCard(props: AssignmentCardProps) {
+export default function AssignmentCard(props: PropsWithChildren<AssignmentCardProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const ActionButtons = getComponentFromMap('ActionButtons');
 

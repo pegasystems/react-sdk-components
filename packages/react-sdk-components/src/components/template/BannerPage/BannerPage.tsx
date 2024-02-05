@@ -1,4 +1,4 @@
-import { useMemo, Children } from 'react';
+import { Children, PropsWithChildren, useMemo } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
@@ -6,7 +6,6 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 interface BannerPageProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   layout?: string;
   heading?: string;
   message?: string;
@@ -19,7 +18,7 @@ interface BannerPageProps {
 /*
  * BannerPage template.
  */
-export default function BannerPage(props: BannerPageProps) {
+export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const Banner = getComponentFromMap('Banner');
 

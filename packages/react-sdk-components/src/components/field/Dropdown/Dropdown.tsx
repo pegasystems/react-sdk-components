@@ -6,7 +6,7 @@ import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-// import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
@@ -46,19 +46,19 @@ const getDisplayFieldsMetaData = columnList => {
   return metaDataObj;
 };
 
-// Can't use DropdownProps with 8.23 until getLocaleRuleNameFromKeys is NOT private
-// interface DropdownProps extends PConnFieldProps {
-//   // If any, enter additional props that only exist on Dropdown here
-//   datasource?: Array<any>,
-//   onRecordChange?: any,
-//   fieldMetadata?: any,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   listType: string,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   additionalProps?: object
-// }
+interface DropdownProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Dropdown here
+  datasource?: any[];
+  onRecordChange?: any;
+  fieldMetadata?: any;
+  listType: string;
+  deferDatasource?: boolean;
+  datasourceMetadata?: any;
+  parameters?: any;
+  columns: any[];
+}
 
-export default function Dropdown(props /* : DropdownProps */) {
+export default function Dropdown(props: DropdownProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldValueList = getComponentFromMap('FieldValueList');
 
@@ -85,12 +85,12 @@ export default function Dropdown(props /* : DropdownProps */) {
   let { listType, parameters, datasource = [], columns = [] } = props;
   placeholder = placeholder || 'Select...';
   const [options, setOptions] = useState<IOption[]>([]);
-  const [theDatasource, setDatasource] = useState(null);
+  const [theDatasource, setDatasource] = useState<any[] | null>(null);
   const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = (thePConn.getStateProps() as any).value;
   const className = thePConn.getCaseInfo().getClassName();
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
@@ -169,6 +169,7 @@ export default function Dropdown(props /* : DropdownProps */) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
+        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
       />
     );
@@ -178,6 +179,7 @@ export default function Dropdown(props /* : DropdownProps */) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
+        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         variant='stacked'
       />
@@ -222,6 +224,7 @@ export default function Dropdown(props /* : DropdownProps */) {
     >
       {options.map((option: any) => (
         <MenuItem key={option.key} value={option.key}>
+          {/* @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'  */}
           {thePConn.getLocalizedValue(option.value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         </MenuItem>
       ))}

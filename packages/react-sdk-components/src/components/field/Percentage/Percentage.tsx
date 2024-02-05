@@ -2,7 +2,7 @@ import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 // Inspired by https://stackoverflow.com/questions/50823182/material-ui-remove-up-down-arrow-dials-from-textview
 const useStyles = makeStyles((/* theme */) => ({

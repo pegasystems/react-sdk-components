@@ -1,4 +1,4 @@
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 interface SingleReferenceReadOnlyProps extends PConnProps {
   // If any, enter additional props that only exist on this component

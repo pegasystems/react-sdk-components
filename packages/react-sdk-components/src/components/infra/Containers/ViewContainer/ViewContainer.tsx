@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useContext, createElement } from 'react';
+import React, { createElement, useContext, useEffect, useState } from 'react';
 import { Box, CircularProgress } from '@material-ui/core';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import StoreContext from '../../../../bridge/Context/StoreContext';
 import { isEmptyObject } from '../../../helpers/common-utils';
-import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
 interface ViewContainerProps extends PConnProps {
   // If any, enter additional props that only exist on this component

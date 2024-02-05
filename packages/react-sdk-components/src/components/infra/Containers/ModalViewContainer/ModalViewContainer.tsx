@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, createElement } from 'react';
+import { createElement, useEffect, useRef, useState } from 'react';
 import isEqual from 'fast-deep-equal';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,19 +10,14 @@ import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { getBanners } from '../../../helpers/case-utils';
 import { isEmptyObject } from '../../../helpers/common-utils';
-// import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
-// Can't use ModalViewContainerProps until getContainerManager() knows about initializeContainers
-//  Currently just expects "object"
-// interface ModalViewContainerProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   loadingInfo?: string,
-//   routingInfo?: any,
-//   pageMessages?: Array<string>
-// }
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 8 errors)
-declare const PCore: any;
+interface ModalViewContainerProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  loadingInfo?: string;
+  routingInfo?: any;
+  pageMessages?: string[];
+}
 
 function buildName(pConnect, name = '') {
   const context = pConnect.getContextName();
@@ -79,7 +74,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ModalViewContainer(props /* : ModalViewContainerProps */) {
+export default function ModalViewContainer(props: ModalViewContainerProps) {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap('Assignment');
   const CancelAlert = getComponentFromMap('CancelAlert');
@@ -120,7 +115,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
     */
     if (latestItem && isModalAction && !actionsDialog.current) {
       const configObject = getConfigObject(latestItem, pConn);
-      setCancelPConn(configObject.getPConnect());
+      setCancelPConn(configObject?.getPConnect() as any);
       setShowCancelAlert(true);
     }
   }
@@ -210,6 +205,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
           //    The config has meta.config.type = "view"
           const newComp = configObject.getPConnect();
           // const newCompName = newComp.getComponentName();
+          // @ts-ignore - parameter “contextName” for getDataObject method should be optional
           const caseInfo = newComp && newComp.getDataObject() && newComp.getDataObject().caseInfo ? newComp.getDataObject().caseInfo : null;
 
           // console.log(`ModalViewContainer just created newComp: ${newCompName}`);
@@ -270,7 +266,7 @@ export default function ModalViewContainer(props /* : ModalViewContainerProps */
               // This is the 8.6 implementation. Leaving it in for reference for now.
               // And create a similar array of the children as React components
               //  passed to Assignment component when rendered
-              arChildrenAsReact = newComp.getChildren().map(child => {
+              arChildrenAsReact = (newComp.getChildren() as []).map((child: any) => {
                 // Use Case Summary ID as the React element's key
                 const caseSummaryID = child.getPConnect().getCaseSummary().ID;
                 return createElement(createPConnectComponent(), {
