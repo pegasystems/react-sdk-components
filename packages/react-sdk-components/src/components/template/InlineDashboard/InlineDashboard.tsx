@@ -1,6 +1,6 @@
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Children, PropsWithChildren, useMemo } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 
 // InlineDashboard does NOT have getPConnect. So, no need to extend from PConnProps
 interface InlineDashboardProps {
@@ -40,9 +40,7 @@ export default function InlineDashboard(props: PropsWithChildren<InlineDashboard
   const classes = useStyles();
 
   const { children, title, filterPosition } = props;
-  const childArray = useMemo(() => {
-    return Children.toArray(children);
-  }, [children]);
+  const childrenToRender = children as ReactElement[];
 
   const direction = filterPosition === 'inline-start' ? 'row-reverse' : 'row';
   return (
@@ -54,20 +52,20 @@ export default function InlineDashboard(props: PropsWithChildren<InlineDashboard
       {filterPosition === 'block-start' && (
         <Grid container spacing={2} direction='column-reverse' className={classes.containerStyles}>
           <Grid item xs={12} className={classes.colStyles}>
-            {childArray[0]}
+            {childrenToRender[0]}
           </Grid>
           <Grid id='filters' item xs={12} className={classes.filterContainerStyles}>
-            {childArray[1]}
+            {childrenToRender[1]}
           </Grid>
         </Grid>
       )}
       {filterPosition !== 'block-start' && (
         <Grid container spacing={2} direction={direction} className={classes.containerStyles}>
           <Grid item xs={9}>
-            {childArray[0]}
+            {childrenToRender[0]}
           </Grid>
           <Grid id='filters' item xs={3} className={classes.inlineStyles}>
-            {childArray[1]}
+            {childrenToRender[1]}
           </Grid>
         </Grid>
       )}

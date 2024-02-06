@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 
-import { Children, PropsWithChildren, ReactElement, useContext, useEffect, useMemo, useState } from 'react';
+import { PropsWithChildren, ReactElement, useContext, useEffect, useState } from 'react';
 import { Avatar, Card, CardHeader, Divider, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -65,10 +65,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
 
-  const childArray = useMemo(() => {
-    return Children.toArray(children);
-  }, [children]);
-
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
 
@@ -89,7 +85,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
   function getChildRegionByName(inName: string): any {
-    for (const child of childArray) {
+    for (const child of children as ReactElement[]) {
       const theMetadataType: string = (child as ReactElement).props.getPConnect().getRawMetadata().type.toLowerCase();
       const theMetadataName: string = (child as ReactElement).props.getPConnect().getRawMetadata().name.toLowerCase();
 

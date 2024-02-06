@@ -1,4 +1,4 @@
-import { Children, PropsWithChildren, ReactElement, useMemo } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnProps } from '../../../types/PConnProps';
 
@@ -11,10 +11,6 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
   const CaseSummaryFields = getComponentFromMap('CaseSummaryFields');
 
   const { getPConnect, children } = props;
-
-  const childArray = useMemo(() => {
-    return Children.toArray(children);
-  }, [children]);
 
   const thePConn = getPConnect();
   const theConfigProps: any = thePConn.getConfigProps();
@@ -33,7 +29,7 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
   let arPrimaryFields: any[] = [];
   let arSecondaryFields: any[] = [];
 
-  for (const child of childArray) {
+  for (const child of children as ReactElement[]) {
     const childPConn = (child as ReactElement).props.getPConnect();
     const childPConnData = childPConn.resolveConfigProps(childPConn.getRawMetadata());
     if (childPConnData.name.toLowerCase() === 'primary fields') {

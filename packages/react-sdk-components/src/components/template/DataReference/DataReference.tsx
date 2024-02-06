@@ -1,4 +1,4 @@
-import { Children, PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import { PropsWithChildren, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnProps } from '../../../types/PConnProps';
@@ -39,7 +39,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     parameters,
     hideLabel
   } = props;
-  let childrenToRender = Children.toArray(children);
+  let childrenToRender = children as ReactElement[];
   const pConn = getPConnect();
   const [dropDownDataSource, setDropDownDataSource] = useState(null);
   const propsToUse: any = { label, showLabel, ...pConn.getInheritedProps() };
@@ -244,7 +244,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   if (firstChildMeta?.type !== 'Region') {
     const viewsRegion = rawViewMetadata.children[1];
     if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
-      childrenToRender = [recreatedFirstChild, ...Children.toArray(children).slice(1)];
+      childrenToRender = [recreatedFirstChild, ...(children as ReactElement[]).slice(1)];
     } else {
       childrenToRender = [recreatedFirstChild];
     }

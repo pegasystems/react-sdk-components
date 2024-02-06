@@ -57,10 +57,6 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
 
   const [componentName, setComponentName] = useState('');
 
-  const childArray = useMemo(() => {
-    return Children.toArray(children);
-  }, [children]);
-
   useEffect(() => {
     // debugging/investigation help
     // console.log(`componentName change: ${componentName} triggering a re-render`);
@@ -215,11 +211,11 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
 
     return getNoPortalContent();
   }
-  if (childArray && childArray.length > 0) {
+  if (children && Children.count(children) > 0) {
     return (
       <>
         <div>{localizedVal('RootContainer: Has children. Trying to show ModalManager with children, etc.', localeCategory)}</div>
-        {childArray}
+        {children}
         {MemoizedModalViewContainer}
       </>
     );

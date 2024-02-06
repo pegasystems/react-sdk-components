@@ -1,4 +1,4 @@
-import { Children, PropsWithChildren, useMemo } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -19,14 +19,11 @@ export default function OneColumn(props: PropsWithChildren<OneColumnProps>) {
   const classes = useStyles();
 
   const { children } = props;
-  const childArray = useMemo(() => {
-    return Children.toArray(children);
-  }, [children]);
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} className={classes.colStyles}>
-        {childArray.map(child => {
+        {(children as ReactElement[]).map(child => {
           return child;
         })}
       </Grid>

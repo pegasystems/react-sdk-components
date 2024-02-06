@@ -1,4 +1,4 @@
-import { Children, PropsWithChildren, useMemo } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // NarrowWidePage does NOT have getPConnect. So, no need to extend from PConnProps
@@ -18,13 +18,11 @@ export default function NarrowWidePage(props: PropsWithChildren<NarrowWidePagePr
   const NarrowWide = getComponentFromMap('NarrowWide');
 
   const { children, title, templateCol = '1fr 1fr', icon = '' } = props;
-  const childArray = useMemo(() => {
-    return Children.toArray(children);
-  }, [children]);
+  const childrenToRender = children as ReactElement[];
 
   return (
     <div>
-      <NarrowWide a={childArray[0]} b={childArray[1]} title={title} cols={templateCol} icon={icon?.replace('pi pi-', '')} />
+      <NarrowWide a={childrenToRender[0]} b={childrenToRender[1]} title={title} cols={templateCol} icon={icon?.replace('pi pi-', '')} />
     </div>
   );
 }
