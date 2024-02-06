@@ -1,4 +1,4 @@
-import { Children, PropsWithChildren, ReactElement, useMemo } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 import './WideNarrowForm.css';
 
 // WideNarrowForm does NOT have getPConnect. So, no need to extend from PConnProps
