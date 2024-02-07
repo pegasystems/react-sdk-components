@@ -71,6 +71,8 @@ test.describe('E2E test', () => {
 
     await page.locator('a:has-text("Clear All")').click();
 
+    await page.waitForLoadState('networkidle');
+
     await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeHidden();
   }, 10000);
 });
