@@ -1,14 +1,15 @@
 import { Utils } from '../../helpers/utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
-// Can't add PConnTypes until we can resolve type problems with
-//  2nd arg to createWork
-// interface QuickCreateProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-// }
+interface QuickCreateProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  heading: string;
+  showCaseIcons: boolean;
+  classFilter: any[];
+}
 
-export default function QuickCreate(props /* : QuickCreateProps */) {
+export default function QuickCreate(props: QuickCreateProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const WssQuickCreate = getComponentFromMap('WssQuickCreate');
 
@@ -17,7 +18,7 @@ export default function QuickCreate(props /* : QuickCreateProps */) {
   const createCase = className => {
     pConn
       .getActionsApi()
-      .createWork(className, {})
+      .createWork(className, {} as any)
       .catch(error => {
         // eslint-disable-next-line no-console
         console.log('Error in case creation: ', error?.message);

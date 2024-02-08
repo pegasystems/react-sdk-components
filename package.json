@@ -77,7 +77,7 @@
     "@pega/configs": "^0.7.1",
     "@pega/cspell-config": "^0.7.1",
     "@pega/eslint-config": "^0.7.1",
-    "@pega/pcore-pconnect-typedefs": "2.0.0",
+    "@pega/pcore-pconnect-typedefs": "^2.1.0",
     "@pega/prettier-config": "^0.7.1",
     "@pega/stylelint-config": "^0.7.1",
     "@pega/tsconfig": "^0.6.0",

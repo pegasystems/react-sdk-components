@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import { Button, Grid, IconButton, Snackbar } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 import './CancelAlert.css';
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
-declare const PCore: any;
 
 interface CancelAlertProps extends PConnFieldProps {
   // If any, enter additional props that only exist on CancelAlert here
@@ -58,6 +55,7 @@ export default function CancelAlert(props: CancelAlertProps) {
           .then(() => {
             dismissModal();
 
+            // @ts-ignore - second parameter “payload” for publish method should be optional
             PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CASE_CREATED);
           })
           .catch(() => {
@@ -76,6 +74,8 @@ export default function CancelAlert(props: CancelAlertProps) {
         deletePromise
           .then(() => {
             dismissModal();
+
+            // @ts-ignore - second parameter “payload” for publish method should be optional
             PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL);
           })
           .catch(() => {

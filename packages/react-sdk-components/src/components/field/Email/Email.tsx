@@ -1,8 +1,8 @@
-import { TextField, InputAdornment } from '@material-ui/core';
+import { InputAdornment, TextField } from '@material-ui/core';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface EmailProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Date here

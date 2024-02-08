@@ -1,18 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { Button, Card, makeStyles } from '@material-ui/core';
 
 import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 // Confirmation does NOT have getPConnect. So, no need to extend from PConnProps
 
 interface ConfirmationProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   datasource: { source: any };
   label: string;
   showLabel: boolean;
@@ -32,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Confirmation(props: ConfirmationProps) {
+export default function Confirmation(props: PropsWithChildren<ConfirmationProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
   const Details = getComponentFromMap('Details');
@@ -40,11 +37,11 @@ export default function Confirmation(props: ConfirmationProps) {
   const classes = useStyles();
   const CONSTS = PCore.getConstants();
   const [showConfirmView, setShowConfirmView] = useState(true);
-  const { showTasks, getPConnect, datasource } = props;
+  const { showTasks, getPConnect } = props;
   // Get the inherited props from the parent to determine label settings
   // Not using whatsNext at the moment, need to figure out the use of it
-  const whatsNext = datasource?.source;
-  const items = whatsNext.length > 0 ? whatsNext.map(item => item.label) : '';
+  // const whatsNext = datasource?.source;
+  // const items = whatsNext.length > 0 ? whatsNext.map(item => item.label) : '';
   const activeContainerItemID = PCore.getContainerUtils().getActiveContainerItemName(getPConnect().getTarget());
   const rootInfo = PCore.getContainerUtils().getContainerItemData(getPConnect().getTarget(), activeContainerItemID);
   const onConfirmViewClose = () => {

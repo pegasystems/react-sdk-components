@@ -51,7 +51,7 @@ test.describe('E2E test', () => {
     const dateFilter = filters.locator('div:has-text("Create date/time")');
     dateFilter.locator('input').click();
     const datePicker = filters.locator(
-      'div[class="react-datepicker-popper"] div[class="react-datepicker"] div[class="react-datepicker__month-container"] div[role="listbox"]'
+      'div[class="react-datepicker-popper"] div[class="react-datepicker"] div[class="react-datepicker__month-container"]'
     );
     const day = new Date();
     const nextDay = new Date(day);
@@ -70,6 +70,8 @@ test.describe('E2E test', () => {
     await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeVisible();
 
     await page.locator('a:has-text("Clear All")').click();
+
+    await page.waitForLoadState('networkidle');
 
     await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeHidden();
   }, 10000);

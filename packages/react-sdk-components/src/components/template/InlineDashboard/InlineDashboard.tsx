@@ -1,12 +1,10 @@
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
-import type { PConnProps } from '../../../types/PConnProps';
+import { PropsWithChildren, ReactElement } from 'react';
 
 // InlineDashboard does NOT have getPConnect. So, no need to extend from PConnProps
-interface InlineDashboardProps extends PConnProps {
+interface InlineDashboardProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   title: string;
   filterPosition?: string;
 }
@@ -38,10 +36,11 @@ const useStyles = makeStyles((/* theme */) => ({
   }
 }));
 
-export default function InlineDashboard(props: InlineDashboardProps) {
+export default function InlineDashboard(props: PropsWithChildren<InlineDashboardProps>) {
   const classes = useStyles();
 
   const { children, title, filterPosition } = props;
+  const childrenToRender = children as ReactElement[];
 
   const direction = filterPosition === 'inline-start' ? 'row-reverse' : 'row';
   return (
@@ -53,20 +52,20 @@ export default function InlineDashboard(props: InlineDashboardProps) {
       {filterPosition === 'block-start' && (
         <Grid container spacing={2} direction='column-reverse' className={classes.containerStyles}>
           <Grid item xs={12} className={classes.colStyles}>
-            {children[0]}
+            {childrenToRender[0]}
           </Grid>
           <Grid id='filters' item xs={12} className={classes.filterContainerStyles}>
-            {children[1]}
+            {childrenToRender[1]}
           </Grid>
         </Grid>
       )}
       {filterPosition !== 'block-start' && (
         <Grid container spacing={2} direction={direction} className={classes.containerStyles}>
           <Grid item xs={9}>
-            {children[0]}
+            {childrenToRender[0]}
           </Grid>
           <Grid id='filters' item xs={3} className={classes.inlineStyles}>
-            {children[1]}
+            {childrenToRender[1]}
           </Grid>
         </Grid>
       )}

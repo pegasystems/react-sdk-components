@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,14 +9,11 @@ import TableRow from '@material-ui/core/TableRow';
 import isDeepEqual from 'fast-deep-equal/react';
 
 import { Utils } from '../../helpers/utils';
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 interface CaseHistoryProps extends PConnProps {
   // If any, enter additional props that only exist on this component
 }
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
-declare const PCore: any;
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -96,7 +93,11 @@ export default function CaseHistory(props: CaseHistoryProps) {
   useEffect(() => {
     let bCallSetWaitingForData = true;
 
-    const historyData = PCore.getDataApiUtils().getData(dataViewName, `{"dataViewParameters":[{"CaseInstanceKey":"${caseID}"}]}`, context);
+    const historyData = PCore.getDataApiUtils().getData(
+      dataViewName,
+      { dataViewParameters: [{ CaseInstanceKey: caseID }] } as any,
+      context
+    ) as Promise<any>;
 
     historyData.then((historyJSON: any) => {
       const tableDataResults = historyJSON.data.data;

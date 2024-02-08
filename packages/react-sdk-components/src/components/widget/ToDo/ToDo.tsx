@@ -22,10 +22,9 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { Utils } from '../../helpers/utils';
+import { PConnProps } from '../../../types/PConnProps';
 
 import './ToDo.css';
-
-import type { PConnProps } from '../../../types/PConnProps';
 
 interface ToDoProps extends PConnProps {
   // If any, enter additional props that only exist on this component

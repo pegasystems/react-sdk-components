@@ -7,7 +7,7 @@ import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;

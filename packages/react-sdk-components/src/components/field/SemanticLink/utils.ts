@@ -1,6 +1,3 @@
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
-declare const PCore: any;
-
 function getDataReferenceInfo(pConnect, dataRelationshipContext) {
   if (!pConnect) {
     throw Error('PConnect parameter is required');
@@ -34,7 +31,9 @@ function getDataReferenceInfo(pConnect, dataRelationshipContext) {
     const { name, parameters } = fieldMetadata.datasource;
     dataContext = name;
     for (const [key, value] of Object.entries(parameters)) {
-      const property = dataRelationshipContext !== null ? annotationUtils.getPropertyName(value) : annotationUtils.getLeafPropertyName(value);
+      const property =
+        // @ts-ignore - Property 'getLeafPropertyName' is private and only accessible within class 'AnnotationUtils'
+        dataRelationshipContext !== null ? annotationUtils.getPropertyName(value as string) : annotationUtils.getLeafPropertyName(value);
       payload[key] = pConnect.getValue(`.${property}`);
     }
     return { dataContext, dataContextParameters: payload };

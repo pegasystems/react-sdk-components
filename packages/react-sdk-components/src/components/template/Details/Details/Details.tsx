@@ -3,15 +3,16 @@ import Grid from '@material-ui/core/Grid';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import { PConnProps } from '../../../../types/PConnProps';
 
-// import type { PConnProps } from '../../../../types/PConnProps';
+interface DetailsProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  label: string;
+  showLabel: boolean;
+  showHighlightedData: boolean;
+}
 
-// Can't use PConnProps until getPConnect().getChildren() type is ok
-// interface DetailsProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-// }
-
-export default function Details(props /* : DetailsProps */) {
+export default function Details(props: DetailsProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldGroup = getComponentFromMap('FieldGroup');
 
@@ -24,20 +25,18 @@ export default function Details(props /* : DetailsProps */) {
   // in a readonly (display) mode instead of a editable
   getPConnect().setInheritedProp('displayMode', 'LABELS_LEFT');
   getPConnect().setInheritedProp('readOnly', true);
-  const children = getPConnect()
-    .getChildren()
-    .map((configObject, index) =>
-      createElement(createPConnectComponent(), {
-        ...configObject,
-        // eslint-disable-next-line react/no-array-index-key
-        key: index.toString()
-      })
-    );
+  const children = (getPConnect().getChildren() as any[]).map((configObject, index) =>
+    createElement(createPConnectComponent(), {
+      ...configObject,
+      // eslint-disable-next-line react/no-array-index-key
+      key: index.toString()
+    })
+  );
 
   // Set up highlighted data to pass in return if is set to show, need raw metadata to pass to createComponent
   let highlightedDataArr = [];
   if (showHighlightedData) {
-    const { highlightedData = [] } = getPConnect().getRawMetadata().config;
+    const { highlightedData = [] } = (getPConnect().getRawMetadata() as any).config;
     highlightedDataArr = highlightedData.map(field => {
       field.config.displayMode = 'STACKED_LARGE_VAL';
 

@@ -14,22 +14,16 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 
 import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
-// import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
-// Can't use PConnProps until getPConnect().getChildren() types are ok
-// interface FlowContainerProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   children?: Array<any>,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   name?: string,
-//   routingInfo?: any,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   pageMessages: Array<any>
-// }
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 3 errors)
-declare const PCore: any;
+interface FlowContainerProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  pageMessages: any[];
+  rootViewElement: React.ReactNode;
+  getPConnectOfActiveContainerItem: Function;
+  assignmentNames: string[];
+  activeContainerItemID: string;
+}
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -58,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const FlowContainer = (props /* : FlowContainerProps */) => {
+export const FlowContainer = (props: FlowContainerProps) => {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap('Assignment');
   const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
@@ -159,6 +153,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   }, []);
 
   useEffect(() => {
+    // @ts-ignore - Property 'getMetadata' is private and only accessible within class 'C11nEnv'
     if (isInitialized && pConnectOfFlowContainer.getMetadata().children && !hasItems) {
       // ensuring not to add container items, if container already has items
       // because during multi doc mode, we will have container items already in store
@@ -279,6 +274,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
       setShowConfirm(true);
 
       // publish this "assignmentFinished" for mashup, need to get approved as a standard
+      // @ts-ignore - second parameter “payload” for publish method should be optional
       PCore.getPubSubUtils().publish('assignmentFinished');
 
       // debugger;

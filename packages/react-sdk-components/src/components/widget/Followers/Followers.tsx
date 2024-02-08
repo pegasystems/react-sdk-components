@@ -1,11 +1,10 @@
 import { Card, CardContent, CardHeader, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-// import { green } from "@material-ui/core/colors";
+import { PropsWithChildren } from 'react';
 
 // Followers does NOT have getPConnect. So, no need to extend from PConnProps
 interface FollowersProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
 }
 
 const useStyles = makeStyles(theme => ({
@@ -23,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Followers(props: FollowersProps) {
+export default function Followers(props: PropsWithChildren<FollowersProps>) {
   const componentName = 'Followers';
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { children } = props;

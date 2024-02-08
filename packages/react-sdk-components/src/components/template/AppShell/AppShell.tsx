@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 
 import { Utils } from '../../helpers/utils';
 import { NavContext } from '../../helpers/reactContextHelpers';
-import './AppShell.css';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
+
+import './AppShell.css';
 
 interface AppShellProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -19,7 +20,6 @@ interface AppShellProps extends PConnProps {
     pyURLContent: string;
   }[];
   caseTypes?: object[];
-  children?: any[];
   portalTemplate: string;
   portalName: string;
   portalLogo: string;
@@ -45,10 +45,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
-declare const PCore: any;
-
-export default function AppShell(props: AppShellProps) {
+export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const NavBar = getComponentFromMap('NavBar');
   const WssNavBar = getComponentFromMap('WssNavBar');
@@ -71,7 +68,7 @@ export default function AppShell(props: AppShellProps) {
   const classes = useStyles();
   const actionsAPI = pConn.getActionsApi();
   const localeReference = pConn.getValue('.pyLocaleReference', ''); // 2nd arg empty string until typedef marked correctly
-  const [imageBlobUrl, setImageBlobUrl] = useState(null);
+  const [imageBlobUrl, setImageBlobUrl] = useState<string | null>(null);
   // useState for appName and mapChildren - note these are ONLY updated once (on component mount!)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [appName, setAppName] = useState('');

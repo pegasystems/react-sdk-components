@@ -1,11 +1,10 @@
-import { Children } from 'react';
+import { Children, PropsWithChildren } from 'react';
 
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // WideNarrowPage does NOT have getPConnect. So, no need to extend from PConnProps
 interface WideNarrowPageProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   title: string;
   templateCol?: string;
   icon?: string;
@@ -15,7 +14,7 @@ interface WideNarrowPageProps {
  * The wrapper handles knowing how to take in just children and mapping
  * to the Cosmos template.
  */
-export default function WideNarrowPage(props: WideNarrowPageProps) {
+export default function WideNarrowPage(props: PropsWithChildren<WideNarrowPageProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const WideNarrow = getComponentFromMap('WideNarrow');
 

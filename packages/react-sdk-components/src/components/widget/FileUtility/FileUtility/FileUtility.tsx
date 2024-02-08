@@ -12,14 +12,11 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
-import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
 interface FileUtilityProps extends PConnProps {
   // If any, enter additional props that only exist on this component
 }
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 5 errors)
-declare const PCore: any;
 
 export default function FileUtility(props: FileUtilityProps) {
   // Get emitted components from map (so we can get any override that may exist)
@@ -182,6 +179,7 @@ export default function FileUtility(props: FileUtilityProps) {
     const context = thePConn.getContextName();
 
     attachUtils
+      // @ts-ignore - 3rd parameter "responseEncoding" is optional
       .downloadAttachment(ID, context)
       .then(content => {
         if (type === 'FILE') {
@@ -254,14 +252,14 @@ export default function FileUtility(props: FileUtilityProps) {
 
   useEffect(() => {
     PCore.getPubSubUtils().subscribe(
-      PCore.getEvents().getCaseEvent().CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
+      (PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
       getAttachments,
       'caseAttachmentsUpdateFromCaseview'
     );
 
     return () => {
       PCore.getPubSubUtils().unsubscribe(
-        PCore.getEvents().getCaseEvent().CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
+        (PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
         'caseAttachmentsUpdateFromCaseview'
       );
     };
@@ -353,8 +351,7 @@ export default function FileUtility(props: FileUtilityProps) {
         .uploadAttachment(file, onUploadProgress, errorHandler, thePConn.getContextName())
         .then(fileResponse => {
           if (fileResponse.type === 'File') {
-            attachmentUtils
-              .linkAttachmentsToCase(caseID, [fileResponse], 'File', thePConn.getContextName())
+            (attachmentUtils.linkAttachmentsToCase(caseID, [fileResponse], 'File', thePConn.getContextName()) as Promise<any>)
               .then(() => {
                 setFileData(current => {
                   return { ...current, fileList: [], attachedFiles: [] };
@@ -473,15 +470,14 @@ export default function FileUtility(props: FileUtilityProps) {
 
     if (linksToAttach && linksToAttach.length > 0) {
       setProgress(true);
-      attachmentUtils
-        .linkAttachmentsToCase(caseID, linksToAttach, 'URL', thePConn.getContextName())
+      (attachmentUtils.linkAttachmentsToCase(caseID, linksToAttach, 'URL', thePConn.getContextName()) as Promise<any>)
         .then(() => {
           setLinkData(current => {
             return { ...current, linksList: [], attachedLinks: [] };
           });
           getAttachments();
         })
-        .catch(setProgress(false));
+        .catch(() => setProgress(false));
     }
   }
 

@@ -3,35 +3,16 @@ import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } fr
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
-// Checkbox passes in 'value' as a boolean. So can't use the default
-//  PConnFieldProps since it expects value to be a string.
-// But can't use CheckBoxProps until getValidationApi() knows about validate method
-//  Currently just thinks that returns an "object"
-// interface CheckboxProps extends PConnProps {
-//   // If any, enter additional props that only exist on Checkbox here
-//   // Everything from PConnFieldProps except value and change type of value to boolean
+interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
+  // If any, enter additional props that only exist on Checkbox here
+  value?: boolean;
+  // eslint-disable-next-line react/no-unused-prop-types
+  caption?: string;
+}
 
-//   value?: boolean,
-//   label: string,
-//   required: boolean,
-//   disabled: boolean,
-//   validatemessage: string,
-//   status?: string,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   onChange: any,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   onBlur?: any,
-//   readOnly: boolean,
-//   testId: string,
-//   helperText: string,
-//   displayMode?: string,
-//   hideLabel: boolean,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   placeholder?: string
-// }
-export default function CheckboxComponent(props /* : CheckboxProps */) {
+export default function CheckboxComponent(props: CheckboxProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldValueList = getComponentFromMap('FieldValueList');
 
@@ -52,10 +33,10 @@ export default function CheckboxComponent(props /* : CheckboxProps */) {
   const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
-  const theConfigProps = thePConn.getConfigProps();
+  const theConfigProps = thePConn.getConfigProps() as CheckboxProps;
   const caption = theConfigProps.caption;
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps().value;
+  const propName = (thePConn.getStateProps() as any).value;
 
   const [checked, setChecked] = useState(false);
   useEffect(() => {

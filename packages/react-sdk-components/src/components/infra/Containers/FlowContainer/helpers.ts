@@ -1,6 +1,6 @@
 //  Moved PCore.getConstants() into each function in which it's used until we can
 //  make sure that this code isn't run until PCore is defined (after onPCoreReady)
-// const { CASE_INFO } = window.PCore.getConstants();
+// const { CASE_INFO } = PCore.getConstants();
 
 export const addContainerItem = pConnect => {
   const containerManager = pConnect.getContainerManager();

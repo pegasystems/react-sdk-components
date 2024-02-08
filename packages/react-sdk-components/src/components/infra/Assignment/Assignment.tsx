@@ -1,26 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
-// Can't use AssignmentProps until the following are NOT private
-//  getCaseInfo().isAssignmentInCreateStage()
-//  getCaseInfo().isLocalAction()
-// interface AssignmentProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   children: Array<any>,
-//   itemKey: string,
-//   isInModal: boolean,
-//   banners: Array<any>
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   actionButtons: Array<any>,
-// }
+interface AssignmentProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  itemKey: string;
+  isInModal: boolean;
+  banners: any[];
+  // eslint-disable-next-line react/no-unused-prop-types
+  actionButtons: any[];
+}
 
-export default function Assignment(props /* : AssignmentProps */) {
+export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const AssignmentCard = getComponentFromMap('AssignmentCard');
   const MultiStep = getComponentFromMap('MultiStep');
@@ -79,7 +75,7 @@ export default function Assignment(props /* : AssignmentProps */) {
       const firstChild = Array.isArray(children) ? children[0] : children;
       const oWorkItem = firstChild.props.getPConnect();
       const oWorkData = oWorkItem.getDataObject();
-      const oData = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
+      const oData: any = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
         const oCaseInfo = oData.caseInfo;
@@ -171,8 +167,10 @@ export default function Assignment(props /* : AssignmentProps */) {
           // check if create stage (modal)
           const { PUB_SUB_EVENTS } = PCore.getConstants();
           const { publish } = PCore.getPubSubUtils();
+          // @ts-ignore - Property 'isAssignmentInCreateStage' is private and only accessible within class 'CaseInfo'
           const isAssignmentInCreateStage = thePConn.getCaseInfo().isAssignmentInCreateStage();
           const isLocalAction =
+            // @ts-ignore - Property 'isLocalAction' is private and only accessible within class 'CaseInfo'.
             thePConn.getCaseInfo().isLocalAction() ||
             (PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION && getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION, '')); // 2nd arg empty string until typedefs allow it to be optional
           if (isAssignmentInCreateStage && isInModal && !isLocalAction) {
@@ -232,6 +230,7 @@ export default function Assignment(props /* : AssignmentProps */) {
   }
 
   // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
+  // @ts-ignore - Property 'getActionRefreshConditions' is private and only accessible within class 'CaseInfo'
   const refreshConditions = thePConn.getCaseInfo()?.getActionRefreshConditions();
   const context = thePConn.getContextName();
   const pageReference = thePConn.getPageReference();

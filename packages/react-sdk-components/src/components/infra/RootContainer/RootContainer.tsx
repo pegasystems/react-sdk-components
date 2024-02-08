@@ -1,28 +1,20 @@
-import { useMemo, useRef, useState, useEffect, useContext, createElement } from 'react';
-// import { Banner, ModalManager } from "@pega/cosmos-react-core";
+import { Children, createElement, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import isEqual from 'lodash.isequal';
-// import ReAuthMessageModal from "../ReAuthenticationModal";
 import { Box, CircularProgress } from '@material-ui/core';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
-import { LazyMap as LazyComponentMap } from '../../../components_map';
 import StoreContext from '../../../bridge/Context/StoreContext';
+import { LazyMap as LazyComponentMap } from '../../../components_map';
 import { isEmptyObject } from '../../helpers/common-utils';
+import { PConnProps } from '../../../types/PConnProps';
 
-// import type { PConnProps } from '../../../types/PConnProps';
-
-// Can't use RootContainerProps until getChildren() typedef is fixes to not return an array of 'never'
-// interface RootContainerProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   renderingMode?: string,
-//   routingInfo: { type: string, accessedOrder: Array<any>, items: any },
-//   children: Array<any>,
-//   skeleton: any,
-//   httpMessages: Array<any>
-// }
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
-declare const PCore: any;
+interface RootContainerProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  renderingMode?: string;
+  routingInfo: { type: string; accessedOrder: any[]; items: any };
+  skeleton: any;
+  httpMessages: any[];
+}
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -54,8 +46,8 @@ function getItemView(routingInfo, renderingMode) {
   return viewConfigs;
 }
 
-export default function RootContainer(props /* : RootContainerProps */) {
-  const { getPConnect, renderingMode = '', children = [], skeleton, httpMessages = [], routingInfo } = props;
+export default function RootContainer(props: PropsWithChildren<RootContainerProps>) {
+  const { getPConnect, renderingMode = '', children, skeleton, httpMessages = [], routingInfo } = props;
 
   const { displayOnlyFA } = useContext<any>(StoreContext);
 
@@ -132,7 +124,7 @@ export default function RootContainer(props /* : RootContainerProps */) {
           },
           options
         };
-        const theViewCont = PCore.createPConnect(viewContConfig);
+        const theViewCont: any = PCore.createPConnect(viewContConfig);
         // Add in displayOnlyFA if prop is on RootContainer
         if (displayOnlyFA) {
           theViewCont.displayOnlyFA = true;
@@ -160,7 +152,7 @@ export default function RootContainer(props /* : RootContainerProps */) {
   useEffect(() => {
     const { containers } = PCore.getStore().getState();
     const items = Object.keys(containers).filter(item => item.includes('root'));
-    PCore.getContainerUtils().getContainerAPI().addContainerItems(items);
+    (PCore.getContainerUtils().getContainerAPI() as any).addContainerItems(items);
   }, [routingInfo]);
 
   const items: any = getItemView(routingInfo, renderingMode);
@@ -208,7 +200,7 @@ export default function RootContainer(props /* : RootContainerProps */) {
     // eslint-disable-next-line no-console
     console.log(`${localizedVal('RootContainer rendering in noPortal mode', localeCategory)}`);
 
-    const theChildren = pConn.getChildren();
+    const theChildren = pConn.getChildren() as any[];
     if (theChildren && theChildren.length === 1) {
       const localPConn = theChildren[0].getPConnect();
       const localCompName = localPConn.getComponentName();
@@ -219,7 +211,7 @@ export default function RootContainer(props /* : RootContainerProps */) {
 
     return getNoPortalContent();
   }
-  if (children && children.length > 0) {
+  if (children && Children.count(children) > 0) {
     return (
       <>
         <div>{localizedVal('RootContainer: Has children. Trying to show ModalManager with children, etc.', localeCategory)}</div>

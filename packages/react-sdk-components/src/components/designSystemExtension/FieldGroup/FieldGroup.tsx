@@ -1,3 +1,4 @@
+import { PropsWithChildren } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -5,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 //  So, no need to extend PConnProps
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
-  children: any[] | any;
   name: string | object;
 }
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function FieldGroup(props: FieldGroupProps) {
+export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
   const { children, name } = props;
   const classes = useStyles();
 

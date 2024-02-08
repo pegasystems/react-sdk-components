@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-boolean-value */
 
-import { useState, useEffect, useContext } from 'react';
-import { Card, CardHeader, Avatar, Typography, Divider } from '@material-ui/core';
+import { PropsWithChildren, ReactElement, useContext, useEffect, useState } from 'react';
+import { Avatar, Card, CardHeader, Divider, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -10,20 +10,16 @@ import Grid from '@material-ui/core/Grid';
 import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   icon: string;
-  children: any[];
   subheader: string;
   header: string;
   showIconInHeader: boolean;
   caseInfo: any;
 }
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
-declare const PCore: any;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CaseView(props: CaseViewProps) {
+export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
   const VerticalTabs = getComponentFromMap('VerticalTabs');
@@ -68,6 +64,7 @@ export default function CaseView(props: CaseViewProps) {
     showIconInHeader = true,
     caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
+
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
 
@@ -88,9 +85,9 @@ export default function CaseView(props: CaseViewProps) {
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
   function getChildRegionByName(inName: string): any {
-    for (const child of children) {
-      const theMetadataType: string = child.props.getPConnect().getRawMetadata().type.toLowerCase();
-      const theMetadataName: string = child.props.getPConnect().getRawMetadata().name.toLowerCase();
+    for (const child of children as ReactElement[]) {
+      const theMetadataType: string = (child as ReactElement).props.getPConnect().getRawMetadata().type.toLowerCase();
+      const theMetadataName: string = (child as ReactElement).props.getPConnect().getRawMetadata().name.toLowerCase();
 
       if (theMetadataType === 'region' && theMetadataName === inName) {
         return child;
@@ -172,7 +169,8 @@ export default function CaseView(props: CaseViewProps) {
 
   useEffect(() => {
     if (hasNewAttachments) {
-      PCore.getPubSubUtils().publish(PCore.getEvents().getCaseEvent().CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW, true);
+      // @ts-ignore - Argument of type 'boolean' is not assignable to parameter of type 'object'
+      PCore.getPubSubUtils().publish((PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW, true);
     }
   }, [hasNewAttachments]);
 

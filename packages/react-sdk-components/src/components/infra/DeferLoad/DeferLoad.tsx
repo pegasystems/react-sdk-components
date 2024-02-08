@@ -4,15 +4,15 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
-// Can't use PConnProps until typedefs for showData are fixed
-// interface DeferLoadProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   name: string,
-//   isChildDeferLoad?: boolean,
-//   isTab: boolean
-// }
+interface DeferLoadProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  name: string;
+  isChildDeferLoad?: boolean;
+  isTab: boolean;
+  deferLoadId: string;
+}
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DeferLoad(props /* : DeferLoadProps */) {
+export default function DeferLoad(props: DeferLoadProps) {
   const { getPConnect, name, deferLoadId, isTab } = props;
   const [content, setContent] = useState<any>(null);
   const [isLoading, setLoading] = useState(true);
@@ -68,7 +68,7 @@ export default function DeferLoad(props /* : DeferLoadProps */) {
 
   const getViewOptions = () => ({
     viewContext: resourceType,
-    pageClass: loadViewCaseID ? '' : pConnect.getDataObject('').pyPortal.classID, // 2nd arg empty string until typedef allows optional
+    pageClass: loadViewCaseID ? '' : (pConnect.getDataObject('') as any).pyPortal.classID, // 2nd arg empty string until typedef allows optional
     container: isContainerPreview ? 'preview' : null,
     containerName: isContainerPreview ? 'preview' : null,
     updateData: isContainerPreview
@@ -113,7 +113,7 @@ export default function DeferLoad(props /* : DeferLoadProps */) {
         getPConnect()
           .getActionsApi()
           .showData(name, dataContext, dataContextParameters, {
-            // Need to wait for typedefs to be fixed for showData
+            // @ts-ignore - Type 'boolean' is not assignable to type 'string'
             skipSemanticUrl: true,
             isDeferLoaded: true
           })

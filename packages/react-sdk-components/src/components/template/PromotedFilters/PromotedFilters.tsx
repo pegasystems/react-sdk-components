@@ -6,18 +6,18 @@ import { isEmptyObject } from '../../helpers/common-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import './PromotedFilters.css';
 
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 // Can't use PromotedFilterProps until getContainerManager() knows about addTransientItem
 //  Currently just expects "object"
-// interface PromotedFilterProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   viewName: string,
-//   filters: Array<any>,
-//   listViewProps: any,
-//   pageClass: string,
-//   parameters?: object
-// }
+interface PromotedFilterProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  viewName: string;
+  filters: any[];
+  listViewProps: any;
+  pageClass: string;
+  parameters?: object;
+}
 
 const localeCategory = 'SimpleTable';
 const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
@@ -66,7 +66,7 @@ function isValidInput(input) {
   return Object.values(input).findIndex(v => v) >= 0;
 }
 
-export default function PromotedFilters(props /* : PromotedFilterProps */) {
+export default function PromotedFilters(props: PromotedFilterProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const ListView = getComponentFromMap('ListView');
 

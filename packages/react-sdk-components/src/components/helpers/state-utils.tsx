@@ -15,7 +15,7 @@ const connectToState = (mapStateToProps = () => {}) => {
         // Compare start props
         const c11nEnv = next.getPConnect();
         const allStateProps = c11nEnv.getStateProps();
-        for (const key in allStateProps) {
+        for (const key of Object.keys(allStateProps)) {
           if (!shallowEqual(next[key], prev[key]) || (next.routingInfo && !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))) {
             return false;
           }

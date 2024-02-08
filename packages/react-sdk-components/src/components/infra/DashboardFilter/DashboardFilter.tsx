@@ -1,29 +1,25 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable operator-assignment */
-import { useRef, useEffect, useState, forwardRef } from 'react';
+import { forwardRef, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { TextField } from '@material-ui/core';
 import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'throttle-debounce';
+import DatePicker from 'react-datepicker';
 
 import { createFilter, combineFilters, getFormattedDate, getFilterExpression } from './filterUtils';
-
-import { TextField } from '@material-ui/core';
-import React from 'react';
-import DatePicker from 'react-datepicker';
+import { PConnProps } from '../../../types/PConnProps';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import type { PConnProps } from '../../../types/PConnProps';
-
 interface DashboardFilterProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children?: any[];
   name: string;
   filterProp: string;
   type?: string;
   metadata?: any;
 }
 
-export default function DashboardFilter(props: DashboardFilterProps) {
+export default function DashboardFilter(props: PropsWithChildren<DashboardFilterProps>) {
   const { children = [], name, filterProp, type = '', metadata = null, getPConnect } = props;
   const { current: filterId } = useRef(uuidv4());
 

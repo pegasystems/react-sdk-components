@@ -1,10 +1,10 @@
+import { PropsWithChildren, ReactElement } from 'react';
 import { Grid, GridSize } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 // TwoColumn does NOT have getPConnect. So, no need to extend from PConnProps
 interface TwoColumnProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
   templateCol?: string;
 }
 
@@ -16,14 +16,15 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function TwoColumn(props: TwoColumnProps) {
+export default function TwoColumn(props: PropsWithChildren<TwoColumnProps>) {
   const classes = useStyles();
 
   const { children, templateCol = '1fr 1fr' } = props;
+  const childrenToRender = children as ReactElement[];
 
-  if (children.length !== 2) {
+  if (childrenToRender.length !== 2) {
     // eslint-disable-next-line no-console
-    console.error(`TwoColumn template sees more than 2 columns: ${children.length}`);
+    console.error(`TwoColumn template sees more than 2 columns: ${childrenToRender.length}`);
   }
 
   // Calculate the size
@@ -44,10 +45,10 @@ export default function TwoColumn(props: TwoColumnProps) {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} md={aSize} className={classes.colStyles}>
-        {children[0]}
+        {childrenToRender[0]}
       </Grid>
       <Grid item xs={12} md={bSize} className={classes.colStyles}>
-        {children[1]}
+        {childrenToRender[1]}
       </Grid>
     </Grid>
   );

@@ -1,9 +1,9 @@
-import React, { Children, useState, useMemo } from 'react';
+import React, { Children, useMemo, useState } from 'react';
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 
 import { buildView } from '../../../helpers/field-group-utils';
-// import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
 const useStyles = makeStyles(() => ({
   tab: {
@@ -11,24 +11,24 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-// ListViewProps can't be used until getComponentConfig is NOT private
-// interface DynamicTabsProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   showLabel: boolean;
-//   label: string;
-//   referenceList?: Array<any>;
-// }
+interface DynamicTabsProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  showLabel: boolean;
+  label: string;
+  referenceList?: any[];
+}
 
-function DynamicTabs(props /*: DynamicTabsProps */) {
+function DynamicTabs(props: DynamicTabsProps) {
   const classes = useStyles();
   const { referenceList, showLabel, label, getPConnect } = props;
   const pConnect = getPConnect();
   // Get the inherited props from the parent to determine label settings
   const propsToUse = { label, showLabel, ...pConnect.getInheritedProps() };
   const defaultTabIndex = 0;
+  // @ts-ignore - Property 'getComponentConfig' is private and only accessible within class 'C11nEnv'.
   const { tablabel } = pConnect.getComponentConfig();
   const tablabelProp = PCore.getAnnotationUtils().getPropertyName(tablabel);
-  const referenceListData = pConnect.getValue(`${referenceList}.pxResults`, ''); // 2nd arg empty string until typedefs properly allow optional
+  const referenceListData: any = pConnect.getValue(`${referenceList}.pxResults`, ''); // 2nd arg empty string until typedefs properly allow optional
   const memoisedTabViews = useMemo(() => {
     pConnect.setInheritedProp('displayMode', 'LABELS_LEFT');
     pConnect.setInheritedProp('readOnly', true);

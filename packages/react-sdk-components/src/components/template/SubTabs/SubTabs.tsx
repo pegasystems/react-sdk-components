@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Children, PropsWithChildren, useEffect, useState } from 'react';
 import { Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 
@@ -8,14 +8,13 @@ import { getTransientTabs, getVisibleTabs, tabClick } from './tabUtils';
 
 interface SubTabsProps {
   // If any, enter additional props that only exist on this component
-  children: any[];
 }
 
-export default function SubTabs(props: SubTabsProps) {
+export default function SubTabs(props: PropsWithChildren<SubTabsProps>) {
   const { children = [] } = props;
 
   const defaultTabIndex = 0;
-  const deferLoadedTabs = children[0];
+  const deferLoadedTabs = Children.toArray(children)[0];
   const availableTabs = getVisibleTabs(deferLoadedTabs, 'tabsSubs');
   const [currentTabId, setCurrentTabId] = useState(defaultTabIndex.toString());
 

@@ -3,7 +3,7 @@ import { TextField } from '@material-ui/core';
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface TextInputProps extends PConnFieldProps {
   // If any, enter additional props that only exist on TextInput here

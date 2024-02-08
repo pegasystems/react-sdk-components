@@ -3,15 +3,12 @@ import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import DoneIcon from '@material-ui/icons/Done';
 import { makeStyles } from '@material-ui/core/styles';
 
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 interface StagesProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   stages: any[];
 }
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
-declare const PCore: any;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -67,7 +64,7 @@ export default function Stages(props: StagesProps) {
   const stagesObj = filteredStages.map((stage, index, arr) => {
     const theID = stage.ID || stage.id;
     return {
-      name: PCore.getLocaleUtils().getLocaleValue(stage.name, null, key),
+      name: PCore.getLocaleUtils().getLocaleValue(stage.name, undefined, key),
       id: theID,
       complete: stage.visited_status === 'completed',
       current: theID === currentStageID,

@@ -90,7 +90,7 @@ test.describe('E2E test', () => {
     await editableURL.click();
     await editableURL.clear();
     await editableURL.blur();
-    await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeHidden();
+    await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeHidden({ timeout: 200 });
 
     /** Selecting Visibility from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');

@@ -1,12 +1,9 @@
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 interface ErrorBoundaryProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   isInternalError?: boolean;
 }
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
-declare const PCore: any;
 
 export default function ErrorBoundary(props: ErrorBoundaryProps) {
   const errorMsg = PCore.getErrorHandler().getGenericFailedMessage();
@@ -40,6 +37,7 @@ export default function ErrorBoundary(props: ErrorBoundaryProps) {
 
   if (pConn.getContainerName() === WORK_AREA || pConn.isInsideList() === true || pConn.getContainerName() === 'modal') {
     const { publish } = PCore.getPubSubUtils();
+    // @ts-ignore - second parameter “payload” for publish method should be optional
     publish(ERROR_WHILE_RENDERING);
     return null;
   }

@@ -1,21 +1,19 @@
-import { createElement } from 'react';
+import { createElement, PropsWithChildren } from 'react';
 
 import { getInstructions } from '../../helpers/template-utils';
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import connectToState from '../../helpers/state-utils';
 
 import { getKeyForMappedField, mapStateToProps } from './utils';
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 import './DefaultForm.css';
 
-// Can't use PConn props until proper props for getPConnect().getChildren()[0].getPConnect;
-// interface DefaultFormProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   children: Array<any>,
-//   NumCols: string
-
-// }
+interface DefaultFormProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  NumCols: string;
+  instructions: string;
+}
 
 const Child = connectToState(mapStateToProps)(props => {
   const { key, visibility, ...rest } = props;
@@ -23,7 +21,7 @@ const Child = connectToState(mapStateToProps)(props => {
   return createElement(createPConnectComponent(), { ...rest, key, visibility });
 });
 
-export default function DefaultForm(props /* : DefaultFormProps */) {
+export default function DefaultForm(props: PropsWithChildren<DefaultFormProps>) {
   const { getPConnect, NumCols = '1' } = props;
   const instructions = getInstructions(getPConnect(), props.instructions);
 
