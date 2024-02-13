@@ -37,7 +37,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       // eslint-disable-next-line sonarjs/no-small-switch
       switch (fieldTypeLower) {
         case 'caseoperator':
-          return <Operator caseOpConfig={field.config} />;
+          return <Operator {...field.config} />;
           break;
 
         default:
@@ -185,7 +185,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         );
 
       case 'caseoperator':
-        return <Operator caseOpConfig={field.config} />;
+        return <Operator {...field.config} />;
 
       default:
         return (
