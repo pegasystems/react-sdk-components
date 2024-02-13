@@ -181,7 +181,7 @@ export default function FileUtility(props: FileUtilityProps) {
     attachUtils
       // @ts-ignore - 3rd parameter "responseEncoding" is optional
       .downloadAttachment(ID, context)
-      .then(content => {
+      .then((content: any) => {
         if (type === 'FILE') {
           fileDownload(content.data, name, extension);
         } else if (type === 'URL') {
@@ -216,7 +216,7 @@ export default function FileUtility(props: FileUtilityProps) {
     if (caseID && caseID !== '') {
       const attPromise = attachmentUtils.getCaseAttachments(caseID, thePConn.getContextName());
 
-      attPromise.then(resp => {
+      attPromise.then((resp: any) => {
         const arFullListAttachments = addAttachments(resp);
         const attachmentsCount = arFullListAttachments.length;
         const arItems: any = arFullListAttachments.slice(0, 3).map(att => {
@@ -349,7 +349,7 @@ export default function FileUtility(props: FileUtilityProps) {
     for (const file of fileData.attachedFiles) {
       attachmentUtils
         .uploadAttachment(file, onUploadProgress, errorHandler, thePConn.getContextName())
-        .then(fileResponse => {
+        .then((fileResponse: any) => {
           if (fileResponse.type === 'File') {
             (attachmentUtils.linkAttachmentsToCase(caseID, [fileResponse], 'File', thePConn.getContextName()) as Promise<any>)
               .then(() => {

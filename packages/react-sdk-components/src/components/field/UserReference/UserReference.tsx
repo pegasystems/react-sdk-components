@@ -65,7 +65,7 @@ const UserReference = (props: UserReferenceProps) => {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(userId).then(res => {
+        getOperatorDetails(userId).then((res: any) => {
           if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
             setUserName(res.data.pyOperatorInfo.pyUserName);
           }
@@ -80,7 +80,7 @@ const UserReference = (props: UserReferenceProps) => {
         // @ts-ignore - Argument of type '{ queryPayload: { dataViewName: string; }; }' is not assignable to parameter of type 'RestApiOptionsObject'
         // @ts-ignore - Expected 3 arguments, but got 2
         .invokeRestApi('getListData', { queryPayload })
-        .then(res => {
+        .then((res: any) => {
           const ddDataSource = res.data.data.map(listItem => ({
             key: listItem.pyUserIdentifier,
             value: listItem.pyUserName

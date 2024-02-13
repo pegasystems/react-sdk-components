@@ -115,6 +115,7 @@ export default function DeferLoad(props: DeferLoadProps) {
           .showData(name, dataContext, dataContextParameters, {
             // @ts-ignore - Type 'boolean' is not assignable to type 'string'
             skipSemanticUrl: true,
+            // @ts-ignore
             isDeferLoaded: true
           })
           .then(data => {

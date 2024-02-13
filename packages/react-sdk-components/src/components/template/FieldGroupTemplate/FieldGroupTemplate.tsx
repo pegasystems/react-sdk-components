@@ -51,7 +51,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
     } else {
-      pConn.getListActions().insert({}, referenceList.length, null); // 3rd arg null until typedef marked correctly as optional
+      pConn.getListActions().insert({}, referenceList.length);
     }
   };
 
@@ -63,7 +63,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
       if (PCore.getPCoreVersion()?.includes('8.7')) {
         pConn.getListActions().deleteEntry(index, pageReference);
       } else {
-        pConn.getListActions().deleteEntry(index, null); // 2nd arg null until typedef marked correctly as optional
+        pConn.getListActions().deleteEntry(index);
       }
     };
     if (referenceList.length === 0 && allowAddEdit !== false) {
