@@ -12,7 +12,7 @@
     "prebuild-overrides": "shx rm -rf ./packages/react-sdk-overrides/lib && shx cp -r ./packages/react-sdk-components/src/components ./packages/react-sdk-overrides/lib",
     "build-overrides": "node scripts/build-overrides",
     "postbuild-overrides": "echo build-overrides completed",
-    "pack-overrides": "npm  pack ./packages/react-sdk-overrides",
+    "pack-overrides": "npm pack ./packages/react-sdk-overrides",
     "ci": "npm run clean && npm install",
     "clean": "npx shx --yes rm -rf ./node_modules ./dist && npm run clear-lib",
     "delete-tsbuildinfo": "rm -f packages/react-sdk-components/*.*.tsbuildinfo",
