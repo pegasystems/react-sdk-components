@@ -72,7 +72,7 @@ export default function Operator(props: OperatorProps) {
     const localizedVal = PCore.getLocaleUtils().getLocaleValue;
     const localeCategory = 'Operator';
 
-    operatorPreviewPromise.then(res => {
+    operatorPreviewPromise.then((res: any) => {
       const fillerString = '---';
       let fields: any = [];
       if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {

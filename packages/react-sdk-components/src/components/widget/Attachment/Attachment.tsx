@@ -73,7 +73,7 @@ export default function Attachment(props: AttachmentProps) {
     PCore.getAttachmentUtils()
       // @ts-ignore - 3rd parameter "responseEncoding" should be optional
       .downloadAttachment(fileObj.pzInsKey, pConn.getContextName())
-      .then(content => {
+      .then((content: any) => {
         const extension = fileObj.pyAttachName.split('.').pop();
         fileDownload(content.data, fileObj.pyFileName, extension);
       })

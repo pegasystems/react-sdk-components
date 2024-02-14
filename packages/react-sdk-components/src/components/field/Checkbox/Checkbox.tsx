@@ -57,7 +57,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
   };
 
   const handleBlur = event => {
-    thePConn.getValidationApi().validate(event.target.checked, ''); // 2nd arg empty string until typedef marked correctly as optional
+    thePConn.getValidationApi().validate(event.target.checked);
   };
 
   let theCheckbox = <Checkbox color='primary' disabled={disabled} />;

@@ -128,7 +128,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const [displayDialogContainsValue, setDisplayDialogContainsValue] = useState<string>('');
   const [displayDialogDateFilter, setDisplayDialogDateFilter] = useState<string>('notequal');
   const [displayDialogDateValue, setDisplayDialogDateValue] = useState<string>('');
-  const selectedRowIndex = useRef(null);
+  const selectedRowIndex: any = useRef(null);
 
   const parameters = fieldMetadata?.datasource?.parameters;
   const { referenceListStr } = getContext(getPConnect());
