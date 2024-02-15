@@ -1,9 +1,8 @@
 import { Card, CardContent, CardHeader, Typography, CardActions, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { PConnProps } from '../../../types/PConnProps';
 
-// AppAnnouncement is one of the few components that does NOT have getPConnect.
-//  So, no need to extend PConnProps
-interface AppAnnouncementProps {
+interface AppAnnouncementProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   header?: string;
   description?: string;
