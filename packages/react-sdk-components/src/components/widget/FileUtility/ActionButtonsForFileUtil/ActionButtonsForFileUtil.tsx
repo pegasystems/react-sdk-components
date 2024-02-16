@@ -1,8 +1,8 @@
 import { Button } from '@material-ui/core';
+import { PConnProps } from '../../../../types/PConnProps';
 import './ActionButtonsForFileUtil.css';
 
-// ActionButtonsForFileUtil does NOT have getPConnect. So, no need to extend PConnProps
-interface ActionButtonsForFileUtilProps {
+interface ActionButtonsForFileUtilProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   arMainButtons: any[];
   arSecondaryButtons: any[];

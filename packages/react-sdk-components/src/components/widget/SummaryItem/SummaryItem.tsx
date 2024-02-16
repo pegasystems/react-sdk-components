@@ -1,14 +1,12 @@
 import { useState } from 'react';
-
-import { Utils } from '../../helpers/utils';
-
-import './SummaryItem.css';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { Utils } from '../../helpers/utils';
+import { PConnProps } from '../../../types/PConnProps';
 
-// SummaryItem does NOT have getPConnect. So, no need to extend from PConnProps
+import './SummaryItem.css';
 
-interface SummaryItemProps {
+interface SummaryItemProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   menuIconOverride$: string;
   menuIconOverrideAction$: any;

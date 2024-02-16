@@ -8,11 +8,10 @@ import { IconButton, Menu, MenuItem, Typography, Button } from '@material-ui/cor
 import Avatar from '@material-ui/core/Avatar';
 import MenuIcon from '@material-ui/icons/Menu';
 import { logout } from '@pega/auth/lib/sdk-auth-manager';
+import { PConnProps } from '../../../types/PConnProps';
 import './WssNavBar.css';
 
-// WssNavBar does NOT have getPConnect. So, no need to extend from PConnProps
-
-interface WssNavBarProps {
+interface WssNavBarProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   appInfo: any;
   navLinks: any[];

@@ -6,10 +6,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Utils from '../../helpers/utils';
+import { PConnProps } from '../../../types/PConnProps';
 
 // Operator is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
-interface OperatorProps {
+interface OperatorProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   label: string;
   createDateTime: string;
