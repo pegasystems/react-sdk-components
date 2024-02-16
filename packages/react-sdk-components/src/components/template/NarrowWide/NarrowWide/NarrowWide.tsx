@@ -1,8 +1,8 @@
 import { PropsWithChildren, ReactElement } from 'react';
+import { PConnProps } from '../../../../types/PConnProps';
 import './NarrowWide.css';
 
-// NarrowWide does NOT have getPConnect. So, no need to extend from PConnProps
-interface NarrowWideProps {
+interface NarrowWideProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   a: any;
   b: any;

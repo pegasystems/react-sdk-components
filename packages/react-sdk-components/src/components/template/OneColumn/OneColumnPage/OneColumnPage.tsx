@@ -1,7 +1,7 @@
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import { PConnProps } from '../../../../types/PConnProps';
 
-// OneColumnPage does NOT have getPConnect. So, no need to extend from PConnProps
-interface OneColumnPageProps {
+interface OneColumnPageProps extends PConnProps {
   // If any, enter additional props that only exist on this component
 }
 

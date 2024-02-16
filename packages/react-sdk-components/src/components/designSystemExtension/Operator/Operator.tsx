@@ -6,20 +6,19 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Utils from '../../helpers/utils';
+import { PConnProps } from '../../../types/PConnProps';
 
 // Operator is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
-interface OperatorProps {
+interface OperatorProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  caseOpConfig: {
-    label: string;
-    createDateTime: string;
-    createLabel: string;
-    createOperator: { userName: string; userId: string };
-    updateDateTime: string;
-    updateLabel: string;
-    updateOperator: { userName: string; userId: string };
-  };
+  label: string;
+  createDateTime: string;
+  createLabel: string;
+  createOperator: { userName: string; userId: string };
+  updateDateTime: string;
+  updateLabel: string;
+  updateOperator: { userName: string; userId: string };
 }
 
 const useStyles = makeStyles(theme => ({
@@ -35,25 +34,24 @@ const useStyles = makeStyles(theme => ({
 
 export default function Operator(props: OperatorProps) {
   // const componentName = "Operator";
-  const { caseOpConfig } = props;
   const classes = useStyles();
 
-  const fieldLabel = caseOpConfig.label.toLowerCase();
+  const fieldLabel = props.label.toLowerCase();
   let caseOpLabel = '---';
   let caseOpName = '---';
   let caseOpId = '';
   let caseTime = '';
 
   if (fieldLabel === 'create operator') {
-    caseOpLabel = caseOpConfig.createLabel;
-    caseOpName = caseOpConfig.createOperator.userName;
-    caseTime = caseOpConfig.createDateTime;
-    caseOpId = caseOpConfig.createOperator.userId;
+    caseOpLabel = props.createLabel;
+    caseOpName = props.createOperator.userName;
+    caseTime = props.createDateTime;
+    caseOpId = props.createOperator.userId;
   } else if (fieldLabel === 'update operator') {
-    caseOpLabel = caseOpConfig.updateLabel;
-    caseOpName = caseOpConfig.updateOperator.userName;
-    caseTime = caseOpConfig.updateDateTime;
-    caseOpId = caseOpConfig.updateOperator.userId;
+    caseOpLabel = props.updateLabel;
+    caseOpName = props.updateOperator.userName;
+    caseTime = props.updateDateTime;
+    caseOpId = props.updateOperator.userId;
   }
 
   // Popover-related

@@ -1,9 +1,8 @@
 import { PropsWithChildren, ReactElement } from 'react';
+import { PConnProps } from '../../../../types/PConnProps';
 import './NarrowWideForm.css';
 
-// NarrowWideForm does NOT have getPConnect. So, no need to extend from PConnProps
-
-interface NarrowWideFormProps {
+interface NarrowWideFormProps extends PConnProps {
   // If any, enter additional props that only exist on this component
 }
 
