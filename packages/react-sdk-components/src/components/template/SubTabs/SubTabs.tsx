@@ -3,10 +3,9 @@ import { Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 
 import { getTransientTabs, getVisibleTabs, tabClick } from './tabUtils';
+import { PConnProps } from '../../../types/PConnProps';
 
-// SubTabs does NOT have getPConnect. So, no need to extend from PConnProps
-
-interface SubTabsProps {
+interface SubTabsProps extends PConnProps {
   // If any, enter additional props that only exist on this component
 }
 

@@ -1,9 +1,9 @@
 import { PropsWithChildren, ReactElement } from 'react';
 import { Grid, GridSize } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { PConnProps } from '../../../../types/PConnProps';
 
-// TwoColumn does NOT have getPConnect. So, no need to extend from PConnProps
-interface TwoColumnProps {
+interface TwoColumnProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   templateCol?: string;
 }

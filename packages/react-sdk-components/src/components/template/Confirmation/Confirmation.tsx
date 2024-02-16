@@ -6,8 +6,6 @@ import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnProps } from '../../../types/PConnProps';
 
-// Confirmation does NOT have getPConnect. So, no need to extend from PConnProps
-
 interface ConfirmationProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   datasource: { source: any };

@@ -1,8 +1,8 @@
 import { PropsWithChildren, ReactElement } from 'react';
+import { PConnProps } from 'packages/react-sdk-components/src/types/PConnProps';
 import './WideNarrow.css';
 
-// WideNarrow does NOT have getPConnect. So, no need to extend from PConnProps
-interface WideNarrowProps {
+interface WideNarrowProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   a: any;
   b: any;

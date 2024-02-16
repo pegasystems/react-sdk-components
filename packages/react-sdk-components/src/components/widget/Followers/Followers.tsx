@@ -1,9 +1,9 @@
+import { PropsWithChildren } from 'react';
 import { Card, CardContent, CardHeader, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { PropsWithChildren } from 'react';
+import { PConnProps } from '../../../types/PConnProps';
 
-// Followers does NOT have getPConnect. So, no need to extend from PConnProps
-interface FollowersProps {
+interface FollowersProps extends PConnProps {
   // If any, enter additional props that only exist on this component
 }
 
