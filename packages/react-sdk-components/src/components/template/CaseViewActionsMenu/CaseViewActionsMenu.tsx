@@ -46,6 +46,15 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     handleClose();
   }
 
+  function _actionMenuProcessClick(process) {
+    const actionsAPI = thePConn.getActionsApi();
+    const openProcessAction = actionsAPI.openProcessAction.bind(actionsAPI);
+    openProcessAction(process.ID, {
+      ...process
+    });
+    handleClose();
+  }
+
   availableActions.forEach(action => {
     arMenuItems.push(
       <MenuItem key={action.ID} onClick={() => _actionMenuActionsClick(action)}>
@@ -55,7 +64,11 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
   });
 
   availableProcesses.forEach(process => {
-    arMenuItems.push(<MenuItem onClick={handleClose}>{process.name}</MenuItem>);
+    arMenuItems.push(
+      <MenuItem key={process.ID} onClick={() => _actionMenuProcessClick(process)}>
+        {localizedVal(process.name, '', localeKey)}
+      </MenuItem>
+    );
   });
 
   return (
