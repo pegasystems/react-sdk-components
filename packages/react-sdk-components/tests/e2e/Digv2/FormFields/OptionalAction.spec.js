@@ -3,10 +3,6 @@ const { test, expect } = require('@playwright/test');
 const config = require('../../../config');
 const common = require('../../../common');
 
-// These values represent the data values used for the conditions and are initialised in pyDefault DT
-const isDisabled = true;
-const isVisible = true;
-
 test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
