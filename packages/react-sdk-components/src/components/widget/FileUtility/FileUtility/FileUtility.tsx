@@ -346,23 +346,29 @@ export default function FileUtility(props: FileUtilityProps) {
     if (fileData.attachedFiles && fileData.attachedFiles.length > 0) {
       setProgress(true);
     }
-    for (const file of fileData.attachedFiles) {
-      attachmentUtils
-        .uploadAttachment(file, onUploadProgress, errorHandler, thePConn.getContextName())
-        .then((fileResponse: any) => {
-          if (fileResponse.type === 'File') {
-            (attachmentUtils.linkAttachmentsToCase(caseID, [fileResponse], 'File', thePConn.getContextName()) as Promise<any>)
-              .then(() => {
-                setFileData(current => {
-                  return { ...current, fileList: [], attachedFiles: [] };
-                });
-                getAttachments();
-              })
-              .catch();
+
+    Promise.allSettled(
+      fileData.attachedFiles.map(file => attachmentUtils.uploadAttachment(file, onUploadProgress, errorHandler, thePConn.getContextName()))
+    )
+      .then((fileResponses: any) => {
+        const uploadedFiles: any = [];
+        fileResponses.forEach(fileResponse => {
+          if (fileResponse.status === 'fulfilled') {
+            uploadedFiles.push(fileResponse.value);
           }
-        })
-        .catch();
-    }
+        });
+        if (uploadedFiles.length > 0) {
+          (attachmentUtils.linkAttachmentsToCase(caseID, uploadedFiles, 'File', thePConn.getContextName()) as Promise<any>)
+            .then(() => {
+              setFileData(current => {
+                return { ...current, fileList: [], attachedFiles: [] };
+              });
+              getAttachments();
+            })
+            .catch();
+        }
+      })
+      .catch();
   }
 
   function onAddLinksClick() {
