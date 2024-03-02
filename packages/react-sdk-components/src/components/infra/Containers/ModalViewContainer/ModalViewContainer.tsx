@@ -4,6 +4,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DayjsUtils from '@date-io/dayjs';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 // Need to get correct implementation from component map for Assignment and CancelAlert
@@ -324,17 +326,19 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         </DialogTitle>
         <DialogContent className={classes.dlgContent}>
           {bShowModal ? (
-            <Assignment
-              getPConnect={createdView.configObject.getPConnect}
-              itemKey={itemKey}
-              isInModal
-              banners={getBanners({
-                target: itemKey,
-                pageMessages
-              })}
-            >
-              {arNewChildrenAsReact}
-            </Assignment>
+            <MuiPickersUtilsProvider utils={DayjsUtils}>
+              <Assignment
+                getPConnect={createdView.configObject.getPConnect}
+                itemKey={itemKey}
+                isInModal
+                banners={getBanners({
+                  target: itemKey,
+                  pageMessages
+                })}
+              >
+                {arNewChildrenAsReact}
+              </Assignment>
+            </MuiPickersUtilsProvider>
           ) : null}
         </DialogContent>
         {isMultiRecordData && (
