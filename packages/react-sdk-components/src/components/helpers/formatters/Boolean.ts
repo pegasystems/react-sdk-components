@@ -15,7 +15,7 @@ export default {
   TrueFalse: (value, options) =>
     Boolean(value, {
       ...options,
-      tick: 'True',
-      cross: 'False'
+      tick: options.trueLabel || 'True',
+      cross: options.falseLabel || 'False'
     })
 };

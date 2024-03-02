@@ -109,7 +109,7 @@ export function format(value, type, options = {}): string {
 
     case 'boolean':
     case 'checkbox': {
-      formattedValue = Boolean.TrueFalse(value, { allowEmpty: false });
+      formattedValue = Boolean.TrueFalse(value, { allowEmpty: false, ...options });
       break;
     }
 
