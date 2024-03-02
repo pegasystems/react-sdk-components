@@ -46,6 +46,7 @@ import FieldValueList from './components/designSystemExtension/FieldValueList';
 import FileUtility from './components/widget/FileUtility/FileUtility';
 import FlowContainer from './components/infra/Containers/FlowContainer';
 import Followers from './components/widget/Followers';
+import Group from './components/field/Group';
 import InlineDashboard from './components/template/InlineDashboard';
 import InlineDashboardPage from './components/template/InlineDashboardPage/InlineDashboardPage';
 import Integer from './components/field/Integer';
@@ -158,6 +159,7 @@ const pegaSdkComponentMap = {
   FileUtility,
   FlowContainer,
   Followers,
+  Group,
   InlineDashboard,
   InlineDashboardPage,
   Integer,

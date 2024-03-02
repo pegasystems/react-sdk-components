@@ -16,12 +16,16 @@
   gap: calc(1rem);
 }
 
+.psdk-default-form-three-column .grid-column {
+  grid-column: 1 / span 3;
+}
+
 .psdk-default-form-two-column .grid-column {
   grid-column: 1 / span 2;
 }
 
-.psdk-default-form-three-column .grid-column {
-  grid-column: 1 / span 3;
+.psdk-default-form-one-column .grid-column {
+  grid-column: 1;
 }
 
 .psdk-default-form-instruction-text {
