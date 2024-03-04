@@ -10,6 +10,8 @@ interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   value?: boolean;
   // eslint-disable-next-line react/no-unused-prop-types
   caption?: string;
+  trueLabel?: string;
+  falseLabel?: string;
 }
 
 export default function CheckboxComponent(props: CheckboxProps) {
@@ -18,7 +20,6 @@ export default function CheckboxComponent(props: CheckboxProps) {
 
   const {
     getPConnect,
-    label,
     value = false,
     readOnly,
     testId,
@@ -28,7 +29,9 @@ export default function CheckboxComponent(props: CheckboxProps) {
     helperText,
     validatemessage,
     displayMode,
-    hideLabel
+    hideLabel,
+    trueLabel,
+    falseLabel
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -45,11 +48,11 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }, [value]);
 
   if (displayMode === 'LABELS_LEFT') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value.toString()} />;
+    return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value.toString()} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} variant='stacked' />;
   }
 
   const handleChange = event => {

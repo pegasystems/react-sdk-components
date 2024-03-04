@@ -30,6 +30,7 @@ import { getReferenceList } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
 import { buildFieldsForTable, filterData, getContext } from '../../../helpers/simpleTableHelpers';
 import { PConnProps } from '../../../../types/PConnProps';
+import { format } from '../../../helpers/formatters';
 
 interface SimpleTableManualProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -171,6 +172,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const bUseSeparateViewForEdit = editModeConfig ? editModeConfig.useSeparateViewForEdit : useSeparateViewForEdit;
   const editView = editModeConfig ? editModeConfig.editView : viewForEditModal;
 
+  const fieldsWithPropNames = rawFields.map((field, index) => {
+    return { ...resolvedFields[index], propName: field.config.value.replace('@P .', '') };
+  });
+
   useEffect(() => {
     if (editableMode && !allowEditingInModal) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -197,6 +202,19 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     return field.name ? field.name : field.cellRenderer;
   });
 
+  const getFormattedValue = (val, key) => {
+    const rawField = fieldsWithPropNames.find(item => item.propName === key);
+    let options = {};
+    if (rawField && ['Boolean', 'Checkbox'].includes(rawField.type)) {
+      const { trueLabel, falseLabel } = rawField.config;
+      options = {
+        trueLabel,
+        falseLabel
+      };
+    }
+    return rawField ? format(val, rawField.type, options) : val;
+  };
+
   // console.log(`SimpleTable displayedColumns:`);
   // console.log(displayedColumns);
 
@@ -209,7 +227,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     for (const key of refKeys) {
       valBuilder = valBuilder[key];
     }
-    return valBuilder;
+    return getFormattedValue(valBuilder, inColKey);
   }
 
   const formatRowsData = data => {
