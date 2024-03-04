@@ -29,7 +29,7 @@ test.describe('E2E test', () => {
     const formFieldsCase = page.locator('div[role="button"]:has-text("Form Field")');
     await formFieldsCase.click();
 
-    /** Selecting Attachment from the Category dropdown */
+    /** Selecting Group from the Category dropdown */
     const selectedCategory = page.locator('div[data-test-id="76729937a5eb6b0fd88c42581161facd"]');
     await selectedCategory.click();
     await page.getByRole('option', { name: 'Group' }).click();
@@ -65,7 +65,7 @@ test.describe('E2E test', () => {
     await expect(page.getByText('ReadyOnly Dropdown')).toBeVisible();
     await expect(page.getByText('United States')).toBeVisible();
 
-    /** Selecting ReadOnly from the Sub Category dropdown */
+    /** Selecting Collapsible from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
     await selectedSubCategory.click();
     await page.getByRole('option', { name: 'Collapsible' }).click();
@@ -90,5 +90,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-const outputDir = './test-reports/e2e/DigV2/FormFields/Attachment';
+const outputDir = './test-reports/e2e/DigV2/FormFields/FieldGroup';
 test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));
