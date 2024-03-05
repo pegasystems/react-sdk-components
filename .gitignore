@@ -15,3 +15,9 @@ tests/playwright-report
 test-reports
 
 **/tsconfig.*.tsbuildinfo
+
+// ignore Security.md and License files in packages
+packages/react-sdk-components/LICENSE
+packages/react-sdk-components/SECURITY.md
+packages/react-sdk-overrides/LICENSE
+packages/react-sdk-overrides/SECURITY.md
