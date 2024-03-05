@@ -4,7 +4,10 @@
   "description": "React SDK - Code for overriding components",
   "_filesComment": "During packing, npm ignores everything NOT in the files list",
   "files": [
-    "lib"
+    "lib",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
