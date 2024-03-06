@@ -132,7 +132,12 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
 
         const theViewContainerAsReact = createElement(createPConnectComponent(), theViewCont);
 
-        noPortalContent = theViewContainerAsReact;
+        noPortalContent = (
+          <>
+            {MemoizedModalViewContainer}
+            {theViewContainerAsReact}
+          </>
+        );
         break;
       }
 

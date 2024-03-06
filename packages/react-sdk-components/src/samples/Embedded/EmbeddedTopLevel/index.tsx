@@ -318,6 +318,12 @@ export default function EmbeddedTopLevel() {
     // eslint-disable-next-line no-console
     console.log(`EmbeddedTopLevel: initialRender got a PConnect with ${thePConn.getComponentName()}`);
 
+    thePConn.getContainerManager().initializeContainers({
+      type: 'multiple',
+      name: 'modal',
+      context: 'app'
+    });
+
     let target: any = null;
 
     if (domContainerID !== null) {
