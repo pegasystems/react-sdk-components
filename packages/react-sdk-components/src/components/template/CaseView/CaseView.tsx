@@ -178,7 +178,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     const actionsAPI = thePConn.getActionsApi();
     const openLocalAction = actionsAPI.openLocalAction.bind(actionsAPI);
 
-    openLocalAction(editAction.ID, { ...editAction });
+    openLocalAction(editAction.ID, { ...editAction, containerName: 'modal', type: 'express' });
   }
 
   function getActionButtonsHtml(): any {
