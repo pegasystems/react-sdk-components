@@ -79,7 +79,6 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
         getStepsInfo(step.steps, formedSteps);
       } else {
         formedSteps.push(step);
-        return;
       }
     });
 

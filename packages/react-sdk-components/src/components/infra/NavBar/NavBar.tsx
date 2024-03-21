@@ -280,7 +280,7 @@ export default function NavBar(props: NavBarProps) {
               <ListItemIcon>
                 <ArrowBackIcon fontSize='large' />
               </ListItemIcon>
-              <Typography variant='inherit'>{localizedVal('Logout', localeCategory)}</Typography>
+              <Typography variant='inherit'>{localizedVal('Log off', localeCategory)}</Typography>
             </MenuItem>
           </Menu>
         </>
