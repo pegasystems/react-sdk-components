@@ -70,6 +70,22 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     return arIndicies;
   }
 
+  function getStepsInfo(steps, formedSteps) {
+    steps.forEach(step => {
+      if (step.name) {
+        step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
+      }
+      if (step.steps) {
+        getStepsInfo(step.steps, formedSteps);
+      } else {
+        formedSteps.push(step);
+        return;
+      }
+    });
+
+    return formedSteps;
+  }
+
   useEffect(() => {
     if (children) {
       const firstChild = Array.isArray(children) ? children[0] : children;
@@ -110,22 +126,6 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
       }
     }
   }, [children]);
-
-  function getStepsInfo(steps, formedSteps) {
-    steps.forEach(step => {
-      if (step.name) {
-        step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
-      }
-      if (step.steps) {
-        getStepsInfo(step.steps, formedSteps);
-      } else {
-        formedSteps.push(step);
-        return;
-      }
-    });
-
-    return formedSteps;
-  }
 
   function showToast(message: string) {
     const theMessage = `Assignment: ${message}`;
