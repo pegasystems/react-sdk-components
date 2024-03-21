@@ -116,6 +116,8 @@ export default function NavBar(props: NavBarProps) {
   const [bShowCaseTypes, setBShowCaseTypes] = useState(true);
   const [bShowOperatorButtons, setBShowOperatorButtons] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const localeUtils = PCore.getLocaleUtils();
+  const localeReference = pConn.getValue('.pyLocaleReference');
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'AppShell';
@@ -231,7 +233,7 @@ export default function NavBar(props: NavBarProps) {
               <ListItemIcon>
                 <WorkOutlineIcon fontSize='large' />
               </ListItemIcon>
-              <ListItemText primary={caseType.pyLabel} />
+              <ListItemText primary={localeUtils.getLocaleValue(caseType.pyLabel, '', localeReference)} />
             </ListItem>
           ))}
         </List>
@@ -240,7 +242,7 @@ export default function NavBar(props: NavBarProps) {
         {navPages.map(page => (
           <ListItem button onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
             <ListItemIcon>{iconMap[page.pxPageViewIcon]}</ListItemIcon>
-            <ListItemText primary={page.pyLabel} />
+            <ListItemText primary={localeUtils.getLocaleValue(page.pyLabel, '', localeReference)} />
           </ListItem>
         ))}
       </List>

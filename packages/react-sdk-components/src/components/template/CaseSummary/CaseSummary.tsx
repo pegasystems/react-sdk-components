@@ -17,7 +17,8 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
   // const { status, showStatus } = theConfigProps;
   const status = theConfigProps.status;
   const showStatus = theConfigProps.showStatus;
-
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'ModalContainer';
   // from Constellation DX Components
   // get the primary and secondary fields with the raw data (which has the non-resolved property values)
   // const regionsRaw = getPConnect().getRawMetadata().children;
@@ -34,6 +35,11 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
     const childPConnData = childPConn.resolveConfigProps(childPConn.getRawMetadata());
     if (childPConnData.name.toLowerCase() === 'primary fields') {
       arPrimaryFields = childPConnData.children;
+      arPrimaryFields.forEach(field => {
+        if (field.config?.value && typeof field.config?.value === 'string') {
+          field.config.value = localizedVal(field.config.value, localeCategory);
+        }
+      });
     } else if (childPConnData.name.toLowerCase() === 'secondary fields') {
       arSecondaryFields = childPConnData.children;
     }
