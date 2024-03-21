@@ -97,18 +97,35 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
           } else {
             setIsVertical(false);
           }
-          const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
-          steps.forEach(step => {
-            if (step.name) {
-              step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
-            }
-          });
-          setArNavigationSteps(steps);
+
+          if (oCaseInfo?.navigation?.steps) {
+            const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
+            let formedSteps = [];
+            formedSteps = getStepsInfo(steps, formedSteps);
+            setArNavigationSteps(formedSteps);
+          }
+
           setArCurrentStepIndicies(findCurrentIndicies(arNavigationSteps, arCurrentStepIndicies, 0));
         }
       }
     }
   }, [children]);
+
+  function getStepsInfo(steps, formedSteps) {
+    steps.forEach(step => {
+      if (step.name) {
+        step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
+      }
+      if (step.steps) {
+        getStepsInfo(step.steps, formedSteps);
+      } else {
+        formedSteps.push(step);
+        return;
+      }
+    });
+
+    return formedSteps;
+  }
 
   function showToast(message: string) {
     const theMessage = `Assignment: ${message}`;
