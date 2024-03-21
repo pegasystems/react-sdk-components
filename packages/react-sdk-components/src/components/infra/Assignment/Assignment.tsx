@@ -70,18 +70,17 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     return arIndicies;
   }
 
-  function getStepsInfo(steps, formedSteps) {
+  function getStepsInfo(steps, formedSteps: any = []) {
     steps.forEach(step => {
       if (step.name) {
         step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
       }
       if (step.steps) {
-        getStepsInfo(step.steps, formedSteps);
+        formedSteps = getStepsInfo(step.steps, formedSteps);
       } else {
         formedSteps.push(step);
       }
     });
-
     return formedSteps;
   }
 
@@ -115,8 +114,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
 
           if (oCaseInfo?.navigation?.steps) {
             const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
-            let formedSteps = [];
-            formedSteps = getStepsInfo(steps, formedSteps);
+            const formedSteps = getStepsInfo(steps);
             setArNavigationSteps(formedSteps);
           }
 
