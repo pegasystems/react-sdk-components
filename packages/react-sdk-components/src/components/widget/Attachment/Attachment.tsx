@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/no-array-index-key */
+/* eslint-disable no-nested-ternary */
 import { useState, useEffect, useCallback } from 'react';
 import { CircularProgress, IconButton, Menu, MenuItem, Button } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -39,7 +40,10 @@ export default function Attachment(props: AttachmentProps) {
   [required, disabled] = [required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
   const pConn = getPConnect();
   const caseID = PCore.getStoreValue('.pyID', 'caseInfo.content', pConn.getContextName());
-
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'CosmosFields';
+  const uploadMultipleFilesLabel = localizedVal('file_upload_text_multiple', localeCategory);
+  const uploadSingleFileLabel = localizedVal('file_upload_text_one', localeCategory);
   let categoryName = '';
   if (value && value.pyCategoryName) {
     categoryName = value.pyCategoryName;
@@ -379,7 +383,13 @@ export default function Attachment(props: AttachmentProps) {
             onChange={onFileAdded}
           />
           <Button style={{ textTransform: 'none' }} variant='outlined' color='primary' component='span'>
-            {allowMultiple === 'true' ? 'Upload files' : 'Upload a file'}
+            {allowMultiple === 'true'
+              ? uploadMultipleFilesLabel === 'file_upload_text_multiple'
+                ? 'Choose files'
+                : uploadMultipleFilesLabel
+              : uploadSingleFileLabel === 'file_upload_text_one'
+                ? 'Choose a file'
+                : uploadSingleFileLabel}
           </Button>
         </label>
       </div>
