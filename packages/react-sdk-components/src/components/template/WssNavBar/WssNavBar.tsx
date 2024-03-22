@@ -54,6 +54,9 @@ export default function WssNavBar(props: WssNavBarProps) {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'AppShell';
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -144,7 +147,7 @@ export default function WssNavBar(props: WssNavBarProps) {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={logout}>
-                  <Typography>Logout</Typography>
+                  <Typography>{localizedVal('Log off', localeCategory)}</Typography>
                 </MenuItem>
               </Menu>
             </Box>

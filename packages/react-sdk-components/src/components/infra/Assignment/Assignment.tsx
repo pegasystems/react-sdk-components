@@ -70,6 +70,20 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     return arIndicies;
   }
 
+  function getStepsInfo(steps, formedSteps: any = []) {
+    steps.forEach(step => {
+      if (step.name) {
+        step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
+      }
+      if (step.steps) {
+        formedSteps = getStepsInfo(step.steps, formedSteps);
+      } else {
+        formedSteps.push(step);
+      }
+    });
+    return formedSteps;
+  }
+
   useEffect(() => {
     if (children) {
       const firstChild = Array.isArray(children) ? children[0] : children;
@@ -97,13 +111,13 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
           } else {
             setIsVertical(false);
           }
-          const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
-          steps.forEach(step => {
-            if (step.name) {
-              step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
-            }
-          });
-          setArNavigationSteps(steps);
+
+          if (oCaseInfo?.navigation?.steps) {
+            const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
+            const formedSteps = getStepsInfo(steps);
+            setArNavigationSteps(formedSteps);
+          }
+
           setArCurrentStepIndicies(findCurrentIndicies(arNavigationSteps, arCurrentStepIndicies, 0));
         }
       }
