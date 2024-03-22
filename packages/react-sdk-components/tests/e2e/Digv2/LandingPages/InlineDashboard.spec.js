@@ -34,6 +34,10 @@ test.describe('E2E test', () => {
     const complexFieldsList = page.locator('h6:has-text("Complex  Fields - List")');
     await expect(complexFieldsList).toBeVisible();
 
+    const table = await page.locator('div[id="list-view"] >> nth=0');
+    const numOfRows = await table.locator('tbody >> tr').count();
+
+    const responsePromise = page.waitForResponse('**/data_views/D_ComplexFieldsList');
     /** Testing My Work List presence */
     const myworkList = page.locator('h6:has-text("My Work List")');
     await expect(myworkList).toBeVisible();
@@ -43,10 +47,12 @@ test.describe('E2E test', () => {
     const caseIdFilter = filters.locator('div:has-text("Case ID")');
     caseIdFilter.locator('input').fill(caseID);
 
-    await expect(page.locator(`td >> text=${caseID}`)).toBeVisible();
-    await expect(page.locator('td >> text="Complex  Fields" >> nth=1')).toBeVisible();
-    await expect(page.locator('td >> text="User DigV2"')).toBeVisible();
-    await expect(page.locator('td >> text="New" >> nth=1')).toBeVisible();
+    await responsePromise;
+
+    await expect(table.locator(`td >> text=${caseID}`)).toBeVisible();
+    await expect(table.locator('td >> text="Complex  Fields"')).toBeVisible();
+    await expect(table.locator('td >> text="User DigV2"')).toBeVisible();
+    await expect(table.locator('td >> text="New"')).toBeVisible();
 
     const dateFilter = filters.locator('div:has-text("Create date/time")');
     dateFilter.locator('input').click();
@@ -73,7 +79,10 @@ test.describe('E2E test', () => {
 
     await page.waitForLoadState('networkidle');
 
-    await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeHidden();
+    await expect(await caseIdFilter.locator('input').inputValue()).toEqual('');
+    await expect(await dateFilter.locator('input').inputValue()).toEqual('');
+
+    await expect(await table.locator('tbody >> tr')).toHaveCount(numOfRows);
   }, 10000);
 });
 
