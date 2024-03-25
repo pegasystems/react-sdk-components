@@ -632,7 +632,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 .slice(0)
                 .map((row, index) => {
                   return (
-                    <TableRow key={row[displayedColumns[0]]}>
+                    // eslint-disable-next-line react/no-array-index-key
+                    <TableRow key={index}>
                       {displayedColumns.map(colKey => {
                         return (
                           <TableCell key={colKey} className={classes.tableCell}>

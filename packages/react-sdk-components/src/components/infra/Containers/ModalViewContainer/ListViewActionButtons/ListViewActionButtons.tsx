@@ -34,7 +34,6 @@ function ListViewActionButtons(props: ListViewActionButtonsProps) {
         variant='contained'
         color='secondary'
         onClick={() => {
-          closeActionsDialog();
           getPConnect().getActionsApi().cancelDataObject(context);
         }}
       >
