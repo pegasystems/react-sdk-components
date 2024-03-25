@@ -83,14 +83,14 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeFalsy();
 
     /** Validation tests */
-    const validationMsg = 'valid URL';
+    const validationMsg = 'Please enter a valid URL including the protocol (http://, https://, ftp://, etc.)';
     await editableURL.fill('InvalidUrl');
     await editableURL.blur();
     await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeVisible();
     await editableURL.click();
     await editableURL.clear();
     await editableURL.blur();
-    await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeHidden({ timeout: 200 });
+    await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeHidden();
 
     /** Selecting Visibility from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');

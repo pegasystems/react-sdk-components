@@ -1,19 +1,11 @@
-const path = require('path');
 const { test, expect } = require('@playwright/test');
 
 const config = require('../../../config');
 const common = require('../../../common');
-const endpoints = require('../../../../../../sdk-config.json');
-const { toHaveValue } = require('@testing-library/jest-dom/matchers');
-
-// These values represent the data values used for the conditions and are initialised in pyDefault DT
-const isDisabled = true;
 
 test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
-  let attributes;
-
   test('should login, create case and run the Field Group tests', async ({ page }) => {
     await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
