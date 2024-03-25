@@ -30,6 +30,38 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
   let arPrimaryFields: any[] = [];
   let arSecondaryFields: any[] = [];
 
+  /* eslint-disable @typescript-eslint/no-shadow */
+  function prepareComponentInCaseSummary(pConnectMeta, getPConnect) {
+    const { config, children } = pConnectMeta;
+    const pConnect = getPConnect();
+
+    const caseSummaryComponentObject: any = {};
+
+    const { type } = pConnectMeta;
+    const createdComponent = pConnect.createComponent({
+      type,
+      children: children ? [...children] : [],
+      config: {
+        ...config
+      }
+    });
+
+    caseSummaryComponentObject.value = createdComponent;
+    return caseSummaryComponentObject;
+  }
+
+  function prepareCaseSummaryData(summaryFieldChildren) {
+    const convertChildrenToSummaryData = kid => {
+      return kid?.map((childItem, index) => {
+        const childMeta = childItem.getPConnect().meta;
+        const caseSummaryComponentObject = prepareComponentInCaseSummary(childMeta, childItem.getPConnect);
+        caseSummaryComponentObject.id = index + 1;
+        return caseSummaryComponentObject;
+      });
+    };
+    return summaryFieldChildren ? convertChildrenToSummaryData(summaryFieldChildren?.getChildren()) : undefined;
+  }
+
   for (const child of children as ReactElement[]) {
     const childPConn = (child as ReactElement).props.getPConnect();
     const childPConnData = childPConn.resolveConfigProps(childPConn.getRawMetadata());
@@ -41,7 +73,11 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
         }
       });
     } else if (childPConnData.name.toLowerCase() === 'secondary fields') {
+      const secondarySummaryFields = prepareCaseSummaryData(childPConn);
       arSecondaryFields = childPConnData.children;
+      arSecondaryFields.forEach((field, index) => {
+        field.config.displayLabel = secondarySummaryFields[index]?.value?.props?.label;
+      });
     }
   }
 
