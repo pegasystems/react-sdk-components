@@ -141,7 +141,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   // Getting current context
   const context = getPConnect().getContextName();
   const resolvedList = getReferenceList(pConn);
-  const pageReference = `${pConn.getPageReference()}${resolvedList}`;
   pConn.setReferenceList(resolvedList);
   const menuIconOverride$ = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
 
@@ -288,10 +287,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       pConn
         .getActionsApi()
         .openEmbeddedDataModal(defaultView, pConn, referenceListStr, referenceList.length, PCore.getConstants().RESOURCE_STATUS.CREATE);
-    } else if (PCore.getPCoreVersion()?.includes('8.7')) {
-      pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
     } else {
-      pConn.getListActions().insert({ classID: contextClass }, referenceList.length, ''); // 3rd arg null until typedef marked correctly as optional
+      pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
     }
   };
 
@@ -312,11 +309,11 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   const deleteRecord = () => {
     setEditAnchorEl(null);
-    if (PCore.getPCoreVersion()?.includes('8.7')) {
-      pConn.getListActions().deleteEntry(selectedRowIndex.current, pageReference);
-    } else {
-      pConn.getListActions().deleteEntry(selectedRowIndex.current, ''); // 2nd arg empty string until typedef marked correctly as optional
-    }
+    pConn.getListActions().deleteEntry(selectedRowIndex.current);
+  };
+
+  const deleteRecordFromInlineEditable = (index: number) => {
+    pConn.getListActions().deleteEntry(index);
   };
 
   function buildElementsForTable() {
@@ -616,7 +613,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                           className='psdk-utility-button'
                           id='delete-button'
                           aria-label='Delete Cell'
-                          onClick={() => deleteRecord()}
+                          onClick={() => deleteRecordFromInlineEditable(index)}
                         >
                           <img className='psdk-utility-card-action-svg-icon' src={menuIconOverride$} />
                         </button>
