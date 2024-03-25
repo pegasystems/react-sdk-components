@@ -37,31 +37,32 @@ test.describe('E2E test', () => {
 
     /** Testing that the Assignment has opened */
     expect(page.locator('div[id="Assignment"]')).toBeVisible();
-  }, 10000),
-    test('should login, create case and come back to Home landing page and run tests', async ({ page }) => {
-      await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+  }, 10000);
 
-      /** Testing announcement banner presence */
-      const announcementBanner = page.locator('h6:has-text("Announcements")');
-      await expect(announcementBanner).toBeVisible();
+  test('should login, create case and come back to Home landing page and run tests', async ({ page }) => {
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
-      /** Testing worklist presence */
-      const worklist = page.locator('h6:has-text("My Worklist")');
-      await expect(worklist).toBeVisible();
+    /** Testing announcement banner presence */
+    const announcementBanner = page.locator('h6:has-text("Announcements")');
+    await expect(announcementBanner).toBeVisible();
 
-      /** Creating a View Templates case-type */
-      const viewTemplatesCase = page.locator('div[role="button"]:has-text("View Templates")');
-      await viewTemplatesCase.click();
+    /** Testing worklist presence */
+    const worklist = page.locator('h6:has-text("My Worklist")');
+    await expect(worklist).toBeVisible();
 
-      /** Click on the `Home` landing page */
-      const homeLandingPage = page.locator('div[role="button"]:has-text("Home")');
-      await homeLandingPage.click();
+    /** Creating a View Templates case-type */
+    const viewTemplatesCase = page.locator('div[role="button"]:has-text("View Templates")');
+    await viewTemplatesCase.click();
 
-      /** Test whether Home has loaded as expected */
-      await expect(announcementBanner).toBeVisible();
+    /** Click on the `Home` landing page */
+    const homeLandingPage = page.locator('div[role="button"]:has-text("Home")');
+    await homeLandingPage.click();
 
-      await expect(worklist).toBeVisible();
-    }, 10000);
+    /** Test whether Home has loaded as expected */
+    await expect(announcementBanner).toBeVisible();
+
+    await expect(worklist).toBeVisible();
+  }, 10000);
 });
 
 const outputDir = './test-reports/e2e/DigV2/LandingPages/LandingPages';

@@ -241,7 +241,7 @@ test.describe('E2E test', () => {
     await page.locator('text=United States+1 >> nth=0').click();
     await phone.locator('input').fill('6175551212');
 
-    let country = modal.locator('div[data-test-id="59716c97497eb9694541f7c3d37b1a4d"]');
+    const country = modal.locator('div[data-test-id="59716c97497eb9694541f7c3d37b1a4d"]');
     await country.click();
     await page.getByRole('option', { name: 'Switzerland' }).click();
 
@@ -275,7 +275,7 @@ test.describe('E2E test', () => {
 
     modal = page.locator('div[role="dialog"]');
 
-    /** Testing Edit Record title*/
+    /** Testing Edit Record title */
     const editRecordTitle = modal.locator('h2:has-text("Edit Record")');
     await expect(editRecordTitle).toBeVisible();
 

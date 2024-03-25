@@ -46,34 +46,35 @@ test.describe('E2E test', () => {
 
     /** Submitting the case */
     await page.locator('button:has-text("submit")').click();
-  }, 10000),
-    test('should login, create case and run test cases for Cancel action on the Assignment', async ({ page }) => {
-      await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+  }, 10000);
 
-      /** Testing announcement banner presence */
-      const announcementBanner = page.locator('h6:has-text("Announcements")');
-      await expect(announcementBanner).toBeVisible();
+  test('should login, create case and run test cases for Cancel action on the Assignment', async ({ page }) => {
+    await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
-      /** Testing worklist presence */
-      const worklist = page.locator('h6:has-text("My Worklist")');
-      await expect(worklist).toBeVisible();
+    /** Testing announcement banner presence */
+    const announcementBanner = page.locator('h6:has-text("Announcements")');
+    await expect(announcementBanner).toBeVisible();
 
-      /** Creating a Complex Fields case-type */
-      const complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
-      await complexFieldsCase.click();
+    /** Testing worklist presence */
+    const worklist = page.locator('h6:has-text("My Worklist")');
+    await expect(worklist).toBeVisible();
 
-      /** Wait until newly created case loads */
-      await expect(page.locator('div[id="Assignment"]')).toBeVisible();
+    /** Creating a Complex Fields case-type */
+    const complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
+    await complexFieldsCase.click();
 
-      await page.locator('button >> span:has-text("Cancel")').click();
+    /** Wait until newly created case loads */
+    await expect(page.locator('div[id="Assignment"]')).toBeVisible();
 
-      await page.locator('button[id="go-btn"]').click();
+    await page.locator('button >> span:has-text("Cancel")').click();
 
-      await expect(page.locator('div[id="Assignment"]')).toBeVisible();
+    await page.locator('button[id="go-btn"]').click();
 
-      /** Submitting the case */
-      await page.locator('button:has-text("submit")').click();
-    }, 10000);
+    await expect(page.locator('div[id="Assignment"]')).toBeVisible();
+
+    /** Submitting the case */
+    await page.locator('button:has-text("submit")').click();
+  }, 10000);
 });
 
 const outputDir = './test-reports/e2e/DigV2/ComplexFields/CaseView';
