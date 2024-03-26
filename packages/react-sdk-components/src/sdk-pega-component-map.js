@@ -15,7 +15,7 @@ import Attachment from './components/widget/Attachment';
 import AutoComplete from './components/field/AutoComplete';
 import Banner from './components/designSystemExtension/Banner';
 import BannerPage from './components/template/BannerPage';
-import CancelAlert from './components/field/CancelAlert';
+import CancelAlert from './components/infra/Containers/ModalViewContainer/CancelAlert';
 import CaseHistory from './components/widget/CaseHistory';
 import CaseSummary from './components/template/CaseSummary';
 import CaseSummaryFields from './components/designSystemExtension/CaseSummaryFields';

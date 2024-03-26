@@ -6,8 +6,6 @@ const common = require('../../../common');
 test.beforeEach(common.launchPortal);
 
 test.describe('E2E test', () => {
-  let attributes;
-
   test('should login, create case and run the Email tests', async ({ page }) => {
     await common.login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
 
@@ -29,16 +27,16 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'PickList' }).click();
 
     /** Selecting Required from the Sub Category dropdown */
-    let selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
+    const selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
     await selectedSubCategory.click();
     await page.getByRole('option', { name: 'DataPage' }).click();
 
     /** Dropdown tests */
-    let picklistAs = page.locator('div[data-test-id="683ea3aece0dce7e065d31d43f1c269b"]');
+    const picklistAs = page.locator('div[data-test-id="683ea3aece0dce7e065d31d43f1c269b"]');
     await picklistAs.click();
     await page.getByRole('option', { name: 'Dropdown' }).click();
 
-    let dropdown = page.locator('div[data-test-id="94cb322b7468c7827d336398e525827e"]');
+    const dropdown = page.locator('div[data-test-id="94cb322b7468c7827d336398e525827e"]');
     await dropdown.click();
     await page.getByRole('option', { name: 'Massachusetts' }).click();
 

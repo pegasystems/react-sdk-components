@@ -18,7 +18,7 @@ test.describe('E2E test', () => {
     await expect(worklist).toBeVisible();
 
     /** Creating a Complex Fields case-type */
-    let complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
+    const complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
     await complexFieldsCase.click();
 
     const caseID = await page.locator('div[id="caseId"]').textContent();
@@ -26,7 +26,7 @@ test.describe('E2E test', () => {
     await page.locator('button:has-text("submit")').click();
 
     /* Testing InlineDashboard landing page */
-    let inlineDashboard = page.locator('div[role="button"]:has-text("Inline Dashboard")');
+    const inlineDashboard = page.locator('div[role="button"]:has-text("Inline Dashboard")');
 
     await inlineDashboard.click();
 
@@ -43,7 +43,7 @@ test.describe('E2E test', () => {
     await expect(myworkList).toBeVisible();
 
     /* Testing the filters */
-    let filters = page.locator('div[id="filters"]');
+    const filters = page.locator('div[id="filters"]');
     const caseIdFilter = filters.locator('div:has-text("Case ID")');
     caseIdFilter.locator('input').fill(caseID);
 
@@ -72,7 +72,7 @@ test.describe('E2E test', () => {
 
     await expect(complexTable.locator(`td:has-text("${day.getDate().toString().padStart(2, '0')}")`)).toBeVisible();
 
-    let pagination = page.locator('div[id="pagination"]');
+    const pagination = page.locator('div[id="pagination"]');
     await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeVisible();
 
     await page.locator('a:has-text("Clear All")').click();

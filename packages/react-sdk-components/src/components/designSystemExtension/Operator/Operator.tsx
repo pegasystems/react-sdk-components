@@ -19,6 +19,7 @@ interface OperatorProps extends PConnProps {
   updateDateTime: string;
   updateLabel: string;
   updateOperator: { userName: string; userId: string };
+  displayLabel?: any;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -36,18 +37,19 @@ export default function Operator(props: OperatorProps) {
   // const componentName = "Operator";
   const classes = useStyles();
 
-  const fieldLabel = props.label.toLowerCase();
+  const fieldLabel = props?.label?.toLowerCase();
+  const displayLabel = props?.displayLabel?.toLowerCase();
   let caseOpLabel = '---';
   let caseOpName = '---';
   let caseOpId = '';
   let caseTime = '';
 
-  if (fieldLabel === 'create operator') {
+  if (fieldLabel === 'create operator' || displayLabel === 'create operator') {
     caseOpLabel = props.createLabel;
     caseOpName = props.createOperator.userName;
     caseTime = props.createDateTime;
     caseOpId = props.createOperator.userId;
-  } else if (fieldLabel === 'update operator') {
+  } else if (fieldLabel === 'update operator' || displayLabel === 'update operator') {
     caseOpLabel = props.updateLabel;
     caseOpName = props.updateOperator.userName;
     caseTime = props.updateDateTime;
