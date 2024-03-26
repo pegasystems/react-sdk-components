@@ -119,7 +119,7 @@
     "shx": "^0.3.4",
     "style-loader": "^3.3.4",
     "stylelint": "^16.1.0",
-    "tinymce": "^6.8.2",
+    "tinymce": "^7.0.0",
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.5.1",
     "typescript": "^4.9.5",
