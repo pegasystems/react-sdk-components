@@ -40,9 +40,6 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
   const arMenuItems: any[] = [];
 
   function showToast(message: string) {
-    const theMessage = `Process Action: ${message}`;
-    // eslint-disable-next-line no-console
-    console.error(theMessage);
     setSnackbarMessage(message);
     setShowSnackbar(true);
   }
