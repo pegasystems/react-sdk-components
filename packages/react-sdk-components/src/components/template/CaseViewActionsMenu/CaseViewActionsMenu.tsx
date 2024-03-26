@@ -4,6 +4,9 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import { PConnProps } from '../../../types/PConnProps';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 interface CaseViewActionsMenuProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -23,6 +26,9 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage]: any = useState('');
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -32,6 +38,21 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
   };
 
   const arMenuItems: any[] = [];
+
+  function showToast(message: string) {
+    const theMessage = `Process Action: ${message}`;
+    // eslint-disable-next-line no-console
+    console.error(theMessage);
+    setSnackbarMessage(message);
+    setShowSnackbar(true);
+  }
+
+  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowSnackbar(false);
+  }
 
   function _actionMenuActionsClick(data) {
     const actionsAPI = thePConn.getActionsApi();
@@ -51,7 +72,11 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     const openProcessAction = actionsAPI.openProcessAction.bind(actionsAPI);
     openProcessAction(process.ID, {
       ...process
-    });
+    })
+      .then(() => {})
+      .catch(() => {
+        showToast(`${process.name} Submit failed!`);
+      });
     handleClose();
   }
 
@@ -79,6 +104,17 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
       <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         {arMenuItems}
       </Menu>
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={
+          <IconButton size='small' aria-label='close' color='inherit' onClick={handleSnackbarClose}>
+            <CloseIcon fontSize='small' />
+          </IconButton>
+        }
+      />
     </>
   );
 }
