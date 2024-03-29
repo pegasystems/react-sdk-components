@@ -680,7 +680,9 @@ export const readContextResponse = async (context, params) => {
     if (compositeKeys.length) {
       otherContext.setCompositeKeys(compositeKeys);
     }
-    otherContext.fetchRowActionDetails = null;
+    if (otherContext) {
+      otherContext.fetchRowActionDetails = null;
+    }
   }
 
   const presetArray = [];
