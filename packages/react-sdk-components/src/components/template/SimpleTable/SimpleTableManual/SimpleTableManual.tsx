@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -197,6 +197,20 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   //  Constellation DX Components.
   const fieldDefs = buildFieldsForTable(rawFields, resolvedFields, showDeleteButton);
 
+  useLayoutEffect(() => {
+    if (allowEditingInModal) {
+      getPConnect()
+        .getListActions()
+        .initDefaultPageInstructions(
+          getPConnect().getReferenceList(),
+          fieldDefs.filter(item => item.name).map(item => item.name)
+        );
+    } else {
+      // @ts-ignore - An argument for 'fields' was not provided
+      getPConnect().getListActions().initDefaultPageInstructions(getPConnect().getReferenceList());
+    }
+  }, []);
+
   const displayedColumns = fieldDefs.map(field => {
     return field.name ? field.name : field.cellRenderer;
   });
@@ -290,6 +304,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     } else {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
     }
+
+    getPConnect().clearErrorMessages({
+      property: (getPConnect().getStateProps() as any)?.referenceList?.substring(1)
+    } as any);
   };
 
   const editRecord = () => {

@@ -132,7 +132,7 @@ export const buildFieldsForTable = (configFields, fields, showDeleteButton) => {
       type: 'text',
       label: fields[index].config.label || fields[index].config.caption,
       fillAvailableSpace: !!field.config.fillAvailableSpace,
-      id: index,
+      id: `${index}`,
       name: field.config.value.substr(4),
       cellRenderer: TABLE_CELL,
       sort: false,
