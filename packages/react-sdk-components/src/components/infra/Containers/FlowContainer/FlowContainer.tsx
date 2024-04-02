@@ -304,11 +304,11 @@ export const FlowContainer = (props: FlowContainerProps) => {
       {!bShowConfirm &&
         (!todo_showTodo ? (
           !displayOnlyFA ? (
-            <Card className={classes.root}>
+            <Card className={`${classes.root} psdk-root`}>
               <CardHeader
                 title={<Typography variant='h6'>{containerName}</Typography>}
                 subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
-                avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
+                avatar={<Avatar className={`${classes.avatar} psdk-avatar`}>{operatorInitials}</Avatar>}
               />
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
@@ -318,7 +318,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
               </MuiPickersUtilsProvider>
             </Card>
           ) : (
-            <Card className={classes.root}>
+            <Card className={`${classes.root} psdk-root`}>
               <Typography variant='h6'>{containerName}</Typography>
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
@@ -345,7 +345,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
           </div>
         ))}
       {bHasCaseMessages && (
-        <div className={classes.alert}>
+        <div className={`${classes.alert} psdk-alert`}>
           <Alert severity='success'>{caseMessages}</Alert>
         </div>
       )}
