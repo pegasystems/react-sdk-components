@@ -310,10 +310,10 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
   return (
     <>
       <Dialog open={bShowModal} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title' className={classes.dlgTitle}>
+        <DialogTitle id='form-dialog-title' className={`${classes.dlgTitle} psdk-dialog-title`}>
           {title}
         </DialogTitle>
-        <DialogContent className={classes.dlgContent}>
+        <DialogContent className={`${classes.dlgContent} psdk-dialog-content`}>
           {bShowModal ? (
             <MuiPickersUtilsProvider utils={DayjsUtils}>
               <Assignment
