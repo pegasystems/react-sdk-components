@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
@@ -45,14 +44,9 @@ export default function Decimal(props: DecimalProps) {
   const propName = (pConn.getStateProps() as any).value;
   const helperTextToDisplay = validatemessage || helperText;
 
-  const [theCurrDec, setCurrDec] = useState('.');
-  const [theCurrSep, setCurrSep] = useState(',');
-
-  useEffect(() => {
-    const theSymbols = getCurrencyCharacters(currencyISOCode);
-    setCurrDec(theSymbols.theDecimalIndicator);
-    setCurrSep(theSymbols.theDigitGroupSeparator);
-  }, [currencyISOCode]);
+  const theSymbols = getCurrencyCharacters(currencyISOCode);
+  const theCurrDec = theSymbols.theDecimalIndicator;
+  const theCurrSep = theSymbols.theDigitGroupSeparator;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
   const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);

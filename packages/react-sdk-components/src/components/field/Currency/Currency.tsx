@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
-import handleEvent from '../../helpers/event-utils';
-import { format } from '../../helpers/formatters';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
-
+import handleEvent from '../../helpers/event-utils';
+import { format } from '../../helpers/formatters';
 import { getCurrencyCharacters, getCurrencyOptions } from './currency-utils';
 
 // Using control from: https://github.com/unicef/material-ui-currency-textfield
@@ -48,17 +46,11 @@ export default function Currency(props: CurrrencyProps) {
     'data-test-id': testId
   };
 
-  const [theCurrSym, setCurrSym] = useState('$');
-  const [theCurrDec, setCurrDec] = useState('.');
-  const [theCurrSep, setCurrSep] = useState(',');
-
-  useEffect(() => {
-    // currencySymbols looks like this: { theCurrencySymbol: '$', theDecimalIndicator: '.', theSeparator: ',' }
-    const theSymbols = getCurrencyCharacters(currencyISOCode);
-    setCurrSym(theSymbols.theCurrencySymbol);
-    setCurrDec(theSymbols.theDecimalIndicator);
-    setCurrSep(theSymbols.theDigitGroupSeparator);
-  }, [currencyISOCode]);
+  // currencySymbols looks like this: { theCurrencySymbol: '$', theDecimalIndicator: '.', theSeparator: ',' }
+  const theSymbols = getCurrencyCharacters(currencyISOCode);
+  const theCurrSym = theSymbols.theCurrencySymbol;
+  const theCurrDec = theSymbols.theDecimalIndicator;
+  const theCurrSep = theSymbols.theDigitGroupSeparator;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
   const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
