@@ -1,28 +1,31 @@
-import { TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
+import { getCurrencyCharacters } from '../Currency/currency-utils';
+import handleEvent from '../../helpers/event-utils';
 
+// Following code isn't needed, but having it here just for a reference
 // Inspired by https://stackoverflow.com/questions/50823182/material-ui-remove-up-down-arrow-dials-from-textview
-const useStyles = makeStyles((/* theme */) => ({
-  input: {
-    '& input[type=number]': {
-      '-moz-appearance': 'textfield'
-    },
-    '& input[type=number]::-webkit-outer-spin-button': {
-      '-webkit-appearance': 'none',
-      margin: 0
-    },
-    '& input[type=number]::-webkit-inner-spin-button': {
-      '-webkit-appearance': 'none',
-      margin: 0
-    }
-  }
-}));
+// const useStyles = makeStyles((/* theme */) => ({
+//   input: {
+//     '& input[type=number]': {
+//       '-moz-appearance': 'textfield'
+//     },
+//     '& input[type=number]::-webkit-outer-spin-button': {
+//       '-webkit-appearance': 'none',
+//       margin: 0
+//     },
+//     '& input[type=number]::-webkit-inner-spin-button': {
+//       '-webkit-appearance': 'none',
+//       margin: 0
+//     }
+//   }
+// }));
 
 interface PercentageProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Percentage here
+  currencyISOCode?: string;
 }
 
 export default function Percentage(props: PercentageProps) {
@@ -30,24 +33,28 @@ export default function Percentage(props: PercentageProps) {
   const TextInput = getComponentFromMap('TextInput');
   const FieldValueList = getComponentFromMap('FieldValueList');
 
-  const classes = useStyles();
-
   const {
+    getPConnect,
     label,
     required,
     disabled,
     value = '',
     validatemessage,
     status,
-    onChange,
-    onBlur,
+    // onChange,
+    // onBlur,
     readOnly,
+    currencyISOCode = 'USD',
     testId,
     helperText,
     displayMode,
     hideLabel,
     placeholder
   } = props;
+
+  const pConn = getPConnect();
+  const actions = pConn.getActionsApi();
+  const propName = (pConn.getStateProps() as any).value;
   const helperTextToDisplay = validatemessage || helperText;
 
   // console.log(`Percentage: label: ${label} value: ${value}`);
@@ -70,9 +77,16 @@ export default function Percentage(props: PercentageProps) {
     'data-test-id': testId
   };
 
+  const theSymbols = getCurrencyCharacters(currencyISOCode);
+  const theCurrDec = theSymbols.theDecimalIndicator;
+  const theCurrSep = theSymbols.theDigitGroupSeparator;
+
+  function PercentageOnBlur(event, inValue) {
+    handleEvent(actions, 'changeNblur', propName, inValue !== '' ? Number(inValue) : inValue);
+  }
+
   return (
-    <TextField
-      className={classes.input}
+    <CurrencyTextField
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
@@ -80,13 +94,20 @@ export default function Percentage(props: PercentageProps) {
       size='small'
       required={required}
       disabled={disabled}
-      onChange={onChange}
-      onBlur={!readOnly ? onBlur : undefined}
+      readOnly={!!readOnly}
       error={status === 'error'}
       label={label}
       value={value}
-      type='number'
-      inputProps={{ ...testProp }}
+      type='text'
+      outputFormat='number'
+      textAlign='left'
+      InputProps={{
+        inputProps: { ...testProp }
+      }}
+      currencySymbol=''
+      decimalCharacter={theCurrDec}
+      digitGroupSeparator={theCurrSep}
+      onBlur={!readOnly ? PercentageOnBlur : undefined}
     />
   );
 }
