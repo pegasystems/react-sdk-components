@@ -29,6 +29,8 @@ export default function Group(props: GroupProps) {
     );
   }, [children, type, isReadOnly]);
 
+  if (!children) return null;
+
   return (
     <FieldGroup name={showHeading ? heading : undefined} collapsible={collapsible} instructions={instructions}>
       {content}
