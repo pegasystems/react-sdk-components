@@ -2,8 +2,9 @@ import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
-import { getCurrencyCharacters } from '../Currency/currency-utils';
+import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
+import { format } from '../../helpers/formatters';
 
 // Following code isn't needed, but having it here just for a reference
 // Inspired by https://stackoverflow.com/questions/50823182/material-ui-remove-up-down-arrow-dials-from-textview
@@ -30,7 +31,6 @@ interface PercentageProps extends PConnFieldProps {
 
 export default function Percentage(props: PercentageProps) {
   // Get emitted components from map (so we can get any override that may exist)
-  const TextInput = getComponentFromMap('TextInput');
   const FieldValueList = getComponentFromMap('FieldValueList');
 
   const {
@@ -57,18 +57,17 @@ export default function Percentage(props: PercentageProps) {
   const propName = (pConn.getStateProps() as any).value;
   const helperTextToDisplay = validatemessage || helperText;
 
+  const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
+  const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+
   // console.log(`Percentage: label: ${label} value: ${value}`);
 
   if (displayMode === 'LABELS_LEFT') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
-  }
-
-  if (readOnly) {
-    return <TextInput {...props} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
   }
 
   let testProp = {};
