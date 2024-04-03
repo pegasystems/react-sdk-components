@@ -6,24 +6,6 @@ import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 
-// Following code isn't needed, but having it here just for a reference
-// Inspired by https://stackoverflow.com/questions/50823182/material-ui-remove-up-down-arrow-dials-from-textview
-// const useStyles = makeStyles((/* theme */) => ({
-//   input: {
-//     '& input[type=number]': {
-//       '-moz-appearance': 'textfield'
-//     },
-//     '& input[type=number]::-webkit-outer-spin-button': {
-//       '-webkit-appearance': 'none',
-//       margin: 0
-//     },
-//     '& input[type=number]::-webkit-inner-spin-button': {
-//       '-webkit-appearance': 'none',
-//       margin: 0
-//     }
-//   }
-// }));
-
 interface PercentageProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Percentage here
   currencyISOCode?: string;
