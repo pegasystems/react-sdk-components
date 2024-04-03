@@ -80,6 +80,13 @@ export function format(value, type, options = {}): string {
       break;
     }
 
+    case 'percentage': {
+      const defaultOptions = { locale: getLocale(), decPlaces: 2 };
+      const params = { ...defaultOptions, ...options };
+      formattedValue = Currency.Percentage(value, params);
+      break;
+    }
+
     case 'integer': {
       const defaultOptions = { locale: getLocale() };
       const params = { ...defaultOptions, ...options };
