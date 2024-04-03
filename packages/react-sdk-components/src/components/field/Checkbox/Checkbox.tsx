@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel } from '@material-ui/core';
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -20,6 +20,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
 
   const {
     getPConnect,
+    label,
     value = false,
     readOnly,
     testId,
@@ -73,6 +74,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
 
   return (
     <FormControl required={required} error={status === 'error'}>
+      {!hideLabel && <FormLabel component='legend'>{label}</FormLabel>}
       <FormGroup>
         <FormControlLabel
           control={theCheckbox}
