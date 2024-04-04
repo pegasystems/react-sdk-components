@@ -6,6 +6,9 @@ import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 
+/* Using @unicef/material-ui-currency-textfield component here, since it allows formatting decimal values,
+as per the locale.
+*/
 interface PercentageProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Percentage here
   currencyISOCode?: string;
