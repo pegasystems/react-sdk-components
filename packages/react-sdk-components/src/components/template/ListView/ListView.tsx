@@ -154,7 +154,8 @@ export default function ListView(props: ListViewProps) {
       paper: {
         width: '100%',
         marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2)
+        marginBottom: theme.spacing(2),
+        display: 'grid'
       },
       search: {
         padding: '5px 5px'
