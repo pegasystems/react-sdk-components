@@ -1,6 +1,6 @@
 import { Children, PropsWithChildren, useEffect, useState } from 'react';
-import { Tab, Tabs } from '@material-ui/core';
-import { TabContext, TabPanel } from '@material-ui/lab';
+import { Tab, Tabs } from '@mui/material';
+import { TabContext, TabPanel } from '@mui/lab';
 
 import { getTransientTabs, getVisibleTabs, tabClick } from './tabUtils';
 import { PConnProps } from '../../../types/PConnProps';

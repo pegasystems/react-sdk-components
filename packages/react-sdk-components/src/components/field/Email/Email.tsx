@@ -1,5 +1,5 @@
-import { InputAdornment, TextField } from '@material-ui/core';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import { InputAdornment, TextField } from '@mui/material';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';

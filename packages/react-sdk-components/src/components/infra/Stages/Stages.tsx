@@ -1,7 +1,7 @@
-import { Breadcrumbs, Card, Typography } from '@material-ui/core';
-import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
-import DoneIcon from '@material-ui/icons/Done';
-import { makeStyles } from '@material-ui/core/styles';
+import { Breadcrumbs, Card, Typography } from '@mui/material';
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import DoneIcon from '@mui/icons-material/Done';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { PConnProps } from '../../../types/PConnProps';
 

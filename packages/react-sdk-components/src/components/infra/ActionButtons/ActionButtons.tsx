@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import { Grid, Divider } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
+import { Grid, Divider } from '@mui/material';
 
 // ActionButtons does NOT have getPConnect. So, no need to extend from PConnProps
 interface ActionButtonsProps {

@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import Grid, { GridSize } from '@material-ui/core/Grid';
+import Grid, { GridSize } from '@mui/material/Grid';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';

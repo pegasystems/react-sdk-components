@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 import { Utils } from '../../../helpers/utils';
 
@@ -7,8 +7,8 @@ import download from 'downloadjs';
 // import SummaryList from '../../SummaryList';
 // import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
 import './FileUtility.css';
-import { IconButton, Menu, MenuItem, Button, CircularProgress } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { IconButton, Menu, MenuItem, Button, CircularProgress } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
@@ -508,6 +508,7 @@ export default function FileUtility(props: FileUtilityProps) {
             aria-expanded={open ? 'true' : undefined}
             aria-haspopup='true'
             onClick={handleClick}
+            size='large'
           >
             <MoreVertIcon />
           </IconButton>

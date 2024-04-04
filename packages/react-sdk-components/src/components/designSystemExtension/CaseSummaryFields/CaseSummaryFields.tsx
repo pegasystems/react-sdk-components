@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import isDeepEqual from 'fast-deep-equal/react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getCurrencyOptions } from '../../field/Currency/currency-utils';
@@ -43,6 +43,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         default:
           return (
             <TextField
+              variant='standard'
               value='---'
               label={field.config.label}
               InputProps={{
@@ -61,6 +62,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       case 'dropdown':
         return (
           <TextField
+            variant='standard'
             value={field.config.value}
             label={field.config.label}
             InputProps={{
@@ -77,6 +79,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
 
         return (
           <TextField
+            variant='standard'
             value={fieldValue}
             label={fieldLabel}
             InputProps={{
@@ -90,6 +93,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       case 'status':
         return (
           <TextField
+            variant='standard'
             className='psdk-csf-status-style'
             value={field.config.value}
             label={field.config.label}
@@ -105,6 +109,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         return (
           <a href={`tel:${displayPhone}`}>
             <TextField
+              variant='standard'
               value={field.config.value}
               label={field.config.label}
               InputProps={{
@@ -124,6 +129,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         return (
           <a href={`mailto:${displayEmail}`}>
             <TextField
+              variant='standard'
               value={field.config.value}
               label={field.config.label}
               InputProps={{
@@ -145,6 +151,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
 
         return (
           <TextField
+            variant='standard'
             value={format(field.config.value, field.type, {
               format: theFormat
             })}
@@ -161,6 +168,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         const theCurrencyOptions = getCurrencyOptions(field.config?.currencyISOCode);
         return (
           <TextField
+            variant='standard'
             value={format(field.config.value, field.type, theCurrencyOptions)}
             label={field.config.label}
             InputProps={{
@@ -175,6 +183,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       case 'userreference':
         return (
           <TextField
+            variant='standard'
             value={format(field.config.value, field.type)}
             label={field.config.label}
             InputProps={{

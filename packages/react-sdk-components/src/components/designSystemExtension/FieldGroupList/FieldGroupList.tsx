@@ -1,6 +1,6 @@
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
 
 import { Utils } from '../../helpers/utils';
 
@@ -47,7 +47,7 @@ export default function FieldGroupList(props: FieldGroupListProps) {
             </Grid>
           ))}
           {props.onAdd && (
-            <Link onClick={props.onAdd} style={{ cursor: 'pointer' }}>
+            <Link onClick={props.onAdd} style={{ cursor: 'pointer' }} underline='hover'>
               +Add
             </Link>
           )}

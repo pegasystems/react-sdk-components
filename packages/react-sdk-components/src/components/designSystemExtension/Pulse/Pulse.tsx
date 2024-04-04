@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
-import { Card, CardContent, CardHeader, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 // Pulse is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps

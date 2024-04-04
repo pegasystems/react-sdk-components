@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Popover from '@material-ui/core/Popover';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@mui/material/TextField';
+import Popover from '@mui/material/Popover';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 
 import Utils from '../../helpers/utils';
 import { PConnProps } from '../../../types/PConnProps';
@@ -189,6 +189,7 @@ export default function Operator(props: OperatorProps) {
   return (
     <>
       <TextField
+        variant='standard'
         defaultValue={caseOpName}
         label={caseOpLabel}
         onClick={showOperatorDetails}

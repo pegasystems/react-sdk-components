@@ -1,5 +1,5 @@
-import { KeyboardTimePicker } from '@material-ui/pickers';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+// import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import dayjs from 'dayjs';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -52,25 +52,29 @@ export default function Time(props: TimeProps) {
   //
 
   return (
-    <KeyboardTimePicker
-      variant='inline'
-      inputVariant='outlined'
-      placeholder='hh:mm am'
-      keyboardIcon={<AccessTimeIcon />}
-      fullWidth
-      required={required}
+    <TimePicker
+      // keyboardIcon={<AccessTimeIcon />}
+      // fullWidth
+
       disabled={disabled}
-      error={status === 'error'}
-      helperText={helperTextToDisplay}
       minutesStep={5}
-      size='small'
       label={label}
-      autoOk
-      mask='__:__ _m'
+      // autoOk
+      // mask='__:__ _m'
       format='hh:mm a'
       value={timeValue}
       onChange={handleChange}
-      InputProps={{ inputProps: { ...testProp } }}
+      slotProps={{
+        textField: {
+          variant: 'outlined',
+          placeholder: 'hh:mm am',
+          required,
+          error: status === 'error',
+          helperText: helperTextToDisplay,
+          size: 'small',
+          InputProps: { inputProps: { ...testProp } }
+        }
+      }}
     />
   );
 }

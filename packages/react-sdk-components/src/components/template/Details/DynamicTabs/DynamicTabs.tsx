@@ -1,6 +1,7 @@
 import React, { Children, useMemo, useState } from 'react';
-import { makeStyles, Tab, Tabs } from '@material-ui/core';
-import { TabContext, TabPanel } from '@material-ui/lab';
+import { Tab, Tabs } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { TabContext, TabPanel } from '@mui/lab';
 
 import { buildView } from '../../../helpers/field-group-utils';
 import { PConnProps } from '../../../../types/PConnProps';

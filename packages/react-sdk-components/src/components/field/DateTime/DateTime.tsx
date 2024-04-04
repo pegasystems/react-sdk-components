@@ -1,4 +1,4 @@
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
@@ -79,25 +79,28 @@ export default function DateTime(props: DateTimeProps) {
   //
 
   return (
-    <KeyboardDateTimePicker
-      variant='inline'
-      inputVariant='outlined'
-      fullWidth
-      autoOk
-      required={required}
+    <DateTimePicker
+      // fullWidth
+      // autoOk
       disabled={disabled}
-      placeholder={`${dateFormatInfo.dateFormatStringLC} hh:mm a`}
       format={`${dateFormatInfo.dateFormatString} hh:mm a`}
-      mask={`${dateFormatInfo.dateFormatMask} __:__ _m`}
+      // mask={`${dateFormatInfo.dateFormatMask} __:__ _m`}
       minutesStep={5}
-      error={status === 'error'}
-      helperText={helperTextToDisplay}
-      size='small'
       label={label}
-      value={value || null}
+      value={value as any}
       onChange={handleChange}
       onAccept={handleAccept}
       data-test-id={testId}
+      slotProps={{
+        textField: {
+          variant: 'outlined',
+          required,
+          placeholder: `${dateFormatInfo.dateFormatStringLC} hh:mm a`,
+          error: status === 'error',
+          helperText: helperTextToDisplay,
+          size: 'small'
+        }
+      }}
     />
   );
 }

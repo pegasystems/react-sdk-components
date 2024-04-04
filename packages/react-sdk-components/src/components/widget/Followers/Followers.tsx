@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
-import { Card, CardContent, CardHeader, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface FollowersProps extends PConnProps {

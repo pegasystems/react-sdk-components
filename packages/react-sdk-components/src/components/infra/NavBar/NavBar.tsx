@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
 
 import {
@@ -15,19 +16,19 @@ import {
   Menu,
   MenuItem,
   Typography
-} from '@material-ui/core';
-import PersonOutlineIcon from '@material-ui/icons/PersonOutlineOutlined';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import AddIcon from '@material-ui/icons/Add';
-import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
-import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+} from '@mui/material';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutlineOutlined';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import AddIcon from '@mui/icons-material/Add';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
 import { useNavBar } from '../../helpers/reactContextHelpers';
@@ -203,7 +204,7 @@ export default function NavBar(props: NavBarProps) {
               }
             />
             <ListItemSecondaryAction>
-              <IconButton edge='end' onClick={handleDrawerOpen}>
+              <IconButton edge='end' onClick={handleDrawerOpen} size='large'>
                 <ChevronLeftIcon className={classes.appListIcon} />
               </IconButton>
             </ListItemSecondaryAction>
@@ -256,7 +257,7 @@ export default function NavBar(props: NavBarProps) {
             <ListItemText primary={portalOperator} />
             {open && (
               <ListItemSecondaryAction>
-                <IconButton edge='end' onClick={navPanelOperatorButtonClick}>
+                <IconButton edge='end' onClick={navPanelOperatorButtonClick} size='large'>
                   <ChevronRightIcon />
                 </IconButton>
               </ListItemSecondaryAction>

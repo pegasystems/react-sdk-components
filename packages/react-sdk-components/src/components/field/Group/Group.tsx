@@ -1,5 +1,5 @@
 import { ReactElement, useMemo } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import FieldGroup from '../../designSystemExtension/FieldGroup';
 import { PConnFieldProps } from '../../../types/PConnProps';
 

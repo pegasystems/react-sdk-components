@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
-import CurrencyTextField from '@unicef/material-ui-currency-textfield';
+// import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
@@ -79,26 +80,27 @@ export default function Currency(props: CurrrencyProps) {
   // console.log(`theCurrSym: ${theCurrSym} | theCurrDec: ${theCurrDec} | theCurrSep: ${theCurrSep}`);
 
   return (
-    <CurrencyTextField
-      fullWidth
-      variant={readOnly ? 'standard' : 'outlined'}
-      helperText={helperTextToDisplay}
-      placeholder={placeholder ?? ''}
-      size='small'
-      required={required}
-      disabled={disabled}
-      readOnly={!!readOnly}
-      error={status === 'error'}
-      label={label}
-      value={value}
-      type='text'
-      outputFormat='number'
-      textAlign='left'
-      InputProps={{ inputProps: { ...testProp } }}
-      currencySymbol={theCurrSym}
-      decimalCharacter={theCurrDec}
-      digitGroupSeparator={theCurrSep}
-      onBlur={!readOnly ? currOnBlur : undefined}
-    />
+    <div>Currency field</div>
+    // <CurrencyTextField
+    //   fullWidth
+    //   variant={readOnly ? 'standard' : 'outlined'}
+    //   helperText={helperTextToDisplay}
+    //   placeholder={placeholder ?? ''}
+    //   size='small'
+    //   required={required}
+    //   disabled={disabled}
+    //   readOnly={!!readOnly}
+    //   error={status === 'error'}
+    //   label={label}
+    //   value={value}
+    //   type='text'
+    //   outputFormat='number'
+    //   textAlign='left'
+    //   InputProps={{ inputProps: { ...testProp } }}
+    //   currencySymbol={theCurrSym}
+    //   decimalCharacter={theCurrDec}
+    //   digitGroupSeparator={theCurrSep}
+    //   onBlur={!readOnly ? currOnBlur : undefined}
+    // />
   );
 }

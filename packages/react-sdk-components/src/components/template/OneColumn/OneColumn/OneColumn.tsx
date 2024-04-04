@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactElement } from 'react';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { PConnProps } from '../../../../types/PConnProps';
 
 interface OneColumnProps extends PConnProps {

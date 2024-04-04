@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@mui/material';
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -72,7 +72,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }
 
   return (
-    <FormControl required={required} error={status === 'error'}>
+    <FormControl variant='standard' required={required} error={status === 'error'}>
       <FormGroup>
         <FormControlLabel
           control={theCheckbox}

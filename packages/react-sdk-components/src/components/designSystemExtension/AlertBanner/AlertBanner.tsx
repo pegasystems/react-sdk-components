@@ -1,4 +1,4 @@
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 
 // AlertBanner is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps

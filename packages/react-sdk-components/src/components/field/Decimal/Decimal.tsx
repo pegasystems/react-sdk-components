@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
-import CurrencyTextField from '@unicef/material-ui-currency-textfield';
+// import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
@@ -74,27 +75,28 @@ export default function Decimal(props: DecimalProps) {
   }
 
   return (
-    <CurrencyTextField
-      fullWidth
-      variant={readOnly ? 'standard' : 'outlined'}
-      helperText={helperTextToDisplay}
-      placeholder={placeholder ?? ''}
-      size='small'
-      required={required}
-      disabled={disabled}
-      error={status === 'error'}
-      label={label}
-      value={value}
-      readOnly={!!readOnly}
-      type='text'
-      outputFormat='number'
-      textAlign='left'
-      InputProps={{ inputProps: { ...testProp } }}
-      currencySymbol=''
-      decimalCharacter={theCurrDec}
-      digitGroupSeparator={showGroupSeparators ? theCurrSep : ''}
-      decimalPlaces={decimalPrecision}
-      onBlur={!readOnly ? decimalOnBlur : undefined}
-    />
+    <div>Decimal field</div>
+    // <CurrencyTextField
+    //   fullWidth
+    //   variant={readOnly ? 'standard' : 'outlined'}
+    //   helperText={helperTextToDisplay}
+    //   placeholder={placeholder ?? ''}
+    //   size='small'
+    //   required={required}
+    //   disabled={disabled}
+    //   error={status === 'error'}
+    //   label={label}
+    //   value={value}
+    //   readOnly={!!readOnly}
+    //   type='text'
+    //   outputFormat='number'
+    //   textAlign='left'
+    //   InputProps={{ inputProps: { ...testProp } }}
+    //   currencySymbol=''
+    //   decimalCharacter={theCurrDec}
+    //   digitGroupSeparator={showGroupSeparators ? theCurrSep : ''}
+    //   decimalPlaces={decimalPrecision}
+    //   onBlur={!readOnly ? decimalOnBlur : undefined}
+    // />
   );
 }
