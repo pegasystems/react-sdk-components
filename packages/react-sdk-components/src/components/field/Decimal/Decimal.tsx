@@ -6,7 +6,9 @@ import { format } from '../../helpers/formatters';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
-// Using control from: https://github.com/unicef/material-ui-currency-textfield
+/* Using @unicef/material-ui-currency-textfield component here, since it allows formatting decimal values,
+as per the locale.
+*/
 
 interface DecimalProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Decimal here
