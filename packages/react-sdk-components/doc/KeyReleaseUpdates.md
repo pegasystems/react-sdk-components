@@ -1,4 +1,4 @@
-### React SDK - Release Announcement - v23.1.11 (March 2024)
+### React SDK - Release Announcement - v23.1.11 (10 April 2024)
 
 This release - **SDK-R v23.1.11** - is **only compatible with Pega Infinity 23**. This release is related to the [**release/23.1.11** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/release/23.1.11).
 <br>
