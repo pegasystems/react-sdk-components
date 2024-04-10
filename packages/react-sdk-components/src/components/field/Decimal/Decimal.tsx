@@ -49,6 +49,7 @@ export default function Decimal(props: DecimalProps) {
   const theSymbols = getCurrencyCharacters(currencyISOCode);
   const theCurrDec = theSymbols.theDecimalIndicator;
   const theCurrSep = theSymbols.theDigitGroupSeparator;
+  const theCurrSym = theSymbols.theCurrencySymbol;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
   const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
@@ -86,7 +87,7 @@ export default function Decimal(props: DecimalProps) {
       outputFormat='number'
       textAlign='left'
       InputProps={{ inputProps: { ...testProp } }}
-      currencySymbol=''
+      currencySymbol={theCurrSym}
       decimalCharacter={theCurrDec}
       digitGroupSeparator={showGroupSeparators ? theCurrSep : ''}
       decimalPlaces={decimalPrecision}
