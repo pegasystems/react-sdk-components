@@ -588,7 +588,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                           direction={orderBy === displayedColumns[index] ? order : 'asc'}
                           onClick={createSortHandler(displayedColumns[index])}
                         >
-                          {field.label}
+                          {field.label || '---'}
                           {_showFilteredIcon(field.name) && <FilterListIcon className={classes.moreIcon} />}
                           {orderBy === displayedColumns[index] ? (
                             <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
