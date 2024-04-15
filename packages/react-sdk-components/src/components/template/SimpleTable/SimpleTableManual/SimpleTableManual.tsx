@@ -374,10 +374,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   };
 
   function descendingComparator<T>(a: T, b: T, orderedBy: keyof T) {
-    if (b[orderedBy] < a[orderedBy]) {
+    if (!b[orderedBy] || b[orderedBy] < a[orderedBy]) {
       return -1;
     }
-    if (b[orderedBy] > a[orderedBy]) {
+    if (!a[orderedBy] || b[orderedBy] > a[orderedBy]) {
       return 1;
     }
     return 0;
@@ -671,7 +671,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                             ) : typeof row[colKey] === 'boolean' && row[colKey] ? (
                               'True'
                             ) : (
-                              row[colKey]
+                              row[colKey] || '---'
                             )}
                           </TableCell>
                         );

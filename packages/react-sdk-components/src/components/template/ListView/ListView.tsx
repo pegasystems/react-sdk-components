@@ -209,10 +209,10 @@ export default function ListView(props: ListViewProps) {
   };
 
   function descendingComparator<T>(a: T, b: T, orderedBy: keyof T) {
-    if (b[orderedBy] < a[orderedBy]) {
+    if (!b[orderedBy] || b[orderedBy] < a[orderedBy]) {
       return -1;
     }
-    if (b[orderedBy] > a[orderedBy]) {
+    if (!a[orderedBy] || b[orderedBy] > a[orderedBy]) {
       return 1;
     }
     return 0;
@@ -981,7 +981,7 @@ export default function ListView(props: ListViewProps) {
         break;
 
       default:
-        val = column.format && typeof value === 'number' ? column.format(value) : value;
+        val = column.format && typeof value === 'number' ? column.format(value) : value || '---';
     }
     return val;
   };
@@ -1062,7 +1062,7 @@ export default function ListView(props: ListViewProps) {
                                       {column.format && typeof value === 'number' ? column.format(value) : value}
                                     </Link>
                                   ) : (
-                                    <>{column.format && typeof value === 'number' ? column.format(value) : value}</>
+                                    <>{column.format && typeof value === 'number' ? column.format(value) : value || '---'}</>
                                   )}
                                 </TableCell>
                               );
