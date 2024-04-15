@@ -56,6 +56,7 @@ import ListView from './components/template/ListView';
 import ListViewActionButtons from './components/infra/Containers/ModalViewContainer/ListViewActionButtons';
 import ModalViewContainer from './components/infra/Containers/ModalViewContainer/ModalViewContainer';
 import MultiReferenceReadOnly from './components/template/MultiReferenceReadOnly';
+import Multiselect from './components/field/Multiselect/Multiselect';
 import MultiStep from './components/infra/MultiStep';
 import NarrowWide from './components/template/NarrowWide/NarrowWide';
 import NarrowWideDetails from './components/template/NarrowWide/NarrowWideDetails';
@@ -169,6 +170,7 @@ const pegaSdkComponentMap = {
   ListViewActionButtons,
   ModalViewContainer,
   MultiReferenceReadOnly,
+  Multiselect,
   MultiStep,
   NarrowWide,
   NarrowWideDetails,
