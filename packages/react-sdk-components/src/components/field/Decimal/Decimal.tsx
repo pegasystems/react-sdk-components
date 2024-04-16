@@ -15,6 +15,7 @@ interface DecimalProps extends PConnFieldProps {
   currencyISOCode?: string;
   decimalPrecision?: number;
   showGroupSeparators?: string;
+  formatter?: string;
 }
 
 export default function Decimal(props: DecimalProps) {
@@ -38,7 +39,8 @@ export default function Decimal(props: DecimalProps) {
     decimalPrecision = 2,
     showGroupSeparators = true,
     testId,
-    placeholder
+    placeholder,
+    formatter
   } = props;
 
   const pConn = getPConnect();
@@ -87,7 +89,7 @@ export default function Decimal(props: DecimalProps) {
       outputFormat='number'
       textAlign='left'
       InputProps={{ inputProps: { ...testProp } }}
-      currencySymbol={theCurrSym}
+      currencySymbol={readOnly && formatter === 'Currency' ? theCurrSym : ''}
       decimalCharacter={theCurrDec}
       digitGroupSeparator={showGroupSeparators ? theCurrSep : ''}
       decimalPlaces={decimalPrecision}
