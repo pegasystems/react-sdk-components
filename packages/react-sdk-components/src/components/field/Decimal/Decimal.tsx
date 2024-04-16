@@ -54,7 +54,13 @@ export default function Decimal(props: DecimalProps) {
   const theCurrSym = theSymbols.theCurrencySymbol;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
-  const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+
+  let formattedValue = '';
+  if (formatter === 'Currency') {
+    formattedValue = format(value, formatter.toLowerCase(), theCurrencyOptions);
+  } else {
+    formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+  }
 
   if (displayMode === 'LABELS_LEFT') {
     return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
