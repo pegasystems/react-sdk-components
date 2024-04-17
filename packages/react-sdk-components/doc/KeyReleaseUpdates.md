@@ -1,4 +1,4 @@
-### React SDK - Release Announcement - v23.1.11 (March 2024)
+### React SDK - Release Announcement - v23.1.11 (10 April 2024)
 
 This release - **SDK-R v23.1.11** - is **only compatible with Pega Infinity 23**. This release is related to the [**release/23.1.11** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/release/23.1.11).
 <br>
@@ -8,7 +8,6 @@ The SDK-R v23.1.11 release allow React SDK users to to take advantage of the lat
 * React version upgrade to 17
 * Additional functionality including FieldGroup support, Multiple Attachement, Optional Process flows
 * Added modal dialog edit view in table
-* Enhanced security including token storage and item obfuscation support.
 * Added Lint support to improve code quality and Prettier support for code formatting.
 * Bug fixes
 * Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?q=is%3Apr+is%3Amerged+base%3Amaster+). This release includes all PRs since (and including) #232.
