@@ -131,6 +131,7 @@ export default function Multiselect(props) {
               };
             })
           : [];
+      setSelectedItems(selectedRows);
     }
 
     // if items tree is null or text search is triggered then always should use fresh data object, we use the original object
@@ -198,7 +199,7 @@ export default function Multiselect(props) {
     if (newSelectedValues && newSelectedValues.length > 0) {
       updatedItems = newSelectedValues.map(ele => {
         ele.selected = true;
-        return { text: ele.primary, id: ele.id, selected: true };
+        return ele;
       });
     }
     if (newSelectedValues.length > selectedItems.length) {
@@ -226,10 +227,11 @@ export default function Multiselect(props) {
       fullWidth
       options={itemsTree}
       disableCloseOnSelect
-      getOptionSelected={(option, val) => option.primary === val.primary}
-      getOptionLabel={option => option.primary}
+      getOptionSelected={(option: any, val: any) => option?.primary === val?.primary}
+      getOptionLabel={(option: any) => option?.primary}
       onChange={handleChange}
-      renderOption={(option, { selected }) => (
+      value={selectedItems}
+      renderOption={(option: any, { selected }) => (
         <>
           <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
           {option.primary}
