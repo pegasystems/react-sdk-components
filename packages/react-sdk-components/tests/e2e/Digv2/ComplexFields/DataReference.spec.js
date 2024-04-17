@@ -246,7 +246,7 @@ test.describe('E2E test', () => {
 
     const lastRow = table.locator('tbody >> tr >> nth=3');
     tableCell = lastRow.locator('td >> nth=1');
-    // "Luxury Product" should be at the top in the descending order
+    // "---" should be at the top in the descending order
     await expect(await tableCell.textContent()).toBe('---');
 
     await page.locator('button:has-text("Next")').click();
