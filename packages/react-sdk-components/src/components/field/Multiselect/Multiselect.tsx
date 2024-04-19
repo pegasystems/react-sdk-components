@@ -3,8 +3,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import utils from './utils';
+import { doSearch, getDisplayFieldsMetaData, useDeepMemo, preProcessColumns, getGroupDataForItemsTree } from './utils';
+import { insertInstruction, deleteInstruction } from '../../helpers/instructions-utils';
 import { debounce } from 'throttle-debounce';
+
+const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
+const checkedIcon = <CheckBoxIcon fontSize='small' />;
 
 export default function Multiselect(props) {
   const {
@@ -29,7 +33,7 @@ export default function Multiselect(props) {
     value
   } = props;
   let { datasource = [], columns = [{}] } = props;
-  const { doSearch, getDisplayFieldsMetaData, useDeepMemo, preProcessColumns, getGroupDataForItemsTree } = utils;
+  // const { doSearch, getDisplayFieldsMetaData, useDeepMemo, preProcessColumns, getGroupDataForItemsTree } = utils;
 
   if (referenceList.length > 0) {
     datasource = referenceList;
@@ -114,9 +118,6 @@ export default function Multiselect(props) {
   const listActions = pConn.getListActions();
   const dataApiObj = useRef();
 
-  const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
-  const checkedIcon = <CheckBoxIcon fontSize='small' />;
-
   // main search function trigger
   const getCaseListBasedOnParams = async (searchText, group, selectedRows, currentItemsTree, isTriggeredFromSearch = false) => {
     if (referenceList && referenceList.length > 0) {
@@ -187,9 +188,9 @@ export default function Multiselect(props) {
     });
     const { selected } = item;
     if (selected) {
-      utils.insertInstruction(pConn, selectionList, selectionKey, primaryField, item);
+      insertInstruction(pConn, selectionList, selectionKey, primaryField, item);
     } else {
-      utils.deleteInstruction(pConn, selectionList, selectionKey, item);
+      deleteInstruction(pConn, selectionList, selectionKey, item);
     }
   };
 

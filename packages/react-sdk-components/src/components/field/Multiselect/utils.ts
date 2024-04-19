@@ -217,7 +217,7 @@ const getGroupDataForItemsTree = (groupDataSource, groupsDisplayFieldMeta, showS
   });
 };
 
-export default {
+export {
   useDeepMemo,
   preProcessColumns,
   getDisplayFieldsMetaData,
