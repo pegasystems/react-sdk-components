@@ -220,6 +220,37 @@ test.describe('E2E test', () => {
     // await expect(assignment.locator('input[value="75"]')).toBeVisible();
     await expect(assignment.locator('input[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
+    await page.locator('button:has-text("Previous")').click();
+
+    /** Testing Sorting(both ascending and descending) */
+    selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
+    await selectedSubCategory.click();
+    await page.locator('li:has-text("Options")').click();
+
+    selectedTestName = page.locator('div[data-test-id="6f64b45d01d11d8efd1693dfcb63b735"]');
+    await selectedTestName.click();
+    await page.locator('li:has-text("ListOfRecords")').click();
+
+    await page.locator('span:has-text("Product Name")').click();
+
+    const table = page.locator('div[id="list-view"]');
+    let tableCell = table.locator('tbody >> tr >> td >> nth=1');
+    // "---" should come at the top in the ascending order, since it's a Falsy value
+    await expect(await tableCell.textContent()).toBe('---');
+
+    await page.locator('span:has-text("Product Name")').click();
+
+    tableCell = table.locator('tbody >> tr >> td >> nth=1');
+    // "Luxury Product" should be at the top in the descending order
+    await expect(await tableCell.textContent()).toBe('Luxury Product');
+
+    const lastRow = table.locator('tbody >> tr >> nth=3');
+    tableCell = lastRow.locator('td >> nth=1');
+    // "---" should be at the top in the descending order
+    await expect(await tableCell.textContent()).toBe('---');
+
+    await page.locator('button:has-text("Next")').click();
+
     /** Submitting the case */
     await page.locator('button:has-text("submit")').click();
   }, 10000);
