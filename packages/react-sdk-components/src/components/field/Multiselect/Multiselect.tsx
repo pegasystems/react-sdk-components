@@ -33,7 +33,6 @@ export default function Multiselect(props) {
     value
   } = props;
   let { datasource = [], columns = [{}] } = props;
-  // const { doSearch, getDisplayFieldsMetaData, useDeepMemo, preProcessColumns, getGroupDataForItemsTree } = utils;
 
   if (referenceList.length > 0) {
     datasource = referenceList;
