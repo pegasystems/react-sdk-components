@@ -199,6 +199,65 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("Previous")').click();
 
+    /** MultiSelect mode type test */
+    selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
+    await selectedSubCategory.click();
+    await page.locator('li:has-text("Mode")').click();
+
+    selectedTestName = page.locator('div[data-test-id="6f64b45d01d11d8efd1693dfcb63b735"]');
+    await selectedTestName.click();
+    await page.locator('li:has-text("MultiSelect")').click();
+
+    /** Combo-Box mode type test */
+    let displayAs = page.locator('div[data-test-id="4aa668349e0970901aa6b11528f95223"]');
+    await displayAs.click();
+    await page.locator('li:has-text("Combo-Box")').click();
+
+    let selectProducts = page.locator('div[role="combobox"]');
+    await selectProducts.click();
+    await page.locator('li:has-text("Mobile")').click();
+    await page.locator('li:has-text("Telivision")').click();
+    await expect(selectProducts).toBeVisible();
+
+    await page.locator('button:has-text("Next")').click();
+
+    assignment = page.locator('div[id="Assignment"]');
+
+    await expect(assignment.locator('td >> text="Mobile"')).toBeVisible();
+    await expect(assignment.locator('td >> text="Telivision"')).toBeVisible();
+
+    await page.locator('button:has-text("Previous")').click();
+
+    await expect(selectProducts.locator('div[role="button"]:has-text("Mobile")')).toBeVisible();
+    await expect(selectProducts.locator('div[role="button"]:has-text("Telivision")')).toBeVisible();
+
+    let deleteProduct = await selectProducts.locator('div[role="button"]:has-text("Mobile")');
+    await deleteProduct.locator('svg[focusable="false"]').click();
+
+    await page.locator('button:has-text("Next")').click();
+
+    await expect(selectProducts.locator('div[role="button"]:has-text("Mobile")')).not.toBeVisible();
+
+    await page.locator('button:has-text("Previous")').click();
+
+    deleteProduct = await selectProducts.locator('div[role="button"]:has-text("Telivision")');
+    await deleteProduct.locator('svg[focusable="false"]').click();
+
+    /** Checkbox group mode type test */
+    displayAs = page.locator('div[data-test-id="4aa668349e0970901aa6b11528f95223"]');
+    await displayAs.click();
+    await page.locator('li:has-text("Checkbox group")').click();
+
+    await page.locator('label:has-text("Washin Machine")').click();
+    await page.locator('label:has-text("Mobile")').click();
+
+    await page.locator('button:has-text("Next")').click();
+
+    await expect(assignment.locator('td >> text="Washin Machine"')).toBeVisible();
+    await expect(assignment.locator('td >> text="Mobile"')).toBeVisible();
+
+    await page.locator('button:has-text("Previous")').click();
+
     /** Readonly mode type test */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
     await selectedSubCategory.click();
