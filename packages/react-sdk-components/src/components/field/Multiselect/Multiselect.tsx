@@ -123,14 +123,13 @@ export default function Multiselect(props) {
       selectedRows = await listActions.getSelectedRows(true);
 
       selectedRows =
-        selectedRows.length > 0
-          ? selectedRows.map(item => {
-              return {
-                id: item[selectionKey.startsWith('.') ? selectionKey.substring(1) : selectionKey],
-                primary: item[primaryField.startsWith('.') ? primaryField.substring(1) : primaryField]
-              };
-            })
-          : [];
+        selectedRows &&
+        selectedRows.map(item => {
+          return {
+            id: item[selectionKey.startsWith('.') ? selectionKey.substring(1) : selectionKey],
+            primary: item[primaryField.startsWith('.') ? primaryField.substring(1) : primaryField]
+          };
+        });
       setSelectedItems(selectedRows);
     }
 
