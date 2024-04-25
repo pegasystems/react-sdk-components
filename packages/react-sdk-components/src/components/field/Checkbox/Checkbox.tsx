@@ -93,6 +93,25 @@ export default function CheckboxComponent(props: CheckboxProps) {
     thePConn.getValidationApi().validate(event.target.checked);
   };
 
+  const handleChangeMultiMode = (event, element) => {
+    if (event.target.checked) {
+      insertInstruction(thePConn, selectionList, selectionKey, primaryField, {
+        id: element.key,
+        primary: element.text ?? element.value
+      });
+    } else {
+      deleteInstruction(thePConn, selectionList, selectionKey, {
+        id: element.key,
+        primary: element.text ?? element.value
+      });
+    }
+    thePConn.clearErrorMessages({
+      property: selectionList,
+      category: '',
+      context: ''
+    });
+  };
+
   let theCheckbox;
   const listOfCheckboxes: any = [];
   if (selectionMode === 'multi') {
@@ -105,24 +124,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
             <Checkbox
               key={index}
               checked={selectedvalues?.some?.(data => data[dataField] === element.key)}
-              onChange={event => {
-                if (event.target.checked) {
-                  insertInstruction(thePConn, selectionList, selectionKey, primaryField, {
-                    id: element.key,
-                    primary: element.text ?? element.value
-                  });
-                } else {
-                  deleteInstruction(thePConn, selectionList, selectionKey, {
-                    id: element.key,
-                    primary: element.text ?? element.value
-                  });
-                }
-                thePConn.clearErrorMessages({
-                  property: selectionList,
-                  category: '',
-                  context: ''
-                });
-              }}
+              onChange={event => handleChangeMultiMode(event, element)}
               onBlur={() => {
                 thePConn.getValidationApi().validate(selectedvalues, selectionList);
               }}
