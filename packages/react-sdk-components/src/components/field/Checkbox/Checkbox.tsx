@@ -1,18 +1,34 @@
+/* eslint-disable react/no-array-index-key */
 import { useState, useEffect } from 'react';
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel } from '@material-ui/core';
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../helpers/instructions-utils';
 import { PConnFieldProps } from '../../../types/PConnProps';
+import { makeStyles } from '@material-ui/core/styles';
 
 interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on Checkbox here
   value?: boolean;
-  // eslint-disable-next-line react/no-unused-prop-types
   caption?: string;
   trueLabel?: string;
   falseLabel?: string;
+  selectionMode?: string;
+  datasource?: any;
+  selectionKey?: string;
+  selectionList?: any;
+  primaryField: string;
+  readonlyContextList: any;
+  referenceList: string;
 }
+
+const useStyles = makeStyles(() => ({
+  checkbox: {
+    display: 'flex',
+    flexDirection: 'column'
+  }
+}));
 
 export default function CheckboxComponent(props: CheckboxProps) {
   // Get emitted components from map (so we can get any override that may exist)
@@ -21,7 +37,8 @@ export default function CheckboxComponent(props: CheckboxProps) {
   const {
     getPConnect,
     label,
-    value = false,
+    caption,
+    value,
     readOnly,
     testId,
     required,
@@ -32,21 +49,33 @@ export default function CheckboxComponent(props: CheckboxProps) {
     displayMode,
     hideLabel,
     trueLabel,
-    falseLabel
+    falseLabel,
+    selectionMode,
+    datasource,
+    selectionKey,
+    selectionList,
+    primaryField,
+    referenceList,
+    readonlyContextList: selectedvalues
   } = props;
+  const classes = useStyles();
   const helperTextToDisplay = validatemessage || helperText;
-
   const thePConn = getPConnect();
-  const theConfigProps = thePConn.getConfigProps() as CheckboxProps;
-  const caption = theConfigProps.caption;
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
 
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState<any>();
   useEffect(() => {
     // This update theSelectedButton which will update the UI to show the selected button correctly
     setChecked(value);
   }, [value]);
+
+  useEffect(() => {
+    if (referenceList?.length > 0) {
+      thePConn.setReferenceList(selectionList);
+      updateNewInstuctions(thePConn, selectionList);
+    }
+  }, [thePConn]);
 
   if (displayMode === 'LABELS_LEFT') {
     return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} />;
@@ -64,28 +93,77 @@ export default function CheckboxComponent(props: CheckboxProps) {
     thePConn.getValidationApi().validate(event.target.checked);
   };
 
-  let theCheckbox = <Checkbox color='primary' disabled={disabled} />;
+  const handleChangeMultiMode = (event, element) => {
+    if (event.target.checked) {
+      insertInstruction(thePConn, selectionList, selectionKey, primaryField, {
+        id: element.key,
+        primary: element.text ?? element.value
+      });
+    } else {
+      deleteInstruction(thePConn, selectionList, selectionKey, {
+        id: element.key,
+        primary: element.text ?? element.value
+      });
+    }
+    thePConn.clearErrorMessages({
+      property: selectionList,
+      category: '',
+      context: ''
+    });
+  };
 
-  if (readOnly) {
-    // Workaround for lack of InputProps readOnly from https://github.com/mui-org/material-ui/issues/17043
-    //  Also note that we need to turn off the onChange call in the FormControlLabel wrapper, too. See below!
-    theCheckbox = <Checkbox value={value || false} readOnly={readOnly} />;
+  let theCheckbox;
+  const listOfCheckboxes: any = [];
+  if (selectionMode === 'multi') {
+    const listSourceItems = datasource?.source ?? [];
+    const dataField: any = selectionKey?.split?.('.')[1];
+    listSourceItems.forEach((element, index) => {
+      listOfCheckboxes.push(
+        <FormControlLabel
+          control={
+            <Checkbox
+              key={index}
+              checked={selectedvalues?.some?.(data => data[dataField] === element.key)}
+              onChange={event => handleChangeMultiMode(event, element)}
+              onBlur={() => {
+                thePConn.getValidationApi().validate(selectedvalues, selectionList);
+              }}
+              data-testid={`${testId}:${element.value}`}
+            />
+          }
+          key={index}
+          label={element.text ?? element.value}
+          labelPlacement='end'
+          data-test-id={testId}
+        />
+      );
+    });
+    theCheckbox = <div className={classes.checkbox}>{listOfCheckboxes}</div>;
+  } else {
+    theCheckbox = (
+      <FormControlLabel
+        control={
+          <Checkbox
+            color='primary'
+            checked={checked}
+            onChange={!readOnly ? handleChange : undefined}
+            onBlur={!readOnly ? handleBlur : undefined}
+            value={value}
+            disabled={disabled}
+            readOnly={readOnly}
+          />
+        }
+        label={caption}
+        labelPlacement='end'
+        data-test-id={testId}
+      />
+    );
   }
 
   return (
     <FormControl required={required} error={status === 'error'}>
       {!hideLabel && <FormLabel component='legend'>{label}</FormLabel>}
-      <FormGroup>
-        <FormControlLabel
-          control={theCheckbox}
-          checked={checked}
-          onChange={!readOnly ? handleChange : undefined}
-          onBlur={!readOnly ? handleBlur : undefined}
-          label={caption}
-          labelPlacement='end'
-          data-test-id={testId}
-        />
-      </FormGroup>
+      <FormGroup>{theCheckbox}</FormGroup>
       <FormHelperText>{helperTextToDisplay}</FormHelperText>
     </FormControl>
   );
