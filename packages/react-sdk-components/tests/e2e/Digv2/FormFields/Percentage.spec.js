@@ -50,7 +50,7 @@ test.describe('E2E test', () => {
     attributes = await common.getAttributes(requiredPercentage);
     await expect(attributes.includes('required')).toBeTruthy();
     await expect(attributes.includes('placeholder')).toBeTruthy();
-    await expect(page.locator('div >> label:has-text("PercentageRequired")')).toBeVisible();
+    await expect(page.locator('div >> label').filter({ hasText: 'Required Percentage *' })).toBeVisible();
     await expect(page.locator('div >> p:has-text("Percentage helpertext")')).toBeVisible();
     await expect(await requiredPercentage.inputValue()).toBe('10.00');
 
