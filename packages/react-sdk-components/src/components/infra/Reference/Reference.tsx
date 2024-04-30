@@ -36,7 +36,7 @@ export default function Reference(props: ReferenceProps) {
 
   // @ts-ignore - Argument of type 'null' is not assignable to parameter of type 'string'.
   const viewComponent: any = pConnect.createComponent(viewObject, null, null, {
-    pageReference: context
+    pageReference: context && context.startsWith('@CLASS') ? '' : context
   });
 
   viewComponent.props.getPConnect().setInheritedConfig({
