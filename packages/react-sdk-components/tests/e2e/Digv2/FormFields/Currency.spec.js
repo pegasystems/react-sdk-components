@@ -42,7 +42,7 @@ test.describe('E2E test', () => {
     attributes = await common.getAttributes(notRequiredCurrency);
     await expect(attributes.includes('required')).toBeFalsy();
 
-    await expect(page.locator('div >> label:has-text("CurrencyRequired")')).toBeVisible();
+    await expect(page.locator('div >> label').filter({ hasText: 'Required Currency *' })).toBeVisible();
     const requiredCurrency = page.locator('input[data-test-id="77af0bd660f2e0276e23a7db7d48235a"]');
     await requiredCurrency.pressSequentially('20');
     await notRequiredCurrency.click();
