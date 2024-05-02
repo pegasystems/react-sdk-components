@@ -44,7 +44,7 @@ test.describe('E2E test', () => {
     requiredInteger.fill('10000');
     attributes = await common.getAttributes(requiredInteger);
     await expect(attributes.includes('required')).toBeTruthy();
-    await expect(attributes.includes('placeholder')).toBeTruthy();
+    await expect(await requiredInteger.getAttribute('placeholder')).toBe('Integer Placeholder');
     await expect(page.locator('div >> label').filter({ hasText: 'Required Integer *' })).toBeVisible();
     await expect(page.locator('div >> p:has-text("Integer HelperText")')).toBeVisible();
 
