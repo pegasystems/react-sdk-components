@@ -64,7 +64,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
 
-  const [checked, setChecked] = useState<any>();
+  const [checked, setChecked] = useState<any>(false);
   useEffect(() => {
     // This update theSelectedButton which will update the UI to show the selected button correctly
     setChecked(value);
