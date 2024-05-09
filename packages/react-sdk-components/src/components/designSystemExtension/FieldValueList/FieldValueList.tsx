@@ -9,6 +9,7 @@ interface FieldValueListProps {
   name?: string;
   value: any;
   variant?: string;
+  isHtml?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -45,7 +46,7 @@ function formatItemValue(value) {
 }
 
 export default function FieldValueList(props: FieldValueListProps) {
-  const { name, value, variant = 'inline' } = props;
+  const { name, value, variant = 'inline', isHtml = false } = props;
   const classes = useStyles();
 
   function getGridItemLabel() {
@@ -63,9 +64,14 @@ export default function FieldValueList(props: FieldValueListProps) {
 
     return (
       <Grid item xs={variant === 'stacked' ? 12 : 6} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
-        <Typography variant={variant === 'stacked' ? 'h6' : 'body2'} component='span' className={classes.fieldValue}>
-          {formattedValue}
-        </Typography>
+        {isHtml ? (
+          // eslint-disable-next-line react/no-danger
+          <div dangerouslySetInnerHTML={{ __html: formattedValue }} />
+        ) : (
+          <Typography variant={variant === 'stacked' ? 'h6' : 'body2'} component='span' className={classes.fieldValue}>
+            {formattedValue}
+          </Typography>
+        )}
       </Grid>
     );
   }

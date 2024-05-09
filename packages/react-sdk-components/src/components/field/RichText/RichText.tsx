@@ -24,11 +24,11 @@ export default function RichText(props: RichTextProps) {
   const helperTextToDisplay = validatemessage || helperText;
 
   if (displayMode === 'LABELS_LEFT') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} isHtml />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} isHtml variant='stacked' />;
   }
 
   let richTextComponent;
