@@ -248,12 +248,12 @@ test.describe('E2E test', () => {
     await displayAs.click();
     await page.locator('li:has-text("Checkbox group")').click();
 
-    await page.locator('label:has-text("Washin Machine")').click();
+    await page.locator('label:has-text("Washing Machine")').click();
     await page.locator('label:has-text("Mobile")').click();
 
     await page.locator('button:has-text("Next")').click();
 
-    await expect(assignment.locator('td >> text="Washin Machine"')).toBeVisible();
+    await expect(assignment.locator('td >> text="Washing Machine"')).toBeVisible();
     await expect(assignment.locator('td >> text="Mobile"')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
