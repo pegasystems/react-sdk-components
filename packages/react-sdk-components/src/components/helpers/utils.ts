@@ -47,7 +47,7 @@ export class Utils {
           // get data page
           // eslint-disable-next-line no-case-declarations
           const dataPage = configProps.datasource;
-          if (dataObject[dataPage]) {
+          if (typeof dataPage === 'string' && dataObject[dataPage]) {
             // eslint-disable-next-line no-alert
             alert('need to handle data page');
           } else {
