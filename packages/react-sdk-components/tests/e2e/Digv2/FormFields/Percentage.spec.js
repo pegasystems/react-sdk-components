@@ -52,7 +52,7 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('placeholder')).toBeTruthy();
     await expect(page.locator('div >> label').filter({ hasText: 'Required Percentage *' })).toBeVisible();
     await expect(page.locator('div >> p:has-text("Percentage helpertext")')).toBeVisible();
-    await expect(await requiredPercentage.inputValue()).toBe('10.00');
+    await expect(await requiredPercentage.inputValue()).toBe('10%');
 
     /** Selecting Disable from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');

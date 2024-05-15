@@ -56,7 +56,7 @@
     "@pega/auth": "^0.2.2",
     "@tinymce/tinymce-react": "^4.3.2",
     "@types/react": "^17.0.74",
-    "@unicef/material-ui-currency-textfield": "^0.8.6",
+    "react-number-format": "^5.3.4",
     "dayjs": "^1.11.10",
     "downloadjs": "^1.4.7",
     "fast-deep-equal": "^3.1.3",
