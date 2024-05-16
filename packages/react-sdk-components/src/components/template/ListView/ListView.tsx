@@ -1047,7 +1047,7 @@ export default function ListView(props: ListViewProps) {
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map(row => {
                         return (
-                          <TableRow key={row.pxRefObjectInsName || row.pyID}>
+                          <TableRow key={row.pxRefObjectInsName || row.pyID || row.pyGUID}>
                             {arColumns.map(column => {
                               const value = row[column.id];
                               return (
@@ -1104,7 +1104,7 @@ export default function ListView(props: ListViewProps) {
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map(row => {
                           return (
-                            <TableRow key={row[rowID]}>
+                            <TableRow key={row.pxRefObjectInsName || row.pyGUID || row.pyID}>
                               {selectionMode === SELECTION_MODE.SINGLE && (
                                 <TableCell>
                                   <Radio

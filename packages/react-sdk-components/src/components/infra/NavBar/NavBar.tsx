@@ -249,7 +249,7 @@ export default function NavBar(props: NavBarProps) {
       <Divider />
       <List className='marginTopAuto'>
         <>
-          <ListItem onClick={navPanelOperatorButtonClick}>
+          <ListItem onClick={navPanelOperatorButtonClick} style={{cursor: 'pointer'}}>
             <ListItemIcon>
               <PersonOutlineIcon fontSize='large' />
             </ListItemIcon>
