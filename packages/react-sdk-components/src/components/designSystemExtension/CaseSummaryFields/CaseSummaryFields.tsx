@@ -109,9 +109,9 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
               label={field.config.label}
               InputProps={{
                 readOnly: true,
+                disableUnderline: true,
                 inputProps: {
-                  style: { cursor: 'pointer' },
-                  disableUnderline: true
+                  style: { cursor: 'pointer' }
                 }
               }}
             />
