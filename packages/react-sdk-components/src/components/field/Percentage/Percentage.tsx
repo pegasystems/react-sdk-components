@@ -1,17 +1,20 @@
-import CurrencyTextField from '@unicef/material-ui-currency-textfield';
-
+import { TextField } from '@material-ui/core';
+import { NumericFormat } from 'react-number-format';
+import { useState } from 'react';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 
-/* Using @unicef/material-ui-currency-textfield component here, since it allows formatting decimal values,
+/* Using react-number-format component here, since it allows formatting decimal values,
 as per the locale.
 */
 interface PercentageProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Percentage here
   currencyISOCode?: string;
+  showGroupSeparators?: string;
+  decimalPrecision?: number;
 }
 
 export default function Percentage(props: PercentageProps) {
@@ -34,8 +37,12 @@ export default function Percentage(props: PercentageProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder
+    placeholder,
+    showGroupSeparators,
+    decimalPrecision
   } = props;
+
+  const [values, setValues] = useState(value.toString());
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
@@ -45,7 +52,11 @@ export default function Percentage(props: PercentageProps) {
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
   const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
 
-  // console.log(`Percentage: label: ${label} value: ${value}`);
+  let readOnlyProp = {}; // Note: empty if NOT ReadOnly
+
+  if (readOnly) {
+    readOnlyProp = { readOnly: true };
+  }
 
   if (displayMode === 'LABELS_LEFT') {
     return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
@@ -65,12 +76,17 @@ export default function Percentage(props: PercentageProps) {
   const theCurrDec = theSymbols.theDecimalIndicator;
   const theCurrSep = theSymbols.theDigitGroupSeparator;
 
-  function PercentageOnBlur(event, inValue) {
-    handleEvent(actions, 'changeNblur', propName, inValue !== '' ? Number(inValue) : inValue);
+  function PercentageOnBlur() {
+    handleEvent(actions, 'changeNblur', propName, values);
   }
 
+  const handleChange = val => {
+    setValues(val.value);
+  };
+
   return (
-    <CurrencyTextField
+    <NumericFormat
+      valueIsNumericString
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
@@ -78,20 +94,19 @@ export default function Percentage(props: PercentageProps) {
       size='small'
       required={required}
       disabled={disabled}
-      readOnly={!!readOnly}
       error={status === 'error'}
       label={label}
-      value={value}
-      type='text'
-      outputFormat='number'
-      textAlign='left'
-      InputProps={{
-        inputProps: { ...testProp }
+      value={values}
+      onValueChange={val => {
+        handleChange(val);
       }}
-      currencySymbol=''
-      decimalCharacter={theCurrDec}
-      digitGroupSeparator={theCurrSep}
       onBlur={!readOnly ? PercentageOnBlur : undefined}
+      decimalSeparator={theCurrDec}
+      thousandSeparator={showGroupSeparators ? theCurrSep : ''}
+      decimalScale={decimalPrecision}
+      suffix='%'
+      InputProps={{ ...readOnlyProp, inputProps: { ...testProp } }}
+      customInput={TextField}
     />
   );
 }

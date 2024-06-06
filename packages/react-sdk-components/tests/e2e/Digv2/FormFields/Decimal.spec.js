@@ -97,9 +97,7 @@ test.describe('E2E test', () => {
     const decimalAsCurrency = page.locator('input[data-test-id="9e438afab6d7ec67b5582bded10f5172"]');
     attributes = await common.getAttributes(decimalAsCurrency);
     await expect(attributes.includes('readonly')).toBeTruthy();
-    await expect(await decimalAsCurrency.inputValue()).toBe('20.00');
-    const symbol = page.locator('div:has-text("DecimalAsCurrency")');
-    await expect(symbol.locator('p:has-text("$")')).toBeTruthy();
+    await expect(await decimalAsCurrency.inputValue()).toBe('$20');
 
     /** Selecting Visibility from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
