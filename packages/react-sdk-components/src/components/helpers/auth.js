@@ -293,7 +293,10 @@ class PegaAuth {
 
       const fnAuthMessageReceiver = (event) => {
         // Check origin to make sure it is the redirect origin
-        if (event.origin !== redirectOrigin) return;
+        if (event.origin !== redirectOrigin) {
+            // eslint-disable-next-line no-console
+            console.info(`Received event from unexpected origin: ${event.origin} (was expecting: ${redirectOrigin})`);
+        }
         if (!event.data || !event.data.type || event.data.type !== 'PegaAuth') return;
         const aArgs = ['code', 'state', 'error', 'errorDesc'];
         const aValues = [];
@@ -301,6 +304,17 @@ class PegaAuth {
           const arg = aArgs[i];
           aValues[arg] = event.data[arg] ? event.data[arg].toString() : null;
         }
+        if (aValues.code) {
+          if (aValues.state === this.#dynState.state) {
+            // eslint-disable-next-line no-console
+            console.info(`Event data includes expected state: ${aValues.state}.`);
+          } else {
+            // eslint-disable-next-line no-console
+            console.info(`Event data includes unexpected state: ${aValues.state} (was expecting ${this.#dynState.state})`);
+          }
+        }
+        // eslint-disable-next-line no-console
+        console.info(`Event data includes state: ${aValues.state}.`);
         if (aValues.error || (aValues.code && aValues.state === this.#dynState.state)) {
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
           fnGetTokenAndFinish(aValues.code, aValues.error, aValues.errorDesc);
@@ -467,7 +481,12 @@ class PegaAuth {
             fnCloseIframe();
           } else {
             clearInterval(checkWindowClosed);
-            myWindow.close();
+            try {
+              myWindow.close();
+            } catch(e) {
+              // eslint-disable-next-line no-console
+              console.warn(`attempt to close opened window failed`);
+            }
           }
         }
         if (code) {

@@ -11,7 +11,7 @@
 
 // For enabling logging via debugger (do not let it be a const...then can't change in debugger)
 // eslint-disable-next-line prefer-const
-let bDebug = false;
+let bDebug = true;
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -64,6 +64,7 @@ function main() {
 
     // Post messages require a targetDomain...trying to pass this via state
     const embedOrigin = getEmbedOriginFromState();
+    doLog(`authDone.js: embedOrigin: ${embedOrigin}`);
     if (!bSuccess) {
       try {
         window.opener.postMessage({ type: 'PegaAuth', code, state, error, errorDesc }, embedOrigin);
