@@ -47,6 +47,7 @@ It attempts assorted techniques to pass back a received code
 
             // Post messages require a targetDomain...trying to pass this via state
             let embedOrigin = getEmbedOriginFromState(state);
+            fnLog(`auth.html: embedOrigin: ${embedOrigin}`);
             if( !bSuccess ) {
                 try {
                     window.opener.postMessage({type:"PegaAuth", code:code}, embedOrigin);

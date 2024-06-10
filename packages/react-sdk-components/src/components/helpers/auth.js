@@ -228,7 +228,12 @@ class PegaAuth {
                           fnCloseIframe();
                       } else {
                           clearInterval(checkWindowClosed);
-                          myWindow.close();
+                          try {
+                            myWindow.close();
+                          } catch (e) {
+                            // eslint-disable-next-line no-console
+                            console.warn(`attempt to close opened window failed`);
+                          }
                       }
                       resolve(token);
                   })
@@ -239,8 +244,10 @@ class PegaAuth {
               /* Handler to receive the auth code */
               authMessageReceiver = (event) => {
                   // Check origin to make sure it is the redirect origin
-                  if( event.origin !== redirectOrigin )
-                      return;
+                  if( event.origin !== redirectOrigin ) {
+                    // eslint-disable-next-line no-console
+                    console.info(`Received event from unexpected origin: ${event.origin} (was expecting: ${redirectOrigin})`);
+                  }
                   if( !event.data || !event.data.type || event.data.type !== "PegaAuth" )
                       return;
                   // eslint-disable-next-line no-console
