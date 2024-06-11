@@ -99,6 +99,8 @@ class PegaAuth {
                           console.log("authjs(login): loaded a page in iFrame");
                       } else {
                           myWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
+                          // eslint-disable-next-line no-console
+                          console.log(`authjs(login): loaded a page in popup window...sending 'PegaAuth' message. redirectOrigin: ${redirectOrigin}`);
                       }
                   } catch(e) {
                       // eslint-disable-next-line no-console

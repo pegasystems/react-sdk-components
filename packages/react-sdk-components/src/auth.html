@@ -59,7 +59,8 @@ It attempts assorted techniques to pass back a received code
 
             if( !bSuccess ) {
                 window.addEventListener("message", (event) => {
-                    if( event.data && event.data.type && event.data.type==="PegaAuth" ) {
+                  fnLog(`auth.html: embedOrigin: ${embedOrigin}`);
+                  if( event.data && event.data.type && event.data.type==="PegaAuth" ) {
                         event.source.postMessage({type:"PegaAuth", code:code}, embedOrigin);
                     }
                 })
