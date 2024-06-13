@@ -250,7 +250,7 @@ export default function NavBar(props: NavBarProps) {
       <List className='marginTopAuto'>
         <>
           <ListItem onClick={navPanelOperatorButtonClick}>
-            <ListItemIcon>
+            <ListItemIcon id='person-icon'>
               <PersonOutlineIcon fontSize='large' />
             </ListItemIcon>
             <ListItemText primary={portalOperator} />

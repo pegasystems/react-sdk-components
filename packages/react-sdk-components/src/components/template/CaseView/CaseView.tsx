@@ -186,6 +186,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
       <Box>
         {editAction && (
           <Button
+            id='edit'
             onClick={() => {
               _editClick();
             }}
@@ -217,7 +218,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
               <CardHeader
                 className={classes.caseViewHeader}
                 title={
-                  <Typography variant='h6' component='div'>
+                  <Typography variant='h6' component='div' id='case-name'>
                     {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
                   </Typography>
                 }

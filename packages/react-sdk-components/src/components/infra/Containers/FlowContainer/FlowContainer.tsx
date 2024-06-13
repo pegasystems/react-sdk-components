@@ -99,6 +99,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Messages';
 
+  const key = `${thePConn.getCaseInfo().getClassName()}!CASE!${thePConn.getCaseInfo().getName()}`.toUpperCase();
   const classes = useStyles();
 
   function getBuildName(): string {
@@ -306,8 +307,9 @@ export const FlowContainer = (props: FlowContainerProps) => {
           !displayOnlyFA ? (
             <Card className={`${classes.root} psdk-root`}>
               <CardHeader
-                title={<Typography variant='h6'>{containerName}</Typography>}
-                subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
+                id='assignment-header'
+                title={<Typography variant='h6'>{PCore.getLocaleUtils().getLocaleValue(containerName, undefined, key)}</Typography>}
+                subheader={`${localizedVal('Task in', 'Todo')} ${caseId} \u2022 ${localizedVal('Priority', 'Todo')} ${urgency}`}
                 avatar={<Avatar className={`${classes.avatar} psdk-avatar`}>{operatorInitials}</Avatar>}
               />
               {displayPageMessages()}
@@ -319,7 +321,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
             </Card>
           ) : (
             <Card className={`${classes.root} psdk-root`}>
-              <Typography variant='h6'>{containerName}</Typography>
+              <Typography variant='h6'>{PCore.getLocaleUtils().getLocaleValue(containerName, undefined, key)}</Typography>
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>

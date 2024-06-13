@@ -144,7 +144,9 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                       </div>
                     </div>
                     <div className={_getHLabelClass(mainStep.visited_status)}>
-                      <div className='psdk-horizontal-step-text-label'>{mainStep.name}</div>
+                      <div className='psdk-horizontal-step-text-label' id='selected-label'>
+                        {mainStep.name}
+                      </div>
                     </div>
                   </div>
                   {_showHLine(index) && <div className='psdk-horizontal-step-line' />}

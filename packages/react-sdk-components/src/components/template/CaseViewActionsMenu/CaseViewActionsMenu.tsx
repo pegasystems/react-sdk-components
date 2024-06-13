@@ -95,7 +95,7 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
 
   return (
     <>
-      <Button aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
+      <Button id='actions-menu' aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
         {localizedVal('Actions...', localeCategory)}
       </Button>
       <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
