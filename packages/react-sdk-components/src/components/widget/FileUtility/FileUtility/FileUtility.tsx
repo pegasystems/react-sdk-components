@@ -488,7 +488,7 @@ export default function FileUtility(props: FileUtilityProps) {
   }
 
   return (
-    <div className='psdk-utility'>
+    <div className='psdk-utility' id='file-utility'>
       {inProgress && (
         <div className='progress-div'>
           <CircularProgress />
