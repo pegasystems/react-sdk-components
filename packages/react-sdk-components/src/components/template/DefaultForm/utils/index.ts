@@ -20,13 +20,8 @@ export const getKeyForMappedField = field => {
 
   const pConnect = field?.getPConnect?.();
 
-  if (pConnect?.meta?.type && pConnect?.meta?.config?.name) {
-    return `${pConnect.meta.type}_${pConnect.meta.config.name}`;
-  }
-
-  // Using label as a fallback if name is not defined.
-  if (pConnect?.meta?.type && pConnect?.meta?.config?.label) {
-    return `${pConnect.meta.type}_${pConnect.meta.config.label}`;
+  if (pConnect?.meta) {
+    return JSON.stringify(pConnect.meta);
   }
 
   return uuidv4();
