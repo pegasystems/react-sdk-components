@@ -4,20 +4,20 @@ const config = require('../../../config');
 const common = require('../../../common');
 
 test.beforeEach(common.launchPortal);
-
+/** Added tests for french locale (fr-FR) */
 test.describe('E2E test', () => {
   test('should login, create case and test the localized values', async ({ page }) => {
-    await common.login(config.config.apps.digv2.localization.username, config.config.apps.digv2.localization.password, page);
+    await common.login(config.config.apps.digv2.localizedUser.username, config.config.apps.digv2.localizedUser.password, page);
 
     /** Testing announcement banner text localized */
     const announcementBanner = page.locator('h6:has-text("Anuncios")');
     await expect(announcementBanner).toBeVisible();
 
-    /** Testing worklist title localized */
+    /** Testing worklist title */
     const worklist = page.locator('h6:has-text("Mi lista de trabajo")');
     await expect(worklist).toBeVisible();
 
-    /** Testing landing pages localized */
+    /** Testing landing pages */
     expect(await page.locator('div[role="button"]:has-text("Hogar")')).toBeVisible(); // Home
     expect(await page.locator('div[role="button"]:has-text("Panel de control en línea")')).toBeVisible(); // Inline Dashboard
 
@@ -34,13 +34,13 @@ test.describe('E2E test', () => {
     const caseSummary = await page.locator('div[id="CaseSummary"]');
     expect(caseSummary.locator('input[value="Nuevo"]')).toBeVisible(); // case Status
 
-    /** Testing Case history Localized values */
+    /** Testing Case history */
     const caseHistory = await page.locator('div[id="CaseHistory"]');
     await expect(caseHistory.locator('th >> text="Fecha"')).toBeVisible();
     await expect(caseHistory.locator('th >> text="Descripción"')).toBeVisible();
     await expect(caseHistory.locator('th >> text="Interpretado por"')).toBeVisible();
 
-    /** Testing Case view Localized values */
+    /** Testing Case view */
     const stages = await page.locator('div[id="Stages"]');
     await expect(stages.locator('li:has-text("Crear")')).toBeVisible();
 
@@ -48,7 +48,7 @@ test.describe('E2E test', () => {
     await expect(assignmentHeader.locator('h6:has-text("Seleccionar prueba")')).toBeVisible();
     await expect(assignmentHeader.locator('span:has-text("Tarea en")')).toBeVisible();
 
-    /** Testing action buttons Localized values */
+    /** Testing action buttons */
     const assignment = await page.locator('div[id="Assignment"]');
     await expect(assignment.locator('button:has-text("Cancelar")')).toBeVisible();
     await expect(assignment.locator('button:has-text("Entregar")')).toBeVisible();
@@ -60,11 +60,10 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("Entregar")').click();
 
-    /** Testing Multi step Localized values */
+    /** Testing Multi step */
     await expect(assignment.locator('div[id="selected-label"]:has-text("Datos integrados")')).toBeVisible();
 
     let selectedOption = page.locator('div[data-test-id="c6be2b6191e6660291b6b0c92bd2f0df"]');
-    // await expect(selectedOption.locator('span:has-text("Seleccionar opción")')).toBeVisible(); // dropdown label
     await selectedOption.click();
     await page.locator('li:has-text("ListOfRecords")').click();
 
@@ -83,14 +82,14 @@ test.describe('E2E test', () => {
 
     await expect(assignment.locator('h3:has-text("Dirección de Envío")')).toBeVisible();
 
-    /** Testing table headers Localized values */
+    /** Testing table headers */
     await expect(assignment.locator('th >> text="Calle"')).toBeVisible();
     await expect(assignment.locator('th >> text="Ciudad"')).toBeVisible();
     await expect(assignment.locator('th >> text="Estado"')).toBeVisible();
     await expect(assignment.locator('th >> text="Código Postal"')).toBeVisible();
     await expect(assignment.locator('th >> text="Número de teléfono"')).toBeVisible();
 
-    /** Testing file utility Localized values */
+    /** Testing file utility */
     const fileUtility = await page.locator('div[id="file-utility"]');
     await expect(fileUtility.locator('div:has-text("Archivos adjuntos0")')).toBeVisible();
     await fileUtility.locator('button[id="long-button"]').click();
@@ -98,7 +97,7 @@ test.describe('E2E test', () => {
     await expect(page.locator('li:has-text("Agregar archivos")')).toBeVisible();
     await expect(page.locator('li:has-text("Agregar enlaces")')).toBeVisible();
 
-    /** Testing Add files Modal Localized values */
+    /** Testing Add files Modal */
     await page.locator('li:has-text("Agregar archivos")').click();
     await expect(fileUtility.locator('h3:has-text("Agregar archivos locales")')).toBeVisible();
     await expect(fileUtility.locator('button:has-text("Cancelar")')).toBeVisible();
@@ -107,7 +106,7 @@ test.describe('E2E test', () => {
     fileUtility.locator('button:has-text("Cancelar")').click();
     await fileUtility.locator('button[id="long-button"]').click();
 
-    /** Testing Add links Modal Localized values */
+    /** Testing Add links Modal */
     await page.locator('li:has-text("Agregar enlaces")').click();
     await expect(fileUtility.locator('h3:has-text("Agregar enlaces")')).toBeVisible();
     await expect(fileUtility.locator('div >> text="Añadir enlace"')).toBeVisible();

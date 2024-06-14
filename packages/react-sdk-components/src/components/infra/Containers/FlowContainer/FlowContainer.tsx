@@ -308,7 +308,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
             <Card className={`${classes.root} psdk-root`}>
               <CardHeader
                 id='assignment-header'
-                title={<Typography variant='h6'>{PCore.getLocaleUtils().getLocaleValue(containerName, undefined, key)}</Typography>}
+                title={<Typography variant='h6'>{localizedVal(containerName, undefined, key)}</Typography>}
                 subheader={`${localizedVal('Task in', 'Todo')} ${caseId} \u2022 ${localizedVal('Priority', 'Todo')} ${urgency}`}
                 avatar={<Avatar className={`${classes.avatar} psdk-avatar`}>{operatorInitials}</Avatar>}
               />
@@ -321,7 +321,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
             </Card>
           ) : (
             <Card className={`${classes.root} psdk-root`}>
-              <Typography variant='h6'>{PCore.getLocaleUtils().getLocaleValue(containerName, undefined, key)}</Typography>
+              <Typography variant='h6'>{localizedVal(containerName, undefined, key)}</Typography>
               {displayPageMessages()}
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>

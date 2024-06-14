@@ -22,7 +22,7 @@ const config = {
         username: 'user.digv2',
         password: 'pega'
       },
-      localization: {
+      localizedUser: {
         username: 'localization@DigV2',
         password: 'pega'
       }
