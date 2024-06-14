@@ -9,7 +9,7 @@ test.describe('E2E test', () => {
   test('should login, create case and test the localized values', async ({ page }) => {
     await common.login(config.config.apps.digv2.localizedUser.username, config.config.apps.digv2.localizedUser.password, page);
 
-    /** Testing announcement banner text localized */
+    /** Testing announcement banner text */
     const announcementBanner = page.locator('h6:has-text("Anuncios")');
     await expect(announcementBanner).toBeVisible();
 
@@ -25,7 +25,7 @@ test.describe('E2E test', () => {
     const complexFieldsCase = page.locator('div[role="button"]:has-text("Campos complejos")');
     await complexFieldsCase.click();
 
-    /** Testing Case summary Localized values */
+    /** Testing Case summary */
     expect(await page.locator('div[id="case-name"]:has-text("Campos complejos")')).toBeVisible(); // case type
 
     expect(await page.locator('button[id="edit"]:has-text("Editar")')).toBeVisible(); // edit action
