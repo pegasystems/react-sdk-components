@@ -75,7 +75,7 @@
     "@pega/commitlint-config": "^0.7.1",
     "@pega/commitlint-plugin": "^0.7.1",
     "@pega/configs": "^0.7.1",
-    "@pega/constellationjs": "~23.1.1",
+    "@pega/constellationjs": "24.1.0-test-20240610",
     "@pega/cspell-config": "^0.7.1",
     "@pega/eslint-config": "^0.7.1",
     "@pega/pcore-pconnect-typedefs": "~2.1.1",

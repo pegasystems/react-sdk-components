@@ -87,7 +87,7 @@ test.describe('E2E test', () => {
     await editablePhoneInput.pressSequentially('6175551212');
 
     /** Validation tests */
-    const validationMsg = 'Invalid Phone';
+    const validationMsg = 'Enter a valid phone number';
     await editablePhoneInput.clear();
     await countrySelector.click();
     await page.locator('text=United States+1 >> nth=0').click();
