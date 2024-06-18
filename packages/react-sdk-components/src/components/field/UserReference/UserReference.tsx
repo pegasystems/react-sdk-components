@@ -4,6 +4,7 @@ import { Typography } from '@material-ui/core';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnProps } from '../../../types/PConnProps';
 
+import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
 
 const DROPDOWN_LIST = 'Drop-down list';
@@ -12,6 +13,7 @@ const SEARCH_BOX = 'Search box';
 interface UserReferenceProps extends PConnProps {
   // If any, enter additional props that only exist on URLComponent here
   displayAs?: string;
+  displayMode?: string;
   label?: string;
   value?: any;
   testId?: string;
@@ -36,6 +38,7 @@ const UserReference = (props: UserReferenceProps) => {
   const {
     label = '',
     displayAs = '',
+    displayMode = '',
     getPConnect,
     value = '',
     testId = '',
@@ -95,6 +98,14 @@ const UserReference = (props: UserReferenceProps) => {
   }, [displayAs, readOnly, showAsFormattedText, value]);
 
   let userReferenceComponent: any = null;
+
+  if (displayMode === 'LABELS_LEFT') {
+    return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} />;
+  }
+
+  if (displayMode === 'STACKED_LARGE_VAL') {
+    return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} variant='stacked' />;
+  }
 
   if (readOnly && showAsFormattedText) {
     if (userId) {
@@ -172,7 +183,6 @@ const UserReference = (props: UserReferenceProps) => {
       );
     }
   }
-
   return userReferenceComponent;
 };
 
