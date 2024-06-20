@@ -36,10 +36,12 @@ export default function ScalarList(props: ScalarListProps) {
       {
         type: componentType,
         config: {
+          // @ts-ignore - Type '{ readOnly: true; displayInModal: boolean; value: any; displayMode: string; label: string; }' is not assignable to type 'ComponentMetadataConfig'.
           value: scalarValue,
           displayMode: 'LABELS_LEFT',
           label,
           ...restProps,
+          // @ts-ignore - Type 'string' is not assignable to type 'boolean | undefined'.
           readOnly: 'true'
         }
       },

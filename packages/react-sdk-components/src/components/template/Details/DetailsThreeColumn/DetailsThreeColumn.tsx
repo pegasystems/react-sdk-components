@@ -46,7 +46,7 @@ export default function DetailsThreeColumn(props: DetailsThreeColumnProps) {
         field.config.displayAsStatus = true;
       }
 
-      return getPConnect().createComponent(field, '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
+      return getPConnect().createComponent(field, '', 0, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
     });
   }
 

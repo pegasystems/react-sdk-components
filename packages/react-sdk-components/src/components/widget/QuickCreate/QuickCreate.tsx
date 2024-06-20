@@ -35,6 +35,7 @@ export default function QuickCreate(props: QuickCreateProps) {
     const defaultCases: any = [];
     const envInfo = PCore.getEnvironmentInfo();
     if (envInfo?.environmentInfoObject?.pyCaseTypeList) {
+      // @ts-ignore - Property 'forEach' does not exist on type 'string'
       envInfo.environmentInfoObject.pyCaseTypeList.forEach(casetype => {
         if (casetype.pyWorkTypeName && casetype.pyWorkTypeImplementationClassName) {
           defaultCases.push({

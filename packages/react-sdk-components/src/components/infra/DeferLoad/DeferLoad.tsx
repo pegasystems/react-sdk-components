@@ -137,7 +137,7 @@ export default function DeferLoad(props: DeferLoadProps) {
       getPConnect()
         .getActionsApi()
         .refreshCaseView(encodeURI(loadViewCaseID), name, '') // 3rd arg empty string until typedef allows optional
-        .then(data => {
+        .then((data: any) => {
           onResponse(data.root);
         });
     }

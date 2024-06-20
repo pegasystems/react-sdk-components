@@ -167,6 +167,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
 
           savePromise
             .then(() => {
+              // @ts-ignore - Property 'c11nEnv' is private and only accessible within class 'CaseInfo'.
               const caseType = thePConn.getCaseInfo().c11nEnv.getValue(PCore.getConstants().CASE_INFO.CASE_TYPE_ID);
               onSaveActionSuccess({ caseType, caseID, assignmentID });
             })
@@ -263,7 +264,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     refreshProps.forEach(prop => {
       PCore.getRefreshManager().registerForRefresh(
         'PROP_CHANGE',
-        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, null, pageReference, {
+        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, '', pageReference, {
           ...refreshOptions,
           refreshFor: prop[0]
         }),

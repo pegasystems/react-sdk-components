@@ -128,7 +128,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     const refreshOptions = { autoDetectRefresh: true };
     if (canBeChangedInReviewMode && pConn.getValue('__currentPageTabViewName', '')) {
       // 2nd arg empty string until typedef marked correctly
-      getPConnect().getActionsApi().refreshCaseView(caseKey, pConn.getValue('__currentPageTabViewName', ''), null, refreshOptions); // 2nd arg empty string until typedef marked correctly
+      getPConnect().getActionsApi().refreshCaseView(caseKey, pConn.getValue('__currentPageTabViewName', ''), '', refreshOptions); // 2nd arg empty string until typedef marked correctly
       PCore.getDeferLoadManager().refreshActiveComponents(pConn.getContextName());
     } else {
       const pgRef = pConn.getPageReference().replace('caseInfo.content', '');

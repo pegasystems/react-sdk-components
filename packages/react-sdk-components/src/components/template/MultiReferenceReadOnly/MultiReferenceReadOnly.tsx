@@ -29,7 +29,7 @@ export default function MultiReferenceReadOnly(props: MultiReferenceReadOnlyProp
       }
     },
     '',
-    '',
+    0,
     {}
   ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
 

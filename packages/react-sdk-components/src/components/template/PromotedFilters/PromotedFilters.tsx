@@ -87,6 +87,7 @@ export default function PromotedFilters(props: PromotedFilterProps) {
     };
     return getPConnect().getContainerManager().addTransientItem({
       id: viewName,
+      // @ts-ignore - Property 'coreHeaders' is missing in type '{ classID: string; }' but required in type '{ coreHeaders: any; }'.
       data: filtersWithClassID
     });
   }, []);

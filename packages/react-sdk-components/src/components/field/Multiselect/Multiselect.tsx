@@ -115,7 +115,7 @@ export default function Multiselect(props) {
   const pConn = getPConnect();
   const contextName = pConn.getContextName();
   const listActions = pConn.getListActions();
-  const dataApiObj = useRef();
+  const dataApiObj: any = useRef();
 
   // main search function trigger
   const getCaseListBasedOnParams = async (searchText, group, selectedRows, currentItemsTree, isTriggeredFromSearch = false) => {
