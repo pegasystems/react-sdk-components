@@ -97,7 +97,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
     metadata.config.onRecordChange = e => {
       fireFilterChange(e.id);
     };
-    return getPConnect().createComponent(metadata, '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
+    return getPConnect().createComponent(metadata, '', 0, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
   };
 
   const onChange = dates => {

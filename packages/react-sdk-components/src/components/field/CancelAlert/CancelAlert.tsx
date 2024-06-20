@@ -21,6 +21,7 @@ export default function CancelAlert(props: CancelAlertProps) {
   const actionsAPI = getPConnect().getActionsApi();
   const containerManagerAPI = getPConnect().getContainerManager();
   const isLocalAction = getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION);
+  // @ts-ignore - Property 'options' is private and only accessible within class 'C11nEnv'.
   const isBulkAction = getPConnect()?.options?.isBulkAction;
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const broadCastUtils: any = PCore.getCoexistenceManager().getBroadcastUtils();
@@ -83,6 +84,7 @@ export default function CancelAlert(props: CancelAlertProps) {
       actionsAPI.cancelBulkAction(containerItemID);
     } else {
       dismiss(true);
+      // @ts-ignore - Argument of type '{ containerItemID: string; skipReleaseLockRequest: any; }' is not assignable to parameter of type 'ContainerInfo'.
       containerManagerAPI.removeContainerItem({ containerItemID, skipReleaseLockRequest });
     }
   }

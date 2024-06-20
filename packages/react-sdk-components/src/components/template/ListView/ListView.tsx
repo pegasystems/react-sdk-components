@@ -653,6 +653,7 @@ export default function ListView(props: ListViewProps) {
 
     thePConn
       .getActionsApi()
+      // @ts-ignore
       .openAssignment(pzInsKey, pxRefObjectClass, options)
       .then(() => {
         // console.log("openAssignment successful");
@@ -885,6 +886,7 @@ export default function ListView(props: ListViewProps) {
         pzInsKey = row[`${associationCategory}:pzInsKey`];
       }
       if (column.isAssignmentLink) {
+        // @ts-ignore
         thePConn.getActionsApi().openAssignment(pzInsKey, pxObjClass, {
           containerName: 'primary',
           channelName: ''

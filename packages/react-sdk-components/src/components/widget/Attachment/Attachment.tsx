@@ -160,6 +160,7 @@ export default function Attachment(props: AttachmentProps) {
                 messages: [
                   {
                     type: 'error',
+                    // @ts-ignore - Type '{ type: string; message: string; }' is not assignable to type 'MessagesConfigObject'.
                     message: pConn.getLocalizedValue('Error with one or more files', '', '')
                   }
                 ],
@@ -233,6 +234,7 @@ export default function Attachment(props: AttachmentProps) {
             messages: [
               {
                 type: 'error',
+                // @ts-ignore - Type '{ type: string; message: string; }' is not assignable to type 'MessagesConfigObject'.
                 message: pConn.getLocalizedValue('Error with one or more files', '', '')
               }
             ],
