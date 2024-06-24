@@ -8,7 +8,6 @@ import download from 'downloadjs';
 
 import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
 import { Utils } from '../../helpers/utils';
-import { isInfinity23OrHigher } from '../../helpers/common-utils';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 import './Attachment.css';
@@ -61,7 +60,7 @@ export default function Attachment(props: AttachmentProps) {
   const [toggleUploadBegin, setToggleUploadBegin] = useState(false);
 
   const resetAttachmentStoredState = () => {
-    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(isInfinity23OrHigher() ? valueRef : ''), undefined, {
+    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(valueRef), undefined, {
       pageReference: 'context_data',
       isArrayDeepMerge: false
     });
