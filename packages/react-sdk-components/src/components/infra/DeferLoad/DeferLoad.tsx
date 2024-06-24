@@ -139,6 +139,10 @@ export default function DeferLoad(props: DeferLoadProps) {
         .refreshCaseView(encodeURI(loadViewCaseID), name, '') // 3rd arg empty string until typedef allows optional
         .then((data: any) => {
           onResponse(data.root);
+        })
+        .catch(error => {
+          // eslint-disable-next-line no-console
+          console.log(`deferload: ${error}`);
         });
     }
   }, [name, getPConnect, currentLoadedAssignment]);
