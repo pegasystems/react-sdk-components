@@ -291,16 +291,6 @@ export default function ListView(props: ListViewProps) {
     });
   }
 
-  function getMyColumnList(arCols: any[]): string[] {
-    const myColList: string[] = [];
-
-    arCols.forEach(col => {
-      myColList.push(col.id);
-    });
-
-    return myColList;
-  }
-
   /** Will return field from a filter expression */
   function getFieldFromFilter(filter, dateRange = false) {
     let fieldValue;
