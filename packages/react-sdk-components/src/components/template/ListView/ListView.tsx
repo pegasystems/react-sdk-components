@@ -65,7 +65,6 @@ interface ListViewProps extends PConnProps {
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
 let myRows: any[];
-let myDisplayColumnList: any[];
 
 let menuColumnId = '';
 let menuColumnType = '';
@@ -119,6 +118,7 @@ export default function ListView(props: ListViewProps) {
   const rowID = compositeKeys && compositeKeys?.length === 1 ? compositeKeys[0] : defRowID;
 
   const [arRows, setRows] = useState<any[]>([]);
+  const [rowsData, setRowsData] = useState<any[]>([]);
   const [arColumns, setColumns] = useState<any[]>([]);
   const [response, setResponse] = useState<any[]>([]);
 
@@ -543,8 +543,8 @@ export default function ListView(props: ListViewProps) {
 
     // store globally, so can be searched, filtered, etc.
     myRows = usingDataResults;
-    myDisplayColumnList = getMyColumnList(myColumns);
 
+    setRowsData(myRows);
     // At this point, if we have data ready to render and haven't been asked
     //  to NOT call setRows and setColumns, call them
     if (bCallSetRowsColumns) {
@@ -604,24 +604,22 @@ export default function ListView(props: ListViewProps) {
   }, [listContext]);
 
   function searchFilter(value: string, rows: any[]) {
+    const cols = arColumns.map(ele => {
+      return ele.id;
+    });
+
     function filterArray(el: any): boolean {
-      const bReturn = false;
-      for (const key of Object.keys(el)) {
-        // only search columsn that are displayed (pzInsKey and pxRefObjectClass are added and may or may not be displayed)
-        if (myDisplayColumnList.includes(key)) {
-          let myVal = el[key];
-          if (myVal !== null) {
-            if (typeof myVal !== 'string') {
-              myVal = myVal.toString();
-            }
-            if (myVal.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-              return true;
-            }
+      return Object.keys(el).some(key => {
+        // only search columns that are displayed (pzInsKey and pxRefObjectClass are added and may or may not be displayed)
+        if (cols.includes(key)) {
+          const myVal = el[key];
+          if (myVal !== null && typeof myVal !== 'undefined') {
+            const strVal = String(myVal); // Ensure myVal is a string
+            return strVal.toLowerCase().includes(value.toLowerCase());
           }
         }
-      }
-
-      return bReturn;
+        return false;
+      });
     }
 
     rows = rows.filter(filterArray);
@@ -631,8 +629,7 @@ export default function ListView(props: ListViewProps) {
 
   function _onSearch(event: any) {
     const searchValue = event.target.value;
-
-    const filteredRows = searchFilter(searchValue, myRows.slice());
+    const filteredRows = searchFilter(searchValue, rowsData?.slice());
 
     setRows(filteredRows);
   }
