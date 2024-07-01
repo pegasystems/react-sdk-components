@@ -59,6 +59,12 @@ const calculateCoverage = async (page, outputDir) => {
   await page.close();
 };
 
+const enterPhoneNumber = async (phone, number) => {
+  const phoneInput = phone.locator('input');
+  await phoneInput.click();
+  await phoneInput.pressSequentially(number);
+};
+
 module.exports = {
   launchPortal,
   launchEmbedded,
@@ -66,5 +72,6 @@ module.exports = {
   login,
   getAttributes,
   getFutureDate,
-  calculateCoverage
+  calculateCoverage,
+  enterPhoneNumber
 };
