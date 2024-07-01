@@ -1,7 +1,9 @@
 import MuiPhoneNumber from 'material-ui-phone-number';
+import { useEffect, useState } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
+import handleEvent from '../../helpers/event-utils';
 
 interface PhoneProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Phone here
@@ -12,6 +14,7 @@ export default function Phone(props: PhoneProps) {
   const FieldValueList = getComponentFromMap('FieldValueList');
 
   const {
+    getPConnect,
     label,
     required,
     disabled,
@@ -19,7 +22,6 @@ export default function Phone(props: PhoneProps) {
     validatemessage,
     status,
     onChange,
-    onBlur,
     readOnly,
     testId,
     helperText,
@@ -27,6 +29,14 @@ export default function Phone(props: PhoneProps) {
     hideLabel,
     placeholder
   } = props;
+
+  const pConn = getPConnect();
+  const actions = pConn.getActionsApi();
+  const propName = (pConn.getStateProps() as any).value;
+
+  const [inputValue, setInputValue] = useState(value);
+  useEffect(() => setInputValue(value), [value]);
+
   const helperTextToDisplay = validatemessage || helperText;
 
   let testProp = {};
@@ -69,15 +79,14 @@ export default function Phone(props: PhoneProps) {
   }
 
   const handleChange = inputVal => {
-    let phoneValue = inputVal && inputVal.replace(/\D+/g, '');
-    phoneValue = `+${phoneValue}`;
-    onChange({ value: phoneValue });
+    setInputValue(inputVal);
   };
 
   const handleBlur = event => {
     const phoneValue = event?.target?.value;
-    event.target.value = `+${phoneValue && phoneValue.replace(/\D+/g, '')}`;
-    onBlur(event);
+    let phoneNumber = phoneValue.split(' ').slice(1).join();
+    phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
+    handleEvent(actions, 'changeNblur', propName, phoneNumber);
   };
 
   return (
@@ -94,7 +103,7 @@ export default function Phone(props: PhoneProps) {
       onBlur={!readOnly ? handleBlur : undefined}
       error={status === 'error'}
       label={label}
-      value={value}
+      value={inputValue}
       InputProps={{ ...testProp }}
     />
   );
