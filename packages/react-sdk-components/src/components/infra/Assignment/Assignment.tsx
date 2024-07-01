@@ -41,6 +41,8 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   const cancelAssignment = actionsAPI.cancelAssignment.bind(actionsAPI);
   const saveAssignment = actionsAPI.saveAssignment?.bind(actionsAPI);
   const cancelCreateStageAssignment = actionsAPI.cancelCreateStageAssignment.bind(actionsAPI);
+  const approveCase = actionsAPI.approveCase?.bind(actionsAPI);
+  const rejectCase = actionsAPI.rejectCase?.bind(actionsAPI);
   // const showPage = actionsAPI.showPage.bind(actionsAPI);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
@@ -212,6 +214,18 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
           break;
         }
 
+        case 'rejectCase': {
+          const rejectPromise = rejectCase(itemKey);
+
+          rejectPromise
+            .then(() => {})
+            .catch(() => {
+              showToast(`${localizedVal('Rejection failed!', localeCategory)}`);
+            });
+
+          break;
+        }
+
         default:
           break;
       }
@@ -225,6 +239,18 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
             .then(() => {})
             .catch(() => {
               showToast(`${localizedVal('Submit failed!', localeCategory)}`);
+            });
+
+          break;
+        }
+
+        case 'approveCase': {
+          const approvePromise = approveCase(itemKey);
+
+          approvePromise
+            .then(() => {})
+            .catch(() => {
+              showToast(`${localizedVal('Approve failed!', localeCategory)}`);
             });
 
           break;
