@@ -96,13 +96,11 @@ const connectRedux = (component, c11nEnv) => {
           }
         }
 
-        // For CaseSummary (when status === ".pyStatusWork"), we need to compare changes in
-        //  primaryFields and secondary Fields
-        if (allStateProps.status === '.pyStatusWork') {
-          for (const key of Object.keys(prev)) {
-            if (!PCore.isDeepEqual(next[key], prev[key])) {
-              return false;
-            }
+        // status === ".pyStatusWork" condition was not allowing the CaseSummary component to re-render,
+        // hence got rid of that
+        for (const key of Object.keys(prev)) {
+          if (!PCore.isDeepEqual(next[key], prev[key])) {
+            return false;
           }
         }
         /* TODO For some rawConfig we are not getting routingInfo under allStateProps */
