@@ -66,6 +66,10 @@ export class PegaAuth {
       }
     }
 
+    reloadConfig() {
+        this.#reloadConfig();
+    }
+
     #updateConfig() {
       // transform must occur unless it is explicitly disabled
       const transform = this.#config.transform !== false;
