@@ -94,13 +94,13 @@ class PegaAuth {
               const myWinOnLoad = () => {
                   try{
                       if( bWinIframe ) {
-                          elIframe.contentWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
                           // eslint-disable-next-line no-console
                           console.log("authjs(login): loaded a page in iFrame");
+                          elIframe.contentWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
                       } else {
-                          myWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
                           // eslint-disable-next-line no-console
                           console.log(`authjs(login): loaded a page in popup window...sending 'PegaAuth' message. redirectOrigin: ${redirectOrigin}`);
+                          myWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
                       }
                   } catch(e) {
                       // eslint-disable-next-line no-console
@@ -120,7 +120,8 @@ class PegaAuth {
                           // eslint-disable-next-line prefer-promise-reject-errors
                           reject("closed");
                       }
-                  }, 500);
+                      myWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
+                    }, 500);
                   try {
                       myWindow.addEventListener("load", myWinOnLoad, true);
                   } catch(e) {
@@ -211,12 +212,16 @@ class PegaAuth {
                       if( this.config.iframeLoginUI ) {
                         elIframe.style.display="block";
                         elCloseBtn.style.display="block";
-                    } else {
+                      } else {
                         fnCloseIframe();
+                        // eslint-disable-next-line no-console
+                        console.log(`Opening popup inside tmrAuthComplete (bWinIframe: ${bWinIframe})`);
                         fnOpenPopup();
-                    }
+                      }
                   }, iframeTimeout);
               } else {
+                  // eslint-disable-next-line no-console
+                  console.log(`Opening popup outside tmrAuthComplete (bWinIframe: ${bWinIframe})`);
                   fnOpenPopup();
               }
 
