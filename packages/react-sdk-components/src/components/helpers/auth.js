@@ -120,7 +120,14 @@ class PegaAuth {
                           // eslint-disable-next-line prefer-promise-reject-errors
                           reject("closed");
                       }
-                      myWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
+                      try {
+                        // eslint-disable-next-line no-console
+                        console.log(`authjs(login): Posting message to popup window. redirectOrigin: ${redirectOrigin}`);
+                        myWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
+                      } catch(e) {
+                        // eslint-disable-next-line no-console
+                        console.log(`authjs(login): Failed to post message to popup window. redirectOrigin: ${redirectOrigin}`);
+                      }
                     }, 500);
                   try {
                       myWindow.addEventListener("load", myWinOnLoad, true);
