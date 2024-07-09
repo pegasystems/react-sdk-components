@@ -26,7 +26,6 @@ interface AppShellProps extends PConnProps {
   navDisplayOptions: { alignment: string; position: string };
   httpMessages: string[];
   pageMessages: string[];
-  errorDetails: any[];
 }
 
 const useStyles = makeStyles(theme => ({
@@ -60,13 +59,12 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     showAppName,
     children = [],
     getPConnect,
-    httpMessages,
-    pageMessages,
+    httpMessages = [],
+    pageMessages = [],
     portalTemplate,
     portalName,
     portalLogo,
-    navDisplayOptions,
-    errorDetails
+    navDisplayOptions
   } = props;
 
   const [open, setOpen] = useState(true);
@@ -92,7 +90,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mapChildren, setMapChildren] = useState([]);
 
-  const messages = httpMessages ? (pageMessages ? [...httpMessages, ...pageMessages] : httpMessages) : pageMessages;
+  const messages = [...httpMessages, ...pageMessages];
+
   const hasBanner = messages && messages.length ? messages.length > 0 : false;
   let banners: any = null;
   banners = hasBanner && (
