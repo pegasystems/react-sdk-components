@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     height: '100vh',
-    overflow: 'auto',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2)
   },
@@ -42,6 +41,14 @@ const useStyles = makeStyles(theme => ({
     height: '100vh',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1)
+  },
+  navbarCollapse: {
+    position: 'relative',
+    marginInlineStart: '5rem'
+  },
+  navbarExpand: {
+    position: 'relative',
+    marginInlineStart: '19.5rem'
   }
 }));
 
@@ -203,7 +210,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           pages={pages}
           caseTypes={caseTypes}
         />
-        <div className={classes.content}>{children}</div>
+        <div className={`${classes.content} ${open ? classes.navbarExpand : classes.navbarCollapse}`}>{children}</div>
       </div>
     </NavContext.Provider>
   );

@@ -124,6 +124,18 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
         }
       }
     }
+
+    const assignment = document.getElementById('Assignment');
+    if (assignment) {
+      // Find all editable elements within the div
+      const editableElements: any = assignment.querySelectorAll('input, select, textarea');
+
+      // Focus on the first editable element
+      if (editableElements.length > 0) {
+        editableElements[0].focus();
+      }
+    }
+    window.scrollTo(0, 0);
   }, [children]);
 
   function showToast(message: string) {
