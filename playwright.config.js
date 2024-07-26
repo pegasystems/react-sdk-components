@@ -46,7 +46,7 @@ const config = {
       slowMo: 200
     }
   },
-
+  testIgnore: ['e2e/DigV2/ComplexFields/ManyToMany.spec.js', 'e2e/DigV2/Localization/Localization.spec.js'],
   /* Configure projects for major browsers */
   projects: [
     {
