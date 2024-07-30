@@ -135,7 +135,8 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
         editableElements[0].focus();
       }
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const scroll = document.querySelector('#portal') || document.querySelector('#pega-part-of-page');
+    scroll?.scrollIntoView();
   }, [children]);
 
   function showToast(message: string) {

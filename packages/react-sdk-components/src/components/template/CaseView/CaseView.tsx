@@ -241,7 +241,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
             </Card>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={6} id='portal'>
             {theStagesRegion}
             {theTodoRegion}
             {deferLoadInfo.length > 0 && <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab />}

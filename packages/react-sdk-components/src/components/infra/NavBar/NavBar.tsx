@@ -101,10 +101,6 @@ const useStyles = makeStyles(theme => ({
   },
   applicationLabel: {
     whiteSpace: 'initial'
-  },
-  appshellNav: {
-    zIndex: 199,
-    position: 'fixed'
   }
 }));
 
@@ -191,7 +187,6 @@ export default function NavBar(props: NavBarProps) {
       classes={{
         paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose)
       }}
-      className={classes.appshellNav}
       open={open && isDesktop}
     >
       {open ? (
