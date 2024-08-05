@@ -1,0 +1,9 @@
+{
+  "name": "InlineDashboardPage",
+  "label": "Inline Dashboard",
+  "description": "Inline Dashboard Page Template",
+  "type": "Template",
+  "subtype": "PAGE",
+  "icon": "InlineDashboardPage.svg",
+  "properties": []
+}
