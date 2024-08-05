@@ -1,0 +1,9 @@
+{
+  "name": "QuickCreate",
+  "label": "Quick create",
+  "description": "Quick create widget",
+  "type": "Widget",
+  "subtype": "PAGE",
+  "properties": [],
+  "defaultConfig": {}
+}

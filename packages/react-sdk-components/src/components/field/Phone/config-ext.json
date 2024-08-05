@@ -1,0 +1,8 @@
+{
+  "name": "Phone",
+  "label": "Phone",
+  "description": "Phone",
+  "type": "Field",
+  "subtype": "DATA_CAPTURE",
+  "properties": []
+}
