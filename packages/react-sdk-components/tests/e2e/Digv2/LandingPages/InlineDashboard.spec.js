@@ -68,9 +68,8 @@ test.describe('E2E test', () => {
     await currentMonthSelector.locator(`text="${day.getDate().toString()}"`).click();
     await currentMonthSelector.locator(`text="${nextDay.getDate().toString()}"`).click();
 
-    const complexTable = page.locator('div[id="list-view"] >> nth=0');
-
-    await expect(await complexTable.locator(`td:has-text("${day.getDate().toString().padStart(2, '0')}")`)).toBeVisible();
+    const dateCol = await table.locator('td >> nth=2');
+    await expect(dateCol.getByText(`${new Date().getDate().toString().padStart(2, '0')}`)).toBeVisible();
 
     await page.locator('a:has-text("Clear All")').click();
 
