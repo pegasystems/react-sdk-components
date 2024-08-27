@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { useFocusFirstField, useScrolltoTop } from '../../../hooks';
 
 import { PConnProps } from '../../../types/PConnProps';
 
@@ -85,6 +86,10 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     });
     return formedSteps;
   }
+
+  const scrollId = window.location.href.includes('embedded') ? '#pega-part-of-page' : '#portal';
+  useScrolltoTop(scrollId, children);
+  useFocusFirstField('Assignment', children);
 
   useEffect(() => {
     if (children) {
