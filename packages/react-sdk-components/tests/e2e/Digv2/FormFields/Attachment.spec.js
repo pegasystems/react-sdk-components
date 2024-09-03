@@ -96,14 +96,6 @@ test.describe('E2E test', () => {
     await expect(multipleAttachment.locator('span[role="button"]:has-text("Choose files")')).toBeVisible();
     await page.setInputFiles(`#AttachmentList`, [filePath, filePath2]);
 
-    await Promise.all([
-      page.waitForResponse(
-        `${endpoints.serverConfig.infinityRestServerUrl}${
-          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
-        }/api/application/v2/attachments/upload`
-      )
-    ]);
-
     await expect(page.locator('div >> text="cableinfo.jpg"')).toBeVisible();
     await expect(page.locator('div >> text="cablechat.jpg"')).toBeVisible();
 
