@@ -92,6 +92,25 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     setMapChildren(tempMap);
   }, []);
 
+  useEffect(() => {
+    // @ts-ignore
+    const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
+    if (caseTypesAvailableToCreateDP) {
+      const portalID = pConn.getValue('.pyOwner');
+      PCore.getDataPageUtils()
+        .getPageDataAsync(caseTypesAvailableToCreateDP, pConn.getContextName(), {
+          PortalName: portalID
+        })
+        .then(response => {
+          if (response?.pyCaseTypesAvailableToCreate) {
+            pConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
+              skipDirtyValidation: true
+            });
+          }
+        });
+    }
+  }, []);
+
   const [iconURL, setIconURL] = useState('');
   const [fullIconURL, setFullIconURL] = useState('');
   useEffect(() => {
