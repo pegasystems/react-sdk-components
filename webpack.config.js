@@ -87,6 +87,10 @@ module.exports = (env, argv) => {
           to() {
             return Promise.resolve('constellation/prerequisite/[name][ext]');
           }
+        },
+        {
+          from: './node_modules/@pega/constellationjs/dist/js',
+          to: './constellation/prerequisite/js'
         }
       ]
     })
@@ -95,31 +99,33 @@ module.exports = (env, argv) => {
   // Enable gzip and brotli compression
   //  Exclude constellation-core and bootstrap-shell files since
   //    client receives these files in gzip and brotli format
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: '[path][base].gz',
-      algorithm: 'gzip',
-      test: /\.js$|\.ts$|\.css$|\.html$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: '[path][base].br',
-      algorithm: 'brotliCompress',
-      test: /\.(js|ts|css|html|svg)$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      compressionOptions: {
-        params: {
-          [zlib.constants.BROTLI_PARAM_QUALITY]: 11
-        }
-      },
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
+  if (webpackMode === 'production') {
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].gz',
+        algorithm: 'gzip',
+        test: /\.js$|\.ts$|\.css$|\.html$/,
+        exclude: /constellation-core.*.js|bootstrap-shell.js|531.*.js/,
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].br',
+        algorithm: 'brotliCompress',
+        test: /\.(js|ts|css|html|svg)$/,
+        exclude: /constellation-core.*.js|bootstrap-shell.js|531.*.js/,
+        compressionOptions: {
+          params: {
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+          }
+        },
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+  }
 
   if (webpackMode === 'development') {
     // In development mode, add LiveReload plug
@@ -137,7 +143,7 @@ module.exports = (env, argv) => {
   // need to set mode to 'development' to get LiveReload to work
   //  and for debugger statements to not be stripped out of the bundle
   initConfig = {
-    mode: 'development',
+    mode: argv.mode,
     entry: {
       app: './packages/react-sdk-components/src/index.tsx'
     },
