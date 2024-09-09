@@ -9,7 +9,7 @@ const useFocusFirstField = (id, children) => {
     const assignment = document.getElementById(id);
     if (assignment) {
       // Find all editable elements within the div
-      const editableElements: any = assignment.querySelectorAll('input, select, textarea');
+      const editableElements: NodeListOf<HTMLElement> = assignment.querySelectorAll('input, select, textarea');
 
       // Focus on the first editable element
       if (editableElements.length > 0) {
