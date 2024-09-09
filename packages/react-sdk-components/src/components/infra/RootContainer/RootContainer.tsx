@@ -54,6 +54,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
   const pConn = getPConnect();
 
   const options = { context: 'app' };
+  const rootView = useRef(null);
 
   const [componentName, setComponentName] = useState('');
 
@@ -146,7 +147,6 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
     return noPortalContent;
   }
 
-  let rootView: any;
   let rootViewConfig: any = null;
 
   useEffect(() => {
@@ -181,7 +181,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
     };
 
     if (!isEqual(currentRootConfig, prevRootConfig)) {
-      rootView = createElement(createPConnectComponent(), PCore.createPConnect(currentRootConfig));
+      rootView.current = createElement(createPConnectComponent(), PCore.createPConnect(currentRootConfig)) as any;
     }
 
     // debugging/investigation help
@@ -189,7 +189,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
 
     return (
       <div id='ModalManager'>
-        {rootView}
+        {rootView.current}
         {MemoizedModalViewContainer}
         <div id='MemoizedPreviewViewContainer' />
         <div id='ReAuthMessageModal' />
