@@ -1,9 +1,10 @@
 /* eslint-disable react/button-has-type */
 import { useState, useEffect } from 'react';
-import { render } from 'react-dom';
-import Typography from '@material-ui/core/Typography';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { createRoot } from 'react-dom/client';
+import Typography from '@mui/material/Typography';
+import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme, ThemeProvider, Theme, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { sdkIsLoggedIn, loginIfNecessary, sdkSetAuthHeader, sdkSetCustomTokenParamsCB, getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 
 import StoreContext from '../../../bridge/Context/StoreContext';
@@ -12,6 +13,10 @@ import EmbeddedSwatch from '../EmbeddedSwatch';
 import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelpers';
 import { getSdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../../sdk-local-component-map';
+
+declare module '@mui/styles/defaultTheme' {
+  interface DefaultTheme extends Theme {}
+}
 
 declare const myLoadMashup: any;
 
@@ -103,16 +108,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function EmbeddedTopLevel() {
-  const theme = createTheme({
-    // palette: {
-    //   primary: {
-    //     main: '#2196f3',
-    //   },
-    //   secondary: {
-    //     main: '#ff9800',
-    //   },
-    // },
-  });
+  const theme = createTheme(
+    adaptV4Theme({
+      // palette: {
+      //   primary: {
+      //     main: '#2196f3',
+      //   },
+      //   secondary: {
+      //     main: '#ff9800',
+      //   },
+      // },
+    })
+  );
 
   // Array of 3 shopping options to display
   const shoppingOptions = [
@@ -294,10 +301,12 @@ export default function EmbeddedTopLevel() {
     return (
       // eslint-disable-next-line react/jsx-no-constructed-context-values
       <StoreContext.Provider value={{ store: PCore.getStore(), displayOnlyFA: true }}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {thePConnObj}
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {thePConnObj}
+          </ThemeProvider>
+        </StyledEngineProvider>
       </StoreContext.Provider>
     );
   }
@@ -334,14 +343,17 @@ export default function EmbeddedTopLevel() {
     }
 
     const theComponent = (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...props} portalTarget={portalTarget} styleSheetTarget={styleSheetTarget} />
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Component {...props} portalTarget={portalTarget} styleSheetTarget={styleSheetTarget} />
+        </ThemeProvider>
+      </StyledEngineProvider>
     );
+    const root = createRoot(target);
 
     // Initial render of component passed in (which should be a RootContainer)
-    render(<>{theComponent}</>, target);
+    root.render(<>{theComponent}</>);
 
     // Initial render to show that we have a PConnect and can render in the target location
     // render( <div>EmbeddedTopLevel initialRender in {domContainerID} with PConn of {componentName}</div>, target);

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { Theme } from '@mui/material/styles';
+import withStyles from '@mui/styles/withStyles';
+import createStyles from '@mui/styles/createStyles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import isDeepEqual from 'fast-deep-equal/react';
 
 import { Utils } from '../../helpers/utils';
@@ -145,9 +147,9 @@ export default function CaseHistory(props: CaseHistoryProps) {
         const theKey = `CaseHistory-${index}`;
         theDataRows.push(
           <TableRow key={theKey}>
-            <StyledTableCell>{dataRow[0] ? dataRow[0] : '---'}</StyledTableCell>
-            <StyledTableCell>{dataRow[1] ? dataRow[1] : '---'}</StyledTableCell>
-            <StyledTableCell>{dataRow[2] ? dataRow[2] : '---'}</StyledTableCell>
+            <StyledTableCell>{dataRow[0] ? dataRow[0] : ('---' as any)}</StyledTableCell>
+            <StyledTableCell>{dataRow[1] ? dataRow[1] : ('---' as any)}</StyledTableCell>
+            <StyledTableCell>{dataRow[2] ? dataRow[2] : ('---' as any)}</StyledTableCell>
           </TableRow>
         );
       });

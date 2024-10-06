@@ -1,12 +1,12 @@
 /* eslint-disable react/no-array-index-key */
 import { useState, useEffect } from 'react';
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../helpers/instructions-utils';
 import { PConnFieldProps } from '../../../types/PConnProps';
-import { makeStyles } from '@material-ui/core/styles';
 
 interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on Checkbox here
@@ -161,7 +161,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }
 
   return (
-    <FormControl required={required} error={status === 'error'}>
+    <FormControl variant='standard' required={required} error={status === 'error'}>
       {!hideLabel && <FormLabel component='legend'>{label}</FormLabel>}
       <FormGroup>{theCheckbox}</FormGroup>
       <FormHelperText>{helperTextToDisplay}</FormHelperText>

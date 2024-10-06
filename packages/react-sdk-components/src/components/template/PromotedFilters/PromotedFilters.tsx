@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, createElement } from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import { isEmptyObject } from '../../helpers/common-utils';

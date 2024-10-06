@@ -1,4 +1,4 @@
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
@@ -29,7 +29,6 @@ export default function Date(props: DateProps) {
     validatemessage,
     status,
     onChange,
-    onBlur,
     readOnly,
     testId,
     helperText,
@@ -88,26 +87,47 @@ export default function Date(props: DateProps) {
   };
 
   return (
-    <KeyboardDatePicker
-      disableToolbar
-      variant='inline'
-      inputVariant='outlined'
-      placeholder={dateFormatInfo.dateFormatStringLC}
-      format={dateFormatInfo.dateFormatString}
-      mask={dateFormatInfo.dateFormatMask}
-      fullWidth
-      autoOk
-      required={required}
-      disabled={disabled}
-      error={status === 'error'}
-      helperText={helperTextToDisplay}
-      size='small'
+    // <KeyboardDatePicker
+    //   disableToolbar
+    //   variant='inline'
+    //   inputVariant='outlined'
+    //   placeholder={dateFormatInfo.dateFormatStringLC}
+    //   format={dateFormatInfo.dateFormatString}
+    //   mask={dateFormatInfo.dateFormatMask}
+    //   fullWidth
+    //   autoOk
+    //   required={required}
+    //   disabled={disabled}
+    //   error={status === 'error'}
+    //   helperText={helperTextToDisplay}
+    //   size='small'
+    //   label={label}
+    //   value={value || null}
+    //   onChange={handleChange}
+    //   onBlur={!readOnly ? onBlur : undefined}
+    //   onAccept={handleAccept}
+    //   InputProps={{ ...testProp }}
+    // />
+
+    <DatePicker
       label={label}
-      value={value || null}
+      disabled={disabled}
+      format={dateFormatInfo.dateFormatString}
+      value={value as any}
+      slotProps={{
+        textField: {
+          required,
+          variant: 'outlined',
+          placeholder: dateFormatInfo.dateFormatStringLC,
+          error: status === 'error',
+          helperText: helperTextToDisplay,
+          size: 'small',
+          InputProps: { ...testProp }
+        }
+      }}
       onChange={handleChange}
-      onBlur={!readOnly ? onBlur : undefined}
+      // onAccept={!readOnly ? onBlur : undefined}
       onAccept={handleAccept}
-      InputProps={{ ...testProp }}
     />
   );
 }

@@ -2,8 +2,8 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-nested-ternary */
 import { useState, useEffect, useCallback } from 'react';
-import { CircularProgress, IconButton, Menu, MenuItem, Button } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { CircularProgress, IconButton, Menu, MenuItem, Button } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import download from 'downloadjs';
 
 import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
@@ -430,6 +430,7 @@ export default function Attachment(props: AttachmentProps) {
                       aria-expanded={open ? 'true' : undefined}
                       aria-haspopup='true'
                       onClick={handleClick}
+                      size='large'
                     >
                       <MoreVertIcon />
                     </IconButton>

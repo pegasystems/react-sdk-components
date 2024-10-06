@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { useFocusFirstField, useScrolltoTop } from '../../../hooks';
@@ -139,7 +139,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     setShowSnackbar(true);
   }
 
-  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+  function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
     if (reason === 'clickaway') {
       return;
     }
@@ -235,7 +235,6 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
           break;
       }
     } else if (sButtonType === 'primary') {
-      // eslint-disable-next-line sonarjs/no-small-switch
       switch (sAction) {
         case 'finishAssignment': {
           const finishPromise = finishAssignment(itemKey);

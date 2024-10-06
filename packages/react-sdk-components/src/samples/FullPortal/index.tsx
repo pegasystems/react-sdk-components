@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import ReactDOM from 'react-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { useLocation, useHistory } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
+import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme, ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SdkConfigAccess, loginIfNecessary, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
 
 import StoreContext from '../../bridge/Context/StoreContext';
@@ -12,6 +12,10 @@ import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../sdk-local-component-map';
 
 import InvalidPortal from './InvalidPortal';
+
+declare module '@mui/styles/defaultTheme' {
+  interface DefaultTheme extends Theme {}
+}
 
 declare const myLoadPortal: any;
 declare const myLoadDefaultPortal: any;
@@ -27,7 +31,7 @@ export default function FullPortal() {
   const [defaultPortalName, setDefaultPortalName] = useState('');
   const [availablePortals, setAvailablePortals] = useState<string[]>([]);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const query = useQuery();
   if (query.get('portal')) {
     const portalValue: any = query.get('portal');
@@ -66,10 +70,12 @@ export default function FullPortal() {
     return (
       // eslint-disable-next-line react/jsx-no-constructed-context-values
       <StoreContext.Provider value={{ store: PCore.getStore() }}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {thePConnObj}
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {thePConnObj}
+          </ThemeProvider>
+        </StyledEngineProvider>
       </StoreContext.Provider>
     );
   }
@@ -102,16 +108,18 @@ export default function FullPortal() {
 
     // var theComponent = <div>the Component</div>;
     const theComponent = (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...props} portalTarget={portalTarget} styleSheetTarget={styleSheetTarget} />;
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Component {...props} portalTarget={portalTarget} styleSheetTarget={styleSheetTarget} />;
+        </ThemeProvider>
+      </StyledEngineProvider>
     );
 
-    ReactDOM.render(
+    const root = createRoot(target || document.getElementById('pega-root') || document.getElementsByTagName(domContainerID)[0]);
+    root.render(
       // was <Component
-      theComponent,
-      target || document.getElementById('pega-root') || document.getElementsByTagName(domContainerID)[0]
+      theComponent
     );
   }
 
@@ -171,7 +179,7 @@ export default function FullPortal() {
   }
 
   function doRedirectDone() {
-    history.replace(window.location.pathname);
+    navigate(window.location.pathname);
     // appName and mainRedirect params have to be same as earlier invocation
     loginIfNecessary({ appName: 'portal', mainRedirect: true });
   }

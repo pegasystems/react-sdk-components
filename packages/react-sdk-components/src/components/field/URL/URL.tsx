@@ -1,4 +1,4 @@
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';

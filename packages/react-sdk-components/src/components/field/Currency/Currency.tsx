@@ -1,6 +1,6 @@
-import { TextField } from '@material-ui/core';
 import { useState } from 'react';
 import { NumericFormat } from 'react-number-format';
+import { TextField } from '@mui/material';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';

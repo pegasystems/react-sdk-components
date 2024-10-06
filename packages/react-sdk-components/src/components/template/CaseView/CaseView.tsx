@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-boolean-value */
 
 import { PropsWithChildren, ReactElement, useContext, useEffect, useState } from 'react';
-import { Avatar, Card, CardHeader, Divider, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import { Avatar, Card, CardHeader, Divider, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
 import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
