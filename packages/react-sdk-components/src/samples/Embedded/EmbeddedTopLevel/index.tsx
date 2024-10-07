@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider, Theme, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import { sdkIsLoggedIn, loginIfNecessary, sdkSetAuthHeader, sdkSetCustomTokenParamsCB, getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 
@@ -13,13 +13,11 @@ import EmbeddedSwatch from '../EmbeddedSwatch';
 import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelpers';
 import { getSdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../../sdk-local-component-map';
-
-declare module '@mui/styles/defaultTheme' {
-  interface DefaultTheme extends Theme {}
-}
+import { theme } from '../../../theme';
 
 declare const myLoadMashup: any;
 
+// eslint-disable-next-line @typescript-eslint/no-shadow
 const useStyles = makeStyles(theme => ({
   embedTopRibbon: {
     display: 'none',
@@ -108,19 +106,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function EmbeddedTopLevel() {
-  const theme = createTheme(
-    adaptV4Theme({
-      // palette: {
-      //   primary: {
-      //     main: '#2196f3',
-      //   },
-      //   secondary: {
-      //     main: '#ff9800',
-      //   },
-      // },
-    })
-  );
-
   // Array of 3 shopping options to display
   const shoppingOptions = [
     {

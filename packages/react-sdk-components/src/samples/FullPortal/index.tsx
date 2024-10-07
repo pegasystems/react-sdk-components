@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SdkConfigAccess, loginIfNecessary, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
 
 import StoreContext from '../../bridge/Context/StoreContext';
@@ -10,12 +10,9 @@ import createPConnectComponent from '../../bridge/react_pconnect';
 import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers';
 import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../sdk-local-component-map';
+import { theme } from '../../theme';
 
 import InvalidPortal from './InvalidPortal';
-
-declare module '@mui/styles/defaultTheme' {
-  interface DefaultTheme extends Theme {}
-}
 
 declare const myLoadPortal: any;
 declare const myLoadDefaultPortal: any;
@@ -37,17 +34,6 @@ export default function FullPortal() {
     const portalValue: any = query.get('portal');
     sessionStorage.setItem('rsdk_portalName', portalValue);
   }
-
-  const theme = createTheme({
-    // palette: {
-    //   primary: {
-    //     main: '#2196f3',
-    //   },
-    //   secondary: {
-    //     main: '#ff9800',
-    //   },
-    // },
-  });
 
   //  const outlet = document.getElementById("outlet");
 
