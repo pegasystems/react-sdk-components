@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs, { Dayjs } from 'dayjs';
 
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
@@ -15,21 +17,9 @@ export default function DateTime(props: DateTimeProps) {
   const TextInput = getComponentFromMap('TextInput');
   const FieldValueList = getComponentFromMap('FieldValueList');
 
-  const {
-    getPConnect,
-    label,
-    required,
-    disabled,
-    value = '',
-    validatemessage,
-    status,
-    onChange,
-    readOnly,
-    testId,
-    helperText,
-    displayMode,
-    hideLabel
-  } = props;
+  const { getPConnect, label, required, disabled, value = '', validatemessage, status, readOnly, testId, helperText, displayMode, hideLabel } = props;
+
+  const [dateValue, setDateValue] = useState<Dayjs | null>(value ? dayjs(value) : null);
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
@@ -64,11 +54,7 @@ export default function DateTime(props: DateTimeProps) {
   }
 
   const handleChange = date => {
-    const changeValue = date && date.isValid() ? date.toISOString() : null;
-    onChange({ value: changeValue });
-  };
-
-  const handleAccept = date => {
+    setDateValue(date);
     const changeValue = date && date.isValid() ? date.toISOString() : null;
     handleEvent(actions, 'changeNblur', propName, changeValue);
   };
@@ -87,9 +73,8 @@ export default function DateTime(props: DateTimeProps) {
       // mask={`${dateFormatInfo.dateFormatMask} __:__ _m`}
       minutesStep={5}
       label={label}
-      value={value as any}
+      value={dateValue}
       onChange={handleChange}
-      onAccept={handleAccept}
       data-test-id={testId}
       slotProps={{
         textField: {
