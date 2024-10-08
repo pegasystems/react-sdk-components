@@ -1,6 +1,5 @@
 import { Children, createElement, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import isEqual from 'lodash.isequal';
-import { Box, CircularProgress } from '@material-ui/core';
+import { Box, CircularProgress } from '@mui/material';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import StoreContext from '../../../bridge/Context/StoreContext';
@@ -180,7 +179,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
       }
     };
 
-    if (!isEqual(currentRootConfig, prevRootConfig)) {
+    if (!PCore.isDeepEqual(currentRootConfig, prevRootConfig)) {
       rootView.current = createElement(createPConnectComponent(), PCore.createPConnect(currentRootConfig)) as any;
     }
 

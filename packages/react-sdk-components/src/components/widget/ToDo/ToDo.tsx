@@ -13,13 +13,14 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction
-} from '@material-ui/core';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+} from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { Utils } from '../../helpers/utils';
 import { PConnProps } from '../../../types/PConnProps';
@@ -194,7 +195,7 @@ export default function ToDo(props: ToDoProps) {
     setShowSnackbar(true);
   }
 
-  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+  function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
     if (reason === 'clickaway') {
       return;
     }
@@ -284,7 +285,7 @@ export default function ToDo(props: ToDoProps) {
     );
   };
 
-  const getCount = () => (type === CONSTS.WORKLIST ? count ?? assignments.length : assignments.length);
+  const getCount = () => (type === CONSTS.WORKLIST ? (count ?? assignments.length) : assignments.length);
 
   const toDoContent = (
     <>
@@ -312,7 +313,7 @@ export default function ToDo(props: ToDoProps) {
             </div>
             {(!isConfirm || canPerform) && (
               <div style={{ marginLeft: 'auto' }}>
-                <IconButton id='go-btn' onClick={() => clickGo(assignment)}>
+                <IconButton id='go-btn' onClick={() => clickGo(assignment)} size='large'>
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
@@ -343,7 +344,7 @@ export default function ToDo(props: ToDoProps) {
                 <ListItem key={getAssignmentId(assignment)} dense divider onClick={() => clickGo(assignment)}>
                   <ListItemText primary={getAssignmentName(assignment)} secondary={getListItemComponent(assignment)} />
                   <ListItemSecondaryAction>
-                    <IconButton onClick={() => clickGo(assignment)}>
+                    <IconButton onClick={() => clickGo(assignment)} size='large'>
                       <ArrowForwardIosOutlinedIcon />
                     </IconButton>
                   </ListItemSecondaryAction>

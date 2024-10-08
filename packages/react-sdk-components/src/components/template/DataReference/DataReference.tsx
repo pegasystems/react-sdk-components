@@ -251,7 +251,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   }
 
   return childrenToRender.length === 1 ? (
-    childrenToRender[0] ?? null
+    (childrenToRender[0] ?? null)
   ) : (
     <div>
       {childrenToRender.map(child => (

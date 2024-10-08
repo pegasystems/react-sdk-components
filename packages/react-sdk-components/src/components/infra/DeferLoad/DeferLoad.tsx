@@ -1,6 +1,6 @@
 import { useState, useEffect, createElement } from 'react';
-import { Box, Card, CircularProgress } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Card, CircularProgress } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
