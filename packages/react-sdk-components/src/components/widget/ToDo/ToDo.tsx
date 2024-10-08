@@ -170,9 +170,11 @@ export default function ToDo(props: ToDoProps) {
   );
 
   useEffect(() => {
-    fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context).then(responseData => {
-      deferLoadWorklistItems(responseData);
-    });
+    if (Object.keys(myWorkList).length) {
+      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context).then(responseData => {
+        deferLoadWorklistItems(responseData);
+      });
+    }
   }, []);
 
   const getAssignmentId = assignment => {
