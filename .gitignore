@@ -15,7 +15,6 @@ tests/playwright-report
 test-reports
 monocart-report
 
-
 **/tsconfig.*.tsbuildinfo
 
 // ignore Security.md and License files in packages
