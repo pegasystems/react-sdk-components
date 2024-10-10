@@ -18,7 +18,8 @@ interface LeftAlignVerticalTabsProps {
 const LeftAlignVerticalTabs: any = withStyles((/* theme */) => ({
   root: {
     width: '100%',
-    maxWidth: '100%'
+    maxWidth: '100%',
+    alignItems: 'flex-start'
   },
   wrapper: {
     display: 'block',
