@@ -217,9 +217,11 @@ export default function Attachment(props: AttachmentProps) {
         };
         if (!validateMaxSize(f, maxAttachmentSize)) {
           f.props.error = true;
+          f.inProgress = false;
           f.props.meta = pConn.getLocalizedValue(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`, '', '');
         } else if (!validateFileExtension(f, extensions)) {
           f.props.error = true;
+          f.inProgress = false;
           f.props.meta = `${pConn.getLocalizedValue('File has invalid extension. Allowed extensions are:', '', '')} ${extensions.replaceAll(
             '.',
             ''
