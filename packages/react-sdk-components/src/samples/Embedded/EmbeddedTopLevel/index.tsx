@@ -17,8 +17,7 @@ import { theme } from '../../../theme';
 
 declare const myLoadMashup: any;
 
-// eslint-disable-next-line @typescript-eslint/no-shadow
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   embedTopRibbon: {
     display: 'none',
     alignItems: 'center',
@@ -466,7 +465,12 @@ export default function EmbeddedTopLevel() {
 
     const theOptions = shoppingOptions.map((option, index) => {
       return (
-        <EmbeddedSwatch key={shoppingOptions[index].level} pcore={bShowAppName ? PCore : null} {...shoppingOptions[index]} onClick={onShopNow} />
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <EmbeddedSwatch key={shoppingOptions[index].level} pcore={bShowAppName ? PCore : null} {...shoppingOptions[index]} onClick={onShopNow} />
+          </ThemeProvider>
+        </StyledEngineProvider>
       );
     });
 
