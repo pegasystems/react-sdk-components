@@ -41,7 +41,7 @@ export default function Time(props: TimeProps) {
   };
 
   let timeValue: any = null;
-  if (value) {
+  if (value && Object.keys(value).length) {
     const timeArray = value.split(':').map(itm => Number(itm));
     timeValue = dayjs().hour(timeArray[0]).minute(timeArray[1]);
   }
@@ -72,7 +72,7 @@ export default function Time(props: TimeProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { inputProps: { ...testProp } }
+          InputProps: { ...testProp }
         }
       }}
     />

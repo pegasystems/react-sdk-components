@@ -53,6 +53,12 @@ export default function DateTime(props: DateTimeProps) {
     return <TextInput {...props} value={formattedDateTime} />;
   }
 
+  let testProp = {};
+
+  testProp = {
+    'data-test-id': testId
+  };
+
   const handleChange = date => {
     setDateValue(date);
     const changeValue = date && date.isValid() ? date.toISOString() : null;
@@ -83,7 +89,8 @@ export default function DateTime(props: DateTimeProps) {
           placeholder: `${dateFormatInfo.dateFormatStringLC} hh:mm a`,
           error: status === 'error',
           helperText: helperTextToDisplay,
-          size: 'small'
+          size: 'small',
+          InputProps: { ...testProp }
         }
       }}
     />
