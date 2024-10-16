@@ -1,9 +1,10 @@
+/* eslint-disable no-console */
 import { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import { SdkConfigAccess, loginIfNecessary, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
+import { SdkConfigAccess, loginIfNecessary, getAvailablePortals, sdkIsLoggedIn } from '@pega/auth/lib/sdk-auth-manager';
 
 import StoreContext from '../../bridge/Context/StoreContext';
 import createPConnectComponent from '../../bridge/react_pconnect';
@@ -162,7 +163,12 @@ export default function FullPortal() {
   }
 
   function doRedirectDone() {
-    navigate(window.location.pathname);
+    console.log('doRedirectDone');
+    const redirectUrl: any = sessionStorage.getItem('url');
+    window.location.href = redirectUrl;
+    // navigate(window.location.pathname);
+    // navigate(redirectUrl);
+    // window.location.href = 'http://localhost:3502/prweb';
     let localeOverride: any = sessionStorage.getItem('rsdk_locale');
     if (!localeOverride) {
       localeOverride = undefined;
@@ -177,10 +183,20 @@ export default function FullPortal() {
       // start the portal
       startPortal();
     });
+    document.addEventListener('SdkLoggedIn', () => {
+      sessionStorage.setItem('logined', 'true');
+    });
     let localeOverride: any = sessionStorage.getItem('rsdk_locale');
     if (!localeOverride) {
       localeOverride = undefined;
     }
+    const logined = sessionStorage.getItem('logined');
+    const redirected = sessionStorage.getItem('redirected');
+    if (logined !== 'true' && redirected !== 'true') {
+      sessionStorage.setItem('url', `${window.location.origin}${window.location.pathname}`);
+      navigate('/portal');
+    }
+    sessionStorage.setItem('redirected', 'true');
     // Login if needed, doing an initial main window redirect
     loginIfNecessary({
       appName: 'portal',
