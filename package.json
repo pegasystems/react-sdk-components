@@ -55,7 +55,7 @@
     "@mui/material": "^5.15.14",
     "@mui/styles": "^5.15.14",
     "@mui/x-date-pickers": "^7.1.0",
-    "@pega/auth": "~0.2.14",
+    "@pega/auth": "file:pega-auth-0.2.15.tgz",
     "@tinymce/tinymce-react": "^5.1.1",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.13",
@@ -74,7 +74,7 @@
   "devDependencies": {
     "@kooneko/livereload-webpack-plugin": "^1.2.1",
     "@pega/configs": "^0.7.1",
-    "@pega/constellationjs": "~0.242.5",
+    "@pega/constellationjs": "file:pega-constellationjs-24.1.0.tgz",
     "@pega/eslint-config": "^0.7.2",
     "@pega/pcore-pconnect-typedefs": "~3.0.0",
     "@pega/tsconfig": "^0.6.0",

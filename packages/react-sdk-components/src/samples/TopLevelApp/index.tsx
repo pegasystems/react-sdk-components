@@ -18,6 +18,9 @@ document.addEventListener('SdkLoggedOut', () => {
     theLogoutMsgDiv.innerHTML = `You are logged out. Refresh the page to log in again.`;
     thePegaRoot.appendChild(theLogoutMsgDiv);
   }
+  window.location.href = `${window.location.origin}/portal`;
+  sessionStorage.removeItem('logined');
+  sessionStorage.removeItem('redirected');
   sessionStorage.removeItem('rsdk_portalName');
 });
 
