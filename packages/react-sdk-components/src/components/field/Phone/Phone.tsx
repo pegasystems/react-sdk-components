@@ -62,6 +62,7 @@ export default function Phone(props: PhoneProps) {
           helperText={helperTextToDisplay}
           placeholder={placeholder ?? ''}
           size='small'
+          defaultCountry='us'
           required={required}
           disabled={disabled}
           onChange={onChange}

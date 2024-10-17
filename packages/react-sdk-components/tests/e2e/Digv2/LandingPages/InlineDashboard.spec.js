@@ -46,8 +46,10 @@ test.describe('E2E test', () => {
     const caseIdFilter = filters.locator('div:has-text("Case ID")');
     caseIdFilter.locator('input').fill(caseID);
 
+    await page.pause();
+
     const pagination = page.locator('div[id="pagination"]');
-    await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeVisible();
+    await expect(pagination.locator('p:has-text("1–1 of 1")')).toBeVisible();
 
     await expect(table.locator(`td >> text=${caseID}`)).toBeVisible();
     await expect(table.locator('td >> text="Complex  Fields"')).toBeVisible();
