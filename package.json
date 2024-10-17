@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "0.242.2",
+  "version": "24.2.10",
   "description": "React SDK packaging: bridge and components, overrides",
   "main": "index.ts",
   "scripts": {
@@ -48,13 +48,13 @@
   "author": "Pegasystems",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.15.14",
-    "@mui/lab": "^5.0.0-alpha.169",
-    "@mui/material": "^5.15.14",
-    "@mui/styles": "^5.15.14",
-    "@mui/x-date-pickers": "^7.1.0",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.7",
+    "@mui/lab": "^5.0.0-alpha.173",
+    "@mui/material": "^5.16.7",
+    "@mui/styles": "^5.16.7",
+    "@mui/x-date-pickers": "^7.20.0",
     "@pega/auth": "~0.2.14",
     "@tinymce/tinymce-react": "^5.1.1",
     "clsx": "^2.1.0",
