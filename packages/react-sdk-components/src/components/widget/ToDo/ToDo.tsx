@@ -41,6 +41,7 @@ const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, c
         select: Object.keys(fields).map(key => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) }))
       },
       {
+        invalidateCache: true,
         additionalApiParams: {
           includeTotalCount
         }
@@ -147,7 +148,7 @@ export default function ToDo(props: ToDoProps) {
   const showlessLocalizedValue = localizedVal('show_less', 'CosmosFields');
   const showMoreLocalizedValue = localizedVal('show_more', 'CosmosFields');
   const canPerform = assignments?.[0]?.canPerform === 'true' || assignments?.[0]?.canPerform === true;
-  const [count, setCount] = useState(null);
+  const [count, setCount] = useState(0);
 
   const {
     WORK_BASKET: { MY_WORK_LIST }
@@ -170,7 +171,7 @@ export default function ToDo(props: ToDoProps) {
   );
 
   useEffect(() => {
-    if (Object.keys(myWorkList).length) {
+    if (Object.keys(myWorkList).length && myWorkList.datapage) {
       fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context).then(responseData => {
         deferLoadWorklistItems(responseData);
       });
@@ -206,10 +207,12 @@ export default function ToDo(props: ToDoProps) {
 
   function _showMore() {
     setBShowMore(false);
-    if (type === CONSTS.WORKLIST && count && count > assignments.length) {
+    if (type === CONSTS.WORKLIST && count && count > assignments.length && !assignmentsSource) {
       fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, count, false, context).then(response => {
         setAssignments(response.data);
       });
+    } else {
+      setAssignments(assignmentsSource);
     }
   }
 
@@ -287,7 +290,8 @@ export default function ToDo(props: ToDoProps) {
     );
   };
 
-  const getCount = () => (type === CONSTS.WORKLIST ? (count ?? assignments.length) : assignments.length);
+  // eslint-disable-next-line no-nested-ternary
+  const getCount = () => (assignmentsSource ? assignmentsSource.length : type === CONSTS.WORKLIST ? count : 0);
 
   const toDoContent = (
     <>

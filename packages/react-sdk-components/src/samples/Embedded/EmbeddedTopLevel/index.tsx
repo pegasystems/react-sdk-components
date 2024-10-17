@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 import { useState, useEffect } from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
@@ -17,8 +17,7 @@ import { theme } from '../../../theme';
 
 declare const myLoadMashup: any;
 
-// eslint-disable-next-line @typescript-eslint/no-shadow
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   embedTopRibbon: {
     display: 'none',
     alignItems: 'center',
@@ -335,10 +334,9 @@ export default function EmbeddedTopLevel() {
         </ThemeProvider>
       </StyledEngineProvider>
     );
-    const root = createRoot(target);
 
     // Initial render of component passed in (which should be a RootContainer)
-    root.render(<>{theComponent}</>);
+    ReactDOM.render(<>{theComponent}</>, target);
 
     // Initial render to show that we have a PConnect and can render in the target location
     // render( <div>EmbeddedTopLevel initialRender in {domContainerID} with PConn of {componentName}</div>, target);
@@ -467,7 +465,12 @@ export default function EmbeddedTopLevel() {
 
     const theOptions = shoppingOptions.map((option, index) => {
       return (
-        <EmbeddedSwatch key={shoppingOptions[index].level} pcore={bShowAppName ? PCore : null} {...shoppingOptions[index]} onClick={onShopNow} />
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <EmbeddedSwatch key={shoppingOptions[index].level} pcore={bShowAppName ? PCore : null} {...shoppingOptions[index]} onClick={onShopNow} />
+          </ThemeProvider>
+        </StyledEngineProvider>
       );
     });
 

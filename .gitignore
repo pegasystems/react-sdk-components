@@ -13,6 +13,7 @@ node_modules
 tests/coverage
 tests/playwright-report
 test-reports
+monocart-report
 
 **/tsconfig.*.tsbuildinfo
 

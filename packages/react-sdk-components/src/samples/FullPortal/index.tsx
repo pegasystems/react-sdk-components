@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { useEffect, useMemo, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
@@ -107,10 +107,10 @@ export default function FullPortal() {
       </StyledEngineProvider>
     );
 
-    const root = createRoot(target || document.getElementById('pega-root') || document.getElementsByTagName(domContainerID)[0]);
-    root.render(
+    ReactDOM.render(
       // was <Component
-      theComponent
+      theComponent,
+      target || document.getElementById('pega-root') || document.getElementsByTagName(domContainerID)[0]
     );
   }
 

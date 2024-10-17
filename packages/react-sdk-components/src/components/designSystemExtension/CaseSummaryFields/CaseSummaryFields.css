@@ -13,6 +13,5 @@
 
 .psdk-case-summary-fields {
   padding: calc(2 * 0.5rem);
-  display: grid;
   grid-row-gap: calc(2 * 0.5rem);
 }

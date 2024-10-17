@@ -22,6 +22,9 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import TabletAndroidOutlineIcon from '@mui/icons-material/TabletAndroidOutlined';
+import AirportShuttleOutlinedIcon from '@mui/icons-material/AirportShuttleOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
@@ -49,7 +52,11 @@ interface NavBarProps extends PConnProps {
 const iconMap = {
   'pi pi-headline': <HomeOutlinedIcon fontSize='large' />,
   'pi pi-flag-solid': <FlagOutlinedIcon fontSize='large' />,
-  'pi pi-home-solid': <HomeOutlinedIcon fontSize='large' />
+  'pi pi-home-solid': <HomeOutlinedIcon fontSize='large' />,
+  'pi pi-tablet': <TabletAndroidOutlineIcon fontSize='large' />,
+  'pi pi-ambulance': <AirportShuttleOutlinedIcon fontSize='large' />,
+  'pi pi-ink-solid': <EditOutlinedIcon fontSize='large' />,
+  'pi pi-columns': <HomeOutlinedIcon fontSize='large' />
 };
 
 const drawerWidth = 300;
