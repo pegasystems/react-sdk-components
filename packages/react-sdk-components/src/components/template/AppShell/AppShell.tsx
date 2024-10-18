@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
+import makeStyles from '@mui/styles/makeStyles';
+import Avatar from '@mui/material/Avatar';
 
 import { Utils } from '../../helpers/utils';
 import { NavContext } from '../../helpers/reactContextHelpers';
@@ -90,6 +90,25 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     });
 
     setMapChildren(tempMap);
+  }, []);
+
+  useEffect(() => {
+    // @ts-ignore
+    const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
+    if (caseTypesAvailableToCreateDP) {
+      const portalID = pConn.getValue('.pyOwner');
+      PCore.getDataPageUtils()
+        .getPageDataAsync(caseTypesAvailableToCreateDP, pConn.getContextName(), {
+          PortalName: portalID
+        })
+        .then(response => {
+          if (response?.pyCaseTypesAvailableToCreate) {
+            pConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
+              skipDirtyValidation: true
+            });
+          }
+        });
+    }
   }, []);
 
   const [iconURL, setIconURL] = useState('');

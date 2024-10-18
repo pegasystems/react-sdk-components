@@ -1,5 +1,5 @@
-import { TextField } from '@material-ui/core';
 import { NumericFormat } from 'react-number-format';
+import { TextField } from '@mui/material';
 import { useState } from 'react';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';

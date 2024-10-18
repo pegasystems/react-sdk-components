@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { TextField } from '@material-ui/core';
-import MenuItem from '@material-ui/core/MenuItem';
+import { TextField } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 import isDeepEqual from 'fast-deep-equal/react';
 import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';

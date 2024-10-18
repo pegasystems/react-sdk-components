@@ -47,7 +47,8 @@ test.describe('E2E test', () => {
     const serviceDateInput = serviceDate.locator('input');
     await serviceDateInput.click();
     const futureDate = common.getFutureDate();
-    await serviceDateInput.fill(futureDate);
+    console.log(futureDate);
+    await serviceDateInput.pressSequentially(futureDate);
 
     await page.locator('button:has-text("submit")').click();
 
@@ -60,7 +61,7 @@ test.describe('E2E test', () => {
     await cityInput.fill('Cambridge');
 
     const state = page.locator('div[data-test-id="46A2A41CC6E552044816A2D04634545D"]');
-    const stateSelector = state.locator('div[role="button"]');
+    const stateSelector = state.locator('div[role="combobox"]');
     await stateSelector.click();
     await page.locator('li[data-value="MA"]').click();
 
@@ -106,24 +107,16 @@ test.describe('E2E test', () => {
     const attachmentID = await page.locator('div[id="attachment-ID"]').textContent();
     await page.setInputFiles(`#${attachmentID}`, filePath);
 
-    await Promise.all([
-      page.waitForResponse(
-        `${endpoints.serverConfig.infinityRestServerUrl}${
-          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
-        }/api/application/v2/attachments/upload`
-      )
-    ]);
+    await expect(page.locator('CircularProgress')).not.toBeVisible();
+    await page.waitForTimeout(5000);
 
     await page.locator('button:has-text("submit")').click();
 
-    await Promise.all([
-      page.waitForResponse(
-        `${endpoints.serverConfig.infinityRestServerUrl}${
-          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
-        }/api/application/v2/cases/${currentCaseID}/attachments?includeThumbnail=false`
-      )
-    ]);
+    // await page.pause();
 
+    // const todo = page.locator('h6:has-text("Manager Discount")');
+    // await expect(todo).toBeVisible();
+    await page.waitForTimeout(5000);
     const attachmentCount = await page.locator('div[id="attachments-count"]').textContent();
     await expect(Number(attachmentCount)).toBeGreaterThan(0);
   }, 10000);

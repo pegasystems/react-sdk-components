@@ -282,7 +282,11 @@ class PConnect extends Component {
 
     // If the new component is a reference node then mark with a unique key
     if (['reference', 'View'].includes(getPConnect().getComponentName()) && !finalProps.key) {
-      finalProps.key = this.getKey();
+      return (
+        <this.Control {...finalProps} key={this.getKey()}>
+          {this.createChildren()}
+        </this.Control>
+      );
     }
 
     // console.log(`react_pconnect: used to return: <this.Control {...finalProps} />`);

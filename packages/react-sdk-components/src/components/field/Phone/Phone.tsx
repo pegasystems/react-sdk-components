@@ -1,5 +1,5 @@
-import MuiPhoneNumber from 'material-ui-phone-number';
 import { useEffect, useState } from 'react';
+import MuiPhoneNumber from 'material-ui-phone-number';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
@@ -62,6 +62,7 @@ export default function Phone(props: PhoneProps) {
           helperText={helperTextToDisplay}
           placeholder={placeholder ?? ''}
           size='small'
+          defaultCountry='us'
           required={required}
           disabled={disabled}
           onChange={onChange}

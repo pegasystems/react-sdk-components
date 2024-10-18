@@ -1,11 +1,8 @@
 /* eslint-disable no-nested-ternary */
 
 import { useState, useEffect, useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import DayjsUtils from '@date-io/dayjs';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import makeStyles from '@mui/styles/makeStyles';
+import { Alert, Card, CardHeader, Avatar, Typography } from '@mui/material';
 
 import StoreContext from '../../../../bridge/Context/StoreContext';
 import { Utils } from '../../../helpers/utils';
@@ -15,6 +12,8 @@ import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 
 import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
 import { PConnProps } from '../../../../types/PConnProps';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 interface FlowContainerProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -313,21 +312,21 @@ export const FlowContainer = (props: FlowContainerProps) => {
                 avatar={<Avatar className={`${classes.avatar} psdk-avatar`}>{operatorInitials}</Avatar>}
               />
               {displayPageMessages()}
-              <MuiPickersUtilsProvider utils={DayjsUtils}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
                   {rootViewElement}
                 </Assignment>
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </Card>
           ) : (
             <Card className={`${classes.root} psdk-root`}>
               <Typography variant='h6'>{localizedVal(containerName, undefined, key)}</Typography>
               {displayPageMessages()}
-              <MuiPickersUtilsProvider utils={DayjsUtils}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
                   {rootViewElement}
                 </Assignment>
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </Card>
           )
         ) : (

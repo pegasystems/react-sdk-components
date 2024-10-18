@@ -1,10 +1,10 @@
 import { createElement, useEffect, useRef, useState } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core/styles';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DayjsUtils from '@date-io/dayjs';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import makeStyles from '@mui/styles/makeStyles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import difference from 'lodash.difference';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
@@ -315,7 +315,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         </DialogTitle>
         <DialogContent className={`${classes.dlgContent} psdk-dialog-content`}>
           {bShowModal ? (
-            <MuiPickersUtilsProvider utils={DayjsUtils}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Assignment
                 getPConnect={createdView.configObject.getPConnect}
                 itemKey={itemKey}
@@ -327,7 +327,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
               >
                 {arNewChildrenAsReact}
               </Assignment>
-            </MuiPickersUtilsProvider>
+            </LocalizationProvider>
           ) : null}
         </DialogContent>
 

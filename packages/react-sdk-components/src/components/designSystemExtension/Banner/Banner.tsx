@@ -1,4 +1,4 @@
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import './Banner.css';
 
 // AlertBanner is one of the few components that does NOT have getPConnect.
