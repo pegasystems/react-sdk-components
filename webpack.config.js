@@ -1,25 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const LiveReloadPlugin = require('@kooneko/livereload-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const zlib = require('zlib');
 
 module.exports = (env, argv) => {
   const pluginsToAdd = [];
   const webpackMode = argv.mode;
-
-  //  NOTE: we allow dangerouslyAllowCleanPatternsOutsideProject so we can cleanup outside the
-  //    normal directory structure without getting webpack errors when live-reload recompiles
-  //    See: https://github.com/johnagan/clean-webpack-plugin
-  pluginsToAdd.push(
-    new CleanWebpackPlugin({
-      dry: true,
-      verbose: false,
-      dangerouslyAllowCleanPatternsOutsideProject: true
-    })
-  );
 
   pluginsToAdd.push(
     new HtmlWebpackPlugin({
@@ -127,19 +114,6 @@ module.exports = (env, argv) => {
     );
   }
 
-  if (webpackMode === 'development') {
-    // In development mode, add LiveReload plug
-    //  When run in conjunction with build-with-watch,
-    //  This will reload the browser when code is changed/re-compiled
-    const liveReloadOptions = {
-      protocol: 'http',
-      appendScriptTag: true,
-      delay: 1000,
-      hostname: 'localhost'
-    };
-    pluginsToAdd.push(new LiveReloadPlugin(liveReloadOptions));
-  }
-
   // need to set mode to 'development' to get LiveReload to work
   //  and for debugger statements to not be stripped out of the bundle
   initConfig = {
@@ -158,7 +132,9 @@ module.exports = (env, argv) => {
     plugins: pluginsToAdd,
     output: {
       filename: '[name].bundle.js',
-      path: path.resolve(__dirname, 'dist')
+      path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
+      clean: true
     },
     module: {
       rules: [
