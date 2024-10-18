@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -169,7 +170,9 @@ export default function FullPortal() {
   }
 
   function doRedirectDone() {
-    navigate(window.location.pathname);
+    const redirectUrl: any = sessionStorage.getItem('url');
+    navigate(redirectUrl);
+    sessionStorage.removeItem('url');
     let localeOverride: any = sessionStorage.getItem('rsdk_locale');
     if (!localeOverride) {
       localeOverride = undefined;
@@ -182,12 +185,20 @@ export default function FullPortal() {
   useEffect(() => {
     document.addEventListener('SdkConstellationReady', () => {
       // start the portal
+      sessionStorage.setItem('logined', 'true');
       startPortal();
     });
     let localeOverride: any = sessionStorage.getItem('rsdk_locale');
     if (!localeOverride) {
       localeOverride = undefined;
     }
+    const logined = sessionStorage.getItem('logined');
+    const redirected = sessionStorage.getItem('redirected');
+    if (logined !== 'true' && redirected !== 'true') {
+      sessionStorage.setItem('url', window.location.pathname);
+      navigate('/portal');
+    }
+    sessionStorage.setItem('redirected', 'true');
     // Login if needed, doing an initial main window redirect
     loginIfNecessary({
       appName: 'portal',
