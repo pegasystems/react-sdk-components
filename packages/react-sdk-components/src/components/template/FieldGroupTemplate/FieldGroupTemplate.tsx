@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -39,6 +39,13 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   const pageReference = `${pConn.getPageReference()}${resolvedList}`;
   const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT';
   const HEADING = heading ?? 'Row';
+
+  useLayoutEffect(() => {
+    if (!isReadonlyMode) {
+      // @ts-ignore - Expected 3 arguments, but got 1
+      pConn.getListActions().initDefaultPageInstructions(resolvedList);
+    }
+  }, [referenceList?.length]);
 
   const getDynamicHeaderProp = (item, index) => {
     if (fieldHeader === 'propertyRef' && heading && item[heading.substring(1)]) {
