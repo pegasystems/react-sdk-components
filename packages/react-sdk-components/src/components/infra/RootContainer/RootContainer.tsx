@@ -1,6 +1,5 @@
 import { Children, createElement, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import isEqual from 'lodash.isequal';
-import { Box, CircularProgress } from '@material-ui/core';
+import { Box, CircularProgress } from '@mui/material';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import StoreContext from '../../../bridge/Context/StoreContext';
@@ -54,6 +53,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
   const pConn = getPConnect();
 
   const options = { context: 'app' };
+  const rootView = useRef(null);
 
   const [componentName, setComponentName] = useState('');
 
@@ -146,7 +146,6 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
     return noPortalContent;
   }
 
-  let rootView: any;
   let rootViewConfig: any = null;
 
   useEffect(() => {
@@ -180,8 +179,8 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
       }
     };
 
-    if (!isEqual(currentRootConfig, prevRootConfig)) {
-      rootView = createElement(createPConnectComponent(), PCore.createPConnect(currentRootConfig));
+    if (!PCore.isDeepEqual(currentRootConfig, prevRootConfig)) {
+      rootView.current = createElement(createPConnectComponent(), PCore.createPConnect(currentRootConfig)) as any;
     }
 
     // debugging/investigation help
@@ -189,7 +188,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
 
     return (
       <div id='ModalManager'>
-        {rootView}
+        {rootView.current}
         {MemoizedModalViewContainer}
         <div id='MemoizedPreviewViewContainer' />
         <div id='ReAuthMessageModal' />

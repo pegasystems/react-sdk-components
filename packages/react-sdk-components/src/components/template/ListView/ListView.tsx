@@ -4,37 +4,39 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Paper from '@material-ui/core/Paper';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import SubjectIcon from '@material-ui/icons/Subject';
-import SearchIcon from '@material-ui/icons/Search';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import { Radio } from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import Paper from '@mui/material/Paper';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import SubjectIcon from '@mui/icons-material/Subject';
+import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import { Radio } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
 
 import { filterData } from '../../helpers/simpleTableHelpers';
 
@@ -670,7 +672,7 @@ export default function ListView(props: ListViewProps) {
     }
   }
 
-  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+  function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
     if (reason === 'clickaway') {
       return;
     }
@@ -1047,6 +1049,7 @@ export default function ListView(props: ListViewProps) {
                                       onClick={() => {
                                         _listViewClick(row, column);
                                       }}
+                                      underline='hover'
                                     >
                                       {column.format && typeof value === 'number' ? column.format(value) : value}
                                     </Link>
@@ -1158,7 +1161,7 @@ export default function ListView(props: ListViewProps) {
         <DialogContent>
           {containsDateOrTime ? (
             <>
-              <Select value={displayDialogDateFilter} onChange={_dialogDateFilter} fullWidth>
+              <Select variant='standard' value={displayDialogDateFilter} onChange={_dialogDateFilter} fullWidth>
                 <MenuItem value='notequal'>is not equal to</MenuItem>
                 <MenuItem value='after'>after</MenuItem>
                 <MenuItem value='before'>before</MenuItem>
@@ -1167,6 +1170,7 @@ export default function ListView(props: ListViewProps) {
               </Select>
               {filterType === 'Date' && (
                 <TextField
+                  variant='standard'
                   autoFocus
                   margin='dense'
                   id='containsFilter'
@@ -1178,6 +1182,7 @@ export default function ListView(props: ListViewProps) {
               )}
               {filterType === 'DateTime' && (
                 <TextField
+                  variant='standard'
                   autoFocus
                   margin='dense'
                   id='containsFilter'
@@ -1189,6 +1194,7 @@ export default function ListView(props: ListViewProps) {
               )}
               {filterType === 'Time' && (
                 <TextField
+                  variant='standard'
                   autoFocus
                   margin='dense'
                   id='containsFilter'
@@ -1201,12 +1207,13 @@ export default function ListView(props: ListViewProps) {
             </>
           ) : (
             <>
-              <Select fullWidth onChange={_dialogContainsFilter} value={displayDialogContainsFilter}>
+              <Select variant='standard' fullWidth onChange={_dialogContainsFilter} value={displayDialogContainsFilter}>
                 <MenuItem value='contains'>Contains</MenuItem>
                 <MenuItem value='equals'>Equals</MenuItem>
                 <MenuItem value='startswith'>Starts with</MenuItem>
               </Select>
               <TextField
+                variant='standard'
                 autoFocus
                 margin='dense'
                 id='containsFilter'

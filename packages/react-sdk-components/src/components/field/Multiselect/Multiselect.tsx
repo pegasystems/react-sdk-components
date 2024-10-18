@@ -1,14 +1,8 @@
-import { Checkbox, TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Autocomplete, TextField } from '@mui/material';
 import { doSearch, getDisplayFieldsMetaData, useDeepMemo, preProcessColumns, getGroupDataForItemsTree } from './utils';
 import { insertInstruction, deleteInstruction } from '../../helpers/instructions-utils';
 import { debounce } from 'throttle-debounce';
-
-const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
-const checkedIcon = <CheckBoxIcon fontSize='small' />;
 
 export default function Multiselect(props) {
   const {
@@ -226,16 +220,16 @@ export default function Multiselect(props) {
       fullWidth
       options={itemsTree}
       disableCloseOnSelect
-      getOptionSelected={(option: any, val: any) => option?.primary === val?.primary}
+      // getOptionSelected={(option: any, val: any) => option?.primary === val?.primary}
       getOptionLabel={(option: any) => option?.primary}
       onChange={handleChange}
       value={selectedItems}
-      renderOption={(option: any, { selected }) => (
-        <>
-          <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
-          {option.primary}
-        </>
-      )}
+      // renderOption={(_props, option: any, { selected }) => (
+      //   <>
+      //     <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
+      //     {option.primary}
+      //   </>
+      // )}
       renderInput={params => (
         <TextField {...params} variant='outlined' fullWidth label={label} placeholder={placeholder} size='small' onChange={onSearchHandler} />
       )}

@@ -1,28 +1,28 @@
 /* eslint-disable no-nested-ternary */
 import React, { PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import makeStyles from '@mui/styles/makeStyles';
+import Link from '@mui/material/Link';
 import { createElement } from 'react';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import SubjectIcon from '@material-ui/icons/Subject';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import SubjectIcon from '@mui/icons-material/Subject';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { Utils } from '../../../helpers/utils';
@@ -698,7 +698,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       </TableContainer>
       {showAddRowButton && (
         <div style={{ fontSize: '1rem' }}>
-          <Link style={{ cursor: 'pointer' }} onClick={addRecord}>
+          <Link style={{ cursor: 'pointer' }} onClick={addRecord} underline='hover'>
             + Add
           </Link>
         </div>
@@ -716,7 +716,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         <DialogContent>
           {containsDateOrTime ? (
             <>
-              <Select value={displayDialogDateFilter} onChange={_dialogDateFilter} fullWidth>
+              <Select variant='standard' value={displayDialogDateFilter} onChange={_dialogDateFilter} fullWidth>
                 <MenuItem value='notequal'>is not equal to</MenuItem>
                 <MenuItem value='equal'>is equal to</MenuItem>
                 <MenuItem value='after'>after</MenuItem>
@@ -726,6 +726,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
               </Select>
               {filterType === 'Date' && (
                 <TextField
+                  variant='standard'
                   autoFocus
                   margin='dense'
                   id='containsFilter'
@@ -737,6 +738,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
               )}
               {filterType === 'DateTime' && (
                 <TextField
+                  variant='standard'
                   autoFocus
                   margin='dense'
                   id='containsFilter'
@@ -748,6 +750,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
               )}
               {filterType === 'Time' && (
                 <TextField
+                  variant='standard'
                   autoFocus
                   margin='dense'
                   id='containsFilter'
@@ -760,12 +763,13 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
             </>
           ) : (
             <>
-              <Select id='filter' fullWidth onChange={_dialogContainsFilter} value={displayDialogContainsFilter}>
+              <Select variant='standard' id='filter' fullWidth onChange={_dialogContainsFilter} value={displayDialogContainsFilter}>
                 <MenuItem value='contains'>Contains</MenuItem>
                 <MenuItem value='equals'>Equals</MenuItem>
                 <MenuItem value='startswith'>Starts with</MenuItem>
               </Select>
               <TextField
+                variant='standard'
                 autoFocus
                 margin='dense'
                 id='containsFilter'
