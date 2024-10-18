@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Grid, IconButton, Snackbar } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { Button, Grid, IconButton, Snackbar } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { PConnFieldProps } from '../../../types/PConnProps';
 import './CancelAlert.css';
@@ -89,7 +89,7 @@ export default function CancelAlert(props: CancelAlertProps) {
     }
   }
 
-  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+  function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
     if (reason === 'clickaway') {
       return;
     }

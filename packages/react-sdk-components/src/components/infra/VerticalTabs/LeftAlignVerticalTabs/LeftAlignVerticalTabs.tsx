@@ -1,5 +1,5 @@
-import { withStyles } from '@material-ui/core/styles';
-import { Tab, Divider } from '@material-ui/core';
+import withStyles from '@mui/styles/withStyles';
+import { Tab, Divider } from '@mui/material';
 
 // LeftAlignVerticalTabs does NOT have getPConnect. So, no need to extend from PConnProps
 
@@ -18,7 +18,8 @@ interface LeftAlignVerticalTabsProps {
 const LeftAlignVerticalTabs: any = withStyles((/* theme */) => ({
   root: {
     width: '100%',
-    maxWidth: '100%'
+    maxWidth: '100%',
+    alignItems: 'flex-start'
   },
   wrapper: {
     display: 'block',

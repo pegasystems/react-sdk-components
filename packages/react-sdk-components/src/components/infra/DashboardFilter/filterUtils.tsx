@@ -1,7 +1,7 @@
 /* eslint-disable prefer-template */
 /** This file contains various utility methods to generate filter components, regionLayout data, filter expressions, etc.  */
 
-import { Grid, Link } from '@material-ui/core';
+import { Grid, Link } from '@mui/material';
 
 import DashboardFilter from './DashboardFilter';
 
@@ -85,6 +85,7 @@ export const buildFilterComponents = (getPConnect, allFilters) => {
             // @ts-ignore - second parameter “payload” for publish method should be optional
             PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL);
           }}
+          underline='hover'
         >
           Clear All
         </Link>

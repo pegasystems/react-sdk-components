@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Utils } from '../../helpers/utils';
 import { PConnProps } from '../../../types/PConnProps';
 
@@ -69,6 +69,7 @@ export default function SummaryItem(props: SummaryItemProps) {
               aria-expanded={open ? 'true' : undefined}
               aria-haspopup='true'
               onClick={handleClick}
+              size='large'
             >
               <MoreVertIcon />
             </IconButton>

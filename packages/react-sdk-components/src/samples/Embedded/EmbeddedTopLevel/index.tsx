@@ -1,9 +1,10 @@
 /* eslint-disable react/button-has-type */
 import { useState, useEffect } from 'react';
-import { render } from 'react-dom';
-import Typography from '@material-ui/core/Typography';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import ReactDOM from 'react-dom';
+import Typography from '@mui/material/Typography';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { sdkIsLoggedIn, loginIfNecessary, sdkSetAuthHeader, sdkSetCustomTokenParamsCB, getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 
 import StoreContext from '../../../bridge/Context/StoreContext';
@@ -12,10 +13,11 @@ import EmbeddedSwatch from '../EmbeddedSwatch';
 import { compareSdkPCoreVersions } from '../../../components/helpers/versionHelpers';
 import { getSdkComponentMap } from '../../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../../sdk-local-component-map';
+import { theme } from '../../../theme';
 
 declare const myLoadMashup: any;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   embedTopRibbon: {
     display: 'none',
     alignItems: 'center',
@@ -103,17 +105,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function EmbeddedTopLevel() {
-  const theme = createTheme({
-    // palette: {
-    //   primary: {
-    //     main: '#2196f3',
-    //   },
-    //   secondary: {
-    //     main: '#ff9800',
-    //   },
-    // },
-  });
-
   // Array of 3 shopping options to display
   const shoppingOptions = [
     {
@@ -294,10 +285,12 @@ export default function EmbeddedTopLevel() {
     return (
       // eslint-disable-next-line react/jsx-no-constructed-context-values
       <StoreContext.Provider value={{ store: PCore.getStore(), displayOnlyFA: true }}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {thePConnObj}
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {thePConnObj}
+          </ThemeProvider>
+        </StyledEngineProvider>
       </StoreContext.Provider>
     );
   }
@@ -334,14 +327,16 @@ export default function EmbeddedTopLevel() {
     }
 
     const theComponent = (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...props} portalTarget={portalTarget} styleSheetTarget={styleSheetTarget} />
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Component {...props} portalTarget={portalTarget} styleSheetTarget={styleSheetTarget} />
+        </ThemeProvider>
+      </StyledEngineProvider>
     );
 
     // Initial render of component passed in (which should be a RootContainer)
-    render(<>{theComponent}</>, target);
+    ReactDOM.render(<>{theComponent}</>, target);
 
     // Initial render to show that we have a PConnect and can render in the target location
     // render( <div>EmbeddedTopLevel initialRender in {domContainerID} with PConn of {componentName}</div>, target);
@@ -470,7 +465,12 @@ export default function EmbeddedTopLevel() {
 
     const theOptions = shoppingOptions.map((option, index) => {
       return (
-        <EmbeddedSwatch key={shoppingOptions[index].level} pcore={bShowAppName ? PCore : null} {...shoppingOptions[index]} onClick={onShopNow} />
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <EmbeddedSwatch key={shoppingOptions[index].level} pcore={bShowAppName ? PCore : null} {...shoppingOptions[index]} onClick={onShopNow} />
+          </ThemeProvider>
+        </StyledEngineProvider>
       );
     });
 

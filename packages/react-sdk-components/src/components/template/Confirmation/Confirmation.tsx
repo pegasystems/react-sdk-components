@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import { PropsWithChildren, useState } from 'react';
-import { Button, Card, makeStyles } from '@material-ui/core';
+import { Button, Card } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
