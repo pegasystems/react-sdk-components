@@ -72,7 +72,6 @@
     "throttle-debounce": "^5.0.2"
   },
   "devDependencies": {
-    "@kooneko/livereload-webpack-plugin": "^1.2.1",
     "@pega/configs": "^0.7.1",
     "@pega/constellationjs": "~0.242.5",
     "@pega/eslint-config": "^0.7.2",
