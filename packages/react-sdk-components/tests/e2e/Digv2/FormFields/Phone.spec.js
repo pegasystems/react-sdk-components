@@ -83,8 +83,6 @@ test.describe('E2E test', () => {
     await selectedSubCategory.click();
     await page.getByRole('option', { name: 'Update' }).click();
 
-    await page.pause();
-
     /** Update tests */
     const readonlyPhone = page.locator('input[data-test-id="2c511e68e41cb70907b27a00de6b18b9"]');
     attributes = await common.getAttributes(readonlyPhone);
@@ -95,7 +93,6 @@ test.describe('E2E test', () => {
     await countrySelector.click();
     await page.locator('text=United States+1 >> nth=0').click();
     const editablePhoneInput = editablePhone.locator('input');
-    await page.pause();
     await common.enterPhoneNumber(editablePhone, '6175551212');
 
     /** Validation tests */

@@ -2,6 +2,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import dayjs from 'dayjs';
 
+import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
@@ -14,9 +15,11 @@ export default function Time(props: TimeProps) {
   const FieldValueList = getComponentFromMap('FieldValueList');
   const TextInput = getComponentFromMap('TextInput');
 
-  const { label, required, disabled, value = '', validatemessage, status, onChange, readOnly, helperText, displayMode, hideLabel, testId } = props;
+  const { getPConnect, label, required, disabled, value = '', validatemessage, status, readOnly, helperText, displayMode, hideLabel, testId } = props;
   const helperTextToDisplay = validatemessage || helperText;
-
+  const pConn = getPConnect();
+  const actions = pConn.getActionsApi();
+  const propName = (pConn.getStateProps() as any).value;
   if (displayMode === 'LABELS_LEFT') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
@@ -37,7 +40,7 @@ export default function Time(props: TimeProps) {
 
   const handleChange = date => {
     const theValue = date && date.isValid() ? date.format('HH:mm') : null;
-    onChange({ value: theValue });
+    handleEvent(actions, 'changeNblur', propName, theValue);
   };
 
   let timeValue: any = null;

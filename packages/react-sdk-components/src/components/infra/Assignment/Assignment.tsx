@@ -99,7 +99,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
       const oData: any = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
-        const oCaseInfo = oData.caseInfo;
+        const oCaseInfo = oData?.caseInfo;
 
         if (oCaseInfo && oCaseInfo.actionButtons) {
           setActionButtons(oCaseInfo.actionButtons);
