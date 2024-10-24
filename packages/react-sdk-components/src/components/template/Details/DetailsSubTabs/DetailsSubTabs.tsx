@@ -39,7 +39,7 @@ export default function DetailsSubTabs(props: PropsWithChildren<DetailsSubTabsPr
 
   return (
     <>
-      {propsToUse.showLabel && <TextField variant='standard'>{propsToUse.label}</TextField>}
+      {propsToUse.showLabel && <h3>{propsToUse.label}</h3>}
       <TabContext value={currentTabId.toString()}>
         <Tabs onChange={handleTabClick} value={currentTabId}>
           {tabItems.map((tab: any) => (
