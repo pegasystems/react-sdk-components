@@ -58,7 +58,7 @@ export default function Percentage(props: PercentageProps) {
     readOnlyProp = { readOnly: true };
   }
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
   }
 

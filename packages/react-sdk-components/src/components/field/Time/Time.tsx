@@ -20,7 +20,7 @@ export default function Time(props: TimeProps) {
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 

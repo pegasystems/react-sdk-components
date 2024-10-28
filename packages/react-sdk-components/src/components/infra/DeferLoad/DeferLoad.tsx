@@ -95,7 +95,7 @@ export default function DeferLoad(props: DeferLoadProps) {
         }
       };
       const configObject = PCore.createPConnect(config);
-      configObject.getPConnect().setInheritedProp('displayMode', 'LABELS_LEFT');
+      configObject.getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
       setContent(createElement(createPConnectComponent(), configObject));
       if (deferLoadId) {
         PCore.getDeferLoadManager().stop(deferLoadId, getPConnect().getContextName());

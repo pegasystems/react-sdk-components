@@ -61,7 +61,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
     setSelectedButton(value);
   }, [value]);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}

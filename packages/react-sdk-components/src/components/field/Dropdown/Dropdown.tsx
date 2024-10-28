@@ -165,7 +165,7 @@ export default function Dropdown(props: DropdownProps) {
 
   let readOnlyProp = {};
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}

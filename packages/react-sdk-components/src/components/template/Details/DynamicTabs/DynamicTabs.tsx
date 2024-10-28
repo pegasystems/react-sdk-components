@@ -31,7 +31,7 @@ function DynamicTabs(props: DynamicTabsProps) {
   const tablabelProp = PCore.getAnnotationUtils().getPropertyName(tablabel);
   const referenceListData: any = pConnect.getValue(`${referenceList}.pxResults`, ''); // 2nd arg empty string until typedefs properly allow optional
   const memoisedTabViews = useMemo(() => {
-    pConnect.setInheritedProp('displayMode', 'LABELS_LEFT');
+    pConnect.setInheritedProp('displayMode', 'DISPLAY_ONLY');
     pConnect.setInheritedProp('readOnly', true);
 
     return (

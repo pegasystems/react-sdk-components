@@ -678,7 +678,7 @@ export const readContextResponse = async (context, params) => {
     const dataPageKeys = PCore.getDataTypeUtils().getDataPageKeys(dataViewName);
     dataPageKeys?.forEach(item => (item.isAlternateKeyStorage ? compositeKeys.push(item.linkedField) : compositeKeys.push(item.keyName)));
     if (compositeKeys.length) {
-      otherContext.setCompositeKeys(compositeKeys);
+      otherContext?.setCompositeKeys(compositeKeys);
     }
     if (otherContext) {
       otherContext.fetchRowActionDetails = null;

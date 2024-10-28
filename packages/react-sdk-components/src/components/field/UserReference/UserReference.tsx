@@ -99,7 +99,7 @@ const UserReference = (props: UserReferenceProps) => {
 
   let userReferenceComponent: any = null;
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} />;
   }
 

@@ -43,7 +43,7 @@ export default function Email(props: EmailProps) {
     setInputValue(value);
   }, [value]);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 

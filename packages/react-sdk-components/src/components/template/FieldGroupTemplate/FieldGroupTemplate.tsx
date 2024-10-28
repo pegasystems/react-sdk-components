@@ -37,7 +37,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   const resolvedList = getReferenceList(pConn);
   pConn.setReferenceList(resolvedList);
   const pageReference = `${pConn.getPageReference()}${resolvedList}`;
-  const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT';
+  const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT' || displayMode === 'DISPLAY_ONLY';
   const HEADING = heading ?? 'Row';
 
   useLayoutEffect(() => {
@@ -96,7 +96,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     );
   }
 
-  pConn.setInheritedProp('displayMode', 'LABELS_LEFT');
+  pConn.setInheritedProp('displayMode', 'DISPLAY_ONLY');
   const memoisedReadOnlyList = useMemo(() => {
     return referenceList.map((item, index) => {
       const key = item[heading] || `field-group-row-${index}`;

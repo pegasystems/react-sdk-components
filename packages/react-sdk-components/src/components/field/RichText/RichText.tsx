@@ -23,7 +23,7 @@ export default function RichText(props: RichTextProps) {
 
   const helperTextToDisplay = validatemessage || helperText;
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} isHtml />;
   }
 

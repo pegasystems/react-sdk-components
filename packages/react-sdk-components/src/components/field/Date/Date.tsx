@@ -39,7 +39,7 @@ export default function Date(props: DateProps) {
   dateFormatInfo.dateFormatStringLC = theDateFormat.dateFormatStringLC;
   dateFormatInfo.dateFormatMask = theDateFormat.dateFormatMask;
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     const formattedDate = format(props.value, 'date', {
       format: dateFormatInfo.dateFormatString
     });

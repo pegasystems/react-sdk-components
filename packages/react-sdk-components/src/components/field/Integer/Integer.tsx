@@ -42,7 +42,7 @@ export default function Integer(props: IntegerProps) {
     setInputValue(value);
   }, [value]);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 
