@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -118,7 +119,6 @@ export default function FullPortal() {
       // Initialize the SdkComponentMap (local and pega-provided)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       getSdkComponentMap(localSdkComponentMap).then((theComponentMap: any) => {
-        // eslint-disable-next-line no-console
         console.log(`SdkComponentMap initialized`);
 
         // Don't call initialRender until SdkComponentMap is fully initialized
@@ -137,15 +137,12 @@ export default function FullPortal() {
     if (queryPortal) {
       myLoadPortal('pega-root', queryPortal, []);
     } else if (thePortal) {
-      // eslint-disable-next-line no-console
       console.log(`Loading specified appPortal: ${thePortal}`);
       myLoadPortal('pega-root', thePortal, []);
     } else if (myLoadDefaultPortal && defaultPortal && !excludePortals.includes(defaultPortal)) {
-      // eslint-disable-next-line no-console
       console.log(`Loading default portal`);
       myLoadDefaultPortal('pega-root', []);
     } else {
-      // eslint-disable-next-line no-console
       console.log('Loading portal selection screen');
       setPortalSelectionScreen(true);
       setDefaultPortalName(defaultPortal);
@@ -162,31 +159,42 @@ export default function FullPortal() {
   }
 
   function doRedirectDone() {
-    navigate(window.location.pathname);
+    const redirectUrl: any = sessionStorage.getItem('url');
+    navigate(redirectUrl);
+    sessionStorage.removeItem('url');
     let localeOverride: any = sessionStorage.getItem('rsdk_locale');
     if (!localeOverride) {
       localeOverride = undefined;
     }
     // appName and mainRedirect params have to be same as earlier invocation
-    loginIfNecessary({ appName: 'portal', mainRedirect: true, locale: localeOverride });
+    loginIfNecessary({ appName: 'portal', mainRedirect: true, locale: localeOverride, enableSemanticUrls: true });
   }
 
   // One time (initialization)
   useEffect(() => {
     document.addEventListener('SdkConstellationReady', () => {
       // start the portal
+      sessionStorage.setItem('isLoggedIn', 'true');
       startPortal();
     });
     let localeOverride: any = sessionStorage.getItem('rsdk_locale');
     if (!localeOverride) {
       localeOverride = undefined;
     }
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    const redirected = sessionStorage.getItem('redirected');
+    if (isLoggedIn !== 'true' && redirected !== 'true') {
+      sessionStorage.setItem('url', window.location.pathname);
+      navigate('/portal');
+    }
+    sessionStorage.setItem('redirected', 'true');
     // Login if needed, doing an initial main window redirect
     loginIfNecessary({
       appName: 'portal',
       mainRedirect: true,
       redirectDoneCB: doRedirectDone,
-      locale: localeOverride
+      locale: localeOverride,
+      enableSemanticUrls: true
     });
   }, []);
 
