@@ -174,16 +174,16 @@ export default function FullPortal() {
   useEffect(() => {
     document.addEventListener('SdkConstellationReady', () => {
       // start the portal
-      sessionStorage.setItem('logined', 'true');
+      sessionStorage.setItem('isLoggedIn', 'true');
       startPortal();
     });
     let localeOverride: any = sessionStorage.getItem('rsdk_locale');
     if (!localeOverride) {
       localeOverride = undefined;
     }
-    const logined = sessionStorage.getItem('logined');
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     const redirected = sessionStorage.getItem('redirected');
-    if (logined !== 'true' && redirected !== 'true') {
+    if (isLoggedIn !== 'true' && redirected !== 'true') {
       sessionStorage.setItem('url', window.location.pathname);
       navigate('/portal');
     }
