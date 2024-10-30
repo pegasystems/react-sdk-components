@@ -52,7 +52,7 @@ export default function SemanticLink(props: SemanticLinkProps) {
   const { text, displayMode, label, hideLabel } = props;
   const classes = useStyles();
 
-  if (displayMode === 'LABELS_LEFT' || (!displayMode && label !== undefined)) {
+  if (displayMode === 'DISPLAY_ONLY' || (!displayMode && label !== undefined)) {
     const value = text || '---';
     return (
       <Grid container spacing={1} style={{ padding: '4px 0px' }} id='semantic-link-grid'>

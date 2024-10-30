@@ -23,7 +23,7 @@ export default function Details(props: DetailsProps) {
 
   // Set display mode prop and re-create the children so this part of the dom tree renders
   // in a readonly (display) mode instead of a editable
-  getPConnect().setInheritedProp('displayMode', 'LABELS_LEFT');
+  getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
   getPConnect().setInheritedProp('readOnly', true);
   const children = (getPConnect().getChildren() as any[]).map((configObject, index) =>
     createElement(createPConnectComponent(), {

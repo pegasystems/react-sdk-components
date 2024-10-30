@@ -44,7 +44,7 @@ export default function TextArea(props: TextAreaProps) {
     setInputValue(value);
   }, [value]);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 

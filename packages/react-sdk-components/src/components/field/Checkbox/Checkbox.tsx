@@ -77,7 +77,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
     }
   }, [thePConn]);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} />;
   }
 

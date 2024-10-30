@@ -150,7 +150,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
     }
   }, []);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 

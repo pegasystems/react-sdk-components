@@ -34,7 +34,7 @@ export default function DateTime(props: DateTimeProps) {
   dateFormatInfo.dateFormatStringLC = theDateFormat.dateFormatStringLC;
   dateFormatInfo.dateFormatMask = theDateFormat.dateFormatMask;
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     const formattedDateTime = format(props.value, 'datetime', {
       format: `${dateFormatInfo.dateFormatString} hh:mm a`
     });

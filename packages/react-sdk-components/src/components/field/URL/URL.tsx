@@ -44,7 +44,7 @@ export default function URLComponent(props: URLComponentProps) {
     setInputValue(value);
   }, [value]);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 
