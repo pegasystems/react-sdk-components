@@ -37,7 +37,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   const resolvedList = getReferenceList(pConn);
   pConn.setReferenceList(resolvedList);
   const pageReference = `${pConn.getPageReference()}${resolvedList}`;
-  const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT' || displayMode === 'DISPLAY_ONLY';
+  const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY';
   const HEADING = heading ?? 'Row';
 
   useLayoutEffect(() => {

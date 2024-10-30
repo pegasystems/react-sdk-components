@@ -52,7 +52,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   const refList = rawViewMetadata.config.referenceList;
   const canBeChangedInReviewMode = allowAndPersistChangesInReviewMode && (displayAs === 'autocomplete' || displayAs === 'dropdown');
   let propName;
-  const isDisplayModeEnabled = ['LABELS_LEFT', 'STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode);
+  const isDisplayModeEnabled = ['STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode);
   let firstChildPConnect;
 
   /* Only for dropdown when it has param use data api to get the data back and add it to datasource */

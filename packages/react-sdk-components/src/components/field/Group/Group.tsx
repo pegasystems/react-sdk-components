@@ -15,7 +15,7 @@ interface GroupProps extends PConnFieldProps {
 export default function Group(props: GroupProps) {
   const { children, heading, showHeading, instructions, collapsible, displayMode, type } = props;
 
-  const isReadOnly = displayMode === 'LABELS_LEFT' || displayMode === 'DISPLAY_ONLY';
+  const isReadOnly = displayMode === 'DISPLAY_ONLY';
 
   const content = useMemo(() => {
     return (
