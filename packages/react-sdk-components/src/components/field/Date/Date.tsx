@@ -1,4 +1,6 @@
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { useState } from 'react';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
 
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
@@ -20,22 +22,9 @@ export default function Date(props: DateProps) {
   const TextInput = getComponentFromMap('TextInput');
   const FieldValueList = getComponentFromMap('FieldValueList');
 
-  const {
-    getPConnect,
-    label,
-    required,
-    disabled,
-    value = '',
-    validatemessage,
-    status,
-    onChange,
-    onBlur,
-    readOnly,
-    testId,
-    helperText,
-    displayMode,
-    hideLabel
-  } = props;
+  const { getPConnect, label, required, disabled, value, validatemessage, status, readOnly, testId, helperText, displayMode, hideLabel } = props;
+
+  const [dateValue, setDateValue] = useState<Dayjs | null>(value ? dayjs(value) : null);
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
@@ -50,7 +39,7 @@ export default function Date(props: DateProps) {
   dateFormatInfo.dateFormatStringLC = theDateFormat.dateFormatStringLC;
   dateFormatInfo.dateFormatMask = theDateFormat.dateFormatMask;
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     const formattedDate = format(props.value, 'date', {
       format: dateFormatInfo.dateFormatString
     });
@@ -77,37 +66,29 @@ export default function Date(props: DateProps) {
 
   const handleChange = date => {
     if (date && date.isValid()) {
-      onChange({ value: getFormattedDate(date) });
-    }
-  };
-
-  const handleAccept = date => {
-    if (date && date.isValid()) {
+      setDateValue(date);
       handleEvent(actions, 'changeNblur', propName, getFormattedDate(date));
     }
   };
 
   return (
-    <KeyboardDatePicker
-      disableToolbar
-      variant='inline'
-      inputVariant='outlined'
-      placeholder={dateFormatInfo.dateFormatStringLC}
-      format={dateFormatInfo.dateFormatString}
-      mask={dateFormatInfo.dateFormatMask}
-      fullWidth
-      autoOk
-      required={required}
-      disabled={disabled}
-      error={status === 'error'}
-      helperText={helperTextToDisplay}
-      size='small'
+    <DatePicker
       label={label}
-      value={value || null}
+      disabled={disabled}
+      format={dateFormatInfo.dateFormatString}
+      value={dateValue}
+      slotProps={{
+        textField: {
+          required,
+          variant: 'outlined',
+          placeholder: dateFormatInfo.dateFormatStringLC,
+          error: status === 'error',
+          helperText: helperTextToDisplay,
+          size: 'small',
+          InputProps: { ...testProp }
+        }
+      }}
       onChange={handleChange}
-      onBlur={!readOnly ? onBlur : undefined}
-      onAccept={handleAccept}
-      InputProps={{ ...testProp }}
     />
   );
 }

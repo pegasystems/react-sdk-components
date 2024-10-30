@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,18 +13,52 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction
-} from '@material-ui/core';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+} from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { Utils } from '../../helpers/utils';
 import { PConnProps } from '../../../types/PConnProps';
 
 import './ToDo.css';
+
+const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, context) => {
+  return PCore.getDataPageUtils()
+    .getDataAsync(
+      datapage,
+      context,
+      {},
+      {
+        pageNumber: 1,
+        pageSize: numberOfRecords
+      },
+      {
+        select: Object.keys(fields).map(key => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) }))
+      },
+      {
+        invalidateCache: true,
+        additionalApiParams: {
+          includeTotalCount
+        }
+      }
+    )
+    .then(response => {
+      return {
+        ...response,
+        data: (Array.isArray(response?.data) ? response.data : []).map(row =>
+          Object.keys(fields).reduce((obj, key) => {
+            obj[key] = row[PCore.getAnnotationUtils().getPropertyName(fields[key])];
+            return obj;
+          }, {})
+        )
+      };
+    });
+};
 
 interface ToDoProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -37,7 +71,7 @@ interface ToDoProps extends PConnProps {
   itemKey?: string;
   showTodoList?: boolean;
   type?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
+
   context?: string;
   isConfirm?: boolean;
 }
@@ -81,12 +115,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ToDo(props: ToDoProps) {
-  const { getPConnect, datasource = [], headerText = 'To do', showTodoList = true, myWorkList = {}, type = 'worklist', isConfirm = false } = props;
+  const {
+    getPConnect,
+    context,
+    datasource = [],
+    headerText = 'To do',
+    showTodoList = true,
+    myWorkList = {},
+    type = 'worklist',
+    isConfirm = false
+  } = props;
 
   const CONSTS = PCore.getConstants();
 
   const bLogging = true;
-  let assignmentCount = 0;
   const currentUser = PCore.getEnvironmentInfo().getOperatorName();
   const currentUserInitials = Utils.getInitials(currentUser);
   const assignmentsSource = datasource?.source || myWorkList?.source;
@@ -106,16 +148,35 @@ export default function ToDo(props: ToDoProps) {
   const showlessLocalizedValue = localizedVal('show_less', 'CosmosFields');
   const showMoreLocalizedValue = localizedVal('show_more', 'CosmosFields');
   const canPerform = assignments?.[0]?.canPerform === 'true' || assignments?.[0]?.canPerform === true;
-  // const { setOpen } = useNavBar();
+  const [count, setCount] = useState(0);
+
+  const {
+    WORK_BASKET: { MY_WORK_LIST }
+  } = PCore.getConstants();
 
   function initAssignments(): any[] {
     if (assignmentsSource) {
-      assignmentCount = assignmentsSource.length;
       return topThreeAssignments(assignmentsSource);
     }
     // turn off todolist
     return [];
   }
+
+  const deferLoadWorklistItems = useCallback(
+    responseData => {
+      setCount(responseData.totalCount);
+      setAssignments(responseData.data);
+    },
+    [MY_WORK_LIST]
+  );
+
+  useEffect(() => {
+    if (Object.keys(myWorkList).length && myWorkList.datapage) {
+      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context).then(responseData => {
+        deferLoadWorklistItems(responseData);
+      });
+    }
+  }, []);
 
   const getAssignmentId = assignment => {
     return type === CONSTS.TODO ? assignment.ID : assignment.id;
@@ -137,7 +198,7 @@ export default function ToDo(props: ToDoProps) {
     setShowSnackbar(true);
   }
 
-  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+  function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
     if (reason === 'clickaway') {
       return;
     }
@@ -146,12 +207,18 @@ export default function ToDo(props: ToDoProps) {
 
   function _showMore() {
     setBShowMore(false);
-    setAssignments(assignmentsSource);
+    if (type === CONSTS.WORKLIST && count && count > assignments.length && !assignmentsSource) {
+      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, count, false, context).then(response => {
+        setAssignments(response.data);
+      });
+    } else {
+      setAssignments(assignmentsSource);
+    }
   }
 
   function _showLess() {
     setBShowMore(true);
-    setAssignments(topThreeAssignments(assignmentsSource));
+    setAssignments(assignments => assignments.slice(0, 3));
   }
 
   function clickGo(assignment) {
@@ -223,12 +290,15 @@ export default function ToDo(props: ToDoProps) {
     );
   };
 
+  // eslint-disable-next-line no-nested-ternary
+  const getCount = () => (assignmentsSource ? assignmentsSource.length : type === CONSTS.WORKLIST ? count : 0);
+
   const toDoContent = (
     <>
       {showTodoList && (
         <CardHeader
           title={
-            <Badge badgeContent={assignmentCount} overlap='rectangular' color='primary'>
+            <Badge badgeContent={getCount()} overlap='rectangular' color='primary'>
               <Typography variant='h6'>{headerText}&nbsp;&nbsp;&nbsp;</Typography>
             </Badge>
           }
@@ -249,7 +319,7 @@ export default function ToDo(props: ToDoProps) {
             </div>
             {(!isConfirm || canPerform) && (
               <div style={{ marginLeft: 'auto' }}>
-                <IconButton id='go-btn' onClick={() => clickGo(assignment)}>
+                <IconButton id='go-btn' onClick={() => clickGo(assignment)} size='large'>
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
@@ -267,7 +337,7 @@ export default function ToDo(props: ToDoProps) {
           {showTodoList && (
             <CardHeader
               title={
-                <Badge badgeContent={assignmentCount} overlap='rectangular' color='primary'>
+                <Badge badgeContent={getCount()} overlap='rectangular' color='primary'>
                   <Typography variant='h6'>{headerText}&nbsp;&nbsp;&nbsp;</Typography>
                 </Badge>
               }
@@ -280,7 +350,7 @@ export default function ToDo(props: ToDoProps) {
                 <ListItem key={getAssignmentId(assignment)} dense divider onClick={() => clickGo(assignment)}>
                   <ListItemText primary={getAssignmentName(assignment)} secondary={getListItemComponent(assignment)} />
                   <ListItemSecondaryAction>
-                    <IconButton onClick={() => clickGo(assignment)}>
+                    <IconButton onClick={() => clickGo(assignment)} size='large'>
                       <ArrowForwardIosOutlinedIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
@@ -294,7 +364,7 @@ export default function ToDo(props: ToDoProps) {
       {type === CONSTS.TODO && !isConfirm && <Card className={classes.todoWrapper}>{toDoContent}</Card>}
       {type === CONSTS.TODO && isConfirm && <>{toDoContent}</>}
 
-      {assignmentCount > 3 && (
+      {getCount() > 3 && (
         <Box display='flex' justifyContent='center'>
           {bShowMore ? (
             <Button color='primary' onClick={_showMore}>

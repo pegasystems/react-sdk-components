@@ -1,5 +1,5 @@
 import { ReactElement, useMemo } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import FieldGroup from '../../designSystemExtension/FieldGroup';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
@@ -15,7 +15,7 @@ interface GroupProps extends PConnFieldProps {
 export default function Group(props: GroupProps) {
   const { children, heading, showHeading, instructions, collapsible, displayMode, type } = props;
 
-  const isReadOnly = displayMode === 'LABELS_LEFT';
+  const isReadOnly = displayMode === 'DISPLAY_ONLY';
 
   const content = useMemo(() => {
     return (

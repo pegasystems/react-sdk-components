@@ -1,5 +1,7 @@
-import { TextField } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import { TextField } from '@mui/material';
 
+import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
@@ -13,14 +15,13 @@ export default function TextArea(props: TextAreaProps) {
   const FieldValueList = getComponentFromMap('FieldValueList');
 
   const {
+    getPConnect,
     label,
     required,
     disabled,
     value = '',
     validatemessage,
     status,
-    onChange,
-    onBlur,
     readOnly,
     testId,
     fieldMetadata,
@@ -30,12 +31,20 @@ export default function TextArea(props: TextAreaProps) {
     placeholder
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
-
+  const pConn = getPConnect();
+  const actions = pConn.getActionsApi();
+  const propName = (pConn.getStateProps() as any).value;
   const maxLength = fieldMetadata?.maxLength;
+
+  const [inputValue, setInputValue] = useState('');
 
   let readOnlyProp = {};
 
-  if (displayMode === 'LABELS_LEFT') {
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 
@@ -55,6 +64,15 @@ export default function TextArea(props: TextAreaProps) {
     'data-test-id': testId
   };
 
+  function handleChange(event) {
+    // update internal value
+    setInputValue(event?.target?.value);
+  }
+
+  function handleBlur() {
+    handleEvent(actions, 'changeNblur', propName, inputValue);
+  }
+
   return (
     <TextField
       multiline
@@ -67,11 +85,11 @@ export default function TextArea(props: TextAreaProps) {
       size='small'
       required={required}
       disabled={disabled}
-      onChange={onChange}
-      onBlur={!readOnly ? onBlur : undefined}
+      onChange={handleChange}
+      onBlur={!readOnly ? handleBlur : undefined}
       error={status === 'error'}
       label={label}
-      value={value}
+      value={inputValue}
       InputProps={{ ...readOnlyProp, inputProps: { maxLength, ...testProp } }}
     />
   );

@@ -1,6 +1,6 @@
-import { TextField } from '@material-ui/core';
-import { NumericFormat } from 'react-number-format';
 import { useState } from 'react';
+import { NumericFormat } from 'react-number-format';
+import { TextField } from '@mui/material';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
@@ -58,7 +58,7 @@ export default function Percentage(props: PercentageProps) {
     readOnlyProp = { readOnly: true };
   }
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
   }
 

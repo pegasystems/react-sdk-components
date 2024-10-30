@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import './WssQuickCreate.css';
 
 // WssQuickCreate is one of the few components that does NOT have getPConnect.

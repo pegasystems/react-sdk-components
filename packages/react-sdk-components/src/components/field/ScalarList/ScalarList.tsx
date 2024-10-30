@@ -38,7 +38,7 @@ export default function ScalarList(props: ScalarListProps) {
         config: {
           // @ts-ignore - Type '{ readOnly: true; displayInModal: boolean; value: any; displayMode: string; label: string; }' is not assignable to type 'ComponentMetadataConfig'.
           value: scalarValue,
-          displayMode: 'LABELS_LEFT',
+          displayMode: 'DISPLAY_ONLY',
           label,
           ...restProps,
           // @ts-ignore - Type 'string' is not assignable to type 'boolean | undefined'.
@@ -51,7 +51,7 @@ export default function ScalarList(props: ScalarListProps) {
     ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional;
   });
 
-  if (['LABELS_LEFT', 'STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode)) {
+  if (['STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode)) {
     return (
       <div>
         <CommaSeparatedList items={items} />

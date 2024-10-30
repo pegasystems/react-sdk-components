@@ -1,6 +1,6 @@
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
@@ -52,7 +52,7 @@ export default function SemanticLink(props: SemanticLinkProps) {
   const { text, displayMode, label, hideLabel } = props;
   const classes = useStyles();
 
-  if (displayMode === 'LABELS_LEFT' || (!displayMode && label !== undefined)) {
+  if (displayMode === 'DISPLAY_ONLY' || (!displayMode && label !== undefined)) {
     const value = text || '---';
     return (
       <Grid container spacing={1} style={{ padding: '4px 0px' }} id='semantic-link-grid'>

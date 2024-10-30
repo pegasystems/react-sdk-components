@@ -1,8 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import React, { createElement, isValidElement } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import { format } from '../../helpers/formatters';
@@ -48,7 +48,7 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     const { label } = thePConn.getConfigProps();
     const configObj = thePConn?.getReferencedView();
     configObj.config.readOnly = true;
-    configObj.config.displayMode = 'LABELS_LEFT';
+    configObj.config.displayMode = 'DISPLAY_ONLY';
     const propToUse = { ...thePConn.getInheritedProps() };
     configObj.config.label = theCompType === 'reference' ? propToUse?.label : label;
     fieldComponents.push({

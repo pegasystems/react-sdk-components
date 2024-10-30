@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactElement } from 'react';
-import { Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface InlineDashboardProps extends PConnProps {

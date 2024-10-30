@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import Grid, { GridSize } from '@material-ui/core/Grid';
+import Grid, { GridSize } from '@mui/material/Grid';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
@@ -26,7 +26,7 @@ export default function NarrowWideDetails(props: NarrowWideDetailsProps) {
 
   // Set display mode prop and re-create the children so this part of the dom tree renders
   // in a readonly (display) mode instead of a editable
-  getPConnect().setInheritedProp('displayMode', 'LABELS_LEFT');
+  getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
   getPConnect().setInheritedProp('readOnly', true);
   const children = (getPConnect().getChildren() as any[]).map((configObject, index) =>
     createElement(createPConnectComponent(), {

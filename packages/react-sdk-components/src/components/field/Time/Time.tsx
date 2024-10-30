@@ -1,7 +1,8 @@
-import { KeyboardTimePicker } from '@material-ui/pickers';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+// import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import dayjs from 'dayjs';
 
+import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
@@ -14,10 +15,12 @@ export default function Time(props: TimeProps) {
   const FieldValueList = getComponentFromMap('FieldValueList');
   const TextInput = getComponentFromMap('TextInput');
 
-  const { label, required, disabled, value = '', validatemessage, status, onChange, readOnly, helperText, displayMode, hideLabel, testId } = props;
+  const { getPConnect, label, required, disabled, value = '', validatemessage, status, readOnly, helperText, displayMode, hideLabel, testId } = props;
   const helperTextToDisplay = validatemessage || helperText;
-
-  if (displayMode === 'LABELS_LEFT') {
+  const pConn = getPConnect();
+  const actions = pConn.getActionsApi();
+  const propName = (pConn.getStateProps() as any).value;
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 
@@ -37,11 +40,11 @@ export default function Time(props: TimeProps) {
 
   const handleChange = date => {
     const theValue = date && date.isValid() ? date.format('HH:mm') : null;
-    onChange({ value: theValue });
+    handleEvent(actions, 'changeNblur', propName, theValue);
   };
 
   let timeValue: any = null;
-  if (value) {
+  if (value && Object.keys(value).length) {
     const timeArray = value.split(':').map(itm => Number(itm));
     timeValue = dayjs().hour(timeArray[0]).minute(timeArray[1]);
   }
@@ -52,25 +55,29 @@ export default function Time(props: TimeProps) {
   //
 
   return (
-    <KeyboardTimePicker
-      variant='inline'
-      inputVariant='outlined'
-      placeholder='hh:mm am'
-      keyboardIcon={<AccessTimeIcon />}
-      fullWidth
-      required={required}
+    <TimePicker
+      // keyboardIcon={<AccessTimeIcon />}
+      // fullWidth
+
       disabled={disabled}
-      error={status === 'error'}
-      helperText={helperTextToDisplay}
       minutesStep={5}
-      size='small'
       label={label}
-      autoOk
-      mask='__:__ _m'
+      // autoOk
+      // mask='__:__ _m'
       format='hh:mm a'
       value={timeValue}
       onChange={handleChange}
-      InputProps={{ inputProps: { ...testProp } }}
+      slotProps={{
+        textField: {
+          variant: 'outlined',
+          placeholder: 'hh:mm am',
+          required,
+          error: status === 'error',
+          helperText: helperTextToDisplay,
+          size: 'small',
+          InputProps: { ...testProp }
+        }
+      }}
     />
   );
 }

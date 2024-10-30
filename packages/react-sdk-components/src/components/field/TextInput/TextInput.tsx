@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -47,7 +47,7 @@ export default function TextInput(props: TextInputProps) {
     setInputValue(value);
   }, [value]);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 

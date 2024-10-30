@@ -1,5 +1,5 @@
-import { TextField } from '@material-ui/core';
 import { NumericFormat } from 'react-number-format';
+import { TextField } from '@mui/material';
 import { useState } from 'react';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
@@ -71,7 +71,7 @@ export default function Decimal(props: DecimalProps) {
     formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
   }
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
   }
 

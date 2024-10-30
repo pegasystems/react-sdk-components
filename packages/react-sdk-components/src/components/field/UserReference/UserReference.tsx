@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnProps } from '../../../types/PConnProps';
@@ -99,7 +99,7 @@ const UserReference = (props: UserReferenceProps) => {
 
   let userReferenceComponent: any = null;
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} />;
   }
 

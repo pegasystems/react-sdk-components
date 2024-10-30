@@ -1,6 +1,7 @@
 import React, { Children, useMemo, useState } from 'react';
-import { makeStyles, Tab, Tabs } from '@material-ui/core';
-import { TabContext, TabPanel } from '@material-ui/lab';
+import { Tab, Tabs } from '@mui/material';
+import { TabContext, TabPanel } from '@mui/lab';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { buildView } from '../../../helpers/field-group-utils';
 import { PConnProps } from '../../../../types/PConnProps';
@@ -30,7 +31,7 @@ function DynamicTabs(props: DynamicTabsProps) {
   const tablabelProp = PCore.getAnnotationUtils().getPropertyName(tablabel);
   const referenceListData: any = pConnect.getValue(`${referenceList}.pxResults`, ''); // 2nd arg empty string until typedefs properly allow optional
   const memoisedTabViews = useMemo(() => {
-    pConnect.setInheritedProp('displayMode', 'LABELS_LEFT');
+    pConnect.setInheritedProp('displayMode', 'DISPLAY_ONLY');
     pConnect.setInheritedProp('readOnly', true);
 
     return (

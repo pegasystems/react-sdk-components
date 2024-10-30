@@ -1,6 +1,6 @@
 import { Children, PropsWithChildren, useEffect, useState } from 'react';
-import { Tab, Tabs, TextField } from '@material-ui/core';
-import { TabContext, TabPanel } from '@material-ui/lab';
+import { Tab, Tabs } from '@mui/material';
+import { TabContext, TabPanel } from '@mui/lab';
 
 import { getTransientTabs, getVisibleTabs, tabClick } from '../../SubTabs/tabUtils';
 import { PConnProps } from '../../../../types/PConnProps';
@@ -39,7 +39,7 @@ export default function DetailsSubTabs(props: PropsWithChildren<DetailsSubTabsPr
 
   return (
     <>
-      {propsToUse.showLabel && <TextField>{propsToUse.label}</TextField>}
+      {propsToUse.showLabel && <h3>{propsToUse.label}</h3>}
       <TabContext value={currentTabId.toString()}>
         <Tabs onChange={handleTabClick} value={currentTabId}>
           {tabItems.map((tab: any) => (

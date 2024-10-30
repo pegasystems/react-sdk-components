@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -37,8 +37,15 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   const resolvedList = getReferenceList(pConn);
   pConn.setReferenceList(resolvedList);
   const pageReference = `${pConn.getPageReference()}${resolvedList}`;
-  const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT';
+  const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY';
   const HEADING = heading ?? 'Row';
+
+  useLayoutEffect(() => {
+    if (!isReadonlyMode) {
+      // @ts-ignore - Expected 3 arguments, but got 1
+      pConn.getListActions().initDefaultPageInstructions(resolvedList);
+    }
+  }, [referenceList?.length]);
 
   const getDynamicHeaderProp = (item, index) => {
     if (fieldHeader === 'propertyRef' && heading && item[heading.substring(1)]) {
@@ -89,7 +96,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     );
   }
 
-  pConn.setInheritedProp('displayMode', 'LABELS_LEFT');
+  pConn.setInheritedProp('displayMode', 'DISPLAY_ONLY');
   const memoisedReadOnlyList = useMemo(() => {
     return referenceList.map((item, index) => {
       const key = item[heading] || `field-group-row-${index}`;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import isDeepEqual from 'fast-deep-equal/react';
 
 import Utils from '../../helpers/utils';
@@ -150,7 +150,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
     }
   }, []);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 
@@ -191,7 +191,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
       getOptionLabel={(option: IOption) => {
         return option.value ? option.value : '';
       }}
-      getOptionSelected={(option: any) => {
+      isOptionEqualToValue={(option: any) => {
         return option.value ? option.value : '';
       }}
       fullWidth

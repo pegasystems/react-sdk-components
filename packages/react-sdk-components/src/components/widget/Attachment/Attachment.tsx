@@ -2,8 +2,8 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-nested-ternary */
 import { useState, useEffect, useCallback } from 'react';
-import { CircularProgress, IconButton, Menu, MenuItem, Button } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { CircularProgress, IconButton, Menu, MenuItem, Button } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import download from 'downloadjs';
 
 import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
@@ -217,9 +217,11 @@ export default function Attachment(props: AttachmentProps) {
         };
         if (!validateMaxSize(f, maxAttachmentSize)) {
           f.props.error = true;
+          f.inProgress = false;
           f.props.meta = pConn.getLocalizedValue(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`, '', '');
         } else if (!validateFileExtension(f, extensions)) {
           f.props.error = true;
+          f.inProgress = false;
           f.props.meta = `${pConn.getLocalizedValue('File has invalid extension. Allowed extensions are:', '', '')} ${extensions.replaceAll(
             '.',
             ''
@@ -430,6 +432,7 @@ export default function Attachment(props: AttachmentProps) {
                       aria-expanded={open ? 'true' : undefined}
                       aria-haspopup='true'
                       onClick={handleClick}
+                      size='large'
                     >
                       <MoreVertIcon />
                     </IconButton>

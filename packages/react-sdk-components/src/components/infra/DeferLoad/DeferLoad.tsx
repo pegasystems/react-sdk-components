@@ -1,6 +1,6 @@
 import { useState, useEffect, createElement } from 'react';
-import { Box, Card, CircularProgress } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Card, CircularProgress } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
@@ -95,7 +95,7 @@ export default function DeferLoad(props: DeferLoadProps) {
         }
       };
       const configObject = PCore.createPConnect(config);
-      configObject.getPConnect().setInheritedProp('displayMode', 'LABELS_LEFT');
+      configObject.getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
       setContent(createElement(createPConnectComponent(), configObject));
       if (deferLoadId) {
         PCore.getDeferLoadManager().stop(deferLoadId, getPConnect().getContextName());

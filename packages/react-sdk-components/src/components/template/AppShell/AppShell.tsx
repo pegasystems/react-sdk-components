@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
+import makeStyles from '@mui/styles/makeStyles';
+import Avatar from '@mui/material/Avatar';
 
 import { Utils } from '../../helpers/utils';
 import { NavContext } from '../../helpers/reactContextHelpers';
@@ -24,6 +24,8 @@ interface AppShellProps extends PConnProps {
   portalName: string;
   portalLogo: string;
   navDisplayOptions: { alignment: string; position: string };
+  httpMessages: string[];
+  pageMessages: string[];
 }
 
 const useStyles = makeStyles(theme => ({
@@ -49,8 +51,21 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const NavBar = getComponentFromMap('NavBar');
   const WssNavBar = getComponentFromMap('WssNavBar');
+  const AlertBanner = getComponentFromMap('AlertBanner');
 
-  const { pages = [], caseTypes = [], showAppName, children = [], getPConnect, portalTemplate, portalName, portalLogo, navDisplayOptions } = props;
+  const {
+    pages = [],
+    caseTypes = [],
+    showAppName,
+    children = [],
+    getPConnect,
+    httpMessages = [],
+    pageMessages = [],
+    portalTemplate,
+    portalName,
+    portalLogo,
+    navDisplayOptions
+  } = props;
 
   const [open, setOpen] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,6 +90,15 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mapChildren, setMapChildren] = useState([]);
 
+  const messages = [...httpMessages, ...pageMessages];
+
+  const hasBanner = messages && messages.length ? messages.length > 0 : false;
+  let banners: any = null;
+  banners = hasBanner && (
+    <div style={{ display: 'flex', flexDirection: 'column', padding: '1em 0' }}>
+      <AlertBanner id='AppShell' variant='urgent' messages={messages} />
+    </div>
+  );
   // Initial setting of appName and mapChildren
   useEffect(() => {
     setAppName(PCore.getEnvironmentInfo().getApplicationName());
@@ -90,6 +114,25 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     });
 
     setMapChildren(tempMap);
+  }, []);
+
+  useEffect(() => {
+    // @ts-ignore
+    const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
+    if (caseTypesAvailableToCreateDP) {
+      const portalID = pConn.getValue('.pyOwner');
+      PCore.getDataPageUtils()
+        .getPageDataAsync(caseTypesAvailableToCreateDP, pConn.getContextName(), {
+          PortalName: portalID
+        })
+        .then(response => {
+          if (response?.pyCaseTypesAvailableToCreate) {
+            pConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
+              skipDirtyValidation: true
+            });
+          }
+        });
+    }
   }, []);
 
   const [iconURL, setIconURL] = useState('');
@@ -187,7 +230,10 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           operator={getOperator()}
           navDisplayOptions={navDisplayOptions}
         />
-        <div className={classes.wsscontent}>{children}</div>
+        <div className={classes.wsscontent}>
+          {banners}
+          {children}
+        </div>
       </div>
     );
   }
@@ -203,7 +249,11 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           pages={pages}
           caseTypes={caseTypes}
         />
-        <div className={classes.content}>{children}</div>
+
+        <div className={classes.content}>
+          {banners}
+          {children}
+        </div>
       </div>
     </NavContext.Provider>
   );

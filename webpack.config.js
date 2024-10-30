@@ -1,25 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const LiveReloadPlugin = require('@kooneko/livereload-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const zlib = require('zlib');
 
 module.exports = (env, argv) => {
   const pluginsToAdd = [];
   const webpackMode = argv.mode;
-
-  //  NOTE: we allow dangerouslyAllowCleanPatternsOutsideProject so we can cleanup outside the
-  //    normal directory structure without getting webpack errors when live-reload recompiles
-  //    See: https://github.com/johnagan/clean-webpack-plugin
-  pluginsToAdd.push(
-    new CleanWebpackPlugin({
-      dry: true,
-      verbose: false,
-      dangerouslyAllowCleanPatternsOutsideProject: true
-    })
-  );
 
   pluginsToAdd.push(
     new HtmlWebpackPlugin({
@@ -87,6 +74,10 @@ module.exports = (env, argv) => {
           to() {
             return Promise.resolve('constellation/prerequisite/[name][ext]');
           }
+        },
+        {
+          from: './node_modules/@pega/constellationjs/dist/js',
+          to: './constellation/prerequisite/js'
         }
       ]
     })
@@ -95,49 +86,38 @@ module.exports = (env, argv) => {
   // Enable gzip and brotli compression
   //  Exclude constellation-core and bootstrap-shell files since
   //    client receives these files in gzip and brotli format
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: '[path][base].gz',
-      algorithm: 'gzip',
-      test: /\.js$|\.ts$|\.css$|\.html$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: '[path][base].br',
-      algorithm: 'brotliCompress',
-      test: /\.(js|ts|css|html|svg)$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      compressionOptions: {
-        params: {
-          [zlib.constants.BROTLI_PARAM_QUALITY]: 11
-        }
-      },
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
-
-  if (webpackMode === 'development') {
-    // In development mode, add LiveReload plug
-    //  When run in conjunction with build-with-watch,
-    //  This will reload the browser when code is changed/re-compiled
-    const liveReloadOptions = {
-      protocol: 'http',
-      appendScriptTag: true,
-      delay: 1000,
-      hostname: 'localhost'
-    };
-    pluginsToAdd.push(new LiveReloadPlugin(liveReloadOptions));
+  if (webpackMode === 'production') {
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].gz',
+        algorithm: 'gzip',
+        test: /\.js$|\.ts$|\.css$|\.html$/,
+        exclude: /constellation-core.*.js|bootstrap-shell.js|531.*.js/,
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].br',
+        algorithm: 'brotliCompress',
+        test: /\.(js|ts|css|html|svg)$/,
+        exclude: /constellation-core.*.js|bootstrap-shell.js|531.*.js/,
+        compressionOptions: {
+          params: {
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+          }
+        },
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
   }
 
   // need to set mode to 'development' to get LiveReload to work
   //  and for debugger statements to not be stripped out of the bundle
   initConfig = {
-    mode: 'development',
+    mode: argv.mode,
     entry: {
       app: './packages/react-sdk-components/src/index.tsx'
     },
@@ -152,7 +132,9 @@ module.exports = (env, argv) => {
     plugins: pluginsToAdd,
     output: {
       filename: '[name].bundle.js',
-      path: path.resolve(__dirname, 'dist')
+      path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
+      clean: true
     },
     module: {
       rules: [

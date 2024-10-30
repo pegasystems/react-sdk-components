@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Radio, RadioGroup, FormControl, FormControlLabel, FormLabel, FormHelperText } from '@material-ui/core';
+import { Radio, RadioGroup, FormControl, FormControlLabel, FormLabel, FormHelperText } from '@mui/material';
 
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
@@ -61,7 +61,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
     setSelectedButton(value);
   }, [value]);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
@@ -91,7 +91,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
   };
 
   return (
-    <FormControl error={status === 'error'} required={required}>
+    <FormControl variant='standard' error={status === 'error'} required={required}>
       <FormLabel component='legend'>{label}</FormLabel>
       <RadioGroup value={theSelectedButton} onChange={handleChange} onBlur={!readOnly ? handleBlur : undefined} row={inline}>
         {theOptions.map(theOption => {

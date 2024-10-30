@@ -1,9 +1,10 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { useFocusFirstField, useScrolltoTop } from '../../../hooks';
 
 import { PConnProps } from '../../../types/PConnProps';
 
@@ -86,6 +87,10 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     return formedSteps;
   }
 
+  const scrollId = window.location.href.includes('embedded') ? '#pega-part-of-page' : '#portal';
+  useScrolltoTop(scrollId, children);
+  useFocusFirstField('Assignment', children);
+
   useEffect(() => {
     if (children) {
       const firstChild = Array.isArray(children) ? children[0] : children;
@@ -94,7 +99,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
       const oData: any = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
-        const oCaseInfo = oData.caseInfo;
+        const oCaseInfo = oData?.caseInfo;
 
         if (oCaseInfo && oCaseInfo.actionButtons) {
           setActionButtons(oCaseInfo.actionButtons);
@@ -134,7 +139,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     setShowSnackbar(true);
   }
 
-  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+  function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
     if (reason === 'clickaway') {
       return;
     }
@@ -230,7 +235,6 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
           break;
       }
     } else if (sButtonType === 'primary') {
-      // eslint-disable-next-line sonarjs/no-small-switch
       switch (sAction) {
         case 'finishAssignment': {
           const finishPromise = finishAssignment(itemKey);
