@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import isDeepEqual from 'fast-deep-equal/react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 
@@ -242,7 +241,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
 
   // At this point, we know what fields we want to render...
   //  So, update our state if it's changed
-  if (!isDeepEqual(theFieldsToRender, theFieldsModifiable)) {
+  if (!PCore.isDeepEqual(theFieldsToRender, theFieldsModifiable)) {
     setFieldsToRender(theFieldsModifiable);
   }
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import isDeepEqual from 'fast-deep-equal/react';
 
 import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
@@ -86,7 +85,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
 
-  if (!isDeepEqual(datasource, theDatasource)) {
+  if (!PCore.isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)
     setDatasource(datasource);
   }

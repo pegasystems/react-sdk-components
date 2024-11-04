@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import equal from 'fast-deep-equal';
 import cloneDeep from 'lodash/cloneDeep';
 import { updateNewInstuctions, insertInstruction, deleteInstruction } from '../../helpers/instructions-utils';
 
@@ -13,7 +12,7 @@ export const setVisibilityForList = (c11nEnv, visibility) => {
 
 const useDeepMemo = (memoFn, key) => {
   const ref: any = useRef();
-  if (!ref.current || !equal(key, ref.current.key)) {
+  if (!ref.current || !PCore.isDeepEqual(key, ref.current.key)) {
     ref.current = { key, value: memoFn() };
   }
   return ref.current.value;

@@ -8,7 +8,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import isDeepEqual from 'fast-deep-equal/react';
 
 import { Utils } from '../../helpers/utils';
 import { PConnProps } from '../../../types/PConnProps';
@@ -85,7 +84,7 @@ export default function CaseHistory(props: CaseHistoryProps) {
       theRowData[rowIndex] = rowDisplayValues;
     });
 
-    if (!isDeepEqual(theRowData, rowData.current)) {
+    if (!PCore.isDeepEqual(theRowData, rowData.current)) {
       // Only update rowData.current when it actually changes (to prevent infinite loop)
       rowData.current = theRowData;
     }

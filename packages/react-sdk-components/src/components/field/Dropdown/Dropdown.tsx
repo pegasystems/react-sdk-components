@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import isDeepEqual from 'fast-deep-equal/react';
 import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
@@ -94,7 +93,7 @@ export default function Dropdown(props: DropdownProps) {
   const className = thePConn.getCaseInfo().getClassName();
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
-  if (!isDeepEqual(datasource, theDatasource)) {
+  if (!PCore.isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)
     setDatasource(datasource);
   }
