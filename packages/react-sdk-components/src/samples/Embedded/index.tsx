@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { getSdkConfig, loginIfNecessary } from '@pega/auth/lib/sdk-auth-manager';
 
+import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
+import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers';
+
 import Header from './Header';
 import MainScreen from './MainScreen';
-import { theme } from '../../theme';
-import { compareSdkPCoreVersions } from '../../components/helpers/versionHelpers';
-import { initializeAuthentication } from './utils';
-import { getSdkComponentMap } from '../../bridge/helpers/sdk_component_map';
 import localSdkComponentMap from '../../../sdk-local-component-map';
+import { initializeAuthentication } from './utils';
+import { theme } from '../../theme';
 
 declare const myLoadMashup: any;
 

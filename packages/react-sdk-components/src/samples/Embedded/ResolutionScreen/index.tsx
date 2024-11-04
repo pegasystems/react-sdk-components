@@ -1,7 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
-import { theme } from '../../../theme';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   resolutionPart: {
     display: 'flex',
     flexDirection: 'row'

@@ -4,10 +4,11 @@ import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 
-import ShoppingOptionCard from '../ShoppingOptionCard';
-import ResolutionScreen from '../ResolutionScreen';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import createPConnectComponent from '../../../bridge/react_pconnect';
+
+import ShoppingOptionCard from '../ShoppingOptionCard';
+import ResolutionScreen from '../ResolutionScreen';
 import { shoppingOptions } from '../utils';
 
 function RootComponent(props) {
