@@ -111,10 +111,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function EmbeddedSwatch(props) {
+export default function ShoppingOptionCard(props) {
   const classes = useStyles();
 
-  const { play, level, channels, channels_full: channelsFull, banner, price, internetSpeed, calling, pcore } = props;
+  const { play, level, channels, channels_full: channelsFull, banner, price, internetSpeed, calling } = props;
 
   return (
     <div>
@@ -133,7 +133,7 @@ export default function EmbeddedSwatch(props) {
         <ul>
           <li>{channelsFull} channels plus FREE HD</li>
           <li>Thousands of On Demand choices</li>
-          <li>Watch on the {pcore ? pcore.getEnvironmentInfo().getApplicationLabel() : null} App</li>
+          <li>Watch on the {PCore.getEnvironmentInfo().getApplicationLabel()} App</li>
           <li>Up to {internetSpeed} Internet Speeds</li>
           <li>Unlimited nationwide calling {calling}</li>
         </ul>
