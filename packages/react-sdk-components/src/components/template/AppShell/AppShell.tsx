@@ -75,7 +75,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   const imageKey = envInfo.getOperatorImageInsKey();
   const userName = envInfo.getOperatorName();
   const currentUserInitials = Utils.getInitials(userName);
-  const appNameToDisplay = showAppName ? envInfo.getApplicationLabel() : '';
+  const appNameToDisplay: any = showAppName ? envInfo.getApplicationLabel() : '';
   const portalClass = pConn.getValue('.classID', ''); // 2nd arg empty string until typedef marked correctly
   const envPortalName = envInfo.getPortalName();
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
@@ -86,7 +86,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   const [imageBlobUrl, setImageBlobUrl] = useState<string | null>(null);
   // useState for appName and mapChildren - note these are ONLY updated once (on component mount!)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [appName, setAppName] = useState('');
+  const [appName, setAppName] = useState<string | undefined>('');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mapChildren, setMapChildren] = useState([]);
 
@@ -117,7 +117,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   }, []);
 
   useEffect(() => {
-    // @ts-ignore
+    // @ts-ignore Property 'pyCaseTypesAvailableToCreateDP' does not exist on type ...
     const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
     if (caseTypesAvailableToCreateDP) {
       const portalID = pConn.getValue('.pyOwner');
@@ -126,8 +126,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           PortalName: portalID
         })
         .then(response => {
-          if (response?.pyCaseTypesAvailableToCreate) {
-            pConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
+          if ((response as any)?.pyCaseTypesAvailableToCreate) {
+            pConn.replaceState('.pyCaseTypesAvailableToCreate', (response as any).pyCaseTypesAvailableToCreate, {
               skipDirtyValidation: true
             });
           }

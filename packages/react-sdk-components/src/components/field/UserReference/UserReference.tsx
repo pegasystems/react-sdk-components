@@ -80,8 +80,6 @@ const UserReference = (props: UserReferenceProps) => {
       };
 
       PCore.getRestClient()
-        // @ts-ignore - Argument of type '{ queryPayload: { dataViewName: string; }; }' is not assignable to parameter of type 'RestApiOptionsObject'
-        // @ts-ignore - Expected 3 arguments, but got 2
         .invokeRestApi('getListData', { queryPayload })
         .then((res: any) => {
           const ddDataSource = res.data.data.map(listItem => ({

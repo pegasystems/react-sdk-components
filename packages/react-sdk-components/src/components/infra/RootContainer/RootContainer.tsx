@@ -164,7 +164,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
       }
     };
   }
-  const prevRootConfig = usePrevious(rootViewConfig);
+  const prevRootConfig: any = usePrevious(rootViewConfig);
 
   if (renderingModes.includes(renderingMode) && messages && routingInfo && routingInfo?.accessedOrder.length === 0) {
     return <div id='root-container'>{banners}</div>;

@@ -70,7 +70,7 @@ export class Utils {
     return arReturn;
   }
 
-  static getInitials(userName: string): string {
+  static getInitials(userName: string | undefined): string {
     let userInitials = userName;
 
     if (userName && userName !== '') {

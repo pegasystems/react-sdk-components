@@ -57,10 +57,8 @@ export default function SimpleTableSelect(props: SimpleTableSelectProps) {
 
   // Need to get this written so typedefs work
   const { datasource: { parameters: fieldParameters = {} } = {}, pageClass } = isMultiSelectMode
-    ? // @ts-ignore - Property 'getFieldMetadata' is private and only accessible within class 'C11nEnv'.
-      pConn.getFieldMetadata(`@P .${referenceProp}`)
-    : // @ts-ignore - Property 'getCurrentPageFieldMetadata' is private and only accessible within class 'C11nEnv'.
-      pConn.getCurrentPageFieldMetadata(contextPageReference);
+    ? pConn.getFieldMetadata(`@P .${referenceProp}`)
+    : pConn.getCurrentPageFieldMetadata(contextPageReference);
 
   const compositeKeys: any[] = [];
   Object.values(fieldParameters).forEach((param: any) => {

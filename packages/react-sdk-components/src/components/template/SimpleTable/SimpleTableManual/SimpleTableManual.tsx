@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createElement } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,7 +10,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import makeStyles from '@mui/styles/makeStyles';
 import Link from '@mui/material/Link';
-import { createElement } from 'react';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
@@ -52,6 +52,7 @@ interface SimpleTableManualProps extends PConnProps {
   displayMode?: string;
   useSeparateViewForEdit: any;
   viewForEditModal: any;
+  targetClassLabel: string;
 }
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -110,7 +111,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     editModeConfig,
     displayMode,
     useSeparateViewForEdit,
-    viewForEditModal
+    viewForEditModal,
+    targetClassLabel
   } = props;
   const pConn = getPConnect();
   const [rowData, setRowData] = useState([]);
@@ -201,13 +203,12 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (allowEditingInModal) {
       getPConnect()
         .getListActions()
-        // @ts-ignore - An argument for 'uniqueField' was not provided.
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
           fieldDefs.filter(item => item.name).map(item => item.name)
         );
     } else {
-      // @ts-ignore - An argument for 'fields' was not provided
+      // @ts-ignore Expected 2-3 arguments, but got 1
       getPConnect().getListActions().initDefaultPageInstructions(getPConnect().getReferenceList());
     }
   }, []);
@@ -301,9 +302,15 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (allowEditingInModal && defaultView) {
       pConn
         .getActionsApi()
-        .openEmbeddedDataModal(defaultView, pConn, referenceListStr, referenceList.length, PCore.getConstants().RESOURCE_STATUS.CREATE);
+        .openEmbeddedDataModal(
+          defaultView,
+          pConn as any,
+          referenceListStr,
+          referenceList.length,
+          PCore.getConstants().RESOURCE_STATUS.CREATE,
+          targetClassLabel
+        );
     } else {
-      // @ts-ignore - An argument for 'pageRef' was not provided.
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
     }
 
@@ -319,22 +326,21 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         .getActionsApi()
         .openEmbeddedDataModal(
           bUseSeparateViewForEdit ? editView : defaultView,
-          pConn,
+          pConn as any,
           referenceListStr,
           selectedRowIndex.current,
-          PCore.getConstants().RESOURCE_STATUS.UPDATE
+          PCore.getConstants().RESOURCE_STATUS.UPDATE,
+          targetClassLabel
         );
     }
   };
 
   const deleteRecord = () => {
     setEditAnchorEl(null);
-    // @ts-ignore - An argument for 'pageRef' was not provided.
     pConn.getListActions().deleteEntry(selectedRowIndex.current);
   };
 
   const deleteRecordFromInlineEditable = (index: number) => {
-    // @ts-ignore - An argument for 'pageRef' was not provided.
     pConn.getListActions().deleteEntry(index);
   };
 

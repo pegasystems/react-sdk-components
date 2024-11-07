@@ -153,8 +153,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
   }, []);
 
   useEffect(() => {
-    // @ts-ignore - Property 'getMetadata' is private and only accessible within class 'C11nEnv'
-    if (isInitialized && pConnectOfFlowContainer.getMetadata().children && !hasItems) {
+    if (isInitialized && pConnectOfFlowContainer.getMetadata()?.children && !hasItems) {
       // ensuring not to add container items, if container already has items
       // because during multi doc mode, we will have container items already in store
       addContainerItem(pConnectOfFlowContainer);
@@ -274,7 +273,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
       setShowConfirm(true);
 
       // publish this "assignmentFinished" for mashup, need to get approved as a standard
-      // @ts-ignore - second parameter “payload” for publish method should be optional
       PCore.getPubSubUtils().publish('assignmentFinished');
 
       // debugger;

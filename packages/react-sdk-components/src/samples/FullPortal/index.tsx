@@ -26,7 +26,7 @@ function useQuery() {
 
 export default function FullPortal() {
   const [portalSelectionScreen, setPortalSelectionScreen] = useState(false);
-  const [defaultPortalName, setDefaultPortalName] = useState('');
+  const [defaultPortalName, setDefaultPortalName] = useState<string | undefined>('');
   const [availablePortals, setAvailablePortals] = useState<string[]>([]);
 
   const navigate = useNavigate();

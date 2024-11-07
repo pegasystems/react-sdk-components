@@ -75,7 +75,7 @@
     "@pega/configs": "^0.7.1",
     "@pega/constellationjs": "~0.242.5",
     "@pega/eslint-config": "^0.7.2",
-    "@pega/pcore-pconnect-typedefs": "~3.0.0",
+    "@pega/pcore-pconnect-typedefs": "^3.2.0-alpha.2",
     "@pega/tsconfig": "^0.6.0",
     "@playwright/test": "^1.40.1",
     "@testing-library/jest-dom": "^5.17.0",

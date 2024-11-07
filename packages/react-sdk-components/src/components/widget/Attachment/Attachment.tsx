@@ -74,8 +74,7 @@ export default function Attachment(props: AttachmentProps) {
   const downloadFile = (fileObj: any) => {
     setAnchorEl(null);
     PCore.getAttachmentUtils()
-      // @ts-ignore - 3rd parameter "responseEncoding" should be optional
-      .downloadAttachment(fileObj.pzInsKey, pConn.getContextName())
+      .downloadAttachment(fileObj.pzInsKey, pConn.getContextName(), '')
       .then((content: any) => {
         const extension = fileObj.pyAttachName.split('.').pop();
         fileDownload(content.data, fileObj.pyFileName, extension);
@@ -120,8 +119,7 @@ export default function Attachment(props: AttachmentProps) {
         });
         updateAttachmentState(pConn, getAttachmentKey(valueRef), [...currentAttachmentList, ...attachmentsList]);
         if (file.inProgress) {
-          // @ts-ignore - 3rd parameter "responseEncoding" should be optional
-          PCore.getAttachmentUtils().cancelRequest(file.ID, pConn.getContextName());
+          PCore.getAttachmentUtils().cancelRequest(file.ID);
         }
       }
 
@@ -155,11 +153,9 @@ export default function Attachment(props: AttachmentProps) {
               const context = pConn.getContextName();
               // set errors to property to block submit even on errors in file upload
               PCore.getMessageManager().addMessages({
-                // @ts-ignore
                 messages: [
                   {
                     type: 'error',
-                    // @ts-ignore - Type '{ type: string; message: string; }' is not assignable to type 'MessagesConfigObject'.
                     message: pConn.getLocalizedValue('Error with one or more files', '', '')
                   }
                 ],
@@ -192,7 +188,6 @@ export default function Attachment(props: AttachmentProps) {
   const clearFieldErrorMessages = () => {
     const fieldName = (pConn.getStateProps() as any).value;
     const context = pConn.getContextName();
-    // @ts-ignore
     PCore.getMessageManager().clearMessages({
       type: PCore.getConstants().MESSAGES.MESSAGES_TYPE_ERROR,
       property: fieldName,
@@ -231,11 +226,9 @@ export default function Attachment(props: AttachmentProps) {
           const fieldName = (pConn.getStateProps() as any).value;
           const context = pConn.getContextName();
           PCore.getMessageManager().addMessages({
-            // @ts-ignore
             messages: [
               {
                 type: 'error',
-                // @ts-ignore - Type '{ type: string; message: string; }' is not assignable to type 'MessagesConfigObject'.
                 message: pConn.getLocalizedValue('Error with one or more files', '', '')
               }
             ],

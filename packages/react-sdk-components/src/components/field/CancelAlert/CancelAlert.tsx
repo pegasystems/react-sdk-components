@@ -58,14 +58,12 @@ export default function CancelAlert(props: CancelAlertProps) {
   function cancelHandler() {
     if (isReverseCoexistence) {
       dismiss(true);
-      // @ts-ignore - An argument for 'payload' was not provided.
       PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.REVERSE_COEXISTENCE_EVENTS.HANDLE_DISCARD);
     } else if (!isDataObject && !isLocalAction && !isBulkAction) {
       disableButton(btnIds.DELETE);
       actionsAPI
         .deleteCaseInCreateStage(containerItemID, hideDelete)
         .then(() => {
-          // @ts-ignore - An argument for 'payload' was not provided.
           PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL);
         })
         .catch(() => {
@@ -78,13 +76,12 @@ export default function CancelAlert(props: CancelAlertProps) {
         });
     } else if (isLocalAction) {
       dismiss(true);
-      actionsAPI.cancelAssignment(containerItemID);
+      actionsAPI.cancelAssignment(containerItemID, false);
     } else if (isBulkAction) {
       dismiss(true);
       actionsAPI.cancelBulkAction(containerItemID);
     } else {
       dismiss(true);
-      // @ts-ignore - Argument of type '{ containerItemID: string; skipReleaseLockRequest: any; }' is not assignable to parameter of type 'ContainerInfo'.
       containerManagerAPI.removeContainerItem({ containerItemID, skipReleaseLockRequest });
     }
   }

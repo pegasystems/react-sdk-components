@@ -179,8 +179,7 @@ export default function FileUtility(props: FileUtilityProps) {
     const context = thePConn.getContextName();
 
     attachUtils
-      // @ts-ignore - 3rd parameter "responseEncoding" is optional
-      .downloadAttachment(ID, context)
+      .downloadAttachment(ID, context, '')
       .then((content: any) => {
         if (type === 'FILE') {
           fileDownload(content.data, name, extension);
