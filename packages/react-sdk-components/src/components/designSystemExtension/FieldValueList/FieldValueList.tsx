@@ -51,7 +51,7 @@ export default function FieldValueList(props: FieldValueListProps) {
 
   function getGridItemLabel() {
     return (
-      <Grid item xs={variant === 'stacked' ? 12 : 6} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
+      <Grid item xs={variant === 'stacked' ? 12 : 4} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
         <Typography variant='body2' component='span' className={`${classes.fieldLabel}`}>
           {name}
         </Typography>
@@ -63,7 +63,7 @@ export default function FieldValueList(props: FieldValueListProps) {
     const formattedValue = formatItemValue(value);
 
     return (
-      <Grid item xs={variant === 'stacked' ? 12 : 6} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
+      <Grid item xs={variant === 'stacked' ? 12 : 8} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
         {isHtml ? (
           // eslint-disable-next-line react/no-danger
           <div dangerouslySetInnerHTML={{ __html: formattedValue }} />
