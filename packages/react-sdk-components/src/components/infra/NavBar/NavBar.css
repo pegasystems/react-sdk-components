@@ -165,4 +165,5 @@
 
 .scrollable {
   overflow-y: scroll !important;
+  min-height: 200px !important;
 }
