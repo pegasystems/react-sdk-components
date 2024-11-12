@@ -1034,34 +1034,35 @@ export default function ListView(props: ListViewProps) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {stableSort(arRows, getComparator(order, orderBy))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map(row => {
-                        return (
-                          <TableRow key={row.pxRefObjectInsName || row.pyID}>
-                            {arColumns.map(column => {
-                              const value = row[column.id];
-                              return (
-                                <TableCell key={column.id} align={column.align} className={classes.cell}>
-                                  {_showButton(column.id, row) || column.displayAsLink ? (
-                                    <Link
-                                      component='button'
-                                      onClick={() => {
-                                        _listViewClick(row, column);
-                                      }}
-                                      underline='hover'
-                                    >
-                                      {column.format && typeof value === 'number' ? column.format(value) : value}
-                                    </Link>
-                                  ) : (
-                                    <>{column.format && typeof value === 'number' ? column.format(value) : value || '---'}</>
-                                  )}
-                                </TableCell>
-                              );
-                            })}
-                          </TableRow>
-                        );
-                      })}
+                    {arRows &&
+                      stableSort(arRows, getComparator(order, orderBy))
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map(row => {
+                          return (
+                            <TableRow key={row.pxRefObjectInsName || row.pyID}>
+                              {arColumns.map(column => {
+                                const value = row[column.id];
+                                return (
+                                  <TableCell key={column.id} align={column.align} className={classes.cell}>
+                                    {_showButton(column.id, row) || column.displayAsLink ? (
+                                      <Link
+                                        component='button'
+                                        onClick={() => {
+                                          _listViewClick(row, column);
+                                        }}
+                                        underline='hover'
+                                      >
+                                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                                      </Link>
+                                    ) : (
+                                      <>{column.format && typeof value === 'number' ? column.format(value) : value || '---'}</>
+                                    )}
+                                  </TableCell>
+                                );
+                              })}
+                            </TableRow>
+                          );
+                        })}
                   </TableBody>
                 </Table>
               </TableContainer>
