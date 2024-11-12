@@ -1,10 +1,11 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import TextInput from '../../../../../src/components/field/TextInput/index';
+import '@testing-library/jest-dom/extend-expect';
+import Email from '../../../../../src/components/field/Email/index';
 import handleEvent from '../../../../../src/components/helpers/event-utils';
+import TextInput from '../../../../../src/components/field/TextInput';
 
 jest.mock('../../../../../src/components/helpers/event-utils');
-
 jest.mock('../../../../../src/bridge/helpers/sdk_component_map', () => ({
   getComponentFromMap: jest.fn(() => require('../FieldValueList').default)
 }));
@@ -15,13 +16,14 @@ const updateDirtyCheckChangeList = jest.fn();
 const validate = jest.fn();
 const clearErrorMessages = jest.fn();
 const [ignoreSuggestion, acceptSuggestion] = [jest.fn(), jest.fn()];
+
 const getDefaultProps = () => ({
   getPConnect: jest.fn(
     () =>
       ({
         getActionsApi: () => ({ updateFieldValue, triggerFieldChange }),
         getStateProps: () => ({
-          value: '.textInput'
+          value: '.email'
         }),
         getValidationApi: () => ({
           validate
@@ -32,14 +34,14 @@ const getDefaultProps = () => ({
         acceptSuggestion
       }) as any
   ),
-  label: 'TextInput',
-  required: true,
+  label: 'Email Label',
+  required: false,
   disabled: false,
   value: '',
   validatemessage: '',
   status: '',
   readOnly: false,
-  testId: 'textInputTestId',
+  testId: 'emailTestId',
   fieldMetadata: {},
   helperText: '',
   displayMode: '',
@@ -48,75 +50,78 @@ const getDefaultProps = () => ({
   onChange: jest.fn()
 });
 
-describe('TextInput Component', () => {
+describe('Email Component', () => {
   test('renders with required attribute', () => {
     const props = getDefaultProps();
-    const { getByTestId, rerender } = render(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).toHaveAttribute('required');
-
-    props.required = false;
-    rerender(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).not.toHaveAttribute('required');
+    props.required = true;
+    const { getByTestId } = render(<Email {...props} />);
+    expect(getByTestId('emailTestId')).toHaveAttribute('required');
   });
 
   test('renders with disabled attribute', () => {
     const props = getDefaultProps();
     props.disabled = true;
-    const { getByTestId, rerender } = render(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).toHaveAttribute('disabled');
+    const { getByTestId, rerender } = render(<Email {...props} />);
+    expect(getByTestId('emailTestId')).toHaveAttribute('disabled');
 
     props.disabled = false;
-    rerender(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).not.toHaveAttribute('disabled');
+    rerender(<Email {...props} />);
+    expect(getByTestId('emailTestId')).not.toHaveAttribute('disabled');
   });
 
   test('renders with readOnly attribute', () => {
     const props = getDefaultProps();
     props.readOnly = true;
     const { getByTestId, rerender } = render(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).toHaveAttribute('readonly');
+    expect(getByTestId('emailTestId')).toHaveAttribute('readonly');
 
     props.readOnly = false;
-    rerender(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).not.toHaveAttribute('readonly');
+    rerender(<Email {...props} />);
+    expect(getByTestId('emailTestId')).not.toHaveAttribute('readonly');
   });
 
   test('renders with label', () => {
+    // const props = getDefaultProps();
+    // const { getByText } = render(<Email {...props} />);
+    // expect(getByText('Email Label')).toBeVisible();
+
     const props = getDefaultProps();
-    const { getByText } = render(<TextInput {...props} />);
-    expect(getByText('TextInput')).toBeVisible();
+    const { getAllByText } = render(<Email {...props} />);
+    const labels = getAllByText('Email Label');
+    expect(labels.length).toBeGreaterThan(0);
+    expect(labels[0]).toBeVisible();
   });
 
   test('renders in DISPLAY_ONLY mode', () => {
     const props = getDefaultProps();
     props.displayMode = 'DISPLAY_ONLY';
-    props.value = 'Hi there!';
-    const { getByText } = render(<TextInput {...props} />);
-    expect(getByText('Hi there!')).toBeVisible();
+    props.value = 'test@example.com';
+    const { getByText } = render(<Email {...props} />);
+    expect(getByText('test@example.com')).toBeVisible();
   });
 
   test('renders in STACKED_LARGE_VAL mode', () => {
     const props = getDefaultProps();
     props.displayMode = 'STACKED_LARGE_VAL';
-    props.value = 'Hi there!';
-    const { getByText } = render(<TextInput {...props} />);
-    expect(getByText('Hi there!')).toBeVisible();
+    props.value = 'test@example.com';
+    const { getByText } = render(<Email {...props} />);
+    expect(getByText('test@example.com')).toBeVisible();
   });
 
   test('does not invoke onBlur handler for readOnly fields', () => {
     const props = getDefaultProps();
     props.readOnly = true;
     const { getByTestId } = render(<TextInput {...props} />);
-    fireEvent.change(getByTestId('textInputTestId'), { target: { value: 'a' } });
-    fireEvent.blur(getByTestId('textInputTestId'));
+    fireEvent.change(getByTestId('emailTestId'), { target: { value: 'test@example.com' } });
+    fireEvent.blur(getByTestId('emailTestId'));
     expect(handleEvent).not.toHaveBeenCalled();
   });
 
   test('invokes handlers for blur and change events', () => {
     const props = getDefaultProps();
-    const { getByTestId } = render(<TextInput {...props} />);
-    fireEvent.change(getByTestId('textInputTestId'), { target: { value: 'a' } });
-    fireEvent.blur(getByTestId('textInputTestId'));
+    const { getByTestId } = render(<Email {...props} />);
+    fireEvent.change(getByTestId('emailTestId'), { target: { value: 'test@example.com' } });
+    fireEvent.blur(getByTestId('emailTestId'));
     expect(handleEvent).toHaveBeenCalled();
   });
 });

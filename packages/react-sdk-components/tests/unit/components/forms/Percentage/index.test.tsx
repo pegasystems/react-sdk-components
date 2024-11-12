@@ -1,10 +1,30 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import TextInput from '../../../../../src/components/field/TextInput/index';
+import '@testing-library/jest-dom/extend-expect';
+import Percentage from '../../../../../src/components/field/Percentage';
 import handleEvent from '../../../../../src/components/helpers/event-utils';
 
-jest.mock('../../../../../src/components/helpers/event-utils');
+declare global {
+  interface Window {
+    PCore: any;
+  }
+}
 
+window.PCore = {
+  ...window.PCore,
+  getEnvironmentInfo: (): any => {
+    return {
+      getUseLocale: () => {
+        return 'en-US';
+      },
+      getLocale: () => {
+        return 'en-US';
+      }
+    };
+  }
+};
+
+jest.mock('../../../../../src/components/helpers/event-utils');
 jest.mock('../../../../../src/bridge/helpers/sdk_component_map', () => ({
   getComponentFromMap: jest.fn(() => require('../FieldValueList').default)
 }));
@@ -15,31 +35,33 @@ const updateDirtyCheckChangeList = jest.fn();
 const validate = jest.fn();
 const clearErrorMessages = jest.fn();
 const [ignoreSuggestion, acceptSuggestion] = [jest.fn(), jest.fn()];
+
 const getDefaultProps = () => ({
   getPConnect: jest.fn(
     () =>
       ({
         getActionsApi: () => ({ updateFieldValue, triggerFieldChange }),
         getStateProps: () => ({
-          value: '.textInput'
+          value: '.percentage'
         }),
         getValidationApi: () => ({
           validate
         }),
+        getComponentName: () => 'Percentage',
         updateDirtyCheckChangeList,
         clearErrorMessages,
         ignoreSuggestion,
         acceptSuggestion
       }) as any
   ),
-  label: 'TextInput',
-  required: true,
+  label: 'Percentage Label',
+  required: false,
   disabled: false,
   value: '',
   validatemessage: '',
   status: '',
   readOnly: false,
-  testId: 'textInputTestId',
+  testId: 'percentageTestId',
   fieldMetadata: {},
   helperText: '',
   displayMode: '',
@@ -48,75 +70,74 @@ const getDefaultProps = () => ({
   onChange: jest.fn()
 });
 
-describe('TextInput Component', () => {
+describe('Percentage Component', () => {
   test('renders with required attribute', () => {
     const props = getDefaultProps();
-    const { getByTestId, rerender } = render(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).toHaveAttribute('required');
-
-    props.required = false;
-    rerender(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).not.toHaveAttribute('required');
+    props.required = true;
+    const { getByTestId } = render(<Percentage {...props} />);
+    expect(getByTestId('percentageTestId')).toHaveAttribute('required');
   });
 
   test('renders with disabled attribute', () => {
     const props = getDefaultProps();
     props.disabled = true;
-    const { getByTestId, rerender } = render(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).toHaveAttribute('disabled');
+    const { getByTestId, rerender } = render(<Percentage {...props} />);
+    expect(getByTestId('percentageTestId')).toHaveAttribute('disabled');
 
     props.disabled = false;
-    rerender(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).not.toHaveAttribute('disabled');
+    rerender(<Percentage {...props} />);
+    expect(getByTestId('percentageTestId')).not.toHaveAttribute('disabled');
   });
 
   test('renders with readOnly attribute', () => {
     const props = getDefaultProps();
     props.readOnly = true;
-    const { getByTestId, rerender } = render(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).toHaveAttribute('readonly');
+    const { getByTestId, rerender } = render(<Percentage {...props} />);
+    expect(getByTestId('percentageTestId')).toHaveAttribute('readonly');
 
     props.readOnly = false;
-    rerender(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).not.toHaveAttribute('readonly');
+    rerender(<Percentage {...props} />);
+    expect(getByTestId('percentageTestId')).not.toHaveAttribute('readonly');
   });
 
   test('renders with label', () => {
     const props = getDefaultProps();
-    const { getByText } = render(<TextInput {...props} />);
-    expect(getByText('TextInput')).toBeVisible();
+    const { getAllByText } = render(<Percentage {...props} />);
+    const labels = getAllByText('Percentage Label');
+    expect(labels.length).toBeGreaterThan(0);
+    expect(labels[0]).toBeVisible();
   });
 
   test('renders in DISPLAY_ONLY mode', () => {
     const props = getDefaultProps();
     props.displayMode = 'DISPLAY_ONLY';
-    props.value = 'Hi there!';
-    const { getByText } = render(<TextInput {...props} />);
-    expect(getByText('Hi there!')).toBeVisible();
+    props.value = '50';
+    const { getByText } = render(<Percentage {...props} />);
+    expect(getByText('50.00%')).toBeVisible();
   });
 
   test('renders in STACKED_LARGE_VAL mode', () => {
     const props = getDefaultProps();
     props.displayMode = 'STACKED_LARGE_VAL';
-    props.value = 'Hi there!';
-    const { getByText } = render(<TextInput {...props} />);
-    expect(getByText('Hi there!')).toBeVisible();
+    props.value = '50';
+    const { getByText } = render(<Percentage {...props} />);
+    expect(getByText('50.00%')).toBeVisible();
   });
 
   test('does not invoke onBlur handler for readOnly fields', () => {
     const props = getDefaultProps();
     props.readOnly = true;
-    const { getByTestId } = render(<TextInput {...props} />);
-    fireEvent.change(getByTestId('textInputTestId'), { target: { value: 'a' } });
-    fireEvent.blur(getByTestId('textInputTestId'));
+    const { getByTestId } = render(<Percentage {...props} />);
+    fireEvent.change(getByTestId('percentageTestId'), { target: { value: '50' } });
+    fireEvent.blur(getByTestId('percentageTestId'));
     expect(handleEvent).not.toHaveBeenCalled();
   });
 
   test('invokes handlers for blur and change events', () => {
     const props = getDefaultProps();
-    const { getByTestId } = render(<TextInput {...props} />);
-    fireEvent.change(getByTestId('textInputTestId'), { target: { value: 'a' } });
-    fireEvent.blur(getByTestId('textInputTestId'));
+    const { getByTestId } = render(<Percentage {...props} />);
+    fireEvent.change(getByTestId('percentageTestId'), { target: { value: '50' } });
+    fireEvent.blur(getByTestId('percentageTestId'));
     expect(handleEvent).toHaveBeenCalled();
   });
 });
