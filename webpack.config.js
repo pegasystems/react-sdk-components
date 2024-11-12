@@ -78,6 +78,10 @@ module.exports = (env, argv) => {
         {
           from: './node_modules/@pega/constellationjs/dist/js',
           to: './constellation/prerequisite/js'
+        },
+        {
+          from: './assets/uswds',
+          to: './uswds'
         }
       ]
     })
@@ -197,7 +201,10 @@ module.exports = (env, argv) => {
       ]
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js', '.jsx']
+      extensions: ['.tsx', '.ts', '.js', '.jsx'],
+      alias: {
+        'react/jsx-runtime': 'react/jsx-runtime.js'
+      }
     }
   };
   return initConfig;
