@@ -258,11 +258,16 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   function generateRowsData() {
     // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (!referenceList.length && dataPageName) {
-      getDataPage(dataPageName, parameters, context).then(listData => {
-        const data = formatRowsData(listData);
-        myRows = data;
-        setRowData(data);
-      });
+      getDataPage(dataPageName, parameters, context)
+        .then(listData => {
+          const data = formatRowsData(listData);
+          myRows = data;
+          setRowData(data);
+        })
+        .catch(e => {
+          // eslint-disable-next-line no-console
+          console.log(e);
+        });
     } else {
       // The referenceList prop has the JSON data for each row to be displayed
       //  in the table. So, iterate over referenceList to create the dataRows that
