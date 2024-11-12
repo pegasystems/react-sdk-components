@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import MuiPhoneNumber from 'material-ui-phone-number';
+import { MuiTelInput } from 'mui-tel-input';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
@@ -57,12 +57,12 @@ export default function Phone(props: PhoneProps) {
     const disableDropdown = true;
     return (
       <div>
-        <MuiPhoneNumber
+        <MuiTelInput
           fullWidth
           helperText={helperTextToDisplay}
           placeholder={placeholder ?? ''}
           size='small'
-          defaultCountry='us'
+          defaultCountry='US'
           required={required}
           disabled={disabled}
           onChange={onChange}
@@ -91,13 +91,13 @@ export default function Phone(props: PhoneProps) {
   };
 
   return (
-    <MuiPhoneNumber
+    <MuiTelInput
       fullWidth
       variant='outlined'
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
       size='small'
-      defaultCountry='us'
+      defaultCountry='US'
       required={required}
       disabled={disabled}
       onChange={handleChange}
