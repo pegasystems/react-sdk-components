@@ -266,7 +266,9 @@ export const FlowContainer = (props: FlowContainerProps) => {
     // if have caseMessage show message and end
     const theCaseMessages = localizedVal(thePConn.getValue('caseMessages', ''), localeCategory); // 2nd arg empty string until typedefs properly allow optional
 
-    if (theCaseMessages || !hasAssignments()) {
+    // caseMessages's behavior has changed in 24.2, and hence it doesn't let Optional Action work.
+    // Changing the below condition for now. Was: (theCaseMessages || !hasAssignments())
+    if (!hasAssignments()) {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
       setCaseMessages(theCaseMessages || localizedVal('Thank you! The next step in this case has been routed appropriately.', localeCategory));
