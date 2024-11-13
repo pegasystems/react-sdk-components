@@ -45,7 +45,8 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('required')).toBeFalsy();
 
     const requiredPercentage = page.locator('input[data-test-id="86a805ca8375ed5df057777df74dd085"]');
-    requiredPercentage.pressSequentially('10');
+    await requiredPercentage.pressSequentially('10');
+    await requiredPercentage.blur();
     notrequiredPercentage.click();
     attributes = await common.getAttributes(requiredPercentage);
     await expect(attributes.includes('required')).toBeTruthy();
