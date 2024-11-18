@@ -1,4 +1,5 @@
 import { Alert } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 
 // AlertBanner is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
@@ -30,7 +31,7 @@ export default function AlertBanner(props: AlertBannerProps) {
   return (
     <div id={id}>
       {messages.map(message => (
-        <Alert key={message} variant='outlined' severity={SEVERITY_MAP[variant]} {...additionalProps}>
+        <Alert key={uuidv4()} variant='outlined' severity={SEVERITY_MAP[variant]} {...additionalProps}>
           {message}
         </Alert>
       ))}
