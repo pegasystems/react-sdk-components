@@ -55,7 +55,7 @@
     "@mui/material": "^5.16.7",
     "@mui/styles": "^5.16.7",
     "@mui/x-date-pickers": "^7.20.0",
-    "@pega/auth": "~0.2.14",
+    "@pega/auth": "~0.2.15",
     "@tinymce/tinymce-react": "^5.1.1",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.13",
