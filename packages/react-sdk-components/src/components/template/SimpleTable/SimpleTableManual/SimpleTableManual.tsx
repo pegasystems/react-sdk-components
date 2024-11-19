@@ -383,6 +383,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   };
 
   function descendingComparator<T>(a: T, b: T, orderedBy: keyof T) {
+    if (!orderedBy || (!a[orderedBy] && !b[orderedBy])) {
+      return 0;
+    }
     if (!b[orderedBy] || b[orderedBy] < a[orderedBy]) {
       return -1;
     }
