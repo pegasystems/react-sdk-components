@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "24.2.10",
+  "version": "24.2.11",
   "description": "React SDK Infrastructure: bridge and components",
   "_filesComment": "During packing, npm ignores everything NOT in the files list",
   "files": [
@@ -13,5 +13,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Pegasystems",
-  "license": "SEE LICENCE IN LICENSE"
+  "license": "SEE LICENCE IN LICENSE",
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "babel-jest": "^29.7.0"
+  }
 }

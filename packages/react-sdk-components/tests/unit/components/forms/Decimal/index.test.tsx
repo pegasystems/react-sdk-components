@@ -74,7 +74,6 @@ const getDefaultProps = () => ({
 });
 
 describe('Decimal Component', () => {
-  console.log('PCore', window.PCore.getEnvironmentInfo().getUseLocale());
   test('renders with required attribute', () => {
     const props = getDefaultProps();
     props.required = true;

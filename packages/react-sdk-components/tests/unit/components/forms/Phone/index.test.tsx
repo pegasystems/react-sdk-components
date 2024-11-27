@@ -46,7 +46,7 @@ const getDefaultProps = () => ({
   helperText: '',
   displayMode: '',
   hideLabel: false,
-  placeholder: '',
+  placeholder: 'phone number',
   onChange: jest.fn()
 });
 // const testIds = Phone.getTestIds(getDefaultProps().testId);
@@ -54,19 +54,14 @@ const getDefaultProps = () => ({
 
 describe('Phone Component', () => {
   test('renders with required attribute', () => {
-    // const props = getDefaultProps();
-    // props.required = true;
-    // const { getByTestId } = render(<Phone {...props} />);
-    // screen.getByTestId('phone-number-input').GET
-    // expect(getByTestId('phoneTestId')).toHaveAttribute('required');
-
     const props = getDefaultProps();
     props.required = true;
     const { rerender } = render(<Phone {...props} />);
-    expect(screen.getByTestId('phoneTestId')).toHaveAttribute('required');
-    // props.required = false;
-    // rerender(<Phone {...props} />);
-    // expect(screen.getByTestId(testIds.control)).not.toHaveAttribute('required');
+    expect(screen.getByPlaceholderText('phone number')).toHaveAttribute('required');
+
+    props.required = false;
+    rerender(<Phone {...props} />);
+    expect(screen.getByPlaceholderText('phone number')).not.toHaveAttribute('required');
   });
 
   // test('renders with disabled attribute', () => {
@@ -84,11 +79,11 @@ describe('Phone Component', () => {
     const props = getDefaultProps();
     props.disabled = true;
     const { rerender } = render(<Phone {...props} />);
-    expect(screen.getByTestId('phoneTestId')).toHaveAttribute('disabled');
+    expect(screen.getByPlaceholderText('phone number')).toHaveAttribute('disabled');
 
     props.disabled = false;
     rerender(<Phone {...props} />);
-    expect(screen.getByTestId('phoneTestId')).not.toHaveAttribute('disabled');
+    expect(screen.getByPlaceholderText('phone number')).not.toHaveAttribute('disabled');
   });
 
   test('renders with readOnly attribute', () => {
@@ -129,17 +124,17 @@ describe('Phone Component', () => {
   test('does not invoke onBlur handler for readOnly fields', () => {
     const props = getDefaultProps();
     props.readOnly = true;
-    const { getByTestId } = render(<Phone {...props} />);
-    fireEvent.change(getByTestId('phoneTestId'), { target: { value: '+1234567890' } });
-    fireEvent.blur(getByTestId('phoneTestId'));
+    const { getByTestId, getByPlaceholderText } = render(<Phone {...props} />);
+    fireEvent.change(getByPlaceholderText('phone number'), { target: { value: '+1234567890' } });
+    fireEvent.blur(getByPlaceholderText('phone number'));
     expect(handleEvent).not.toHaveBeenCalled();
   });
 
   test('invokes handlers for blur and change events', () => {
     const props = getDefaultProps();
-    const { getByTestId } = render(<Phone {...props} />);
-    fireEvent.change(getByTestId('phoneTestId'), { target: { value: '+1234567890' } });
-    fireEvent.blur(getByTestId('phoneTestId'));
+    const { getByTestId, getByPlaceholderText } = render(<Phone {...props} />);
+    fireEvent.change(getByPlaceholderText('phone number'), { target: { value: '+1234567890' } });
+    fireEvent.blur(getByPlaceholderText('phone number'));
     expect(handleEvent).toHaveBeenCalled();
   });
 });
