@@ -202,7 +202,6 @@ export function getConfigEmbeddedFieldsMeta(configFields, classID) {
       if (value.includes('[')) {
         value = value.substring(0, value.indexOf('[')) + value.substring(value.indexOf(']') + 1);
       }
-      // @ts-ignore - Expected 3 arguments, but got 2.
       const meta: any = PCore.getMetadataUtils().getEmbeddedPropertyMetadata(value, classID);
       meta.fieldID = field;
       configEmbeddedFieldsMeta.push(meta);

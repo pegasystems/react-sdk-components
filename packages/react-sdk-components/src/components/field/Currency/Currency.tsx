@@ -56,7 +56,7 @@ export default function Currency(props: CurrrencyProps) {
   const theCurrSep = theSymbols.theDigitGroupSeparator;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
-  const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+  const formattedValue = format(value, pConn.getComponentName()?.toLowerCase(), theCurrencyOptions);
 
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly
 

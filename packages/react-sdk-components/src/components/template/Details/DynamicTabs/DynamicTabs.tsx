@@ -26,7 +26,6 @@ function DynamicTabs(props: DynamicTabsProps) {
   // Get the inherited props from the parent to determine label settings
   const propsToUse = { label, showLabel, ...pConnect.getInheritedProps() };
   const defaultTabIndex = 0;
-  // @ts-ignore - Property 'getComponentConfig' is private and only accessible within class 'C11nEnv'.
   const { tablabel } = pConnect.getComponentConfig();
   const tablabelProp = PCore.getAnnotationUtils().getPropertyName(tablabel);
   const referenceListData: any = pConnect.getValue(`${referenceList}.pxResults`, ''); // 2nd arg empty string until typedefs properly allow optional

@@ -109,7 +109,6 @@ export default function ListView(props: ListViewProps) {
   });
 
   const thePConn = getPConnect();
-  // @ts-ignore - Property 'getComponentConfig' is private and only accessible within class 'C11nEnv'.
   const componentConfig = thePConn.getComponentConfig();
   const resolvedConfigProps: any = thePConn.getConfigProps() as ListViewProps;
 
@@ -642,7 +641,6 @@ export default function ListView(props: ListViewProps) {
 
     thePConn
       .getActionsApi()
-      // @ts-ignore
       .openAssignment(pzInsKey, pxRefObjectClass, options)
       .then(() => {
         // console.log("openAssignment successful");
@@ -875,7 +873,6 @@ export default function ListView(props: ListViewProps) {
         pzInsKey = row[`${associationCategory}:pzInsKey`];
       }
       if (column.isAssignmentLink) {
-        // @ts-ignore
         thePConn.getActionsApi().openAssignment(pzInsKey, pxObjClass, {
           containerName: 'primary',
           channelName: ''

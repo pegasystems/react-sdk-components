@@ -65,7 +65,6 @@ export default function RadioButtons(props: RadioButtonsProps) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
-        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
       />
     );
@@ -75,7 +74,6 @@ export default function RadioButtons(props: RadioButtonsProps) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
-        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         variant='stacked'
       />
@@ -102,7 +100,6 @@ export default function RadioButtons(props: RadioButtonsProps) {
               label={thePConn.getLocalizedValue(
                 theOption.value,
                 localePath,
-                // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
                 thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
               )}
               control={<Radio key={theOption.key} color='primary' disabled={readOnly} />}

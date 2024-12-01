@@ -113,7 +113,6 @@ export default function DeferLoad(props: DeferLoadProps) {
         getPConnect()
           .getActionsApi()
           .showData(name, dataContext, dataContextParameters, {
-            // @ts-ignore - Type 'boolean' is not assignable to type 'string'
             skipSemanticUrl: true,
             // @ts-ignore
             isDeferLoaded: true
@@ -129,7 +128,7 @@ export default function DeferLoad(props: DeferLoadProps) {
       // Rendering defer loaded tabs in case/ page context
       getPConnect()
         .getActionsApi()
-        .loadView(encodeURI(loadViewCaseID), name, getViewOptions())
+        .loadView(encodeURI(loadViewCaseID), name, getViewOptions() as any)
         .then(data => {
           onResponse(data);
         });
