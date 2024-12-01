@@ -50,12 +50,14 @@ function ListViewActionButtons(props: ListViewActionButtonsProps) {
             .getActionsApi()
             .submitEmbeddedDataModal(context)
             .then(() => {
-              setIsDisabled(false);
               closeActionsDialog();
             })
             .catch(err => {
               // eslint-disable-next-line no-console
               console.log(err);
+            })
+            .finally(() => {
+              setIsDisabled(false);
             });
         }}
       >
