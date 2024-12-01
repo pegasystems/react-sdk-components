@@ -6,7 +6,7 @@ import { Alert, Card, CardHeader, Avatar, Typography } from '@mui/material';
 
 import StoreContext from '../../../../bridge/Context/StoreContext';
 import { Utils } from '../../../helpers/utils';
-import { isContainerInitialized } from '../helpers';
+import { isContainerInitialized } from '../../../helpers/containerHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 
