@@ -69,7 +69,7 @@ export default function SimpleTable(props: SimpleTableProps) {
 
   const label = labelProp || propertyLabel;
   const propsToUse = { label, ...getPConnect().getInheritedProps() };
-  const isDisplayModeEnabled = displayMode === 'DISPLAY_ONLY';
+  const isDisplayModeEnabled = displayMode === 'LABELS_LEFT';
 
   if (fieldMetadata && fieldMetadata.type === 'Page List' && fieldMetadata.dataRetrievalType === 'refer') {
     const {

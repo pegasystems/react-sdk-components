@@ -92,7 +92,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const classes = useStyles();
   const {
     getPConnect,
-    referenceList = [], // if referenceList not in configProps$, default to empy list
+    referenceList = [], // if referenceList not in configProps$, default to empty list
     children,
     renderMode,
     presets,
@@ -160,9 +160,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   const rawConfig = rawMetadata?.config;
   const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
-  const isDisplayModeEnabled = displayMode === 'DISPLAY_ONLY';
-  const readOnlyMode = renderMode === 'ReadOnly';
-  const editableMode = renderMode === 'Editable';
+  const isDisplayModeEnabled = displayMode === 'LABELS_LEFT';
+  const readOnlyMode = renderMode === 'ReadOnly' || isDisplayModeEnabled;
+  const editableMode = renderMode === 'Editable' && !isDisplayModeEnabled;
   const showAddRowButton = !readOnlyMode && !hideAddRow;
   const allowEditingInModal =
     (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);

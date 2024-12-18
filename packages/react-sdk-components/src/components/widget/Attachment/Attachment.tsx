@@ -316,7 +316,7 @@ export default function Attachment(props: AttachmentProps) {
   }, [toggleUploadBegin]);
 
   useEffect(() => {
-    if (files.length > 0 && displayMode !== 'DISPLAY_ONLY') {
+    if (files.length > 0 && displayMode !== 'LABELS_LEFT') {
       const currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef), pConn.getContextName());
       // block duplicate files to redux store when added 1 after another to prevent multiple duplicates being added to the case on submit
       const tempFiles = files.filter(f => currentAttachmentList.findIndex(fr => fr.ID === f.ID) === -1 && !f.inProgress && f.responseProps);
@@ -416,7 +416,7 @@ export default function Attachment(props: AttachmentProps) {
                 {item.props.meta && <div style={{ color: item.props.error ? 'red' : undefined }}>{item.props.meta}</div>}
               </div>
               <div className='psdk-utility-action'>
-                {item.ID && (
+                {item.ID && displayMode !== 'LABELS_LEFT' && (
                   <button type='button' className='psdk-utility-button' aria-label='Delete Attachment' onClick={() => deleteFile(item)}>
                     <img className='psdk-utility-card-action-svg-icon' src={deleteIcon} />
                   </button>
@@ -440,9 +440,11 @@ export default function Attachment(props: AttachmentProps) {
                       >
                         Download
                       </MenuItem>
-                      <MenuItem style={{ fontSize: '14px' }} key='delete' onClick={() => deleteFile(item)}>
-                        Delete
-                      </MenuItem>
+                      {displayMode !== 'LABELS_LEFT' && (
+                        <MenuItem style={{ fontSize: '14px' }} key='delete' onClick={() => deleteFile(item)}>
+                          Delete
+                        </MenuItem>
+                      )}
                     </Menu>
                   </div>
                 )}
@@ -456,7 +458,9 @@ export default function Attachment(props: AttachmentProps) {
   return (
     <div className='file-upload-container'>
       <span className={`label ${required ? 'file-label' : ''}`}>{label}</span>
-      {((files.length === 0 && allowMultiple !== 'true') || allowMultiple === 'true') && <section>{content}</section>}
+      {((files.length === 0 && allowMultiple !== 'true') || allowMultiple === 'true') && displayMode !== 'LABELS_LEFT' && (
+        <section>{content}</section>
+      )}
       {validatemessage !== '' ? <span className='file-error'>{validatemessage}</span> : ''}
       {files && files.length > 0 && <section>{fileDisplay}</section>}
     </div>
