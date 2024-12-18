@@ -49,7 +49,7 @@ export default function ScalarList(props: ScalarListProps) {
     ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional;
   });
 
-  if (['LABELS_LEFT', 'STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode)) {
+  if (['LABELS_LEFT', 'STACKED_LARGE_VAL', 'LABELS_LEFT'].includes(displayMode)) {
     return (
       <div>
         <CommaSeparatedList items={items} />
