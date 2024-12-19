@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import LanguageToggle from '../../../components/LanguageToggle';
 
 const useStyles = makeStyles(theme => ({
   embeddedHeader: {
@@ -24,6 +25,14 @@ export default function Header() {
       <Typography variant='h4'>{PCore.getEnvironmentInfo().getApplicationLabel()}</Typography>
       &nbsp;&nbsp;&nbsp;&nbsp;
       <img src='./assets/img/antenna.svg' className={classes.embedTopIcon} />
+      <div
+        style={{
+          width: '200px',
+          backgroundColor: 'white'
+        }}
+      >
+        <LanguageToggle />
+      </div>
     </div>
   );
 }

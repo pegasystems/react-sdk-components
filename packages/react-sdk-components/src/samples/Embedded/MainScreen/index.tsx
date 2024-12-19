@@ -90,12 +90,23 @@ export default function MainScreen(props: MainScreenProps) {
     // Subscribe to the 'assignmentFinished' event to handle assignment completion
     PCore.getPubSubUtils().subscribe('assignmentFinished', () => assignmentFinished(), 'assignmentFinished');
 
+    PCore.getPubSubUtils().subscribe('refreshPega', refreshPega, 'refreshPega');
+
     return () => {
       // unsubscribe to the events
       PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, 'cancelAssignment');
       PCore.getPubSubUtils().unsubscribe('assignmentFinished', 'assignmentFinished');
+      PCore.getPubSubUtils().unsubscribe('refreshPega', 'refreshPega');
     };
-  });
+  }, []);
+
+  // Function to force reload the pega components from the DOM
+  const refreshPega = () => {
+    setShowPega(val => !val);
+    setTimeout(() => {
+      setShowPega(val => !val);
+    }, 100);
+  };
 
   const cancelAssignment = () => {
     setShowTriplePlayOptions(true);
