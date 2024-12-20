@@ -49,6 +49,22 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
+  async function refreshView() {
+    // this will refresh the case view and load all required translations
+    await thePConn.getActionsApi().refreshCaseView(thePConn.getCaseInfo()?.getKey(), '', thePConn.getPageReference(), {
+      autoDetectRefresh: true
+    });
+
+    // emit this event to reload the react component forcefully
+    PCore.getPubSubUtils().publish('forceRefreshRootComponent');
+  }
+
+  useEffect(() => {
+    PCore.getPubSubUtils().subscribe('languageToggleTriggered', refreshView, 'languageToggleTriggered');
+
+    return () => PCore.getPubSubUtils().unsubscribe('languageToggleTriggered', 'languageToggleTriggered');
+  }, [getPConnect]);
+
   function findCurrentIndicies(arStepperSteps: any[], arIndicies: number[], depth: number): number[] {
     let count = 0;
     arStepperSteps.forEach(step => {

@@ -79,6 +79,8 @@ interface MainScreenProps {}
 export default function MainScreen(props: MainScreenProps) {
   const classes = useStyles();
 
+  const [key, setKey] = useState(0);
+
   const [showPega, setShowPega] = useState(false);
   const [showTriplePlayOptions, setShowTriplePlayOptions] = useState(true);
   const [showResolution, setShowResolution] = useState(false);
@@ -90,12 +92,20 @@ export default function MainScreen(props: MainScreenProps) {
     // Subscribe to the 'assignmentFinished' event to handle assignment completion
     PCore.getPubSubUtils().subscribe('assignmentFinished', () => assignmentFinished(), 'assignmentFinished');
 
+    PCore.getPubSubUtils().subscribe('forceRefreshRootComponent', forceRefreshRootComponent, 'forceRefreshRootComponent');
+
     return () => {
       // unsubscribe to the events
       PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, 'cancelAssignment');
       PCore.getPubSubUtils().unsubscribe('assignmentFinished', 'assignmentFinished');
+      PCore.getPubSubUtils().unsubscribe('forceRefreshRootComponent', 'forceRefreshRootComponent');
     };
-  });
+  }, []);
+
+  // Function to force re-render the pega Root component
+  const forceRefreshRootComponent = () => {
+    setKey(prevKey => prevKey + 1); // Change the key to force re-render
+  };
 
   const cancelAssignment = () => {
     setShowTriplePlayOptions(true);
@@ -178,7 +188,7 @@ export default function MainScreen(props: MainScreenProps) {
       {showPega ? (
         <div className={classes.pegaPartInfo}>
           <div className={classes.pegaPartPega} id='pega-part-of-page'>
-            <RootComponent {...props} />
+            <RootComponent key={key} {...props} />
             <br />
             <div className={classes.pegaPartText}> * - required fields</div>
           </div>

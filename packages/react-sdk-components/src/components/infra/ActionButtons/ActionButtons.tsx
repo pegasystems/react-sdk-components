@@ -62,7 +62,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
                     _onButtonPress(mButton.jsAction, 'primary');
                   }}
                 >
-                  {localizedVal(mButton.name, localeCategory)}
+                  {localizedVal(mButton.name.trim(), localeCategory)}
                 </Button>
               </Grid>
             ))}
