@@ -34,6 +34,7 @@
 
 .file-error {
   color: var(--app-error-color);
+  font-size: 14px;
 }
 
 .psdk-utility-card {
