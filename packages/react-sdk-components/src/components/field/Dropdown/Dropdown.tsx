@@ -137,7 +137,7 @@ export default function Dropdown(props: DropdownProps) {
   }, [theDatasource]);
 
   useEffect(() => {
-    if (!displayMode && listType !== 'associated' && typeof datasource === 'string') {
+    if (listType !== 'associated' && typeof datasource === 'string') {
       getDataPage(datasource, parameters, context).then((results: any) => {
         const optionsData: any[] = [];
         const displayColumn = getDisplayFieldsMetaData(columns);
@@ -165,25 +165,31 @@ export default function Dropdown(props: DropdownProps) {
 
   let readOnlyProp = {};
 
-  if (displayMode === 'LABELS_LEFT') {
-    return (
-      <FieldValueList
-        name={hideLabel ? '' : label}
-        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
-        value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
-      />
-    );
-  }
+  const displayFn = (displayM, val) => {
+    if (displayM === 'LABELS_LEFT') {
+      return (
+        <FieldValueList
+          name={hideLabel ? '' : label}
+          // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
+          value={thePConn.getLocalizedValue(val, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
+        />
+      );
+    }
 
-  if (displayMode === 'STACKED_LARGE_VAL') {
-    return (
-      <FieldValueList
-        name={hideLabel ? '' : label}
-        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
-        value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
-        variant='stacked'
-      />
-    );
+    if (displayM === 'STACKED_LARGE_VAL') {
+      return (
+        <FieldValueList
+          name={hideLabel ? '' : label}
+          // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
+          value={thePConn.getLocalizedValue(val, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
+          variant='stacked'
+        />
+      );
+    }
+  };
+
+  if (displayMode) {
+    return displayFn(displayMode, options.find(option => option.key === value)?.value || value);
   }
 
   if (readOnly) {

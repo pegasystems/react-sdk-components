@@ -176,14 +176,14 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   });
 
   useEffect(() => {
-    if (editableMode && !allowEditingInModal) {
+    if ((editableMode || readOnlyMode) && !allowEditingInModal) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       buildElementsForTable();
     }
   }, [referenceList.length]);
 
   useEffect(() => {
-    if (readOnlyMode || allowEditingInModal) {
+    if (allowEditingInModal) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       generateRowsData();
     }
@@ -340,7 +340,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       const data: any = [];
       rawFields.forEach(item => {
         // removing label field from config to hide title in the table cell
-        item = { ...item, config: { ...item.config, label: '' } };
+        item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode ? 'LABELS_LEFT' : undefined } };
         const referenceListData = getReferenceList(pConn);
         const isDatapage = referenceListData.startsWith('D_');
         const pageReferenceValue = isDatapage
@@ -611,7 +611,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
             </TableRow>
           </TableHead>
           <TableBody>
-            {editableMode &&
+            {(editableMode || readOnlyMode) &&
               elements.map((row: any, index) => {
                 const theKey = `row-${index}`;
                 return (
@@ -640,7 +640,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                   </TableRow>
                 );
               })}
-            {(readOnlyMode || allowEditingInModal) &&
+            {allowEditingInModal &&
               rowData &&
               rowData.length > 0 &&
               stableSort(rowData, getComparator(order, orderBy))
@@ -681,12 +681,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 })}
           </TableBody>
         </Table>
-        {readOnlyMode && rowData && rowData.length === 0 && (
-          <div className='no-records' id='no-records'>
-            No records found.
-          </div>
-        )}
-        {editableMode && referenceList && referenceList.length === 0 && (
+        {referenceList && referenceList.length === 0 && (
           <div className='no-records' id='no-records'>
             No records found.
           </div>
