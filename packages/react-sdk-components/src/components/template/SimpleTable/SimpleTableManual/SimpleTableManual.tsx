@@ -52,11 +52,26 @@ interface SimpleTableManualProps extends PConnProps {
   displayMode?: string;
   useSeparateViewForEdit: any;
   viewForEditModal: any;
+  validatemessage?: string;
+  required?: boolean;
 }
 
 const useStyles = makeStyles((/* theme */) => ({
   label: {
     margin: '8px'
+  },
+  tableLabel: {
+    '&::after': {
+      display: 'inline',
+      content: '" *"',
+      verticalAlign: 'top',
+      color: 'var(--app-error-color)'
+    }
+  },
+  message: {
+    margin: '8px',
+    color: 'var(--app-error-color)',
+    fontSize: '14px'
   },
   header: {
     background: '#f5f5f5'
@@ -110,7 +125,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     editModeConfig,
     displayMode,
     useSeparateViewForEdit,
-    viewForEditModal
+    viewForEditModal,
+    required,
+    validatemessage
   } = props;
   const pConn = getPConnect();
   const [rowData, setRowData] = useState([]);
@@ -583,10 +600,11 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     <>
       <TableContainer component={Paper} style={{ margin: '4px 0px' }} id='simple-table-manual'>
         {propsToUse.label && (
-          <h3 className={classes.label}>
+          <h3 className={`${classes.label} ${required ? classes.tableLabel : ''}`}>
             {propsToUse.label} {results()}
           </h3>
         )}
+        {validatemessage && <div className={classes.message}>{validatemessage}</div>}
         <Table>
           <TableHead className={classes.header}>
             <TableRow>

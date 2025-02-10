@@ -33,7 +33,7 @@ const updateAttachmentState = (pConn, key, attachments) => {
 };
 
 export default function Attachment(props: AttachmentProps) {
-  const { value, getPConnect, label, validatemessage, allowMultiple, extensions, displayMode } = props;
+  const { value, getPConnect, label, validatemessage, allowMultiple, extensions, displayMode, helperText } = props;
   /* this is a temporary fix because required is supposed to be passed as a boolean and NOT as a string */
   let { required, disabled } = props;
   [required, disabled] = [required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
@@ -461,7 +461,7 @@ export default function Attachment(props: AttachmentProps) {
     <div className='file-upload-container'>
       <span className={`label ${required ? 'file-label' : ''}`}>{label}</span>
       {((files.length === 0 && allowMultiple !== 'true') || allowMultiple === 'true') && <section>{content}</section>}
-      {validatemessage !== '' ? <span className='file-error'>{validatemessage}</span> : ''}
+      {validatemessage !== '' ? <span className='file-error'>{validatemessage}</span> : <span style={{ fontSize: '14px' }}>{helperText}</span>}
       {files && files.length > 0 && <section>{fileDisplay}</section>}
     </div>
   );
