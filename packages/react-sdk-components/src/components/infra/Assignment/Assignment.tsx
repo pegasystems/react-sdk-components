@@ -49,11 +49,60 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
+  const LOCAL_ACTION_NAME = 'LanguageToggleToWelsh';
+
+  const callLocalActionSilently = async () => {
+    const { invokeRestApi, invokeCustomRestApi, getCancelTokenSource, isRequestCanceled } = PCore.getRestClient();
+    const cancelTokenSource = getCancelTokenSource();
+
+    const caseID = thePConn.getCaseInfo()?.getKey();
+    const context = thePConn.getContextName();
+
+    try {
+      const response = await invokeRestApi('caseWideActions', {
+        queryPayload: {
+          caseID,
+          actionID: LOCAL_ACTION_NAME
+        },
+        // passing cancel token so that we can cancel the request using cancelTokenSource
+        cancelTokenSource: cancelTokenSource.token
+      });
+      // get etag
+      let updatedEtag = response.headers.etag;
+
+      const response2 = await invokeCustomRestApi(
+        `/api/application/v2/cases/${caseID}/actions/${LOCAL_ACTION_NAME}?excludeAdditionalActions=true&viewType=form`,
+        {
+          method: 'PATCH',
+          headers: {
+            'if-match': updatedEtag
+          }
+        },
+        context
+      );
+      // get etag
+      updatedEtag = response2.headers.etag;
+
+      // update the etag in the case context
+      PCore.getContainerUtils().updateCaseContextEtag(context, updatedEtag);
+
+      // eslint-disable-next-line no-console
+      console.log('Patch Response', response2);
+    } catch (error) {
+      // handle error
+      if (isRequestCanceled(error)) {
+        // handle the canceled request using cancelTokenSource.cancel();
+      }
+    }
+  };
+
   async function refreshView() {
     // this will refresh the case view and load all required translations
     await thePConn.getActionsApi().refreshCaseView(thePConn.getCaseInfo()?.getKey(), '', thePConn.getPageReference(), {
       autoDetectRefresh: true
     });
+
+    await callLocalActionSilently();
 
     // emit this event to reload the react component forcefully
     PCore.getPubSubUtils().publish('forceRefreshRootComponent');
