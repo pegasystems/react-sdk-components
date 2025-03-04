@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import { Alert, Card, CardHeader, Avatar, Typography } from '@mui/material';
 
@@ -301,6 +301,14 @@ export const FlowContainer = (props: FlowContainerProps) => {
     return hasBanner && <AlertBanner id='flowContainerBanner' variant='urgent' messages={messages} />;
   };
 
+  const assignmentForm = useMemo(() => {
+    return (
+      <Assignment getPConnect={getPConnect} itemKey={itemKey}>
+        {rootViewElement}
+      </Assignment>
+    );
+  }, [getPConnect, props]);
+
   return (
     <div style={{ textAlign: 'left' }} id={buildName} className='psdk-flow-container-top'>
       {!bShowConfirm &&
@@ -314,21 +322,13 @@ export const FlowContainer = (props: FlowContainerProps) => {
                 avatar={<Avatar className={`${classes.avatar} psdk-avatar`}>{operatorInitials}</Avatar>}
               />
               {displayPageMessages()}
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                  {rootViewElement}
-                </Assignment>
-              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>{assignmentForm}</LocalizationProvider>
             </Card>
           ) : (
             <Card className={`${classes.root} psdk-root`}>
               <Typography variant='h6'>{localizedVal(containerName, undefined, key)}</Typography>
               {displayPageMessages()}
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                  {rootViewElement}
-                </Assignment>
-              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>{assignmentForm}</LocalizationProvider>
             </Card>
           )
         ) : (
