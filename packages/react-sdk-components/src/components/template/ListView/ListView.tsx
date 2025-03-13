@@ -260,17 +260,27 @@ export default function ListView(props: ListViewProps) {
       }
       const colIndex = fields.findIndex(ele => ele.name === theField);
       const displayAsLink = field.config.displayAsLink;
+
+      const { additionalDetails = {} } = field.config;
+      // const type = field.type;
+      let shouldDisplayAsSemanticLink = additionalDetails.type === 'DISPLAY_LINK';
+      // TODO: This "if" check has been added for backward compatibility, to be removed once the users are notified about the changes in view metadata of US-517164
+      if (!shouldDisplayAsSemanticLink) {
+        shouldDisplayAsSemanticLink = 'displayAsLink' in field.config && field.config.displayAsLink;
+      }
+      // const displayAsLink = field.config.displayAsLink;
+
       const headerRow: any = {};
       headerRow.id = fields[index].id;
       headerRow.type = field.type;
-      headerRow.displayAsLink = displayAsLink;
+      headerRow.displayAsLink = shouldDisplayAsSemanticLink;
       headerRow.numeric = field.type === 'Decimal' || field.type === 'Integer' || field.type === 'Percentage' || field.type === 'Currency' || false;
       headerRow.disablePadding = false;
       headerRow.label = fields[index].label;
       if (colIndex > -1) {
         headerRow.classID = fields[colIndex].classID;
       }
-      if (displayAsLink) {
+      if (shouldDisplayAsSemanticLink) {
         headerRow.isAssignmentLink = AssignDashObjects.includes(headerRow.classID);
         if (field.config.value?.startsWith('@CA')) {
           headerRow.isAssociation = true;
