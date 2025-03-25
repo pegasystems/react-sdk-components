@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import React, { PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -176,13 +175,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   });
 
   useEffect(() => {
-    if (editableMode && !allowEditingInModal) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      buildElementsForTable();
-    }
-  }, [referenceList.length]);
-
-  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    buildElementsForTable();
     if (readOnlyMode || allowEditingInModal) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       generateRowsData();
@@ -340,7 +334,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       const data: any = [];
       rawFields.forEach(item => {
         // removing label field from config to hide title in the table cell
-        item = { ...item, config: { ...item.config, label: '' } };
+        item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'LABELS_LEFT' : undefined } };
         const referenceListData = getReferenceList(pConn);
         const isDatapage = referenceListData.startsWith('D_');
         const pageReferenceValue = isDatapage
@@ -401,7 +395,11 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       return a[1] - b[1];
     });
 
-    return stabilizedThis.map(el => el[0]);
+    const newElements = new Array(stabilizedThis.length);
+    stabilizedThis.forEach((el, index) => {
+      newElements[index] = elements[el[1]];
+    });
+    return newElements;
   }
 
   function _menuClick(event, columnId: string, columnType: string, labelValue: string) {
@@ -581,7 +579,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
               {fieldDefs.map((field: any, index) => {
                 return (
                   <TableCell key={`head-${displayedColumns[index]}`} className={classes.tableCell}>
-                    {readOnlyMode ? (
+                    {(readOnlyMode || allowEditingInModal) && field.cellRenderer !== 'DeleteIcon' ? (
                       <div>
                         <TableSortLabel
                           active={orderBy === displayedColumns[index]}
@@ -612,6 +610,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           </TableHead>
           <TableBody>
             {editableMode &&
+              !allowEditingInModal &&
               elements.map((row: any, index) => {
                 const theKey = `row-${index}`;
                 return (
@@ -649,44 +648,37 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                   return (
                     // eslint-disable-next-line react/no-array-index-key
                     <TableRow key={index}>
-                      {displayedColumns.map(colKey => {
+                      {row.map((item, childIndex) => {
+                        const theColKey = displayedColumns[childIndex];
                         return (
-                          <TableCell key={colKey} className={classes.tableCell}>
-                            {showDeleteButton && colKey === 'DeleteIcon' ? (
-                              <div>
-                                <MoreIcon
-                                  id='table-edit-menu-icon'
-                                  className={classes.moreIcon}
-                                  onClick={event => {
-                                    editMenuClick(event, index);
-                                  }}
-                                />
-                                <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
-                                  <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
-                                  <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
-                                </Menu>
-                              </div>
-                            ) : typeof row[colKey] === 'boolean' && !row[colKey] ? (
-                              'False'
-                            ) : typeof row[colKey] === 'boolean' && row[colKey] ? (
-                              'True'
-                            ) : (
-                              row[colKey] || '---'
-                            )}
+                          <TableCell key={theColKey} className={classes.tableCell}>
+                            {item}
                           </TableCell>
                         );
                       })}
+                      {showDeleteButton && (
+                        <TableCell key='DeleteIcon' className={classes.tableCell}>
+                          <div>
+                            <MoreIcon
+                              id='table-edit-menu-icon'
+                              className={classes.moreIcon}
+                              onClick={event => {
+                                editMenuClick(event, index);
+                              }}
+                            />
+                            <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
+                              <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
+                              <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
+                            </Menu>
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}
           </TableBody>
         </Table>
-        {readOnlyMode && rowData && rowData.length === 0 && (
-          <div className='no-records' id='no-records'>
-            No records found.
-          </div>
-        )}
-        {editableMode && referenceList && referenceList.length === 0 && (
+        {referenceList && referenceList.length === 0 && (
           <div className='no-records' id='no-records'>
             No records found.
           </div>
