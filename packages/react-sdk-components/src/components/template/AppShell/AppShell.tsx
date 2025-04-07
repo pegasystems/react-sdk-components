@@ -74,6 +74,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   const envInfo = PCore.getEnvironmentInfo();
   const imageKey = envInfo.getOperatorImageInsKey();
   const userName = envInfo.getOperatorName();
+  console.log('userName:', Utils.getInitials(userName));
   const currentUserInitials = Utils.getInitials(userName);
   const appNameToDisplay = showAppName ? envInfo.getApplicationLabel() : '';
   const portalClass = pConn.getValue('.classID', ''); // 2nd arg empty string until typedef marked correctly

@@ -24,7 +24,7 @@ export default function WssQuickCreate(props: WssQuickCreateProps) {
               <li className='quick-link-list' key={element.label}>
                 <Button className='quick-link-button' onClick={element.onClick}>
                   <span className='quick-link-button-span'>
-                    {element.icon && <img className='quick-link-icon' src={element.icon} />}
+                    {element.icon && <img className='quick-link-icon' src={element.icon} alt={element.label}/>}
                     <span>{element.label}</span>
                   </span>
                 </Button>

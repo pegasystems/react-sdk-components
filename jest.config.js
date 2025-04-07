@@ -7,5 +7,8 @@ module.exports = {
     '^.+\\.(t|j)sx?$': 'ts-jest'
   },
   setupFilesAfterEnv: ['<rootDir>/packages/react-sdk-components/tests/setupTests.js'],
+  moduleNameMapper: {
+    '\\.css$': 'identity-obj-proxy', // Mock CSS imports
+  },
   coverageDirectory: 'tests/coverage'
 };

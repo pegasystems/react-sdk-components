@@ -57,6 +57,7 @@ export default function DetailsFields(props: DetailsFieldsProps) {
       value: <React.Fragment key={index}>{createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}</React.Fragment>
     });
   });
+  console.log('fieldComponents', fieldComponents);
 
   function getGridItemLabel(field: any, keyVal: string) {
     const dispValue = field.label;
