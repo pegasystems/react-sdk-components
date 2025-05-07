@@ -9,32 +9,27 @@ export default {
   ...DateFormatter
 };
 
-function getDateObject(text): Date {
+function getDateObject(text: string): Date {
   // TODO - cleanup formatters util functions as DX APIs are returning values per ISO std now.
   const timeStamp = text.replace(/-/g, '');
-  const isDateTime = timeStamp.indexOf('GMT') !== -1;
-  const year = parseInt(timeStamp.substr(0, 4), 10);
-  const month = parseInt(timeStamp.substr(4, 2), 10) - 1;
-  const day = parseInt(timeStamp.substr(6, 2), 10);
+  const year = timeStamp.substr(0, 4);
+  const month = timeStamp.substr(4, 2);
+  const day = timeStamp.substr(6, 2);
 
-  const date = new Date();
+  if (timeStamp.includes('GMT')) {
+    const hours = timeStamp.substr(9, 2);
+    const minutes = timeStamp.substr(11, 2);
+    const seconds = timeStamp.substr(13, 2);
+    const ms = timeStamp.substr(16, 3);
 
-  date.setDate(day);
-  date.setMonth(month);
-  date.setFullYear(year);
-
-  if (isDateTime) {
-    const hours = parseInt(timeStamp.substr(9, 2), 10);
-    const minutes = parseInt(timeStamp.substr(11, 2), 10);
-    const seconds = parseInt(timeStamp.substr(13, 2), 10);
-    const ms = parseInt(timeStamp.substr(16, 3), 10);
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    date.setSeconds(seconds);
-    date.setMilliseconds(ms);
+    return new Date(`${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${ms}Z`);
   }
 
-  return date;
+  return new Date(
+    parseInt(year, 10),
+    parseInt(month, 10) - 1,
+    parseInt(day, 10),
+  );
 }
 
 function isIsoDate(str) {
