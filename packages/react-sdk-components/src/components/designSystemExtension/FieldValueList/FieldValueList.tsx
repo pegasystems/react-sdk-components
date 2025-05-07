@@ -63,7 +63,7 @@ export default function FieldValueList(props: FieldValueListProps) {
     const formattedValue = formatItemValue(value);
 
     return (
-      <Grid item xs={variant === 'stacked' ? 12 : 8} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
+      <Grid item xs={variant === 'stacked' || !name ? 12 : 8} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
         {isHtml ? (
           // eslint-disable-next-line react/no-danger
           <div dangerouslySetInnerHTML={{ __html: formattedValue }} />
@@ -78,7 +78,7 @@ export default function FieldValueList(props: FieldValueListProps) {
 
   return (
     <Grid container spacing={4} justifyContent='space-between'>
-      {getGridItemLabel()}
+      {name ? getGridItemLabel() : null}
       {getGridItemValue()}
     </Grid>
   );
