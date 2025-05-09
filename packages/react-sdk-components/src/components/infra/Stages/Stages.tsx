@@ -3,7 +3,7 @@ import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import DoneIcon from '@mui/icons-material/Done';
 import makeStyles from '@mui/styles/makeStyles';
 
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface StagesProps extends PConnProps {
   // If any, enter additional props that only exist on this component

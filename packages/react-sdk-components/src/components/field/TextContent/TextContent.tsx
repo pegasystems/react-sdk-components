@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface TextContentProps extends PConnProps {
   // If any, enter additional props that only exist on TextContent here

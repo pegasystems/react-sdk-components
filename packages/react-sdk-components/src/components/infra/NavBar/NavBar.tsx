@@ -36,7 +36,7 @@ import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
 import { useNavBar } from '../../helpers/reactContextHelpers';
 import { Utils } from '../../helpers/utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 import './NavBar.css';
 
@@ -223,7 +223,7 @@ export default function NavBar(props: NavBarProps) {
         </div>
       )}
       <List>
-        <ListItem button onClick={handleCaseItemClick}>
+        <ListItem component='button' onClick={handleCaseItemClick}>
           <ListItemIcon>{bShowCaseTypes && open ? <ClearOutlinedIcon fontSize='large' /> : <AddIcon fontSize='large' />}</ListItemIcon>
           <ListItemText primary='Create' />
           {bShowCaseTypes ? <ExpandLess /> : <ExpandMore />}
@@ -233,7 +233,7 @@ export default function NavBar(props: NavBarProps) {
         <List component='div' disablePadding>
           {caseTypes.map(caseType => (
             <ListItem
-              button
+              component='button'
               className={classes.nested}
               onClick={() => navPanelCreateCaseType(caseType.pyClassName, caseType.pyFlowType)}
               key={caseType.pyLabel}
@@ -248,7 +248,7 @@ export default function NavBar(props: NavBarProps) {
       </Collapse>
       <List>
         {navPages.map(page => (
-          <ListItem button onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
+          <ListItem component='button' onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
             <ListItemIcon>{iconMap[page.pxPageViewIcon]}</ListItemIcon>
             <ListItemText primary={localeUtils.getLocaleValue(page.pyLabel, '', localeReference)} />
           </ListItem>

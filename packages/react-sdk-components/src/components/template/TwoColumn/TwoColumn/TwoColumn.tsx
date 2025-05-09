@@ -1,7 +1,7 @@
-import { PropsWithChildren, ReactElement } from 'react';
-import { Grid, GridSize } from '@mui/material';
+import type { PropsWithChildren, ReactElement } from 'react';
+import { Grid2, type GridSize } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PConnProps } from '../../../../types/PConnProps';
 
 interface TwoColumnProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -43,13 +43,13 @@ export default function TwoColumn(props: PropsWithChildren<TwoColumnProps>) {
   bSize = (ratio * colAArray[1]) as GridSize;
 
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12} md={aSize} className={classes.colStyles}>
+    <Grid2 container spacing={1}>
+      <Grid2 size={{ xs: 12, md: aSize }} className={classes.colStyles}>
         {childrenToRender[0]}
-      </Grid>
-      <Grid item xs={12} md={bSize} className={classes.colStyles}>
+      </Grid2>
+      <Grid2 size={{ xs: 12, md: bSize }} className={classes.colStyles}>
         {childrenToRender[1]}
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 }

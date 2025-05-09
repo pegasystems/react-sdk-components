@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 

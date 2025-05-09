@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { type PropsWithChildren, useEffect, useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { useFocusFirstField, useScrolltoTop } from '../../../hooks';
 
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface AssignmentProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -147,7 +147,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   }
 
   function onSaveActionSuccess(data) {
-    actionsAPI.cancelAssignment(itemKey).then(() => {
+    actionsAPI.cancelAssignment(itemKey, false).then(() => {
       PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CREATE_STAGE_SAVED, data);
     });
   }
@@ -206,7 +206,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
                 showToast(`${localizedVal('Cancel failed!', localeCategory)}`);
               });
           } else {
-            const cancelPromise = cancelAssignment(itemKey);
+            const cancelPromise = cancelAssignment(itemKey, false);
 
             cancelPromise
               .then(data => {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, EffectCallback, DependencyList } from 'react';
+import { useEffect, useRef, type EffectCallback, type DependencyList } from 'react';
 
 /**
  * @example useAfterInitialEffect(cb, dependencies);
