@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import { forwardRef, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { forwardRef, type PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { TextField } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'throttle-debounce';
 import DatePicker from 'react-datepicker';
 
 import { createFilter, combineFilters, getFormattedDate, getFilterExpression } from './filterUtils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 import 'react-datepicker/dist/react-datepicker.css';
 

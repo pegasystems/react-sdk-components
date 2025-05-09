@@ -1,4 +1,4 @@
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface MultiReferenceReadOnlyProps extends PConnProps {
   config: { referenceList: any; readonlyContextList: any };

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import makeStyles from '@mui/styles/makeStyles';
-import { PConnProps } from '../../../../../types/PConnProps';
+import type { PConnProps } from '../../../../../types/PConnProps';
 
 const useStyles = makeStyles((/* theme */) => ({
   button: {

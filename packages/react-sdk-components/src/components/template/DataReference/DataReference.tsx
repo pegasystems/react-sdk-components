@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { type PropsWithChildren, type ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnProps } from '../../../types/PConnProps';

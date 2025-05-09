@@ -231,7 +231,7 @@ export const filterData = filterByColumns => {
           case 'Date':
           case 'DateTime':
           case 'Time':
-            value = (item[filterObj.ref] !== null ?? item[filterObj.ref] !== '') ? Utils.getSeconds(item[filterObj.ref]) : null;
+            value = item[filterObj.ref] !== null || item[filterObj.ref] !== '' ? Utils.getSeconds(item[filterObj.ref]) : null;
             filterValue =
               filterObj.containsFilterValue !== null && filterObj.containsFilterValue !== '' ? Utils.getSeconds(filterObj.containsFilterValue) : null;
 

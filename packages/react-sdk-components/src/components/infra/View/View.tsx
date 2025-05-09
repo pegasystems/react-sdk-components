@@ -1,8 +1,8 @@
-import { PropsWithChildren, useEffect } from 'react';
+import { type PropsWithChildren, useEffect } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { getAllFields } from '../../helpers/template-utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 // Need to import any templates that we might render
 

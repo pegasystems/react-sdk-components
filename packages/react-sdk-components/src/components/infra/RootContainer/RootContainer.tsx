@@ -1,11 +1,11 @@
-import { Children, createElement, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Children, createElement, type PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { LazyMap as LazyComponentMap } from '../../../components_map';
 import { isEmptyObject } from '../../helpers/common-utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface RootContainerProps extends PConnProps {
   // If any, enter additional props that only exist on this component

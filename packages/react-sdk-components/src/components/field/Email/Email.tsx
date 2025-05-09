@@ -3,7 +3,7 @@ import { InputAdornment, TextField } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 
 interface EmailProps extends PConnFieldProps {

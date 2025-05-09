@@ -5,7 +5,7 @@ import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 /* Using react-number-format component here, since it allows formatting decimal values,
 as per the locale.
