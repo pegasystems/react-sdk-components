@@ -12,7 +12,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PConnProps } from '../../../../types/PConnProps';
 
 interface FileUtilityProps extends PConnProps {
   // If any, enter additional props that only exist on this component

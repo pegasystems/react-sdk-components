@@ -1,6 +1,6 @@
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { type PropsWithChildren, useEffect, useState } from 'react';
 
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 interface AssignmentCardProps extends PConnProps {

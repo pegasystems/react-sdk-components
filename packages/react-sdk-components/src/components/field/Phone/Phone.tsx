@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { MuiTelInput } from 'mui-tel-input';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 
 interface PhoneProps extends PConnFieldProps {

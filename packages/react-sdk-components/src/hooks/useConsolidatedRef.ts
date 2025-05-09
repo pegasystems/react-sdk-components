@@ -1,4 +1,4 @@
-import { useRef, useState, Ref, MutableRefObject, RefObject } from 'react';
+import { useRef, useState, type Ref, type MutableRefObject, type RefObject } from 'react';
 
 /**
  * @example const ref = useConsolidatedRefs(refs);

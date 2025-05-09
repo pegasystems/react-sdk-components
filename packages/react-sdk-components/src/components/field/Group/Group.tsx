@@ -1,7 +1,7 @@
-import { ReactElement, useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 import { Grid } from '@mui/material';
 import FieldGroup from '../../designSystemExtension/FieldGroup';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface GroupProps extends PConnFieldProps {
   children: ReactElement[];

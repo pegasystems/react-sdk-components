@@ -23,7 +23,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { Utils } from '../../helpers/utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 import './ToDo.css';
 
@@ -129,7 +129,7 @@ export default function ToDo(props: ToDoProps) {
   const CONSTS = PCore.getConstants();
 
   const bLogging = true;
-  const currentUser = PCore.getEnvironmentInfo().getOperatorName();
+  const currentUser = PCore.getEnvironmentInfo().getOperatorName() ?? '';
   const currentUserInitials = Utils.getInitials(currentUser);
   const assignmentsSource = datasource?.source || myWorkList?.source;
 

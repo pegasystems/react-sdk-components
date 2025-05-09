@@ -1,11 +1,11 @@
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { type PropsWithChildren, useEffect, useState } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import Avatar from '@mui/material/Avatar';
 
 import { Utils } from '../../helpers/utils';
 import { NavContext } from '../../helpers/reactContextHelpers';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 import './AppShell.css';
 
@@ -73,7 +73,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   const pConn = getPConnect();
   const envInfo = PCore.getEnvironmentInfo();
   const imageKey = envInfo.getOperatorImageInsKey();
-  const userName = envInfo.getOperatorName();
+  const userName = envInfo.getOperatorName() || '';
   const currentUserInitials = Utils.getInitials(userName);
   const appNameToDisplay = showAppName ? envInfo.getApplicationLabel() : '';
   const portalClass = pConn.getValue('.classID', ''); // 2nd arg empty string until typedef marked correctly
@@ -101,7 +101,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   );
   // Initial setting of appName and mapChildren
   useEffect(() => {
-    setAppName(PCore.getEnvironmentInfo().getApplicationName());
+    setAppName(PCore.getEnvironmentInfo().getApplicationName() || '');
 
     const tempMap: any = (pConn.getChildren() as any)?.map((child: any, index) => {
       const theChildComp = child.getPConnect().getComponentName();
@@ -125,7 +125,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
         .getPageDataAsync(caseTypesAvailableToCreateDP, pConn.getContextName(), {
           PortalName: portalID
         })
-        .then(response => {
+        .then((response: { pyCaseTypesAvailableToCreate?: any }) => {
           if (response?.pyCaseTypesAvailableToCreate) {
             pConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
               skipDirtyValidation: true
@@ -218,10 +218,10 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           portalName={portalName}
           imageSrc={iconURL}
           fullImageSrc={fullIconURL}
-          appName={localizedVal(appNameToDisplay, '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase())}
+          appName={localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase())}
           appInfo={{
             imageSrc: iconURL,
-            appName: localizedVal(appNameToDisplay, '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()),
+            appName: localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()),
             onClick: links[0] && /* links[0].onClick ? */ links[0].onClick /* : undefined */
           }}
           navLinks={links.filter((link, index) => {
@@ -245,7 +245,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
         <NavBar
           getPConnect={getPConnect}
           pConn={getPConnect()}
-          appName={localizedVal(appNameToDisplay, '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase())}
+          appName={localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase())}
           pages={pages}
           caseTypes={caseTypes}
         />

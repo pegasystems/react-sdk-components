@@ -1,7 +1,7 @@
-import { PropsWithChildren, ReactElement, useEffect, useMemo, useState } from 'react';
+import { type PropsWithChildren, type ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private
 interface DataReferenceProps extends PConnProps {

@@ -4,7 +4,7 @@ import makeStyles from '@mui/styles/makeStyles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface DeferLoadProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -69,8 +69,8 @@ export default function DeferLoad(props: DeferLoadProps) {
   const getViewOptions = () => ({
     viewContext: resourceType,
     pageClass: loadViewCaseID ? '' : (pConnect.getDataObject('') as any).pyPortal.classID, // 2nd arg empty string until typedef allows optional
-    container: isContainerPreview ? 'preview' : null,
-    containerName: isContainerPreview ? 'preview' : null,
+    container: isContainerPreview ? 'preview' : undefined,
+    containerName: isContainerPreview ? 'preview' : undefined,
     updateData: isContainerPreview
   });
 

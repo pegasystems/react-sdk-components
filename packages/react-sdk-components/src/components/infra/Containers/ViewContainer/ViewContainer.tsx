@@ -4,7 +4,7 @@ import { Box, CircularProgress } from '@mui/material';
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import StoreContext from '../../../../bridge/Context/StoreContext';
 import { isEmptyObject } from '../../../helpers/common-utils';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PConnProps } from '../../../../types/PConnProps';
 
 interface ViewContainerProps extends PConnProps {
   // If any, enter additional props that only exist on this component

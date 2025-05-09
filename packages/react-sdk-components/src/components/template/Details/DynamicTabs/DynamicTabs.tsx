@@ -4,7 +4,7 @@ import { TabContext, TabPanel } from '@mui/lab';
 import makeStyles from '@mui/styles/makeStyles';
 
 import { buildView } from '../../../helpers/field-group-utils';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PConnProps } from '../../../../types/PConnProps';
 
 const useStyles = makeStyles(() => ({
   tab: {

@@ -1,11 +1,11 @@
-import { createElement, PropsWithChildren } from 'react';
+import { createElement, type PropsWithChildren } from 'react';
 
 import { getInstructions } from '../../helpers/template-utils';
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import connectToState from '../../helpers/state-utils';
 
 import { getKeyForMappedField, mapStateToProps } from './utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 import './DefaultForm.css';
 

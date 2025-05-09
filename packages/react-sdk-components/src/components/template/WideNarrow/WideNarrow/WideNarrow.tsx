@@ -1,5 +1,5 @@
-import { PropsWithChildren, ReactElement } from 'react';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PropsWithChildren, ReactElement } from 'react';
+import type { PConnProps } from '../../../../types/PConnProps';
 import './WideNarrow.css';
 
 interface WideNarrowProps extends PConnProps {
