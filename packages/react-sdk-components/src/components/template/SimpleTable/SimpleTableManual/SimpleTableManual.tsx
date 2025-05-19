@@ -323,6 +323,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (allowEditingInModal && defaultView) {
       pConn
         .getActionsApi()
+        // @ts-ignore
         .openEmbeddedDataModal(defaultView, pConn, referenceListStr, referenceList.length, PCore.getConstants().RESOURCE_STATUS.CREATE);
     } else {
       // @ts-ignore - An argument for 'pageRef' was not provided.
@@ -339,6 +340,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (typeof selectedRowIndex.current === 'number') {
       pConn
         .getActionsApi()
+        // @ts-ignore
         .openEmbeddedDataModal(
           bUseSeparateViewForEdit ? editView : defaultView,
           pConn,

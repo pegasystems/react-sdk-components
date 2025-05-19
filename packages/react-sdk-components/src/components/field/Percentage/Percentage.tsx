@@ -50,7 +50,7 @@ export default function Percentage(props: PercentageProps) {
   const helperTextToDisplay = validatemessage || helperText;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
-  const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+  const formattedValue = format(value, pConn.getComponentName()?.toLowerCase(), theCurrencyOptions);
 
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly
 

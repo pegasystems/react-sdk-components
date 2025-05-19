@@ -68,7 +68,7 @@ export default function Decimal(props: DecimalProps) {
   if (formatter === 'Currency') {
     formattedValue = format(value, formatter.toLowerCase(), theCurrencyOptions);
   } else {
-    formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+    formattedValue = format(value, pConn.getComponentName()?.toLowerCase(), theCurrencyOptions);
   }
 
   if (displayMode === 'DISPLAY_ONLY') {
