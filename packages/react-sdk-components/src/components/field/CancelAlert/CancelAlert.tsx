@@ -78,7 +78,7 @@ export default function CancelAlert(props: CancelAlertProps) {
         });
     } else if (isLocalAction) {
       dismiss(true);
-      actionsAPI.cancelAssignment(containerItemID);
+      actionsAPI.cancelAssignment(containerItemID, false);
     } else if (isBulkAction) {
       dismiss(true);
       actionsAPI.cancelBulkAction(containerItemID);

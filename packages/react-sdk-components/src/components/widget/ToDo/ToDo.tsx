@@ -129,7 +129,7 @@ export default function ToDo(props: ToDoProps) {
   const CONSTS = PCore.getConstants();
 
   const bLogging = true;
-  const currentUser = PCore.getEnvironmentInfo().getOperatorName();
+  const currentUser = PCore.getEnvironmentInfo().getOperatorName() ?? '';
   const currentUserInitials = Utils.getInitials(currentUser);
   const assignmentsSource = datasource?.source || myWorkList?.source;
 

@@ -290,7 +290,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
 
   const caseId = thePConn.getCaseSummary().content.pyID;
   const urgency = getPConnect().getCaseSummary().assignments ? getPConnect().getCaseSummary().assignments?.[0].urgency : '';
-  const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName());
+  const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName() || '');
 
   const bShowBanner = showBanner(getPConnect);
 
