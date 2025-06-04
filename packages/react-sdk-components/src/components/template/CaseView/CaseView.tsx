@@ -169,7 +169,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
 
   useEffect(() => {
     if (hasNewAttachments) {
-      // @ts-ignore - Argument of type 'boolean' is not assignable to parameter of type 'object'
       PCore.getPubSubUtils().publish((PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW, true);
     }
   }, [hasNewAttachments]);

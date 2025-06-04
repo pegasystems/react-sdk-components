@@ -218,7 +218,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (allowEditingInModal) {
       getPConnect()
         .getListActions()
-        // @ts-ignore - An argument for 'uniqueField' was not provided.
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
           fieldDefs.filter(item => item.name).map(item => item.name)
@@ -326,7 +325,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         // @ts-ignore
         .openEmbeddedDataModal(defaultView, pConn, referenceListStr, referenceList.length, PCore.getConstants().RESOURCE_STATUS.CREATE);
     } else {
-      // @ts-ignore - An argument for 'pageRef' was not provided.
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
     }
 
@@ -353,12 +351,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   const deleteRecord = () => {
     setEditAnchorEl(null);
-    // @ts-ignore - An argument for 'pageRef' was not provided.
     pConn.getListActions().deleteEntry(selectedRowIndex.current);
   };
 
   const deleteRecordFromInlineEditable = (index: number) => {
-    // @ts-ignore - An argument for 'pageRef' was not provided.
     pConn.getListActions().deleteEntry(index);
   };
 
