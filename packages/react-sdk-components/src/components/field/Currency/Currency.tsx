@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { TextField } from '@mui/material';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -45,9 +45,11 @@ export default function Currency(props: CurrrencyProps) {
   const helperTextToDisplay = validatemessage || helperText;
   const [values, setValues] = useState(value.toString());
 
-  const testProp = {
-    'data-test-id': testId
-  };
+  const testProp = { 'data-test-id': testId };
+
+  useEffect(() => {
+    setValues(value.toString());
+  }, [value]);
 
   // currencySymbols looks like this: { theCurrencySymbol: '$', theDecimalIndicator: '.', theSeparator: ',' }
   const theSymbols = getCurrencyCharacters(currencyISOCode);
@@ -56,7 +58,7 @@ export default function Currency(props: CurrrencyProps) {
   const theCurrSep = theSymbols.theDigitGroupSeparator;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
-  const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+  const formattedValue = format(value, pConn.getComponentName()?.toLowerCase(), theCurrencyOptions);
 
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly
 

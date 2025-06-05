@@ -230,7 +230,6 @@ export default function Dropdown(props: DropdownProps) {
     >
       {options.map((option: any) => (
         <MenuItem key={option.key} value={option.key}>
-          {/* @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'  */}
           {thePConn.getLocalizedValue(option.value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         </MenuItem>
       ))}

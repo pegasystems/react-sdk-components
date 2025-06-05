@@ -69,8 +69,8 @@ export default function DeferLoad(props: DeferLoadProps) {
   const getViewOptions = () => ({
     viewContext: resourceType,
     pageClass: loadViewCaseID ? '' : (pConnect.getDataObject('') as any).pyPortal.classID, // 2nd arg empty string until typedef allows optional
-    container: isContainerPreview ? 'preview' : null,
-    containerName: isContainerPreview ? 'preview' : null,
+    container: isContainerPreview ? 'preview' : undefined,
+    containerName: isContainerPreview ? 'preview' : undefined,
     updateData: isContainerPreview
   });
 
@@ -113,7 +113,6 @@ export default function DeferLoad(props: DeferLoadProps) {
         getPConnect()
           .getActionsApi()
           .showData(name, dataContext, dataContextParameters, {
-            // @ts-ignore - Type 'boolean' is not assignable to type 'string'
             skipSemanticUrl: true,
             // @ts-ignore
             isDeferLoaded: true

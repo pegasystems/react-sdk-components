@@ -15,8 +15,8 @@ import { theme } from '../../theme';
 
 import InvalidPortal from './InvalidPortal';
 
-declare const myLoadPortal: any;
-declare const myLoadDefaultPortal: any;
+declare const myLoadPortal;
+declare const myLoadDefaultPortal;
 
 function useQuery() {
   const { search } = useLocation();
@@ -87,7 +87,7 @@ export default function FullPortal() {
     //  top level Pega root element (likely a RootContainer)
 
     const { appPortal: thePortal, excludePortals } = SdkConfigAccess.getSdkConfigServer();
-    const defaultPortal = PCore?.getEnvironmentInfo?.().getDefaultPortal?.();
+    const defaultPortal = PCore.getEnvironmentInfo().getDefaultPortal() || '';
     const queryPortal = sessionStorage.getItem('rsdk_portalName');
 
     // Note: myLoadPortal and myLoadDefaultPortal are set when bootstrapWithAuthHeader is invoked
@@ -120,7 +120,7 @@ export default function FullPortal() {
     navigate(redirectUrl);
     sessionStorage.removeItem('url');
 
-    const locale: any = sessionStorage.getItem('rsdk_locale') || undefined;
+    const locale = sessionStorage.getItem('rsdk_locale') || undefined;
     // appName and mainRedirect params have to be same as earlier invocation
     loginIfNecessary({ appName: 'portal', mainRedirect: true, locale });
   }
@@ -129,7 +129,7 @@ export default function FullPortal() {
   useEffect(() => {
     document.addEventListener('SdkConstellationReady', handleSdkConstellationReady);
 
-    const locale: any = sessionStorage.getItem('rsdk_locale') || undefined;
+    const locale = sessionStorage.getItem('rsdk_locale') || undefined;
 
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     const redirected = sessionStorage.getItem('redirected');

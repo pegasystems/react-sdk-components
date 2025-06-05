@@ -46,7 +46,6 @@ export const createFilterComponent = (getPConnect, filterMeta, index) => {
   }
   let propInfo: any = PCore.getMetadataUtils().getPropertyMetadata(cleanedName, filterMeta.config.ruleClass);
   if (!propInfo) {
-    // @ts-ignore - PCore.getMetadataUtils().getPropertyMetadata - An argument for 'currentClassID' was not provided.
     propInfo = PCore.getMetadataUtils().getPropertyMetadata(cleanedName);
   }
   const { type: propertyType } = propInfo || { type: 'Text' };
@@ -82,7 +81,6 @@ export const buildFilterComponents = (getPConnect, allFilters) => {
         <Link
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            // @ts-ignore - second parameter “payload” for publish method should be optional
             PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL);
           }}
           underline='hover'

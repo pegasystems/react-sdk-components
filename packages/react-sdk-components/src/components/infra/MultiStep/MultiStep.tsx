@@ -71,12 +71,7 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
   }
 
   function _showHLine(index: number): boolean {
-    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-    if (index < arNavigationSteps.length - 1) {
-      return true;
-    }
-
-    return false;
+    return index < arNavigationSteps.length - 1;
   }
 
   function buttonPress(sAction: string, sButtonType: string) {

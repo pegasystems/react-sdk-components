@@ -5,10 +5,7 @@ import CurrencyMap from './CurrencyMap';
 function NumberFormatter(value, { locale = 'en-US', decPlaces = 2, style = '', currency = 'USD' } = {}): string {
   const currentLocale: string | undefined = getLocale(locale);
   if (value !== null && value !== undefined) {
-    return Number(value).toLocaleString(currentLocale, {
-      minimumFractionDigits: decPlaces,
-      maximumFractionDigits: decPlaces
-    });
+    return Number(value).toLocaleString(currentLocale, { minimumFractionDigits: decPlaces, maximumFractionDigits: decPlaces });
   }
   return value;
 }
@@ -20,14 +17,16 @@ function CurrencyFormatter(
   const currentLocale: string | undefined = getLocale(locale);
   let formattedValue: string = value;
   if (value !== null && value !== undefined && value !== '') {
-    formattedValue = NumberFormatter(value, {
-      locale: currentLocale,
-      decPlaces,
-      style,
-      currency
-    });
+    formattedValue = NumberFormatter(value, { locale: currentLocale, decPlaces, style, currency });
 
-    let countryCode: string | undefined = currentLocale?.split('-')[1].toUpperCase();
+    // For currency other than EUR, we need to determine the country code from currency code
+    // If currency is EUR, we use the locale to determine the country code
+    let countryCode: string | undefined;
+    if (currency !== 'EUR') {
+      countryCode = currency.substring(0, 2);
+    } else {
+      countryCode = currentLocale?.split('-')[1].toUpperCase();
+    }
 
     // If countryCode is still undefined, setting it as US
     if (!countryCode) {
@@ -67,11 +66,7 @@ export default {
   Currency: (value, options) => CurrencyFormatter(value, options),
   'Currency-Code': (value, options) => CurrencyFormatter(value, { ...options, symbol: false }),
   Decimal: (value, options) => NumberFormatter(value, options),
-  'Decimal-Auto': (value, options) =>
-    NumberFormatter(value, {
-      ...options,
-      decPlaces: Number.isInteger(value) ? 0 : 2
-    }),
+  'Decimal-Auto': (value, options) => NumberFormatter(value, { ...options, decPlaces: Number.isInteger(value) ? 0 : 2 }),
   Integer: (value, options) => NumberFormatter(value, { ...options, decPlaces: 0 }),
   Percentage: (value, options) => SymbolFormatter(value, { ...options, symbol: '%' })
 };
