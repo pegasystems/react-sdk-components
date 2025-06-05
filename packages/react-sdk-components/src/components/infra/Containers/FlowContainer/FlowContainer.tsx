@@ -1,35 +1,28 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable camelcase */
-import React, { useState, useEffect, useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardHeader, Avatar, Typography } from '@material-ui/core';
-import { Utils } from '../../../helpers/utils';
-import { Alert } from '@material-ui/lab';
+
+import { useState, useEffect, useContext } from 'react';
+import makeStyles from '@mui/styles/makeStyles';
+import { Alert, Card, CardHeader, Avatar, Typography } from '@mui/material';
 
 import StoreContext from '../../../../bridge/Context/StoreContext';
-import DayjsUtils from '@date-io/dayjs';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-
-import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
+import { Utils } from '../../../helpers/utils';
 import { isContainerInitialized } from '../helpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
-// import type { PConnProps } from '../../../../types/PConnProps';
 
-// Can't use PConnProps until getPConnect().getChildren() types are ok
-// interface FlowContainerProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   children?: Array<any>,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   name?: string,
-//   routingInfo?: any,
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   pageMessages: Array<any>
-// }
+import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
+import { PConnProps } from '../../../../types/PConnProps';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 3 errors)
-declare const PCore: any;
+interface FlowContainerProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  pageMessages: any[];
+  rootViewElement: React.ReactNode;
+  getPConnectOfActiveContainerItem: Function;
+  assignmentNames: string[];
+  activeContainerItemID: string;
+}
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -37,7 +30,7 @@ declare const PCore: any;
 // is totally at your own risk.
 //
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(2),
     paddingLeft: theme.spacing(2),
@@ -58,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const FlowContainer = (props /* : FlowContainerProps */) => {
+export const FlowContainer = (props: FlowContainerProps) => {
   // Get the proper implementation (local or Pega-provided) for these components that are emitted below
   const Assignment = getComponentFromMap('Assignment');
   const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
@@ -92,12 +85,12 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   const [todo_caseInfoID, setCaseInfoID] = useState('');
   const [todo_showTodoList, setShowTodoList] = useState(false);
   const [todo_datasource, setTodoDatasource] = useState({});
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [todo_context, setTodoContext] = useState('');
 
   const [caseMessages, setCaseMessages] = useState('');
   const [bHasCaseMessages, setHasCaseMessages] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [checkSvg, setCheckSvg] = useState('');
 
   const [buildName, setBuildName] = useState('');
@@ -105,6 +98,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Messages';
 
+  const key = `${thePConn.getCaseInfo().getClassName()}!CASE!${thePConn.getCaseInfo().getName()}`.toUpperCase();
   const classes = useStyles();
 
   function getBuildName(): string {
@@ -123,12 +117,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     if (caseViewMode && caseViewMode === 'review') {
       return true;
     }
-    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-    if (caseViewMode && caseViewMode === 'perform') {
-      return false;
-    }
-
-    return true;
+    return !(caseViewMode && caseViewMode === 'perform');
   }
 
   function initComponent() {
@@ -159,6 +148,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
   }, []);
 
   useEffect(() => {
+    // @ts-ignore - Property 'getMetadata' is private and only accessible within class 'C11nEnv'
     if (isInitialized && pConnectOfFlowContainer.getMetadata().children && !hasItems) {
       // ensuring not to add container items, if container already has items
       // because during multi doc mode, we will have container items already in store
@@ -173,7 +163,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     const caseActions = ourPConn.getValue(pCoreConstants.CASE_INFO.AVAILABLEACTIONS, ''); // 2nd arg empty string until typedefs properly allow optional
     let bCaseWideAction = false;
     if (caseActions && actionID) {
-      const actionObj = caseActions.find((caseAction) => caseAction.ID === actionID);
+      const actionObj = caseActions.find(caseAction => caseAction.ID === actionID);
       if (actionObj) {
         bCaseWideAction = actionObj.type === 'Case';
       }
@@ -186,18 +176,14 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
 
     const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS, ''); // 2nd arg empty string until typedefs properly allow optional
     // const allAssignments = [];
-    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-    if (childCases && childCases.length > 0) {
-      return true;
-    }
-    return false;
+    return !!(childCases && childCases.length > 0);
   }
 
   function hasAssignments() {
     const ourPConn = getPConnect();
 
     let bHasAssignments = false;
-    const assignmentsList: Array<any> = ourPConn.getValue(pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''); // 2nd arg empty string until typedefs properly allow optional
+    const assignmentsList: any[] = ourPConn.getValue(pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''); // 2nd arg empty string until typedefs properly allow optional
     const isEmbedded = window.location.href.includes('embedded');
     let bAssignmentsForThisOperator = false;
     // 8.7 includes assignments in Assignments List that may be assigned to
@@ -206,7 +192,7 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     if (PCoreVersion?.includes('8.7') || isEmbedded) {
       const thisOperator = PCore.getEnvironmentInfo().getOperatorIdentifier();
       for (const assignment of assignmentsList) {
-        if (assignment['assigneeInfo']['ID'] === thisOperator) {
+        if (assignment.assigneeInfo.ID === thisOperator) {
           bAssignmentsForThisOperator = true;
         }
       }
@@ -271,7 +257,9 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
     // if have caseMessage show message and end
     const theCaseMessages = localizedVal(thePConn.getValue('caseMessages', ''), localeCategory); // 2nd arg empty string until typedefs properly allow optional
 
-    if (theCaseMessages || !hasAssignments()) {
+    // caseMessages's behavior has changed in 24.2, and hence it doesn't let Optional Action work.
+    // Changing the below condition for now. Was: (theCaseMessages || !hasAssignments())
+    if (!hasAssignments()) {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
       setCaseMessages(theCaseMessages || localizedVal('Thank you! The next step in this case has been routed appropriately.', localeCategory));
@@ -292,44 +280,45 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
 
   const caseId = thePConn.getCaseSummary().content.pyID;
   const urgency = getPConnect().getCaseSummary().assignments ? getPConnect().getCaseSummary().assignments?.[0].urgency : '';
-  const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName());
+  const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName() || '');
 
   const bShowBanner = showBanner(getPConnect);
 
   const displayPageMessages = () => {
     let hasBanner = false;
-    const messages = pageMessages ? pageMessages.map((msg) => localizedVal(msg.message, 'Messages')) : pageMessages;
+    const messages = pageMessages ? pageMessages.map(msg => localizedVal(msg.message, 'Messages')) : pageMessages;
     hasBanner = messages && messages.length > 0;
-    return hasBanner && <AlertBanner id="flowContainerBanner" variant="urgent" messages={messages} />;
+    return hasBanner && <AlertBanner id='flowContainerBanner' variant='urgent' messages={messages} />;
   };
 
   return (
-    <div style={{ textAlign: 'left' }} id={buildName} className="psdk-flow-container-top">
+    <div style={{ textAlign: 'left' }} id={buildName} className='psdk-flow-container-top'>
       {!bShowConfirm &&
         (!todo_showTodo ? (
           !displayOnlyFA ? (
-            <Card className={classes.root}>
+            <Card className={`${classes.root} psdk-root`}>
               <CardHeader
-                title={<Typography variant="h6">{containerName}</Typography>}
-                subheader={`Task in ${caseId} \u2022 Priority ${urgency}`}
-                avatar={<Avatar className={classes.avatar}>{operatorInitials}</Avatar>}
-              ></CardHeader>
+                id='assignment-header'
+                title={<Typography variant='h6'>{localizedVal(containerName, undefined, key)}</Typography>}
+                subheader={`${localizedVal('Task in', 'Todo')} ${caseId} \u2022 ${localizedVal('Priority', 'Todo')} ${urgency}`}
+                avatar={<Avatar className={`${classes.avatar} psdk-avatar`}>{operatorInitials}</Avatar>}
+              />
               {displayPageMessages()}
-              <MuiPickersUtilsProvider utils={DayjsUtils}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                  {[rootViewElement]}
+                  {rootViewElement}
                 </Assignment>
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </Card>
           ) : (
-            <Card className={classes.root}>
-              <Typography variant="h6">{containerName}</Typography>
+            <Card className={`${classes.root} psdk-root`}>
+              <Typography variant='h6'>{localizedVal(containerName, undefined, key)}</Typography>
               {displayPageMessages()}
-              <MuiPickersUtilsProvider utils={DayjsUtils}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Assignment getPConnect={getPConnect} itemKey={itemKey}>
-                  {[rootViewElement]}
+                  {rootViewElement}
                 </Assignment>
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </Card>
           )
         ) : (
@@ -345,15 +334,15 @@ export const FlowContainer = (props /* : FlowContainerProps */) => {
               context={todo_context}
               itemKey={itemKey}
               isConfirm
-            ></ToDo>
+            />
           </div>
         ))}
       {bHasCaseMessages && (
-        <div className={classes.alert}>
-          <Alert severity="success">{caseMessages}</Alert>
+        <div className={`${classes.alert} psdk-alert`}>
+          <Alert severity='success'>{caseMessages}</Alert>
         </div>
       )}
-      {bShowConfirm && bShowBanner && <div>{[rootViewElement]}</div>}
+      {bShowConfirm && bShowBanner && <div>{rootViewElement}</div>}
     </div>
   );
 };

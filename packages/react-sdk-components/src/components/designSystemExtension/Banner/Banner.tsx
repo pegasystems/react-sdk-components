@@ -1,5 +1,4 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import './Banner.css';
 
 // AlertBanner is one of the few components that does NOT have getPConnect.
@@ -7,14 +6,21 @@ import './Banner.css';
 
 interface BannerProps {
   // If any, enter additional props that only exist on this component
-  a: any,
-  b: any,
-  banner: { variant: any, backgroundColor: any, title: any, message: any, backgroundImage: any, tintImage: any },
-  variant: any
+  a: any;
+  b: any;
+  banner: {
+    variant: any;
+    backgroundColor: any;
+    title: any;
+    message: any;
+    backgroundImage: any;
+    tintImage: any;
+  };
+  variant: any;
 }
 
-export default function Banner(props:BannerProps) {
-  const { a, b, banner, variant} = props;
+export default function Banner(props: BannerProps) {
+  const { a, b, banner, variant } = props;
   const { title, message, backgroundImage } = banner;
   const variantMap = {
     'two-column': [6, 6],
@@ -23,10 +29,7 @@ export default function Banner(props:BannerProps) {
   };
   return (
     <div style={{ marginBottom: '2rem' }}>
-      <div
-        className='background-image-style'
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
+      <div className='background-image-style' style={{ backgroundImage: `url(${backgroundImage})` }}>
         <div className='background-style content'>
           <div>
             <h1 className='title'>{title}</h1>

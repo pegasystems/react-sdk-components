@@ -1,4 +1,3 @@
-
 export const getDeferFriendlyTabs = allTabs => {
   return allTabs.map(tab => {
     const theTabCompConfig = tab.getPConnect().getConfigProps();
@@ -38,9 +37,7 @@ export const getTransientTabs = (availableTabs, currentTabId, tabItems) => {
         PCore.getLocaleUtils().getLocaleValue('No label specified in config', 'Generic');
       const tabContent = () => {
         if (i.toString() === currentTabId) {
-          return tabItems?.[i.toString()]?.content
-            ? tabItems?.[i.toString()]?.content
-            : child.getPConnect().getComponent();
+          return tabItems?.[i.toString()]?.content ? tabItems?.[i.toString()]?.content : child.getPConnect().getComponent();
         }
         return tabItems?.[i.toString()]?.content;
       };
@@ -65,7 +62,7 @@ export const tabClick = (id, availableTabs, currentTabId, setCurrentTabId, tabIt
   }
 
   const nextPConn = availableTabs[id].getPConnect();
-  const { deferLoadId: activeId } = nextPConn?.getConfigProps();
+  const { deferLoadId: activeId } = nextPConn?.getConfigProps() || {};
   PCore.getDeferLoadManager().activate(activeId, nextPConn?.getContextName());
   PCore.getDeferLoadManager().refreshComponent(activeId, nextPConn?.getContextName());
 };

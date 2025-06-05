@@ -1,37 +1,36 @@
 import { Utils } from './utils';
 
-
-export const TABLE_CELL = "SdkRenderer";
-export const DELETE_ICON = "DeleteIcon";
+export const TABLE_CELL = 'SdkRenderer';
+export const DELETE_ICON = 'DeleteIcon';
 
 // BUG-615253: Workaround for autosize in table with lazy loading components
 /* istanbul ignore next */
 function getFieldWidth(field, label) {
   let width: number;
   switch (field.type) {
-    case "Time":
+    case 'Time':
       width = 150;
       break;
-    case "Date":
+    case 'Date':
       width = 160;
       break;
-    case "DateTime":
+    case 'DateTime':
       width = 205;
       break;
-    case "AutoComplete":
-    case "TextArea":
+    case 'AutoComplete':
+    case 'TextArea':
       width = 190;
       break;
-    case "Currency":
-    case "TextInput":
+    case 'Currency':
+    case 'TextInput':
       width = 182;
       break;
-    case "Checkbox":
+    case 'Checkbox':
       // eslint-disable-next-line no-case-declarations
-      const text = document.createElement("span");
+      const text = document.createElement('span');
       document.body.appendChild(text);
-      text.style.fontSize = "13px";
-      text.style.position = "absolute";
+      text.style.fontSize = '13px';
+      text.style.position = 'absolute';
       text.innerHTML = label;
       width = Math.ceil(text.clientWidth) + 30;
       document.body.removeChild(text);
@@ -42,13 +41,11 @@ function getFieldWidth(field, label) {
   return width;
 }
 
-export const getContext = (thePConn) => {
+export const getContext = thePConn => {
   const contextName = thePConn.getContextName();
   const pageReference = thePConn.getPageReference();
   const { referenceList } = thePConn.getStateProps()?.config || thePConn.getStateProps();
-  const pageReferenceForRows = referenceList.startsWith(".")
-    ? `${pageReference}.${referenceList.substring(1)}`
-    : referenceList;
+  const pageReferenceForRows = referenceList.startsWith('.') ? `${pageReference}.${referenceList.substring(1)}` : referenceList;
 
   // removing "caseInfo.content" prefix to avoid setting it as a target while preparing pageInstructions
   // skipping the removal as StateMachine itself is removing this case info prefix while preparing pageInstructions
@@ -64,7 +61,7 @@ export const getContext = (thePConn) => {
   };
 };
 
-export const populateRowKey = (rawData) => {
+export const populateRowKey = rawData => {
   return rawData.map((row: any, index: number) => {
     return { ...row, index };
   });
@@ -73,7 +70,7 @@ export const populateRowKey = (rawData) => {
 export const getApiContext = (processedData, pConnect, reorderCB) => {
   return {
     fetchData: () => {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         resolve({
           data: processedData,
           filteredRecordCount: processedData.length,
@@ -87,25 +84,12 @@ export const getApiContext = (processedData, pConnect, reorderCB) => {
     applyRowReorder: (sourceKey, destinationKey) => {
       // indexes are keys for simple table so, it should work.
       reorderCB();
-      return Promise.resolve(
-        pConnect
-          .getListActions()
-          .reorder(parseInt(sourceKey, 10), parseInt(destinationKey, 10))
-      );
+      return Promise.resolve(pConnect.getListActions().reorder(parseInt(sourceKey, 10), parseInt(destinationKey, 10)));
     }
   };
 };
 
-export const buildMetaForListView = (
-  fieldMetadata,
-  fields,
-  type,
-  ruleClass,
-  name,
-  propertyLabel,
-  isDataObject,
-  parameters
-) => {
+export const buildMetaForListView = (fieldMetadata, fields, type, ruleClass, name, propertyLabel, isDataObject, parameters) => {
   return {
     name,
     config: {
@@ -119,22 +103,22 @@ export const buildMetaForListView = (
       reorderFields: true,
       toggleFieldVisibility: true,
       title: propertyLabel,
-      personalizationId: "" /* TODO */,
-      template: "ListView",
+      personalizationId: '' /* TODO */,
+      template: 'ListView',
       presets: [
         {
-          name: "presets",
-          template: "Table",
+          name: 'presets',
+          template: 'Table',
           config: {},
           children: [
             {
-              name: "Columns",
-              type: "Region",
+              name: 'Columns',
+              type: 'Region',
               children: fields
             }
           ],
           label: propertyLabel,
-          id: "P_" /* TODO */
+          id: 'P_' /* TODO */
         }
       ],
       ruleClass
@@ -145,10 +129,10 @@ export const buildMetaForListView = (
 export const buildFieldsForTable = (configFields, fields, showDeleteButton) => {
   const fieldDefs = configFields.map((field, index) => {
     return {
-      type: "text",
+      type: 'text',
       label: fields[index].config.label || fields[index].config.caption,
       fillAvailableSpace: !!field.config.fillAvailableSpace,
-      id: index,
+      id: `${index}`,
       name: field.config.value.substr(4),
       cellRenderer: TABLE_CELL,
       sort: false,
@@ -165,7 +149,7 @@ export const buildFieldsForTable = (configFields, fields, showDeleteButton) => {
   // ONLY add DELETE_ICON to fields when the table is requested as EDITABLE
   if (showDeleteButton) {
     fieldDefs.push({
-      type: "text",
+      type: 'text',
       id: fieldDefs.length,
       cellRenderer: DELETE_ICON,
       sort: false,
@@ -182,17 +166,17 @@ export const buildFieldsForTable = (configFields, fields, showDeleteButton) => {
 export const createMetaForTable = (fields, renderMode) => {
   return {
     height: {
-      minHeight: "auto",
-      fitHeightToElement: "fitHeightToElement",
-      deltaAdjustment: "deltaAdjustment",
+      minHeight: 'auto',
+      fitHeightToElement: 'fitHeightToElement',
+      deltaAdjustment: 'deltaAdjustment',
       autoSize: true
     },
     fieldDefs: fields,
-    itemKey: "index",
+    itemKey: 'index',
     grouping: false,
     reorderFields: false,
-    reorderItems: renderMode === "Editable",
-    dragHandle: renderMode === "Editable",
+    reorderItems: renderMode === 'Editable',
+    dragHandle: renderMode === 'Editable',
     globalSearch: false,
     personalization: false,
     toggleFieldVisibility: false,
@@ -210,7 +194,7 @@ export const createMetaForTable = (fields, renderMode) => {
  * @param {number} index - index of the page list to add
  */
 export const getAddRowCallback = (pConnect, index) => {
-  return () => pConnect.getListActions().insert({}, index, '');  // 3rd arg null until typedef marked correctly as optional
+  return () => pConnect.getListActions().insert({}, index, ''); // 3rd arg null until typedef marked correctly as optional
 };
 
 /**
@@ -233,17 +217,13 @@ export function createPConnect(contextName, referenceList, pageReference): any {
   const { getPConnect } = PCore.createPConnect(config);
 
   return getPConnect();
-};
+}
 
-export const filterData = (filterByColumns) => {
+export const filterData = filterByColumns => {
   return function filteringData(item) {
     let bKeep = true;
     for (const filterObj of filterByColumns) {
-      if (
-        filterObj.containsFilterValue !== '' ||
-        filterObj.containsFilter === 'null' ||
-        filterObj.containsFilter === 'notnull'
-      ) {
+      if (filterObj.containsFilterValue !== '' || filterObj.containsFilter === 'null' || filterObj.containsFilter === 'notnull') {
         let value: any;
         let filterValue: any;
 
@@ -251,14 +231,9 @@ export const filterData = (filterByColumns) => {
           case 'Date':
           case 'DateTime':
           case 'Time':
-            value =
-              item[filterObj.ref] !== null ?? item[filterObj.ref] !== ''
-                ? Utils.getSeconds(item[filterObj.ref])
-                : null;
+            value = (item[filterObj.ref] !== null ?? item[filterObj.ref] !== '') ? Utils.getSeconds(item[filterObj.ref]) : null;
             filterValue =
-              filterObj.containsFilterValue !== null && filterObj.containsFilterValue !== ''
-                ? Utils.getSeconds(filterObj.containsFilterValue)
-                : null;
+              filterObj.containsFilterValue !== null && filterObj.containsFilterValue !== '' ? Utils.getSeconds(filterObj.containsFilterValue) : null;
 
             // eslint-disable-next-line sonarjs/no-nested-switch
             switch (filterObj.containsFilter) {
@@ -279,20 +254,20 @@ export const filterData = (filterByColumns) => {
                 break;
 
               case 'equal':
-                  // becasue filterValue is in minutes, need to have a range of less than 60 secons
+                // becasue filterValue is in minutes, need to have a range of less than 60 secons
 
-                  if (value !== null && filterValue !== null) {
-                    // get rid of milliseconds
-                    value /= 1000;
-                    filterValue /= 1000;
+                if (value !== null && filterValue !== null) {
+                  // get rid of milliseconds
+                  value /= 1000;
+                  filterValue /= 1000;
 
-                    const diff = value - filterValue;
-                    if (diff !== 0) {
-                      bKeep = false;
-                    }
+                  const diff = value - filterValue;
+                  if (diff !== 0) {
+                    bKeep = false;
                   }
+                }
 
-              break;
+                break;
 
               case 'after':
                 if (value < filterValue) {
@@ -361,5 +336,5 @@ export const filterData = (filterByColumns) => {
       }
     }
     return bKeep;
-  }
-}
+  };
+};

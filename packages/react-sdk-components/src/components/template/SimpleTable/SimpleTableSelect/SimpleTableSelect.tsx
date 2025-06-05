@@ -1,22 +1,19 @@
-import React from "react";
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-// import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
-// Need to fix an error noted in comment below before typedefs will work correctly
-// interface SimpleTableSelectProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   label: string,
-//   referenceList: Array<object> | string,
-//   renderMode: string,
-//   showLabel: boolean,
-//   promptedFilters: Array<object>,
-//   viewName: string,
-//   parameters: any,
-//   readonlyContextList: Array<object> | string,
-//   dataRelationshipContext: string
-// }
-
+interface SimpleTableSelectProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  label: string;
+  referenceList: object[] | string;
+  renderMode: string;
+  showLabel: boolean;
+  promptedFilters: object[];
+  viewName: string;
+  parameters: any;
+  readonlyContextList: object[] | string;
+  dataRelationshipContext: string;
+}
 
 const isSelfReferencedProperty = (param, referenceProp) => {
   const [, parentPropName] = param.split('.');
@@ -27,7 +24,7 @@ const isSelfReferencedProperty = (param, referenceProp) => {
  * SimpleTable react component
  * @param {*} props - props
  */
-export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) {
+export default function SimpleTableSelect(props: SimpleTableSelectProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const ListView = getComponentFromMap('ListView');
   const SimpleTable = getComponentFromMap('SimpleTable');
@@ -42,7 +39,7 @@ export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) 
 
   const pConn = getPConnect();
   const { MULTI } = PCore.getConstants().LIST_SELECTION_MODE;
-  const { selectionMode, selectionList } = pConn.getConfigProps();
+  const { selectionMode, selectionList } = pConn.getConfigProps() as any;
   const isMultiSelectMode = selectionMode === MULTI;
 
   if (isMultiSelectMode && renderMode === 'ReadOnly') {
@@ -52,7 +49,7 @@ export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) 
   const pageReference = pConn.getPageReference();
   let referenceProp = isMultiSelectMode ? selectionList.substring(1) : pageReference.substring(pageReference.lastIndexOf('.') + 1);
   // Replace here to use the context name instead
-  let contextPageReference = null;
+  let contextPageReference: string | null = null;
   if (props.dataRelationshipContext !== null && selectionMode === 'single') {
     referenceProp = dataRelationshipContext;
     contextPageReference = pageReference.concat('.').concat(referenceProp);
@@ -63,10 +60,10 @@ export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) 
     ? pConn.getFieldMetadata(`@P .${referenceProp}`)
     : pConn.getCurrentPageFieldMetadata(contextPageReference);
 
-  const compositeKeys: Array<any> = [];
+  const compositeKeys: any[] = [];
   Object.values(fieldParameters).forEach((param: any) => {
     if (isSelfReferencedProperty(param, referenceProp)) {
-     compositeKeys.push(param.substring(param.lastIndexOf('.') + 1));
+      compositeKeys.push(param.substring(param.lastIndexOf('.') + 1));
     }
   });
 
@@ -105,7 +102,7 @@ export default function SimpleTableSelect(props /* : SimpleTableSelectProps */) 
     parameters
   };
 
-  const filters = getPConnect().getRawMetadata().config.promotedFilters ?? [];
+  const filters = (getPConnect().getRawMetadata() as any).config.promotedFilters ?? [];
 
   const isSearchable = filters.length > 0;
 

@@ -1,120 +1,133 @@
 import React, { useState } from 'react';
-import { Button, Grid, IconButton, Snackbar } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { Button, Grid, IconButton, Snackbar } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
+import { PConnFieldProps } from '../../../types/PConnProps';
 import './CancelAlert.css';
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
-declare const PCore: any;
-
 
 interface CancelAlertProps extends PConnFieldProps {
   // If any, enter additional props that only exist on CancelAlert here
-  pConn: any,
-  updateAlertState: any
+  heading: string;
+  content: string;
+  itemKey: string;
+  hideDelete: boolean;
+  isDataObject: boolean;
+  skipReleaseLockRequest: any;
+  dismiss: Function;
 }
 
-
 export default function CancelAlert(props: CancelAlertProps) {
-  const { pConn, updateAlertState } = props;
+  const { heading, content, getPConnect, itemKey: containerItemID, hideDelete, isDataObject, skipReleaseLockRequest, dismiss } = props;
+  const actionsAPI = getPConnect().getActionsApi();
+  const containerManagerAPI = getPConnect().getContainerManager();
+  const isLocalAction = getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION);
+  // @ts-ignore - Property 'options' is private and only accessible within class 'C11nEnv'.
+  const isBulkAction = getPConnect()?.options?.isBulkAction;
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const broadCastUtils: any = PCore.getCoexistenceManager().getBroadcastUtils();
+  const isReverseCoexistence = broadCastUtils.isReverseCoexistenceCaseLoaded();
+  const localeCategory = 'ModalContainer';
+  const btnIds = {
+    SAVE_AND_CLOSE: 'saveAndClose',
+    CONTINUE_WORKING: 'continueWorking',
+    DELETE: 'delete'
+  };
+
+  const [buttonsState, setButtonsState] = useState({
+    [btnIds.SAVE_AND_CLOSE]: false,
+    [btnIds.DELETE]: false
+  });
+
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  const itemKey = pConn.getContextName();
-  const caseInfo = pConn.getCaseInfo();
-  const caseName = caseInfo.getName();
-  const ID = caseInfo.getID();
-  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
-  const localeCategory = 'ModalContainer';
-
-  function showToast(message: string) {
-    setSnackbarMessage(message);
-    setShowSnackbar(true);
+  function disableButton(id) {
+    setButtonsState(prevState => ({
+      ...prevState,
+      [id]: true
+    }));
   }
 
-  const dismissCancelAlertOnly = () => {
-    updateAlertState(true);
-  };
+  function enableButton(id) {
+    setButtonsState(prevState => ({
+      ...prevState,
+      [id]: false
+    }));
+  }
 
-  const dismissModal = () => {
-    updateAlertState(false);
-  };
+  function cancelHandler() {
+    if (isReverseCoexistence) {
+      dismiss(true);
+      PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.REVERSE_COEXISTENCE_EVENTS.HANDLE_DISCARD);
+    } else if (!isDataObject && !isLocalAction && !isBulkAction) {
+      disableButton(btnIds.DELETE);
+      actionsAPI
+        .deleteCaseInCreateStage(containerItemID, hideDelete)
+        .then(() => {
+          PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL);
+        })
+        .catch(() => {
+          setSnackbarMessage(localizedVal('Delete failed.', localeCategory));
+          setShowSnackbar(true);
+        })
+        .finally(() => {
+          enableButton(btnIds.DELETE);
+          dismiss(true);
+        });
+    } else if (isLocalAction) {
+      dismiss(true);
+      actionsAPI.cancelAssignment(containerItemID, false);
+    } else if (isBulkAction) {
+      dismiss(true);
+      actionsAPI.cancelBulkAction(containerItemID);
+    } else {
+      dismiss(true);
+      containerManagerAPI.removeContainerItem({ containerItemID, skipReleaseLockRequest });
+    }
+  }
 
-  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+  function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
     if (reason === 'clickaway') {
       return;
     }
     setShowSnackbar(false);
   }
 
-  const buttonClick = action => {
-    const actionsAPI = pConn.getActionsApi();
+  const leftButton = (
+    <Button
+      name={btnIds.CONTINUE_WORKING}
+      variant='contained'
+      color='secondary'
+      onClick={() => {
+        dismiss();
+        if (isReverseCoexistence) {
+          broadCastUtils.setCallBackFunction(null);
+          broadCastUtils.setIsDirtyDialogActive(false);
+        }
+      }}
+    >
+      {localizedVal('Go back', localeCategory)}
+    </Button>
+  );
 
-    switch (action) {
-      case 'save':
-        // eslint-disable-next-line no-case-declarations
-        const savePromise = actionsAPI.saveAndClose(itemKey);
-
-        savePromise
-          .then(() => {
-            dismissModal();
-
-            PCore.getPubSubUtils().publish(
-              PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CASE_CREATED
-            );
-          })
-          .catch(() => {
-            showToast(localizedVal('Save failed', localeCategory));
-          });
-        break;
-
-      case 'continue':
-        dismissCancelAlertOnly();
-        break;
-
-      case 'delete':
-        // eslint-disable-next-line no-case-declarations
-        const deletePromise = actionsAPI.deleteCaseInCreateStage(itemKey);
-
-        deletePromise
-          .then(() => {
-            dismissModal();
-            PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL);
-          })
-          .catch(() => {
-            showToast(localizedVal('Delete failed.', localeCategory));
-          });
-        break;
-
-      default:
-        break;
-    }
-  };
+  const rightButton = (
+    <Button name={btnIds.DELETE} variant='contained' color='primary' disabled={buttonsState[btnIds.DELETE]} onClick={cancelHandler}>
+      {localizedVal('Discard', localeCategory)}
+    </Button>
+  );
 
   return (
     <>
       <div className='cancel-alert-background'>
         <div className='cancel-alert-top'>
-          <h3>{`Delete ${caseName}(${ID})`}</h3>
+          <h3>{localizedVal(heading, localeCategory)}</h3>
           <div>
-            <p>{`${localizedVal('Are you sure you want to delete', localeCategory)} ${caseName} (${ID})?`}</p>
-            <p>{localizedVal('Alternatively, you can continue working or save your work for later.', localeCategory)}</p>
+            <p>{localizedVal(content, localeCategory)}</p>
           </div>
           <div className='action-controls'>
             <Grid container spacing={4} justifyContent='space-between'>
-              <Grid item>
-                <Button variant='outlined' color='primary' onClick={() => buttonClick('save')}>
-                  {localizedVal('Save for later', localeCategory)}
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button variant='outlined' color='primary' onClick={() => buttonClick('continue')}>
-                  {localizedVal('Continue Working', localeCategory)}
-                </Button>
-                <Button variant='contained' color='primary' onClick={() => buttonClick('delete')}>
-                  {localizedVal('Delete', localeCategory)}
-                </Button>
-              </Grid>
+              <Grid item>{leftButton}</Grid>
+              <Grid item>{rightButton}</Grid>
             </Grid>
           </div>
         </div>
@@ -132,4 +145,4 @@ export default function CancelAlert(props: CancelAlertProps) {
       />
     </>
   );
-};
+}

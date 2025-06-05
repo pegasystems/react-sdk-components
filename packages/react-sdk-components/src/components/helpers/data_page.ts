@@ -1,17 +1,13 @@
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
-declare const PCore: any;
-
 // eslint-disable-next-line import/prefer-default-export
 export const getDataPage = (dataPageName, parameters, context) => {
   let dataViewParams;
-  if(parameters){
+  if (parameters) {
     dataViewParams = {
-      'dataViewParameters': parameters
+      dataViewParameters: parameters
     };
   }
   return new Promise((resolve, reject) => {
-    PCore.getDataApiUtils()
-      .getData(dataPageName, dataViewParams, context)
+    (PCore.getDataApiUtils().getData(dataPageName, dataViewParams, context) as any)
       .then(response => {
         resolve(response.data.data);
       })

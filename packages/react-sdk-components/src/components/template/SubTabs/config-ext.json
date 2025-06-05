@@ -4,6 +4,5 @@
   "description": "Sub tabs view",
   "type": "Template",
   "subtype": "TAB",
-  "properties": [
-  ]
+  "properties": []
 }

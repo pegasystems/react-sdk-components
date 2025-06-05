@@ -1,10 +1,13 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "23.1.10",
+  "version": "24.2.10",
   "description": "React SDK Infrastructure: bridge and components",
   "_filesComment": "During packing, npm ignores everything NOT in the files list",
   "files": [
-    "lib"
+    "lib",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

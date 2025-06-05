@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
-import { getContext, readContextResponse } from './utils';
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
-declare const PCore: any;
+import { getContext, readContextResponse } from './utils';
 
 export default function useInit(props) {
   const {
@@ -29,21 +27,22 @@ export default function useInit(props) {
 
     (async function init() {
       // promise to fetch metadata
-      const metaDataPromise = PCore.getAnalyticsUtils().getDataViewMetadata(referenceList, showDynamicFields);
+      // @ts-ignore - 3rd parameter "associationFilter" should be optional for getDataViewMetadata method
+      const metaDataPromise: Promise<any> = PCore.getAnalyticsUtils().getDataViewMetadata(referenceList, showDynamicFields);
 
       const promisesArray = [metaDataPromise];
 
       // promise to fetch report configured columns
-      const reportColumnsPromise = PCore.getAnalyticsUtils()
-        .getFieldsForDataSource(referenceList, false, getPConnect().getContextName())
-        .catch(() => {
-          return Promise.resolve({
-            data: { data: [] }
-          });
+      const reportColumnsPromise = (
+        PCore.getAnalyticsUtils().getFieldsForDataSource(referenceList, false, getPConnect().getContextName()) as Promise<any>
+      ).catch(() => {
+        return Promise.resolve({
+          data: { data: [] }
         });
+      });
       promisesArray.push(reportColumnsPromise);
 
-      const fetchEditDetails = async (metadata) => {
+      const fetchEditDetails = async metadata => {
         const {
           data: { isQueryable }
         } = metadata;
@@ -64,7 +63,7 @@ export default function useInit(props) {
         return Promise.resolve();
       };
 
-      const editPromise = metaDataPromise.then((metadata) => fetchEditDetails(metadata));
+      const editPromise = metaDataPromise.then(metadata => fetchEditDetails(metadata));
       promisesArray.push(editPromise);
       getContext({
         tableSource: referenceList,
@@ -76,20 +75,19 @@ export default function useInit(props) {
         isSearchable,
         isCacheable: true,
         xRayUid
-      })
-        .then(async (context) => {
-          if (isCompStillMounted) {
-            return readContextResponse(context, {
-              ...props,
-              editing,
-              selectionCountThreshold,
-              ref,
-              selectionMode,
-              xRayUid,
-              cosmosTableRef
-            });
-          }
-        });
+      }).then(async context => {
+        if (isCompStillMounted) {
+          return readContextResponse(context, {
+            ...props,
+            editing,
+            selectionCountThreshold,
+            ref,
+            selectionMode,
+            xRayUid,
+            cosmosTableRef
+          });
+        }
+      });
     })();
 
     return () => {

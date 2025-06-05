@@ -5,7 +5,7 @@ import { useRef, useState, Ref, MutableRefObject, RefObject } from 'react';
  * @param refs The ref or refs to consolidate.
  * @returns ref:: The consolidated ref.
  */
-const useConsolidatedRef = <T>(...refs: Array<Ref<T> | undefined>): RefObject<T> => {
+const useConsolidatedRef = <T>(...refs: (Ref<T> | undefined)[]): RefObject<T> => {
   const targetRef: MutableRefObject<T | null> = useRef<T>(null);
 
   const [refProxy] = useState(() =>
@@ -13,9 +13,9 @@ const useConsolidatedRef = <T>(...refs: Array<Ref<T> | undefined>): RefObject<T>
       configurable: true,
       enumerable: true,
       get: () => targetRef.current,
-      set: (value) => {
+      set: value => {
         targetRef.current = value;
-        refs.forEach((ref) => {
+        refs.forEach(ref => {
           if (!ref) return;
 
           if (typeof ref === 'function') {

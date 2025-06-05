@@ -1,9 +1,11 @@
 /* eslint-disable max-classes-per-file */
-import React, { Component, createElement } from 'react';
+import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { connect, shallowEqual } from 'react-redux';
 
 import ComponentMap, { LazyMap as LazyComponentMap } from '../components_map'; // was '../../../../../src/components_map';
+import ErrorBoundary from '../components/infra/ErrorBoundary';
+
 import StoreContext from './Context/StoreContext';
 
 // const pathToComponents = "../../../../../src/components";  /* When bridge was local, it was "../components" */
@@ -12,20 +14,14 @@ import StoreContext from './Context/StoreContext';
 // As we add components, we'll need to import them here and add to the switch statement
 //    below in getComponent!
 
-import ErrorBoundary from '../components/infra/ErrorBoundary';
-
 import { SdkComponentMap } from './helpers/sdk_component_map';
 
-const isClassIDCompare = (key, prev) => {
-  return !(key === 'classID' && !prev[key]);
+const isClassIDCompare = (key, prev, next) => {
+  return !(key === 'classID' && (!prev[key] || !next[key]));
 };
 
 const routingInfoCompare = (next, prev) => {
-  return (
-    'routingInfo' in next &&
-    (!shallowEqual(next.routingInfo, prev.routingInfo) ||
-      !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
-  );
+  return 'routingInfo' in next && (!shallowEqual(next.routingInfo, prev.routingInfo) || !PCore.isDeepEqual(next.routingInfo, prev.routingInfo));
 };
 
 /** Generate unique id for elements */
@@ -36,10 +32,7 @@ const createUID = () => {
 export const setVisibilityForList = (c11nEnv, visibility) => {
   const { selectionMode, selectionList, renderMode, referenceList } = c11nEnv.getComponentConfig();
   // usecase:multiselect, fieldgroup, editable table
-  if (
-    (selectionMode === PCore.getConstants().LIST_SELECTION_MODE.MULTI && selectionList) ||
-    (renderMode === 'Editable' && referenceList)
-  ) {
+  if ((selectionMode === PCore.getConstants().LIST_SELECTION_MODE.MULTI && selectionList) || (renderMode === 'Editable' && referenceList)) {
     c11nEnv.getListActions().setVisibility(visibility);
   }
 };
@@ -74,9 +67,7 @@ const connectRedux = (component, c11nEnv) => {
       if (typeof component.additionalProps === 'object') {
         addProps = c11nEnv.resolveConfigProps(component.additionalProps);
       } else if (typeof component.additionalProps === 'function') {
-        addProps = c11nEnv.resolveConfigProps(
-          component.additionalProps(state, ownProps.getPConnect)
-        );
+        addProps = c11nEnv.resolveConfigProps(component.additionalProps(state, ownProps.getPConnect));
       }
 
       c11nEnv.getConfigProps(obj);
@@ -96,20 +87,16 @@ const connectRedux = (component, c11nEnv) => {
       context: StoreContext,
       areStatePropsEqual: (next, prev) => {
         const allStateProps = c11nEnv.getStateProps();
-        for (const key in allStateProps) {
-          if (
-            (isClassIDCompare(key, prev) && !shallowEqual(next[key], prev[key])) ||
-            (next.routingInfo && !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
-          ) {
-            return false;
-          }
-        }
-
-        // For CaseSummary (when status === ".pyStatusWork"), we need to compare changes in
-        //  primaryFields and secondary Fields
-        if (allStateProps.status === '.pyStatusWork') {
-          for (const key in prev) {
-            if (!PCore.isDeepEqual(next[key], prev[key])) {
+        for (const key of Object.keys(allStateProps)) {
+          if (Object.prototype.hasOwnProperty.call(allStateProps, key)) {
+            if (key === 'inheritedProps' && next.inheritedProps && !PCore.isDeepEqual(next.inheritedProps, prev.inheritedProps)) {
+              return false;
+            }
+            if (
+              key !== 'inheritedProps' &&
+              ((isClassIDCompare(key, prev, next) && !shallowEqual(next[key], prev[key])) ||
+                (next.routingInfo && !PCore.isDeepEqual(next.routingInfo, prev.routingInfo)))
+            ) {
               return false;
             }
           }
@@ -142,8 +129,7 @@ const getComponent = c11nEnv => {
         console.log(`react_pconnect getComponent found ${componentType}: Local`);
         component = theLocalComponent;
       } else {
-        const thePegaProvidedComponent =
-          SdkComponentMap.getPegaProvidedComponentMap()[componentType];
+        const thePegaProvidedComponent = SdkComponentMap.getPegaProvidedComponentMap()[componentType];
         if (thePegaProvidedComponent !== undefined) {
           // console.log(`react_pconnect getComponent found ${componentType}: Pega-provided`);
           component = thePegaProvidedComponent;
@@ -173,174 +159,164 @@ const getComponent = c11nEnv => {
 };
 
 /**
- *
- * @param {*} declarative
- * @returns {React.Components<Props, State>}
-
+ * JEA - add Type info via JSdoc syntax...
+ * @extends {React.Components<Props, State>}
+ * createPConnectComponent - Class to create/initialize a PConnect (c11nEnv) object
+ * to pre-process meta data of each componnet.
+ * - Wraps each child in a component with PConnect
+ * - Process all actions and make them avaiable in props
+ * - Filters all properties in metadata and keeps them
+ * __internal for re-render process through connect
  */
-const createPConnectComponent = () => {
-  /**
-   * JEA - add Type info via JSdoc syntax...
-   * @extends {React.Components<Props, State>}
-   * createPConnectComponent - Class to create/initialize a PConnect (c11nEnv) object
-   * to pre-process meta data of each componnet.
-   * - Wraps each child in a component with PConnect
-   * - Process all actions and make them avaiable in props
-   * - Filters all properties in metadata and keeps them
-   * __internal for re-render process through connect
-   */
-  class PConnect extends Component {
-    constructor(props) {
-      super(props);
-      const { getPConnect } = this.props;
-      this.state = {
-        hasError: false
-      };
+class PConnect extends Component {
+  constructor(props) {
+    super(props);
+    const { getPConnect } = this.props;
+    this.state = {
+      hasError: false
+    };
 
-      this.eventHandler = this.eventHandler.bind(this);
-      this.changeHandler = this.changeHandler.bind(this);
+    this.eventHandler = this.eventHandler.bind(this);
+    this.changeHandler = this.changeHandler.bind(this);
 
-      this.c11nEnv = getPConnect();
-      this.Control = getComponent(this.c11nEnv);
-      this.actionsAPI = this.c11nEnv.getActionsApi();
+    this.c11nEnv = getPConnect();
+    // eslint-disable-next-line react/no-unused-class-component-methods
+    this.Control = getComponent(this.c11nEnv);
+    this.actionsAPI = this.c11nEnv.getActionsApi();
 
-      this.processActions(this.c11nEnv);
-    }
+    this.processActions(this.c11nEnv);
+  }
 
-    static getDerivedStateFromError(error) {
-      // Update state so the next render will show the fallback UI.
-      return {
-        hasError: true,
-        error
-      };
-    }
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return {
+      hasError: true,
+      error
+    };
+  }
 
-    componentDidMount() {
-      this.c11nEnv.addFormField();
-      setVisibilityForList(this.c11nEnv, true);
-    }
+  componentDidMount() {
+    this.c11nEnv.addFormField();
+    setVisibilityForList(this.c11nEnv, true);
+  }
 
-    componentDidCatch(error, info) {
-      // eslint-disable-next-line no-console
-      console.error(
-        `Error while Rendering the component ${this.componentName} : `,
-        error,
-        info.componentStack
-      );
-    }
+  componentDidCatch(error, info) {
+    // eslint-disable-next-line no-console
+    console.error(`Error while Rendering the component ${this.componentName} : `, error, info.componentStack);
+  }
 
-    componentWillUnmount() {
-      if (this.c11nEnv.removeFormField) {
-        this.c11nEnv.removeFormField();
-        setVisibilityForList(this.c11nEnv, false);
-      }
-    }
-
-    /*
-     *  processActions to see all actions in meta and adds event in props.
-     *  Attaches common handler (eventHandler) for all actions.
-     */
-    processActions() {
-      if (this.c11nEnv.isEditable()) {
-        this.c11nEnv.setAction('onChange', this.changeHandler);
-        this.c11nEnv.setAction('onBlur', this.eventHandler);
-      }
-    }
-
-    // Using separate handle for change as in case of dropdown, native click is mapped to react change
-    changeHandler(event) {
-      this.actionsAPI.changeHandler(this.c11nEnv, event);
-      //      getActionProcessor().changeHandler(this.c11nEnv, event);
-    }
-
-    eventHandler(event) {
-      this.actionsAPI.eventHandler(this.c11nEnv, event);
-      //      getActionProcessor().eventHandler(this.c11nEnv, event);
-    }
-
-    createChildren() {
-      const { getPConnect } = this.props;
-      if (getPConnect().hasChildren() && getPConnect().getChildren()) {
-        return getPConnect()
-          .getChildren()
-          .map(childProps => <PConnect {...childProps} />);
-      }
-      return null;
-    }
-
-    getKey() {
-      const { getPConnect } = this.props;
-      const viewName = getPConnect().getConfigProps().name || getPConnect().getCurrentView();
-      let key = !viewName
-        ? createUID()
-        : `${viewName}!${getPConnect().getCurrentClassID() || createUID()}`;
-
-      // In the case of pyDetails the key must be unigue for each instance
-      if (viewName && viewName.toUpperCase() === 'PYDETAILS') {
-        key += `!${getPConnect().getCaseInfo().getID()}`;
-      }
-
-      return key.toUpperCase();
-    }
-
-    render() {
-      const { hasError } = this.state;
-      const { getPConnect, additionalProps, ...otherProps } = this.props;
-
-      if (hasError) {
-        // You can render any custom fallback UI
-        // console.log(`react_pconnect error: used to return: <ErrorBoundary getPConnect={() => this.c11nEnv} isInternalError />`);
-        return <ErrorBoundary getPConnect={() => this.c11nEnv} isInternalError />;
-      }
-
-      const props = this.c11nEnv.getConfigProps();
-      const actions = this.c11nEnv.getActions();
-      const finalProps = {
-        ...props,
-        getPConnect,
-        ...actions,
-        additionalProps,
-        ...otherProps
-      };
-
-      // If the new component is a reference node then mark with a unique key
-      if (['reference', 'View'].includes(getPConnect().getComponentName()) && !finalProps.key) {
-        finalProps.key = this.getKey();
-      }
-
-      // console.log(`react_pconnect: used to return: <this.Control {...finalProps} />`);
-
-      return <this.Control {...finalProps}>{this.createChildren()}</this.Control>;
+  componentWillUnmount() {
+    if (this.c11nEnv.removeFormField) {
+      this.c11nEnv.removeFormField();
+      setVisibilityForList(this.c11nEnv, false);
     }
   }
 
-  // eslint-disable-next-line react/static-property-placement
-  PConnect.propTypes = {
-    // __internal: PropTypes.object.isRequired,
-    // meta: PropTypes.object.isRequired,
-    // configObject: PropTypes.object.isRequired,
-    getPConnect: PropTypes.func.isRequired,
-    additionalProps: PropTypes.shape({
-      noLabel: PropTypes.bool,
-      readOnly: PropTypes.bool
-    }),
-    validatemessage: PropTypes.string
-  };
+  /*
+   *  processActions to see all actions in meta and adds event in props.
+   *  Attaches common handler (eventHandler) for all actions.
+   */
+  processActions() {
+    if (this.c11nEnv.isEditable()) {
+      this.c11nEnv.setAction('onChange', this.changeHandler);
+      this.c11nEnv.setAction('onBlur', this.eventHandler);
+    }
+  }
 
-  // eslint-disable-next-line react/static-property-placement
-  PConnect.defaultProps = {
-    additionalProps: {},
-    validatemessage: ''
-  };
+  // Using separate handle for change as in case of dropdown, native click is mapped to react change
+  changeHandler(event) {
+    this.actionsAPI.changeHandler(this.c11nEnv, event);
+    //      getActionProcessor().changeHandler(this.c11nEnv, event);
+  }
 
-  return PConnect;
+  eventHandler(event) {
+    this.actionsAPI.eventHandler(this.c11nEnv, event);
+    //      getActionProcessor().eventHandler(this.c11nEnv, event);
+  }
+
+  createChildren() {
+    const { getPConnect } = this.props;
+    if (getPConnect().hasChildren() && getPConnect().getChildren()) {
+      return (
+        getPConnect()
+          .getChildren()
+          // eslint-disable-next-line react/no-array-index-key
+          .map((childProps, index) => <PConnect key={`${this.getKey(childProps)}_${index}`} {...childProps} />)
+      );
+    }
+    return null;
+  }
+
+  getKey(props = this.props) {
+    const { getPConnect } = props;
+    const viewName = getPConnect().getConfigProps().name || getPConnect().getCurrentView();
+    let key = !viewName ? createUID() : `${viewName}!${getPConnect().getCurrentClassID() || createUID()}`;
+
+    // In the case of pyDetails the key must be unique for each instance
+    if (viewName && viewName.toUpperCase() === 'PYDETAILS') {
+      key += `!${getPConnect().getCaseInfo().getID()}`;
+    }
+
+    return key.toUpperCase();
+  }
+
+  render() {
+    const { hasError } = this.state;
+    const { getPConnect, additionalProps, ...otherProps } = this.props;
+
+    if (hasError) {
+      // You can render any custom fallback UI
+      // console.log(`react_pconnect error: used to return: <ErrorBoundary getPConnect={() => this.c11nEnv} isInternalError />`);
+      return <ErrorBoundary getPConnect={() => this.c11nEnv} isInternalError />;
+    }
+
+    const props = this.c11nEnv.getConfigProps();
+    const actions = this.c11nEnv.getActions();
+    const finalProps = {
+      ...props,
+      getPConnect,
+      ...actions,
+      additionalProps,
+      ...otherProps
+    };
+
+    // If the new component is a reference node then mark with a unique key
+    if (['reference', 'View'].includes(getPConnect().getComponentName()) && !finalProps.key) {
+      return (
+        <this.Control {...finalProps} key={this.getKey()}>
+          {this.createChildren()}
+        </this.Control>
+      );
+    }
+
+    // console.log(`react_pconnect: used to return: <this.Control {...finalProps} />`);
+
+    return <this.Control {...finalProps}>{this.createChildren()}</this.Control>;
+  }
+}
+// eslint-disable-next-line react/static-property-placement
+PConnect.propTypes = {
+  // __internal: PropTypes.object.isRequired,
+  // meta: PropTypes.object.isRequired,
+  // configObject: PropTypes.object.isRequired,
+  getPConnect: PropTypes.func.isRequired,
+  additionalProps: PropTypes.shape({
+    noLabel: PropTypes.bool,
+    readOnly: PropTypes.bool
+  }),
+  validatemessage: PropTypes.string
+};
+
+// eslint-disable-next-line react/static-property-placement
+PConnect.defaultProps = {
+  additionalProps: {},
+  validatemessage: ''
 };
 
 // Move these into SdkConstellationReady so PCore is available
 document.addEventListener('SdkConstellationReady', () => {
   PCore.registerComponentCreator((c11nEnv, additionalProps = {}) => {
-    const PConnectComp = createPConnectComponent();
-    return createElement(PConnectComp, {
+    return createElement(PConnect, {
       ...c11nEnv,
       ...c11nEnv.getPConnect().getConfigProps(),
       ...c11nEnv.getPConnect().getActions(),
@@ -363,9 +339,7 @@ document.addEventListener('SdkConstellationReady', () => {
           }
           if (ComponentMap[comp].scripts && ComponentMap[comp].scripts.length) {
             ComponentMap[comp].scripts.forEach(script => {
-              promises.push(
-                PCore.getAssetLoader().getLoader()(script, 'script')
-              );
+              promises.push(PCore.getAssetLoader().getLoader()(script, 'script'));
             });
           }
         }
@@ -380,6 +354,16 @@ document.addEventListener('SdkConstellationReady', () => {
     await Promise.allSettled(promises);
   });
 });
+
+/**
+ *
+ * @param {*} declarative
+ * @returns {React.Components<Props, State>}
+
+ */
+const createPConnectComponent = () => {
+  return PConnect;
+};
 
 export default createPConnectComponent;
 

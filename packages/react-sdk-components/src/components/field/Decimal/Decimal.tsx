@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import CurrencyTextField from '@unicef/material-ui-currency-textfield';
+import { NumericFormat } from 'react-number-format';
+import { TextField } from '@mui/material';
+import { useState } from 'react';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
-// Using control from: https://github.com/unicef/material-ui-currency-textfield
+/* Using react-number-format component here, since it allows formatting decimal values,
+as per the locale.
+*/
 
 interface DecimalProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Decimal here
   currencyISOCode?: string;
   decimalPrecision?: number;
-  showGroupSeparators?: string;
+  showGroupSeparators?: boolean;
+  formatter?: string;
 }
 
 export default function Decimal(props: DecimalProps) {
@@ -33,41 +37,26 @@ export default function Decimal(props: DecimalProps) {
     displayMode,
     hideLabel,
     currencyISOCode = 'USD',
-    decimalPrecision = 2,
-    showGroupSeparators = true,
+    decimalPrecision,
+    showGroupSeparators,
     testId,
-    placeholder
+    placeholder,
+    formatter
   } = props;
+
+  const [values, setValues] = useState(value.toString());
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps()["value"];
+  const propName = (pConn.getStateProps() as any).value;
   const helperTextToDisplay = validatemessage || helperText;
 
-  const [decValue, setDecimalvalue] = useState('');
-  const [theCurrDec, setCurrDec] = useState('.');
-  const [theCurrSep, setCurrSep] = useState(',');
-
-  useEffect(() => {
-    const theSymbols = getCurrencyCharacters(currencyISOCode);
-    setCurrDec(theSymbols.theDecimalIndicator);
-    setCurrSep(theSymbols.theDigitGroupSeparator);
-  }, [currencyISOCode]);
-
-  useEffect(() => {
-    setDecimalvalue(value.toString());
-  }, [value]);
+  const theSymbols = getCurrencyCharacters(currencyISOCode);
+  const theCurrDec = theSymbols.theDecimalIndicator;
+  const theCurrSep = theSymbols.theDigitGroupSeparator;
+  const theCurrSym = theSymbols.theCurrencySymbol;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
-  const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
-
-  if (displayMode === 'LABELS_LEFT') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
-  }
-
-  if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant="stacked" />;
-  }
 
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly
 
@@ -75,43 +64,56 @@ export default function Decimal(props: DecimalProps) {
     readOnlyProp = { readOnly: true };
   }
 
-  let testProp = {};
+  let formattedValue = '';
+  if (formatter === 'Currency') {
+    formattedValue = format(value, formatter.toLowerCase(), theCurrencyOptions);
+  } else {
+    formattedValue = format(value, pConn.getComponentName()?.toLowerCase(), theCurrencyOptions);
+  }
 
-  testProp = {
+  if (displayMode === 'DISPLAY_ONLY') {
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
+  }
+
+  if (displayMode === 'STACKED_LARGE_VAL') {
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
+  }
+
+  const testProp = {
     'data-test-id': testId
   };
 
-  function decimalOnChange(event) {
-    // update internal value
-    setDecimalvalue(event?.target?.value);
+  function decimalOnBlur() {
+    handleEvent(actions, 'changeNblur', propName, values);
   }
 
-  function decimalOnBlur(event, inValue) {
-    handleEvent(actions, 'changeNblur', propName, inValue !== '' ? Number(inValue) : inValue);
-  }
+  const handleChange = val => {
+    setValues(val.value);
+  };
 
   return (
-    <CurrencyTextField
+    <NumericFormat
+      valueIsNumericString
       fullWidth
       variant={readOnly ? 'standard' : 'outlined'}
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
+      size='small'
       required={required}
       disabled={disabled}
-      onChange={decimalOnChange}
-      onBlur={!readOnly ? decimalOnBlur : undefined}
       error={status === 'error'}
       label={label}
-      value={decValue}
-      type="text"
-      outputFormat="number"
-      textAlign="left"
-      InputProps={{ ...readOnlyProp, inputProps: { ...testProp, value: decValue } }}
-      currencySymbol=""
-      decimalCharacter={theCurrDec}
-      digitGroupSeparator={showGroupSeparators ? theCurrSep : ''}
-      decimalPlaces={decimalPrecision}
+      value={values}
+      onValueChange={val => {
+        handleChange(val);
+      }}
+      onBlur={!readOnly ? decimalOnBlur : undefined}
+      prefix={readOnly && formatter === 'Currency' ? theCurrSym : ''}
+      decimalSeparator={theCurrDec}
+      thousandSeparator={showGroupSeparators ? theCurrSep : ''}
+      decimalScale={readOnly && formatter === 'Currency' ? undefined : decimalPrecision}
+      InputProps={{ ...readOnlyProp, inputProps: { ...testProp } }}
+      customInput={TextField}
     />
   );
 }

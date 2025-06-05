@@ -1,22 +1,21 @@
-import React, { createElement } from 'react';
-import Grid from '@material-ui/core/Grid';
-import { GridSize } from '@material-ui/core/Grid';
+import { createElement } from 'react';
+import Grid, { GridSize } from '@mui/material/Grid';
+
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-// import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
-// Can't use PConnProps until PConnect.getChildren() type is ok
-// interface WideNarrowDetailsProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   showLabel?: boolean,
-//   label?: string,
-//   showHighlightedData?: boolean
-// }
+interface WideNarrowDetailsProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  showLabel?: boolean;
+  label?: string;
+  showHighlightedData?: boolean;
+}
 
 const COLUMN_WIDTHS = [8, 4];
 
-export default function WideNarrowDetails(props /* : WideNarrowDetailsProps */) {
+export default function WideNarrowDetails(props: WideNarrowDetailsProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldGroup = getComponentFromMap('FieldGroup');
 
@@ -27,27 +26,25 @@ export default function WideNarrowDetails(props /* : WideNarrowDetailsProps */) 
 
   // Set display mode prop and re-create the children so this part of the dom tree renders
   // in a readonly (display) mode instead of a editable
-  getPConnect().setInheritedProp('displayMode', 'LABELS_LEFT');
+  getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
   getPConnect().setInheritedProp('readOnly', true);
-  const children = getPConnect()
-    .getChildren()
-    ?.map((configObject, index) => {
-      let theConfigObject: object = configObject;
-      if (!theConfigObject) {
-        theConfigObject = {}
-      }
+  const children = (getPConnect().getChildren() as any[])?.map((configObject, index) => {
+    let theConfigObject: object = configObject;
+    if (!theConfigObject) {
+      theConfigObject = {};
+    }
 
-      return createElement(createPConnectComponent(), {
-        ...theConfigObject,
-        // eslint-disable-next-line react/no-array-index-key
-        key: index.toString()
-      });
+    return createElement(createPConnectComponent(), {
+      ...theConfigObject,
+      // eslint-disable-next-line react/no-array-index-key
+      key: index.toString()
     });
+  });
 
   // Set up highlighted data to pass in return if is set to show, need raw metadata to pass to createComponent
   let highlightedDataArr = [];
   if (showHighlightedData) {
-    const { highlightedData = [] } = getPConnect().getRawMetadata().config;
+    const { highlightedData = [] } = (getPConnect().getRawMetadata() as any).config;
     highlightedDataArr = highlightedData.map(field => {
       field.config.displayMode = 'STACKED_LARGE_VAL';
 
@@ -57,13 +54,12 @@ export default function WideNarrowDetails(props /* : WideNarrowDetailsProps */) 
         field.config.displayAsStatus = true;
       }
 
-      return getPConnect().createComponent(field,
-        '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
+      return getPConnect().createComponent(field, '', 0, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
     });
   }
 
   let theName = '';
-  if (propsToUse?.showLabel && propsToUse.label ) {
+  if (propsToUse?.showLabel && propsToUse.label) {
     theName = propsToUse.label;
   }
 

@@ -1,12 +1,11 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { PropsWithChildren, ReactElement, useEffect, useMemo, useState } from 'react';
 
-import type { PConnProps } from '../../../types/PConnProps';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { PConnProps } from '../../../types/PConnProps';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private
 interface DataReferenceProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>;
   label: string;
   showLabel: any;
   displayMode: string;
@@ -15,18 +14,13 @@ interface DataReferenceProps extends PConnProps {
   selectionMode: string;
   displayAs: string;
   ruleClass: string;
-  parameters: Array<string>; // need to fix
+  parameters: string[]; // need to fix
   hideLabel: boolean;
 }
 
-
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows ~7 errors)
-declare const PCore: any;
-
-
-export default function DataReference(props: DataReferenceProps) {
+export default function DataReference(props: PropsWithChildren<DataReferenceProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const SingleReferenceReadonly = getComponentFromMap('SingleReferenceReadOnly');
   const MultiReferenceReadonly = getComponentFromMap('MultiReferenceReadOnly');
@@ -45,50 +39,52 @@ export default function DataReference(props: DataReferenceProps) {
     parameters,
     hideLabel
   } = props;
-  let childrenToRender = children;
+  let childrenToRender = children as ReactElement[];
   const pConn = getPConnect();
   const [dropDownDataSource, setDropDownDataSource] = useState(null);
   const propsToUse: any = { label, showLabel, ...pConn.getInheritedProps() };
   if (propsToUse.showLabel === false) {
     propsToUse.label = '';
   }
-  const rawViewMetadata = pConn.getRawMetadata();
-  const viewName = rawViewMetadata["name"];
-  const [firstChildMeta] = rawViewMetadata["children"];
-  const refList = rawViewMetadata["config"].referenceList;
+  const rawViewMetadata: any = pConn.getRawMetadata();
+  const viewName = rawViewMetadata.name;
+  const [firstChildMeta] = rawViewMetadata.children;
+  const refList = rawViewMetadata.config.referenceList;
   const canBeChangedInReviewMode = allowAndPersistChangesInReviewMode && (displayAs === 'autocomplete' || displayAs === 'dropdown');
   let propName;
-  const isDisplayModeEnabled = ['LABELS_LEFT', 'STACKED_LARGE_VAL'].includes(displayMode);
+  const isDisplayModeEnabled = ['STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode);
   let firstChildPConnect;
 
   /* Only for dropdown when it has param use data api to get the data back and add it to datasource */
   useEffect(() => {
-    if (
-      firstChildMeta?.type === "Dropdown" &&
-      rawViewMetadata["config"]?.parameters
-    ) {
+    if (firstChildMeta?.type === 'Dropdown' && rawViewMetadata.config?.parameters) {
       const { value, key, text } = firstChildMeta.config.datasource.fields;
-      PCore.getDataApiUtils()
-        .getData(refList, {
-          dataViewParameters: parameters
-        })
-        .then((res) => {
+      (
+        PCore.getDataApiUtils().getData(
+          refList,
+          {
+            dataViewParameters: parameters
+          } as any,
+          ''
+        ) as Promise<any>
+      )
+        .then(res => {
           if (res.data.data !== null) {
             const ddDataSource = res.data.data
-              .map((listItem) => ({
-                key: listItem[key.split(" .", 2)[1]],
-                text: listItem[text.split(" .", 2)[1]],
-                value: listItem[value.split(" .", 2)[1]]
+              .map(listItem => ({
+                key: listItem[key.split(' .', 2)[1]],
+                text: listItem[text.split(' .', 2)[1]],
+                value: listItem[value.split(' .', 2)[1]]
               }))
-              .filter((item) => item.key);
+              .filter(item => item.key);
             // Filtering out undefined entries that will break preview
             setDropDownDataSource(ddDataSource);
           } else {
-            const ddDataSource: any = []
+            const ddDataSource: any = [];
             setDropDownDataSource(ddDataSource);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           // eslint-disable-next-line no-console
           console.error(err?.stack);
           return Promise.resolve({
@@ -105,14 +101,14 @@ export default function DataReference(props: DataReferenceProps) {
       delete firstChildMeta.config.readOnly;
     }
     if (firstChildMeta?.type === 'Dropdown') {
-      firstChildMeta.config.datasource.source = rawViewMetadata["config"]?.parameters
+      firstChildMeta.config.datasource.source = rawViewMetadata.config?.parameters
         ? dropDownDataSource
         : '@DATASOURCE '.concat(refList).concat('.pxResults');
     } else if (firstChildMeta?.type === 'AutoComplete') {
       firstChildMeta.config.datasource = refList;
 
       /* Insert the parameters to the component only if present */
-      if (rawViewMetadata["config"]?.parameters) {
+      if (rawViewMetadata.config?.parameters) {
         firstChildMeta.config.parameters = parameters;
       }
     }
@@ -130,10 +126,9 @@ export default function DataReference(props: DataReferenceProps) {
   const handleSelection = event => {
     const caseKey = pConn.getCaseInfo().getKey();
     const refreshOptions = { autoDetectRefresh: true };
-    if (canBeChangedInReviewMode && pConn.getValue('__currentPageTabViewName', '')) {  // 2nd arg empty string until typedef marked correctly
-      getPConnect()
-        .getActionsApi()
-        .refreshCaseView(caseKey, pConn.getValue('__currentPageTabViewName', ''), null, refreshOptions);  // 2nd arg empty string until typedef marked correctly
+    if (canBeChangedInReviewMode && pConn.getValue('__currentPageTabViewName', '')) {
+      // 2nd arg empty string until typedef marked correctly
+      getPConnect().getActionsApi().refreshCaseView(caseKey, pConn.getValue('__currentPageTabViewName', ''), '', refreshOptions); // 2nd arg empty string until typedef marked correctly
       PCore.getDeferLoadManager().refreshActiveComponents(pConn.getContextName());
     } else {
       const pgRef = pConn.getPageReference().replace('caseInfo.content', '');
@@ -143,45 +138,41 @@ export default function DataReference(props: DataReferenceProps) {
     // AutoComplete sets value on event.id whereas Dropdown sets it on event.target.value
     const propValue = event?.id || event?.target.value;
     if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
-      PCore.getDataApiUtils()
-        .getCaseEditLock(caseKey)
-        .then(caseResponse => {
-          const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
-          let curr = {};
-          const commitData = curr;
+      (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then(caseResponse => {
+        const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
+        let curr = {};
+        const commitData = curr;
 
-          pageTokens.forEach(el => {
-            if (el !== '') {
-              curr[el] = {};
-              curr = curr[el];
-            }
-          });
-
-          // expecting format like {Customer: {pyID:"C-100"}}
-          const propArr = propName.split('.');
-          propArr.forEach((element, idx) => {
-            if (idx + 1 === propArr.length) {
-              curr[element] = propValue;
-            } else {
-              curr[element] = {};
-              curr = curr[element];
-            }
-          });
-
-          PCore.getDataApiUtils()
-            .updateCaseEditFieldsData(
-              caseKey,
-              { [caseKey]: commitData },
-              caseResponse.headers.etag,
-              pConn.getContextName()
-            )
-            .then(response => {
-              PCore.getContainerUtils().updateChildContainersEtag(
-                pConn.getContextName(),
-                response.headers.etag
-              );
-            });
+        pageTokens.forEach(el => {
+          if (el !== '') {
+            curr[el] = {};
+            curr = curr[el];
+          }
         });
+
+        // expecting format like {Customer: {pyID:"C-100"}}
+        const propArr = propName.split('.');
+        propArr.forEach((element, idx) => {
+          if (idx + 1 === propArr.length) {
+            curr[element] = propValue;
+          } else {
+            curr[element] = {};
+            curr = curr[element];
+          }
+        });
+
+        (
+          PCore.getDataApiUtils().updateCaseEditFieldsData(
+            caseKey,
+            { [caseKey]: commitData },
+            caseResponse.headers.etag,
+            pConn.getContextName()
+          ) as Promise<any>
+        ).then(response => {
+          PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
+          PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
+        });
+      });
     }
   };
 
@@ -191,7 +182,8 @@ export default function DataReference(props: DataReferenceProps) {
   const recreatedFirstChild = useMemo(() => {
     const { type, config } = firstChildMeta;
     if (firstChildMeta?.type !== 'Region') {
-      pConn.clearErrorMessages({  // Need to add empty string for category and context to match typdef
+      pConn.clearErrorMessages({
+        // Need to add empty string for category and context to match typdef
         property: propName,
         category: '',
         context: ''
@@ -208,80 +200,62 @@ export default function DataReference(props: DataReferenceProps) {
             ruleClass={ruleClass}
             referenceType={referenceType}
             hideLabel={hideLabel}
-            dataRelationshipContext={
-              rawViewMetadata["config"].contextClass && rawViewMetadata["config"].name ? rawViewMetadata["config"].name : null
-            }
+            dataRelationshipContext={rawViewMetadata.config.contextClass && rawViewMetadata.config.name ? rawViewMetadata.config.name : null}
           />
         );
       }
 
       if (isDisplayModeEnabled && selectionMode === SELECTION_MODE.MULTI) {
-        return (
-          <MultiReferenceReadonly
-            config={config}
-            getPConnect={firstChildPConnect}
-            label={propsToUse.label}
-            hideLabel={hideLabel}
-          />
-        );
+        return <MultiReferenceReadonly config={config} getPConnect={firstChildPConnect} label={propsToUse.label} hideLabel={hideLabel} />;
       }
 
       // In the case of a datasource with parameters you cannot load the dropdown before the parameters
-      if (
-        type === 'Dropdown' &&
-        rawViewMetadata["config"]?.parameters &&
-        dropDownDataSource === null
-      ) {
+      if (type === 'Dropdown' && rawViewMetadata.config?.parameters && dropDownDataSource === null) {
         return null;
       }
 
-      return firstChildPConnect().createComponent({
-        type,
-        config: {
-          ...config,
-          required: propsToUse.required,
-          visibility: propsToUse.visibility,
-          disabled: propsToUse.disabled,
-          label: propsToUse.label,
-          viewName: getPConnect().getCurrentView(),
-          parameters: rawViewMetadata["config"].parameters,
-          readOnly: false,
-          localeReference: rawViewMetadata["config"].localeReference,
-          ...(selectionMode === SELECTION_MODE.SINGLE ? { referenceType } : ''),
-          dataRelationshipContext:
-            rawViewMetadata["config"].contextClass && rawViewMetadata["config"].name
-              ? rawViewMetadata["config"].name
-              : null,
-          hideLabel,
-          onRecordChange: handleSelection
+      return firstChildPConnect().createComponent(
+        {
+          type,
+          config: {
+            ...config,
+            required: propsToUse.required,
+            visibility: propsToUse.visibility,
+            disabled: propsToUse.disabled,
+            label: propsToUse.label,
+            viewName: getPConnect().getCurrentView(),
+            parameters: rawViewMetadata.config.parameters,
+            readOnly: false,
+            localeReference: rawViewMetadata.config.localeReference,
+            ...(selectionMode === SELECTION_MODE.SINGLE ? { referenceType } : ''),
+            dataRelationshipContext: rawViewMetadata.config.contextClass && rawViewMetadata.config.name ? rawViewMetadata.config.name : null,
+            hideLabel,
+            onRecordChange: handleSelection
+          }
         },
-      },
-      '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
+        '',
+        '',
+        {}
+      ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
     }
-  }, [
-    firstChildMeta.config?.datasource?.source,
-    parameters,
-    dropDownDataSource,
-    propsToUse.required,
-    propsToUse.disabled
-  ]);
+  }, [firstChildMeta.config?.datasource?.source, parameters, dropDownDataSource, propsToUse.required, propsToUse.disabled]);
 
   // Only include the views region for rendering when it has content
   if (firstChildMeta?.type !== 'Region') {
-    const viewsRegion = rawViewMetadata["children"][1];
+    const viewsRegion = rawViewMetadata.children[1];
     if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
-      childrenToRender = [recreatedFirstChild, ...children.slice(1)];
+      childrenToRender = [recreatedFirstChild, ...(children as ReactElement[]).slice(1)];
     } else {
       childrenToRender = [recreatedFirstChild];
     }
   }
 
   return childrenToRender.length === 1 ? (
-    childrenToRender[0] ?? null
+    (childrenToRender[0] ?? null)
   ) : (
     <div>
       {childrenToRender.map(child => (
-        <React.Fragment>{child}</React.Fragment>
+        <>{child}</>
       ))}
     </div>
   );

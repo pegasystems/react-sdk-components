@@ -1,15 +1,11 @@
-import React from "react";
+import { PropsWithChildren } from 'react';
+import { PConnProps } from '../../../../types/PConnProps';
 
-interface OneColumnTabProps{
+interface OneColumnTabProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>
 }
-export default function OneColumnTab(props: OneColumnTabProps) {
-  const { children} = props;
+export default function OneColumnTab(props: PropsWithChildren<OneColumnTabProps>) {
+  const { children } = props;
 
-  return (
-    <div id="OneColumnTab">
-      {children}
-    </div>
-  )
+  return <div id='OneColumnTab'>{children}</div>;
 }

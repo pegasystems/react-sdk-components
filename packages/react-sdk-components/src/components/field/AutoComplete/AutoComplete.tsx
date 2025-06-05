@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { useEffect, useState } from 'react';
+import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import isDeepEqual from 'fast-deep-equal/react';
+
 import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
   key: string;
   value: string;
 }
 
-const preProcessColumns = (columnList) => {
-  return columnList.map((col) => {
+const preProcessColumns = columnList => {
+  return columnList.map(col => {
     const tempColObj = { ...col };
     tempColObj.value = col.value && col.value.startsWith('.') ? col.value.substring(1) : col.value;
     return tempColObj;
   });
 };
 
-const getDisplayFieldsMetaData = (columnList) => {
-  const displayColumns = columnList.filter((col) => col.display === 'true');
+const getDisplayFieldsMetaData = columnList => {
+  const displayColumns = columnList.filter(col => col.display === 'true');
   const metaDataObj: any = { key: '', primary: '', secondary: [] };
-  const keyCol = columnList.filter((col) => col.key === 'true');
+  const keyCol = columnList.filter(col => col.key === 'true');
   metaDataObj.key = keyCol.length > 0 ? keyCol[0].value : 'auto';
   for (let index = 0; index < displayColumns.length; index += 1) {
     if (displayColumns[index].primary === 'true') {
@@ -47,7 +48,7 @@ interface AutoCompleteProps extends PConnFieldProps {
   listType: string;
   parameters?: any;
   datasource: any;
-  columns: Array<any>;
+  columns: any[];
 }
 
 export default function AutoComplete(props: AutoCompleteProps) {
@@ -76,14 +77,14 @@ export default function AutoComplete(props: AutoCompleteProps) {
   const context = getPConnect().getContextName();
   let { listType, parameters, datasource = [], columns = [] } = props;
   const [inputValue, setInputValue] = useState('');
-  const [options, setOptions] = useState<Array<IOption>>([]);
+  const [options, setOptions] = useState<IOption[]>([]);
   const [theDatasource, setDatasource] = useState(null);
   let selectedValue: any = '';
   const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
-  const propName = thePConn.getStateProps()["value"];
+  const propName = (thePConn.getStateProps() as any).value;
 
   if (!isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)
@@ -92,7 +93,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
 
   const flattenParameters = (params = {}) => {
     const flatParams = {};
-    Object.keys(params).forEach((key) => {
+    Object.keys(params).forEach(key => {
       const { name, value: theVal } = params[key];
       flatParams[name] = theVal;
     });
@@ -105,13 +106,10 @@ export default function AutoComplete(props: AutoCompleteProps) {
   if (deferDatasource && datasourceMetadata?.datasource?.name) {
     listType = 'datapage';
     datasource = datasourceMetadata.datasource.name;
-    parameters = flattenParameters(datasourceMetadata?.datasource?.parameters);
-    const displayProp = datasourceMetadata.datasource.propertyForDisplayText.startsWith('@P')
-      ? datasourceMetadata.datasource.propertyForDisplayText.substring(3)
-      : datasourceMetadata.datasource.propertyForDisplayText;
-    const valueProp = datasourceMetadata.datasource.propertyForValue.startsWith('@P')
-      ? datasourceMetadata.datasource.propertyForValue.substring(3)
-      : datasourceMetadata.datasource.propertyForValue;
+    const { parameters: dataSourceParameters, propertyForDisplayText, propertyForValue } = datasourceMetadata.datasource;
+    parameters = flattenParameters(dataSourceParameters);
+    const displayProp = propertyForDisplayText.startsWith('@P') ? propertyForDisplayText.substring(3) : propertyForDisplayText;
+    const valueProp = propertyForValue.startsWith('@P') ? propertyForValue.substring(3) : propertyForValue;
     columns = [
       {
         key: 'true',
@@ -137,9 +135,9 @@ export default function AutoComplete(props: AutoCompleteProps) {
   useEffect(() => {
     if (!displayMode && listType !== 'associated') {
       getDataPage(datasource, parameters, context).then((results: any) => {
-        const optionsData: Array<any> = [];
+        const optionsData: any[] = [];
         const displayColumn = getDisplayFieldsMetaData(columns);
-        results?.forEach((element) => {
+        results?.forEach(element => {
           const val = element[displayColumn.primary]?.toString();
           const obj = {
             key: element[displayColumn.key] || element.pyGUID,
@@ -152,16 +150,16 @@ export default function AutoComplete(props: AutoCompleteProps) {
     }
   }, []);
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (value) {
-    const index = options?.findIndex((element) => element.key === value);
+    const index = options?.findIndex(element => element.key === value);
     if (index > -1) {
       selectedValue = options[index].value;
     } else {
@@ -182,7 +180,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   };
 
   if (readOnly) {
-    const theValAsString = options?.find((opt) => opt.key === value)?.value;
+    const theValAsString = options?.find(opt => opt.key === value)?.value;
     return <TextInput {...props} value={theValAsString} />;
   }
   // Need to use both getOptionLabel and getOptionSelected to map our
@@ -193,7 +191,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
       getOptionLabel={(option: IOption) => {
         return option.value ? option.value : '';
       }}
-      getOptionSelected={(option: any) => {
+      isOptionEqualToValue={(option: any) => {
         return option.value ? option.value : '';
       }}
       fullWidth
@@ -201,14 +199,14 @@ export default function AutoComplete(props: AutoCompleteProps) {
       value={selectedValue}
       inputValue={inputValue || selectedValue}
       onInputChange={handleInputValue}
-      renderInput={(params) => (
+      renderInput={params => (
         <TextField
           {...params}
           fullWidth
-          variant="outlined"
+          variant='outlined'
           helperText={helperTextToDisplay}
           placeholder={placeholder}
-          size="small"
+          size='small'
           required={required}
           error={status === 'error'}
           label={label}

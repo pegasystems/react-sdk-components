@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const { test, expect } = require('@playwright/test');
 import { attachCoverageReport } from 'monocart-reporter';
 
@@ -16,26 +15,28 @@ const launchEmbedded = async ({ page }) => {
 
 const launchSelfServicePortal = async ({ page }) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto(`${config.baseUrl}/portal?portal=DigV2SelfService`, { waitUntil: 'networkidle' });
+  await page.goto(`${config.baseUrl}/portal?portal=DigV2SelfService`, {
+    waitUntil: 'networkidle'
+  });
 };
 
 const login = async (username, password, page) => {
-  await page.locator('input[id="txtUserID"]').type(username);
-  await page.locator('input[id="txtPassword"]').type(password);
+  await page.waitForLoadState('networkidle');
+  await page.locator('input[id="txtUserID"]').fill(username);
+  await page.locator('input[id="txtPassword"]').fill(password);
   await page.locator('#submit_row .loginButton').click();
 };
 
-const getAttributes = async (element) => {
-  const attributes = await element.evaluate(async (ele) => ele.getAttributeNames());
-  return attributes;
+const getAttributes = async element => {
+  return element.evaluate(async ele => ele.getAttributeNames());
 };
 
-const getFormattedDate = (date) => {
+const getFormattedDate = date => {
   if (!date) {
     return date;
   }
-  const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getFullYear()}`;
-  return formattedDate;
+
+  return `${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getFullYear()}`;
 };
 
 const getFutureDate = () => {
@@ -43,20 +44,25 @@ const getFutureDate = () => {
   // const theLocale = Intl.DateTimeFormat().resolvedOptions().locale;
   // add 2 days to today
   const futureDate = new Date(today.setDate(today.getDate() + 2));
+
   // Need to get leading zeroes on single digit months and 4 digit year
-  const formattedFuturedate = getFormattedDate(futureDate);
-  return formattedFuturedate;
+  return getFormattedDate(futureDate);
 };
 
 const calculateCoverage = async (page, outputDir) => {
   const coverageData = await page.evaluate(() => window.__coverage__);
   expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
   // coverage report
-  const report = await attachCoverageReport(coverageData, test.info(), {
+  await attachCoverageReport(coverageData, test.info(), {
     outputDir
   });
-  console.log(report.summary);
   await page.close();
+};
+
+const enterPhoneNumber = async (phone, number) => {
+  const phoneInput = phone.locator('input');
+  await phoneInput.click();
+  await phoneInput.pressSequentially(number);
 };
 
 module.exports = {
@@ -66,5 +72,6 @@ module.exports = {
   login,
   getAttributes,
   getFutureDate,
-  calculateCoverage
+  calculateCoverage,
+  enterPhoneNumber
 };

@@ -58,7 +58,7 @@ describe('Test Text Input component', () => {
   test('TextInput Component renders with displayMode as LabelsLeft', () => {
     const props = getDefaultProps();
     props.value = 'Hi there!';
-    props.displayMode = 'LABELS_LEFT';
+    props.displayMode = 'DISPLAY_ONLY';
     const { getByText } = render(<TextInput {...props} />);
     const readOnlySpan = getByText('Hi there!');
     expect(readOnlySpan).toBeVisible();

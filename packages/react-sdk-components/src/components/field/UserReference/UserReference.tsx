@@ -1,11 +1,11 @@
-import React, { Fragment, memo, useEffect, useState } from 'react';
-import { Typography } from '@material-ui/core';
-import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnProps } from '../../../types/PConnProps';
+import { memo, useEffect, useState } from 'react';
+import { Typography } from '@mui/material';
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 errors)
-declare const PCore: any;
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { PConnProps } from '../../../types/PConnProps';
+
+import FieldValueList from '../../designSystemExtension/FieldValueList';
+import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
 
 const DROPDOWN_LIST = 'Drop-down list';
 const SEARCH_BOX = 'Search box';
@@ -13,6 +13,7 @@ const SEARCH_BOX = 'Search box';
 interface UserReferenceProps extends PConnProps {
   // If any, enter additional props that only exist on URLComponent here
   displayAs?: string;
+  displayMode?: string;
   label?: string;
   value?: any;
   testId?: string;
@@ -37,6 +38,7 @@ const UserReference = (props: UserReferenceProps) => {
   const {
     label = '',
     displayAs = '',
+    displayMode = '',
     getPConnect,
     value = '',
     testId = '',
@@ -50,7 +52,7 @@ const UserReference = (props: UserReferenceProps) => {
     required = false,
     disabled = false,
     onChange,
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     variant = 'inline'
   } = props;
   const [dropDownDataSource, setDropDownDataSource] = useState([]);
@@ -66,7 +68,7 @@ const UserReference = (props: UserReferenceProps) => {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(userId).then((res) => {
+        getOperatorDetails(userId).then((res: any) => {
           if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
             setUserName(res.data.pyOperatorInfo.pyUserName);
           }
@@ -76,16 +78,17 @@ const UserReference = (props: UserReferenceProps) => {
       const queryPayload = {
         dataViewName: OPERATORS_DP
       };
+
       PCore.getRestClient()
         .invokeRestApi('getListData', { queryPayload })
-        .then((res) => {
-          const ddDataSource = res.data.data.map((listItem) => ({
+        .then(res => {
+          const ddDataSource = res.data.data.map(listItem => ({
             key: listItem.pyUserIdentifier,
             value: listItem.pyUserName
           }));
           setDropDownDataSource(ddDataSource);
         })
-        .catch((err) => {
+        .catch(err => {
           // eslint-disable-next-line no-console
           console.error(err);
         });
@@ -94,18 +97,26 @@ const UserReference = (props: UserReferenceProps) => {
 
   let userReferenceComponent: any = null;
 
+  if (displayMode === 'DISPLAY_ONLY') {
+    return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} />;
+  }
+
+  if (displayMode === 'STACKED_LARGE_VAL') {
+    return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} variant='stacked' />;
+  }
+
   if (readOnly && showAsFormattedText) {
     if (userId) {
       userReferenceComponent = (
-        <Fragment>
+        <>
           {/*
             TODO: This has to be replaced with Operator Component
           */}
           <div>
-            <Typography variant="caption">{label}</Typography>
-            <Typography variant="body1">{userName}</Typography>
+            <Typography variant='caption'>{label}</Typography>
+            <Typography variant='body1'>{userName}</Typography>
           </div>
-        </Fragment>
+        </>
       );
     }
   } else {
@@ -133,7 +144,7 @@ const UserReference = (props: UserReferenceProps) => {
           label={label}
           getPConnect={getPConnect}
           datasource={OPERATORS_DP}
-          listType="datapage"
+          listType='datapage'
           columns={columns}
           testId={testId}
           placeholder={placeholder}
@@ -153,7 +164,7 @@ const UserReference = (props: UserReferenceProps) => {
         <Dropdown
           additionalProps={additionalProps}
           datasource={dropDownDataSource}
-          listType="associated"
+          listType='associated'
           getPConnect={getPConnect}
           label={label}
           value={userId}
@@ -170,7 +181,6 @@ const UserReference = (props: UserReferenceProps) => {
       );
     }
   }
-
   return userReferenceComponent;
 };
 

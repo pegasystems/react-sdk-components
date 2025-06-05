@@ -1,6 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
-
 const { test, expect } = require('@playwright/test');
 
 const config = require('../../../config');
@@ -41,7 +38,10 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Required' }).click();
 
     // Checking required boolean field
+    await expect(page.locator('div >> legend:has-text("Required Boolean")')).toBeVisible();
+    await expect(page.locator('div >> p:has-text("Required field")')).toBeVisible();
     const requiredBooleanLabel = page.locator('label[data-test-id="325f4eb20dc7c90a4fb697cd6c6bf0ea"]');
+    await expect(await requiredBooleanLabel.locator('span').getByText('BooleanRequired')).toBeVisible();
     requiredBooleanLabel.click(); // check required field
     requiredBooleanLabel.click(); // uncheck required field
     await expect(page.locator('p.Mui-error.Mui-required')).toBeVisible();
@@ -115,5 +115,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-const outputDir = './test-reports/e2e/DigV2/FormFields/Boolean'
+const outputDir = './test-reports/e2e/DigV2/FormFields/Boolean';
 test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

@@ -1,6 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
-
 const { test, expect } = require('@playwright/test');
 
 const config = require('../../../config');
@@ -42,6 +39,16 @@ test.describe('E2E test', () => {
 
     /** Required tests */
     const requiredPhone = page.locator('div[data-test-id="af983eaa1b85b015a7654702abd0b249"] >> input');
+
+    /** Checking 'field label', 'placeholder', and 'helper text' */
+    const requiredPhoneFieldLabel = page.locator('text="Required Phone"');
+    await expect(requiredPhoneFieldLabel && requiredPhoneFieldLabel.locator('text="*"')).toBeVisible();
+
+    const placeholderValue = await requiredPhone.getAttribute('placeholder');
+    await expect(placeholderValue).toBe('Phone Placeholder');
+
+    await expect(page.locator('div[id="Assignment"] >> p:has-text("Phone Helper Text")')).toBeVisible();
+
     attributes = await common.getAttributes(requiredPhone);
     await expect(attributes.includes('required')).toBeTruthy();
 
@@ -86,26 +93,26 @@ test.describe('E2E test', () => {
     await countrySelector.click();
     await page.locator('text=United States+1 >> nth=0').click();
     const editablePhoneInput = editablePhone.locator('input');
-    await editablePhoneInput.click();
-    await editablePhoneInput.type('6175551212');
+    await common.enterPhoneNumber(editablePhone, '6175551212');
 
     /** Validation tests */
-    const validationMsg = 'Invalid Phone';
+    const validationMsg = 'Enter a valid phone number';
     await editablePhoneInput.clear();
     await countrySelector.click();
-    await page.locator('text=United States+1 >> nth=0').click();
-    await editablePhoneInput.click();
+    await page.locator('text=United Kingdom+44 >> nth=0').click();
     /** Entering an invalid Phone number */
-    await editablePhoneInput.type('61');
+    await common.enterPhoneNumber(editablePhone, '61');
     await editablePhoneInput.blur();
     /** Expecting an error for Invalid phone number */
+
     await expect(page.locator(`p:has-text("${validationMsg}")`)).toBeVisible();
 
     /** Entering a valid Phone number */
+    await editablePhoneInput.click();
     await editablePhoneInput.clear();
     await countrySelector.click();
     await page.locator('text=United States+1 >> nth=0').click();
-    await editablePhoneInput.type('6175551212');
+    await common.enterPhoneNumber(editablePhone, '6175551212');
 
     await editablePhoneInput.blur();
     /** Expecting the invalid Phone number error be no longer present */

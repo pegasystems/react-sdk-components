@@ -1,5 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
 const path = require('path');
 const { test, expect } = require('@playwright/test');
 
@@ -40,8 +38,8 @@ test.describe('E2E test', () => {
     await selectedSubCategory.click();
     await page.getByRole('option', { name: 'Required' }).click();
 
-    const filePath = path.join(__dirname, '../../../../../../assets/img/cableinfo.png');
-    const filePath2 = path.join(__dirname, '../../../../../../assets/img/cablechat.png');
+    const filePath = path.join(__dirname, '../../../../../../assets/img/cableinfo.jpg');
+    const filePath2 = path.join(__dirname, '../../../../../../assets/img/cablechat.jpg');
     const zeroBytesFile = path.join(__dirname, '../../../../../../assets/img/Zerobytes');
 
     // Checking required  attachment field
@@ -80,14 +78,14 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Single' }).click();
 
     const singleAttachment = page.locator('label[for="Attachment"]');
-    await expect(singleAttachment.locator('span[role="button"]:has-text("Upload a file")')).toBeVisible();
+    await expect(singleAttachment.locator('span[role="button"]:has-text("Choose a file")')).toBeVisible();
     await page.setInputFiles(`#Attachment`, filePath);
-    await expect(page.locator('div >> text="cableinfo.png"')).toBeVisible();
-    await expect(page.locator('span:has-text("Upload a file")')).toBeHidden();
+    await expect(page.locator('div >> text="cableinfo.jpg"')).toBeVisible();
+    await expect(page.locator('span:has-text("Choose a file")')).toBeHidden();
 
     await page.locator('button[aria-label="Delete Attachment"]').click();
 
-    await expect(singleAttachment.locator('span[role="button"]:has-text("Upload a file")')).toBeVisible();
+    await expect(singleAttachment.locator('span[role="button"]:has-text("Choose a file")')).toBeVisible();
 
     /** Testing Multiple mode attachments */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
@@ -95,28 +93,20 @@ test.describe('E2E test', () => {
     await page.getByRole('option', { name: 'Multiple' }).click();
 
     const multipleAttachment = page.locator('label[for="AttachmentList"]');
-    await expect(multipleAttachment.locator('span[role="button"]:has-text("Upload files")')).toBeVisible();
+    await expect(multipleAttachment.locator('span[role="button"]:has-text("Choose files")')).toBeVisible();
     await page.setInputFiles(`#AttachmentList`, [filePath, filePath2]);
 
-    await Promise.all([
-      page.waitForResponse(
-        `${endpoints.serverConfig.infinityRestServerUrl}${
-          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
-        }/api/application/v2/attachments/upload`
-      )
-    ]);
-
-    await expect(page.locator('div >> text="cableinfo.png"')).toBeVisible();
-    await expect(page.locator('div >> text="cablechat.png"')).toBeVisible();
+    await expect(page.locator('div >> text="cableinfo.jpg"')).toBeVisible();
+    await expect(page.locator('div >> text="cablechat.jpg"')).toBeVisible();
 
     await expect(page.locator('div >> text="Uploaded successfully" >> nth=0')).toBeVisible();
 
-    await expect(multipleAttachment.locator('span[role="button"]:has-text("Upload files")')).toBeVisible();
+    await expect(multipleAttachment.locator('span[role="button"]:has-text("Choose files")')).toBeVisible();
 
     /** Testing error case by uploading empty file */
     await page.setInputFiles(`#AttachmentList`, [zeroBytesFile]);
     await expect(page.locator('div >> text="Error with one or more files"')).toBeVisible();
-    await expect(page.locator(`div >> text="Empty file can't be uploaded."`)).toBeVisible();
+    await expect(page.locator(`div >> text="Empty file can't be uploaded." >> nth=0`)).toBeVisible();
 
     const errorFile = await page.locator('div[class="psdk-utility-card"]:has-text("Unable to upload file")');
     await errorFile.locator('button[aria-label="Delete Attachment"]').click();
@@ -133,8 +123,8 @@ test.describe('E2E test', () => {
 
     /** Delete attachment */
     await menuSelector.locator('li >> text="Delete"').click();
-    await expect(page.locator('div >> text="cableinfo.png"')).toBeVisible();
-    await expect(page.locator('div >> text="cablechat.png"')).toBeHidden();
+    await expect(page.locator('div >> text="cableinfo.jpg"')).toBeVisible();
+    await expect(page.locator('div >> text="cablechat.jpg"')).toBeHidden();
   }, 10000);
 });
 

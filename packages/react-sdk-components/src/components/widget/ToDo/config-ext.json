@@ -4,6 +4,5 @@
   "description": "My worklist widget",
   "type": "Widget",
   "subtype": "PAGE",
-  "properties": [
-  ]
+  "properties": []
 }

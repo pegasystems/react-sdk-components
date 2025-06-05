@@ -1,27 +1,23 @@
-import { useState, useEffect, Fragment } from 'react';
-import { getTransientTabs, getVisibleTabs, tabClick } from '../../SubTabs/tabUtils';
-import React from 'react';
-import { Tab, Tabs, TextField } from '@material-ui/core';
-import { TabContext, TabPanel } from '@material-ui/lab';
-import type { PConnProps } from '../../../../types/PConnProps';
+import { Children, PropsWithChildren, useEffect, useState } from 'react';
+import { Tab, Tabs } from '@mui/material';
+import { TabContext, TabPanel } from '@mui/lab';
 
+import { getTransientTabs, getVisibleTabs, tabClick } from '../../SubTabs/tabUtils';
+import { PConnProps } from '../../../../types/PConnProps';
 
 interface DetailsSubTabsProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
-  showLabel: boolean,
-  label: string
-
+  showLabel: boolean;
+  label: string;
 }
 
-
-export default function DetailsSubTabs(props: DetailsSubTabsProps) {
+export default function DetailsSubTabs(props: PropsWithChildren<DetailsSubTabsProps>) {
   const { children = [], label, showLabel = true, getPConnect } = props;
   // Get the inherited props from the parent to determine label settings
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
 
   const defaultTabIndex = 0;
-  const deferLoadedTabs = children[0];
+  const deferLoadedTabs = Children.toArray(children)[0];
   let availableTabs = [];
 
   useEffect(() => {
@@ -42,8 +38,8 @@ export default function DetailsSubTabs(props: DetailsSubTabsProps) {
   };
 
   return (
-    <Fragment>
-      {propsToUse.showLabel && <TextField>{propsToUse.label}</TextField>}
+    <>
+      {propsToUse.showLabel && <h3>{propsToUse.label}</h3>}
       <TabContext value={currentTabId.toString()}>
         <Tabs onChange={handleTabClick} value={currentTabId}>
           {tabItems.map((tab: any) => (
@@ -57,6 +53,6 @@ export default function DetailsSubTabs(props: DetailsSubTabsProps) {
           </TabPanel>
         ))}
       </TabContext>
-    </Fragment>
+    </>
   );
 }

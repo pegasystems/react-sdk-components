@@ -1,20 +1,18 @@
 /* eslint-disable react/no-array-index-key */
 import React, { createElement, isValidElement } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
-
 import { format } from '../../helpers/formatters';
 
 // DetailsFields is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
-interface DetailsFieldsProps{
+interface DetailsFieldsProps {
   // If any, enter additional props that only exist on this component
-  fields: Array<any>
+  fields: any[];
 }
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,7 +40,7 @@ export default function DetailsFields(props: DetailsFieldsProps) {
   // const componentName = "DetailsFields";
   const { fields = [] } = props;
   const classes = useStyles();
-  const fieldComponents: Array<any> = [];
+  const fieldComponents: any[] = [];
 
   fields?.forEach((field, index) => {
     const thePConn = field.getPConnect();
@@ -50,17 +48,13 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     const { label } = thePConn.getConfigProps();
     const configObj = thePConn?.getReferencedView();
     configObj.config.readOnly = true;
-    configObj.config.displayMode = 'LABELS_LEFT';
+    configObj.config.displayMode = 'DISPLAY_ONLY';
     const propToUse = { ...thePConn.getInheritedProps() };
     configObj.config.label = theCompType === 'reference' ? propToUse?.label : label;
     fieldComponents.push({
       type: theCompType,
       label,
-      value: (
-        <React.Fragment key={index}>
-          {createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}
-        </React.Fragment>
-      )
+      value: <React.Fragment key={index}>{createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}</React.Fragment>
     });
   });
 
@@ -122,26 +116,26 @@ export default function DetailsFields(props: DetailsFieldsProps) {
   }
 
   function getGridItems() {
-    const gridItems: Array<any> = fieldComponents.map((field, index) => {
+    const gridItems: any[] = fieldComponents.map((field, index) => {
       if (field?.type === 'reference') {
         return field?.value;
-      } else if (isValidElement(field?.value)) {
+      }
+      if (isValidElement(field?.value)) {
         return (
           <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
             {getGridItem(field, `${index}-item`)}
           </Grid>
         );
-      } else {
-        return (
-          <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
-            {getGridItemLabel(field, `${index}-label`)}
-            {getGridItemValue(field, `${index}-value`)}
-          </Grid>
-        );
       }
+      return (
+        <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
+          {getGridItemLabel(field, `${index}-label`)}
+          {getGridItemValue(field, `${index}-value`)}
+        </Grid>
+      );
     });
     return gridItems;
   }
 
-  return <React.Fragment>{getGridItems()}</React.Fragment>;
+  return <>{getGridItems()}</>;
 }

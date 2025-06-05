@@ -1,34 +1,27 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Tab, Tabs } from "@material-ui/core";
-import { TabContext, TabPanel } from '@material-ui/lab';
+import { Children, PropsWithChildren, useEffect, useState } from 'react';
+import { Tab, Tabs } from '@mui/material';
+import { TabContext, TabPanel } from '@mui/lab';
+
 import { getTransientTabs, getVisibleTabs, tabClick } from './tabUtils';
+import { PConnProps } from '../../../types/PConnProps';
 
-// SubTabs does NOT have getPConnect. So, no need to extend from PConnProps
-
-interface SubTabsProps {
+interface SubTabsProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>
 }
 
-
-export default function SubTabs(props: SubTabsProps) {
+export default function SubTabs(props: PropsWithChildren<SubTabsProps>) {
   const { children = [] } = props;
 
   const defaultTabIndex = 0;
-  const deferLoadedTabs = children[0];
-  const availableTabs = getVisibleTabs(deferLoadedTabs, "tabsSubs");
+  const deferLoadedTabs = Children.toArray(children)[0];
+  const availableTabs = getVisibleTabs(deferLoadedTabs, 'tabsSubs');
   const [currentTabId, setCurrentTabId] = useState(defaultTabIndex.toString());
 
-  const [tabItems, setTabitem] = useState<Array<any>>([]);
+  const [tabItems, setTabitem] = useState<any[]>([]);
   useEffect(() => {
-    const tempTabItems = getTransientTabs(
-      availableTabs,
-      currentTabId,
-      tabItems
-    );
+    const tempTabItems = getTransientTabs(availableTabs, currentTabId, tabItems);
     setTabitem(tempTabItems);
   }, [currentTabId]);
-
 
   const handleTabClick = (id, index: string) => {
     setCurrentTabId(index);
@@ -36,29 +29,18 @@ export default function SubTabs(props: SubTabsProps) {
   };
 
   return (
-    <Fragment>
-      <TabContext value={currentTabId.toString()}>
-      <Tabs
-        onChange={handleTabClick}
-        value={currentTabId}
-        variant="scrollable"
-        >
-      {tabItems.map((tab:any) =>
-        <Tab
-        key={tab.id}
-        label={tab.name}
-        value={tab.id}
-        />
-  )}
-    </Tabs>
-
-      {
-        tabItems.map((tab:any) => (
-          <TabPanel key={tab.id} value={tab.id} tabIndex={+tab.id}>
-            <div>{tab.content ? tab.content : "No content exists"}</div>
-          </TabPanel>
+    <TabContext value={currentTabId.toString()}>
+      <Tabs onChange={handleTabClick} value={currentTabId} variant='scrollable'>
+        {tabItems.map((tab: any) => (
+          <Tab key={tab.id} label={tab.name} value={tab.id} />
         ))}
-      </TabContext>
-    </Fragment>
+      </Tabs>
+
+      {tabItems.map((tab: any) => (
+        <TabPanel key={tab.id} value={tab.id} tabIndex={+tab.id}>
+          <div>{tab.content ? tab.content : 'No content exists'}</div>
+        </TabPanel>
+      ))}
+    </TabContext>
   );
 }

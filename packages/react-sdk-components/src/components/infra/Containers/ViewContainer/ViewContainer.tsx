@@ -1,20 +1,19 @@
-import React, { useEffect, useState, useContext, createElement } from "react";
-import { Box, CircularProgress } from "@material-ui/core";
-import createPConnectComponent from "../../../../bridge/react_pconnect";
-import StoreContext from "../../../../bridge/Context/StoreContext";
-import { isEmptyObject } from '../../../helpers/common-utils';
+import React, { createElement, useContext, useEffect, useState } from 'react';
+import { Box, CircularProgress } from '@mui/material';
 
-import type { PConnProps } from '../../../../types/PConnProps';
+import createPConnectComponent from '../../../../bridge/react_pconnect';
+import StoreContext from '../../../../bridge/Context/StoreContext';
+import { isEmptyObject } from '../../../helpers/common-utils';
+import { PConnProps } from '../../../../types/PConnProps';
 
 interface ViewContainerProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  name?: string,
-  loadingInfo?: any,    // can't be boolean until setDispatchObjState expects loadingInfo to be type null
-  routingInfo?: any,
-  mode?: string,
-  limit?: number
+  name?: string;
+  loadingInfo?: any; // can't be boolean until setDispatchObjState expects loadingInfo to be type null
+  routingInfo?: any;
+  mode?: string;
+  limit?: number;
 }
-
 
 // ViewContainer can emit View
 // import View from '../View';
@@ -25,36 +24,33 @@ interface ViewContainerProps extends PConnProps {
 // is totally at your own risk.
 //
 
-
 export default function ViewContainer(props: ViewContainerProps) {
   // const { getPConnect, children, routingInfo, name } = props;
-  const { getPConnect, name = '', mode = 'single', limit = 16, loadingInfo = false, routingInfo = null} = props;
+  const { getPConnect, name = '', mode = 'single', limit = 16, loadingInfo = false, routingInfo = null } = props;
 
   const { displayOnlyFA } = useContext<any>(StoreContext);
-
 
   const { CONTAINER_TYPE, APP } = PCore.getConstants();
   const pConn = getPConnect();
   const containerMgr: any = pConn.getContainerManager();
 
   const [dispatchObjState, setDispatchObjState] = useState({
-    dispatchObject: {semanticURL: "", context: "", acName: ""},
+    dispatchObject: { semanticURL: '', context: '', acName: '' },
     visible: false,
     loadingInfo: null,
     isLoadingInfoChange: false
-  });   // was this.state in class-based ViewContainer avoiding use of just "state" as the name
+  }); // was this.state in class-based ViewContainer avoiding use of just "state" as the name
 
   let root;
 
-
-  const thePConn = ((typeof getPConnect) === 'function') ? getPConnect() : null;
+  const thePConn = typeof getPConnect === 'function' ? getPConnect() : null;
 
   // beginning of functions for use by ViewContainer
 
   function buildName() {
     const context = thePConn?.getContextName();
     let viewContainerName = name;
-    if (!viewContainerName) viewContainerName = "";
+    if (!viewContainerName) viewContainerName = '';
     return `${context?.toUpperCase()}/${viewContainerName.toUpperCase()}`;
   }
 
@@ -63,11 +59,11 @@ export default function ViewContainer(props: ViewContainerProps) {
     // const { acName = "primary" } = pConn.getContainerName(); // doesn't work with 8.23 typings
     let acName = pConn.getContainerName();
     if (!acName) {
-      acName = "primary";
+      acName = 'primary';
     }
 
     return {
-      semanticURL: "",
+      semanticURL: '',
       context: baseContext,
       acName
     };
@@ -85,7 +81,6 @@ export default function ViewContainer(props: ViewContainerProps) {
 
   // set the root component that is retrieved by PConnectHOC
   function setRootComponent(configObject) {
-
     const { isLoadingInfoChange } = dispatchObjState;
     if (!isLoadingInfoChange) {
       root = createElement(createPConnectComponent(), configObject);
@@ -96,13 +91,9 @@ export default function ViewContainer(props: ViewContainerProps) {
 
   // useEffect on [] -> code that should be run once (as in old constructor and in componentDidMount)
   useEffect(() => {
-
     // This is adapted from the class-based ViewContainer constructor
     containerMgr.initializeContainers({
-      type:
-        mode === CONTAINER_TYPE.MULTIPLE
-          ? CONTAINER_TYPE.MULTIPLE
-          : CONTAINER_TYPE.SINGLE
+      type: mode === CONTAINER_TYPE.MULTIPLE ? CONTAINER_TYPE.MULTIPLE : CONTAINER_TYPE.SINGLE
     });
 
     if (mode === CONTAINER_TYPE.MULTIPLE && limit) {
@@ -111,7 +102,7 @@ export default function ViewContainer(props: ViewContainerProps) {
     }
 
     const dispatchObject = prepareDispatchObject();
-    setDispatchObjState( {
+    setDispatchObjState({
       dispatchObject,
       // PCore is defined in pxBootstrapShell - eventually will be exported in place of constellationCore
       visible: !PCore.checkIfSemanticURL(),
@@ -132,9 +123,8 @@ export default function ViewContainer(props: ViewContainerProps) {
     }
 
     // Getting default view label
-    const navPages = pConn.getValue("pyPortal.pyPrimaryNavPages", '');  // 2nd arg empty string until typedefs allow optional
-    const defaultViewLabel =
-      Array.isArray(navPages) && navPages[0] ? navPages[0].pyLabel : "";
+    const navPages = pConn.getValue('pyPortal.pyPrimaryNavPages', ''); // 2nd arg empty string until typedefs allow optional
+    const defaultViewLabel = Array.isArray(navPages) && navPages[0] ? navPages[0].pyLabel : '';
     // TODO: Plan is to rename window.constellationCore to window.pega (or similar)
     //    And expose less via ui-bootstrap.js
     // PCore is defined in pxBootstrapShell - eventually will be exported in place of constellationCore
@@ -145,11 +135,8 @@ export default function ViewContainer(props: ViewContainerProps) {
         ...objectForAddContainer,
         defaultViewLabel
       });
-
     }
-
-  },
-  []);
+  }, []);
 
   // This code (that's run every time the ViewContainer is called) is adapted from the class-based ViewContainer's render
 
@@ -167,11 +154,7 @@ export default function ViewContainer(props: ViewContainerProps) {
       let componentVisible = accessedOrder.length > 0;
       const { visible } = dispatchObjState;
       componentVisible = visible || componentVisible;
-      if (
-        items[key] &&
-        items[key].view &&
-        !isEmptyObject(items[key].view)
-      ) {
+      if (items[key] && items[key].view && !isEmptyObject(items[key].view)) {
         const latestItem = items[key];
         const rootView = latestItem.view;
         const { context, name: viewName } = rootView.config;
@@ -183,18 +166,22 @@ export default function ViewContainer(props: ViewContainerProps) {
           containerItemName: key,
           hasForm: viewName === CREATE_DETAILS_VIEW_NAME
         };
-        const configObject = PCore.createPConnect(config);
+        const configObject: any = PCore.createPConnect(config);
 
         // Add in displayOnlyFA if prop is on ViewContainer
         if (displayOnlyFA) {
-          configObject["displayOnlyFA"] = true;
+          configObject.displayOnlyFA = true;
         }
 
         setRootComponent(configObject);
         return (
           <React.Fragment key={theBuildName}>
             {componentVisible && root}
-            {loadingInfo && <Box textAlign="center"><CircularProgress /></Box>}
+            {loadingInfo && (
+              <Box textAlign='center'>
+                <CircularProgress />
+              </Box>
+            )}
           </React.Fragment>
         );
       }
@@ -204,8 +191,11 @@ export default function ViewContainer(props: ViewContainerProps) {
   // fall through return if insufficient routingInfo
   return (
     <React.Fragment key={theBuildName}>
-      {loadingInfo && <Box textAlign="center"><CircularProgress /></Box>}
+      {loadingInfo && (
+        <Box textAlign='center'>
+          <CircularProgress />
+        </Box>
+      )}
     </React.Fragment>
   );
-
 }

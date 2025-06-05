@@ -1,8 +1,10 @@
-import React, { Children, useState, useMemo } from 'react';
-import { makeStyles, Tab, Tabs } from '@material-ui/core';
-import { TabContext, TabPanel } from '@material-ui/lab';
+import React, { Children, useMemo, useState } from 'react';
+import { Tab, Tabs } from '@mui/material';
+import { TabContext, TabPanel } from '@mui/lab';
+import makeStyles from '@mui/styles/makeStyles';
+
 import { buildView } from '../../../helpers/field-group-utils';
-// import type { PConnProps } from '../../../../types/PConnProps';
+import { PConnProps } from '../../../../types/PConnProps';
 
 const useStyles = makeStyles(() => ({
   tab: {
@@ -10,15 +12,14 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-// ListViewProps can't be used until getComponentConfig is NOT private
-// interface DynamicTabsProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   showLabel: boolean;
-//   label: string;
-//   referenceList?: Array<any>;
-// }
+interface DynamicTabsProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  showLabel: boolean;
+  label: string;
+  referenceList?: any[];
+}
 
-function DynamicTabs(props /*: DynamicTabsProps */) {
+function DynamicTabs(props: DynamicTabsProps) {
   const classes = useStyles();
   const { referenceList, showLabel, label, getPConnect } = props;
   const pConnect = getPConnect();
@@ -27,9 +28,9 @@ function DynamicTabs(props /*: DynamicTabsProps */) {
   const defaultTabIndex = 0;
   const { tablabel } = pConnect.getComponentConfig();
   const tablabelProp = PCore.getAnnotationUtils().getPropertyName(tablabel);
-  const referenceListData = pConnect.getValue(`${referenceList}.pxResults`, ''); // 2nd arg empty string until typedefs properly allow optional
+  const referenceListData: any = pConnect.getValue(`${referenceList}.pxResults`, ''); // 2nd arg empty string until typedefs properly allow optional
   const memoisedTabViews = useMemo(() => {
-    pConnect.setInheritedProp('displayMode', 'LABELS_LEFT');
+    pConnect.setInheritedProp('displayMode', 'DISPLAY_ONLY');
     pConnect.setInheritedProp('readOnly', true);
 
     return (
@@ -57,16 +58,16 @@ function DynamicTabs(props /*: DynamicTabsProps */) {
 
   return (
     <>
-      {propsToUse.label && <h3 id="dynamic-tabs-title">{propsToUse.label}</h3>}
+      {propsToUse.label && <h3 id='dynamic-tabs-title'>{propsToUse.label}</h3>}
       <TabContext value={panelShown.toString()}>
-        <Tabs onChange={handleTabClick} value={panelShown} variant="scrollable" scrollButtons="auto" indicatorColor="primary" id="dynamic-tabs">
+        <Tabs onChange={handleTabClick} value={panelShown} variant='scrollable' scrollButtons='auto' indicatorColor='primary' id='dynamic-tabs'>
           {tabItems.map((tab: any) => (
             <Tab key={tab.id} label={tab.name} value={tab.id} className={classes.tab} />
           ))}
         </Tabs>
 
         {tabItems.map((tab: any) => (
-          <TabPanel key={tab.id} value={tab.id.toString()} tabIndex={+tab.id} id="dynamic-tabpanel">
+          <TabPanel key={tab.id} value={tab.id.toString()} tabIndex={+tab.id} id='dynamic-tabpanel'>
             <div>{memoisedTabViews[parseInt(tab.id, 10)] || 'No content exists'}</div>
           </TabPanel>
         ))}

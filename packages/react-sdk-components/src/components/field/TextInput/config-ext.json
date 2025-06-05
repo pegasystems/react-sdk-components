@@ -4,6 +4,5 @@
   "description": "Text (single line)",
   "type": "Field",
   "subtype": "Text",
-  "properties": [
-  ]
+  "properties": []
 }

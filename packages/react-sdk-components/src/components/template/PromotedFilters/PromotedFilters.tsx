@@ -1,24 +1,23 @@
-import React, { useCallback, useMemo, useState, createElement, Fragment } from 'react';
-import Button from '@material-ui/core/Button';
+import React, { useCallback, useMemo, useState, createElement } from 'react';
+import Button from '@mui/material/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import { isEmptyObject } from '../../helpers/common-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import './PromotedFilters.css';
 
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 // Can't use PromotedFilterProps until getContainerManager() knows about addTransientItem
 //  Currently just expects "object"
-// interface PromotedFilterProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   viewName: string,
-//   filters: Array<any>,
-//   listViewProps: any,
-//   pageClass: string,
-//   parameters?: object
-// }
-
+interface PromotedFilterProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  viewName: string;
+  filters: any[];
+  listViewProps: any;
+  pageClass: string;
+  parameters?: object;
+}
 
 const localeCategory = 'SimpleTable';
 const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
@@ -64,10 +63,10 @@ function Filters({ filters, transientItemID, localeReference }) {
 }
 
 function isValidInput(input) {
-  return Object.values(input).findIndex((v) => v) >= 0;
+  return Object.values(input).findIndex(v => v) >= 0;
 }
 
-export default function PromotedFilters(props /* : PromotedFilterProps */) {
+export default function PromotedFilters(props: PromotedFilterProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const ListView = getComponentFromMap('ListView');
 
@@ -77,7 +76,7 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
   const [payload, setPayload] = useState({});
   const filtersProperties = {};
 
-  filters.forEach((filter) => {
+  filters.forEach(filter => {
     filtersProperties[PCore.getAnnotationUtils().getPropertyName(filter.config.value)] = '';
   });
 
@@ -99,7 +98,7 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
           lhs: {
             field
           },
-          comparator: "EQ",
+          comparator: 'EQ',
           rhs: {
             value
           }
@@ -110,12 +109,12 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
   }
 
   const getFilterData = useCallback(
-    (e) => {
+    e => {
       e.preventDefault(); // to prevent un-intended forms submission.
 
       const changes = PCore.getFormUtils().getChanges(transientItemID);
       const formValues = {};
-      Object.keys(changes).forEach((key) => {
+      Object.keys(changes).forEach(key => {
         if (!['context_data', 'pageInstructions'].includes(key)) {
           formValues[key] = changes[key];
         }
@@ -143,25 +142,30 @@ export default function PromotedFilters(props /* : PromotedFilterProps */) {
   }, [transientItemID]);
 
   return (
-    <Fragment>
+    <>
       <div>{listViewProps.title}</div>
-      <div className="psdk-grid-filter">
-        <Filters filters={filters} transientItemID={transientItemID} localeReference={listViewProps.localeReference}/>
+      <div className='psdk-grid-filter'>
+        <Filters filters={filters} transientItemID={transientItemID} localeReference={listViewProps.localeReference} />
       </div>
       <div>
         <Button key='1' type='button' onClick={clearFilterData} data-testid='clear' variant='contained' color='primary'>
           {localizedVal('Clear', localeCategory)}
         </Button>
-        <Button style={{float: 'right'}} key='2' type='submit' onClick={getFilterData} data-testid='search' variant='contained' color='primary'>
+        <Button style={{ float: 'right' }} key='2' type='submit' onClick={getFilterData} data-testid='search' variant='contained' color='primary'>
           {localizedVal('Search', localeCategory)}
         </Button>
       </div>
-      {initTable && <ListView {...listViewProps} title='' payload={payload}
-         isSearchable
-         tableDisplay={{
-           show: initTable
-         }}
-       />}
-    </Fragment>
+      {initTable && (
+        <ListView
+          {...listViewProps}
+          title=''
+          payload={payload}
+          isSearchable
+          tableDisplay={{
+            show: initTable
+          }}
+        />
+      )}
+    </>
   );
 }

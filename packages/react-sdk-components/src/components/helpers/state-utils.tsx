@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { connect, Provider, shallowEqual } from 'react-redux';
-import ReactReduxContext from '../../bridge/Context/StoreContext';
 
+import ReactReduxContext from '../../bridge/Context/StoreContext';
 
 const connectToState = (mapStateToProps = () => {}) => {
   return (Component: any) => {
@@ -15,19 +15,15 @@ const connectToState = (mapStateToProps = () => {}) => {
         // Compare start props
         const c11nEnv = next.getPConnect();
         const allStateProps = c11nEnv.getStateProps();
-        for (const key in allStateProps) {
-          if (
-            !shallowEqual(next[key], prev[key]) ||
-            (next.routingInfo && !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
-          ) {
+        for (const key of Object.keys(allStateProps)) {
+          if (!shallowEqual(next[key], prev[key]) || (next.routingInfo && !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))) {
             return false;
           }
         }
         /* TODO For some rawConfig we are not getting routingInfo under allStateProps */
         return !(
           'routingInfo' in next &&
-          (!shallowEqual(next.routingInfo, prev.routingInfo) ||
-            !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
+          (!shallowEqual(next.routingInfo, prev.routingInfo) || !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
         );
       }
     })(Component);

@@ -1,11 +1,9 @@
 // eslint-disable-next-line import/no-named-default
-import { default as CurrencyAlias} from '../../helpers/formatters/Currency';
+import { default as CurrencyAlias } from '../../helpers/formatters/Currency';
 // eslint-disable-next-line import/no-named-default
 import { default as CurrencyMapAlias } from '../../helpers/formatters/CurrencyMap';
 
-
 export const getCurrencyOptions = (inISOCode: string) => {
-
   const operatorLocale = PCore.getEnvironmentInfo().getUseLocale() || PCore.getEnvironmentInfo().getLocale() || 'en-US';
 
   let currMapToUse = CurrencyMapAlias.US;
@@ -15,12 +13,12 @@ export const getCurrencyOptions = (inISOCode: string) => {
   //  If no ISO code, use locale
   //  If no locale, default to US
   if (inISOCode) {
-    if (inISOCode === "EUR") {
+    if (inISOCode === 'EUR') {
       currMapToUse = CurrencyMapAlias.NL;
-      localeToUse = "nl-NL";
+      localeToUse = 'nl-NL';
     } else {
       // For all other ISO codes, use first 2 characters as the lookup from CurrencyMap
-      const countryCode = inISOCode.substring(0,2);
+      const countryCode = inISOCode.substring(0, 2);
       currMapToUse = CurrencyMapAlias[countryCode];
     }
   } else if (operatorLocale) {
@@ -34,23 +32,19 @@ export const getCurrencyOptions = (inISOCode: string) => {
 
   // If no currMapToUse at this point, default to US as a failsafe
   if (!currMapToUse) {
-    currMapToUse = CurrencyMapAlias['US'];
+    currMapToUse = CurrencyMapAlias.US;
   }
 
   const theCode = currMapToUse.currencyCode.substring(0, 3);
-  const currencyOptions = { locale: localeToUse, style: "currency", currency: theCode }
-
-  return currencyOptions;
-
-}
-
+  return { locale: localeToUse, style: 'currency', currency: theCode };
+};
 
 export const getCurrencyCharacters = (inISOCode: string) => {
   const theCurrencyChars = {
     theCurrencySymbol: '$',
     theDecimalIndicator: '.',
     theDigitGroupSeparator: ','
-  }
+  };
 
   const theCurrencyOptions = getCurrencyOptions(inISOCode);
 
@@ -71,5 +65,4 @@ export const getCurrencyCharacters = (inISOCode: string) => {
   // console.log(`theCurrencyChars: symbol: ${theCurrencyChars.theCurrencySymbol} | theDigitGroupSeparator: ${theCurrencyChars.theDigitGroupSeparator} | theDecimalIndicator: ${theCurrencyChars.theDecimalIndicator}`);
 
   return theCurrencyChars;
-
-}
+};

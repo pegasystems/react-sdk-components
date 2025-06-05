@@ -1,33 +1,32 @@
-import React from "react";
-import { Grid } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
+import { PropsWithChildren, ReactElement } from 'react';
+import { Grid } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { PConnProps } from '../../../../types/PConnProps';
 
-// OneColumn does NOT have getPConnect. So, no need to extend from PConnProps
-interface OneColumnProps{
+interface OneColumnProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>
 }
-
 
 const useStyles = makeStyles((/* theme */) => ({
   colStyles: {
-    display: "grid",
-    gap: "1rem",
-    alignContent: "baseline",
-  },
+    display: 'grid',
+    gap: '1rem',
+    alignContent: 'baseline'
+  }
 }));
 
-
-export default function OneColumn(props: OneColumnProps) {
+export default function OneColumn(props: PropsWithChildren<OneColumnProps>) {
   const classes = useStyles();
 
-  const { children} = props;
+  const { children } = props;
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} className={classes.colStyles}>
-        {children.map(child => { return child; } )}
+        {(children as ReactElement[]).map(child => {
+          return child;
+        })}
       </Grid>
     </Grid>
-  )
+  );
 }

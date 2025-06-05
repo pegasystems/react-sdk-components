@@ -1,7 +1,9 @@
-import React from 'react';
-import MuiPhoneNumber from 'material-ui-phone-number';
+import { useEffect, useState } from 'react';
+import { MuiTelInput } from 'mui-tel-input';
+
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
+import handleEvent from '../../helpers/event-utils';
 
 interface PhoneProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Phone here
@@ -12,6 +14,7 @@ export default function Phone(props: PhoneProps) {
   const FieldValueList = getComponentFromMap('FieldValueList');
 
   const {
+    getPConnect,
     label,
     required,
     disabled,
@@ -19,7 +22,6 @@ export default function Phone(props: PhoneProps) {
     validatemessage,
     status,
     onChange,
-    onBlur,
     readOnly,
     testId,
     helperText,
@@ -27,6 +29,14 @@ export default function Phone(props: PhoneProps) {
     hideLabel,
     placeholder
   } = props;
+
+  const pConn = getPConnect();
+  const actions = pConn.getActionsApi();
+  const propName = (pConn.getStateProps() as any).value;
+
+  const [inputValue, setInputValue] = useState(value);
+  useEffect(() => setInputValue(value), [value]);
+
   const helperTextToDisplay = validatemessage || helperText;
 
   let testProp = {};
@@ -35,23 +45,24 @@ export default function Phone(props: PhoneProps) {
     'data-test-id': testId
   };
 
-  if (displayMode === 'LABELS_LEFT') {
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
     const disableDropdown = true;
     return (
       <div>
-        <MuiPhoneNumber
+        <MuiTelInput
           fullWidth
           helperText={helperTextToDisplay}
           placeholder={placeholder ?? ''}
-          size="small"
+          size='small'
+          defaultCountry='US'
           required={required}
           disabled={disabled}
           onChange={onChange}
@@ -68,33 +79,32 @@ export default function Phone(props: PhoneProps) {
     );
   }
 
-  const handleChange = (inputVal) => {
-    let phoneValue = inputVal && inputVal.replace(/\D+/g, '');
-    phoneValue = `+${phoneValue}`;
-    onChange({ value: phoneValue });
+  const handleChange = inputVal => {
+    setInputValue(inputVal);
   };
 
-  const handleBlur = (event) => {
+  const handleBlur = event => {
     const phoneValue = event?.target?.value;
-    event.target.value = `+${phoneValue && phoneValue.replace(/\D+/g, '')}`;
-    onBlur(event);
+    let phoneNumber = phoneValue.split(' ').slice(1).join();
+    phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
+    handleEvent(actions, 'changeNblur', propName, phoneNumber);
   };
 
   return (
-    <MuiPhoneNumber
+    <MuiTelInput
       fullWidth
-      variant="outlined"
+      variant='outlined'
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
-      defaultCountry="us"
+      size='small'
+      defaultCountry='US'
       required={required}
       disabled={disabled}
       onChange={handleChange}
       onBlur={!readOnly ? handleBlur : undefined}
       error={status === 'error'}
       label={label}
-      value={value}
+      value={inputValue}
       InputProps={{ ...testProp }}
     />
   );

@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { useFocusFirstField, useScrolltoTop } from '../../../hooks';
 
-// import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
-// Can't use AssignmentProps until the following are NOT private
-//  getCaseInfo().isAssignmentInCreateStage()
-//  getCaseInfo().isLocalAction()
-// interface AssignmentProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   children: Array<any>,
-//   itemKey: string,
-//   isInModal: boolean,
-//   banners: Array<any>
-//   // eslint-disable-next-line react/no-unused-prop-types
-//   actionButtons: Array<any>,
-// }
+interface AssignmentProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  itemKey: string;
+  isInModal: boolean;
+  banners: any[];
+  // eslint-disable-next-line react/no-unused-prop-types
+  actionButtons: any[];
+}
 
-export default function Assignment(props /* : AssignmentProps */) {
+export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const AssignmentCard = getComponentFromMap('AssignmentCard');
   const MultiStep = getComponentFromMap('MultiStep');
@@ -30,8 +28,8 @@ export default function Assignment(props /* : AssignmentProps */) {
   const [bHasNavigation, setHasNavigation] = useState(false);
   const [actionButtons, setActionButtons] = useState([]);
   const [bIsVertical, setIsVertical] = useState(false);
-  const [arCurrentStepIndicies, setArCurrentStepIndicies] = useState<Array<any>>([]);
-  const [arNavigationSteps, setArNavigationSteps] = useState<Array<any>>([]);
+  const [arCurrentStepIndicies, setArCurrentStepIndicies] = useState<any[]>([]);
+  const [arNavigationSteps, setArNavigationSteps] = useState<any[]>([]);
 
   const actionsAPI = thePConn.getActionsApi();
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
@@ -44,19 +42,21 @@ export default function Assignment(props /* : AssignmentProps */) {
   const cancelAssignment = actionsAPI.cancelAssignment.bind(actionsAPI);
   const saveAssignment = actionsAPI.saveAssignment?.bind(actionsAPI);
   const cancelCreateStageAssignment = actionsAPI.cancelCreateStageAssignment.bind(actionsAPI);
+  const approveCase = actionsAPI.approveCase?.bind(actionsAPI);
+  const rejectCase = actionsAPI.rejectCase?.bind(actionsAPI);
   // const showPage = actionsAPI.showPage.bind(actionsAPI);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  function findCurrentIndicies(arStepperSteps: Array<any>, arIndicies: Array<number>, depth: number): Array<number> {
+  function findCurrentIndicies(arStepperSteps: any[], arIndicies: number[], depth: number): number[] {
     let count = 0;
-    arStepperSteps.forEach((step) => {
+    arStepperSteps.forEach(step => {
       if (step.visited_status === 'current') {
         arIndicies[depth] = count;
 
         // add in
-        step['step_status'] = '';
+        step.step_status = '';
       } else if (step.visited_status === 'success') {
         count += 1;
         step.step_status = 'completed';
@@ -73,16 +73,33 @@ export default function Assignment(props /* : AssignmentProps */) {
     return arIndicies;
   }
 
-  useEffect(() => {
-    if (children && children.length > 0) {
-      // debugger;
+  function getStepsInfo(steps, formedSteps: any = []) {
+    steps.forEach(step => {
+      if (step.name) {
+        step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
+      }
+      if (step.steps) {
+        formedSteps = getStepsInfo(step.steps, formedSteps);
+      } else {
+        formedSteps.push(step);
+      }
+    });
+    return formedSteps;
+  }
 
-      const oWorkItem = children[0].props.getPConnect();
+  const scrollId = window.location.href.includes('embedded') ? '#pega-part-of-page' : '#portal';
+  useScrolltoTop(scrollId, children);
+  useFocusFirstField('Assignment', children);
+
+  useEffect(() => {
+    if (children) {
+      const firstChild = Array.isArray(children) ? children[0] : children;
+      const oWorkItem = firstChild.props.getPConnect();
       const oWorkData = oWorkItem.getDataObject();
-      const oData = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
+      const oData: any = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
 
       if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
-        const oCaseInfo = oData['caseInfo'];
+        const oCaseInfo = oData?.caseInfo;
 
         if (oCaseInfo && oCaseInfo.actionButtons) {
           setActionButtons(oCaseInfo.actionButtons);
@@ -101,13 +118,13 @@ export default function Assignment(props /* : AssignmentProps */) {
           } else {
             setIsVertical(false);
           }
-          const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
-          steps.forEach((step) => {
-            if (step.name) {
-              step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
-            }
-          });
-          setArNavigationSteps(steps);
+
+          if (oCaseInfo?.navigation?.steps) {
+            const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
+            const formedSteps = getStepsInfo(steps);
+            setArNavigationSteps(formedSteps);
+          }
+
           setArCurrentStepIndicies(findCurrentIndicies(arNavigationSteps, arCurrentStepIndicies, 0));
         }
       }
@@ -122,7 +139,7 @@ export default function Assignment(props /* : AssignmentProps */) {
     setShowSnackbar(true);
   }
 
-  function handleSnackbarClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
+  function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
     if (reason === 'clickaway') {
       return;
     }
@@ -130,7 +147,7 @@ export default function Assignment(props /* : AssignmentProps */) {
   }
 
   function onSaveActionSuccess(data) {
-    actionsAPI.cancelAssignment(itemKey).then(() => {
+    actionsAPI.cancelAssignment(itemKey, false).then(() => {
       PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CREATE_STAGE_SAVED, data);
     });
   }
@@ -174,22 +191,22 @@ export default function Assignment(props /* : AssignmentProps */) {
           const isAssignmentInCreateStage = thePConn.getCaseInfo().isAssignmentInCreateStage();
           const isLocalAction =
             thePConn.getCaseInfo().isLocalAction() ||
-            (PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION && getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION, '')); // 2nd arg empty string until typedefs allow it to be optional
+            (PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION && getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION));
           if (isAssignmentInCreateStage && isInModal && !isLocalAction) {
             const cancelPromise = cancelCreateStageAssignment(itemKey);
 
             cancelPromise
-              .then((data) => {
+              .then(data => {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
                 showToast(`${localizedVal('Cancel failed!', localeCategory)}`);
               });
           } else {
-            const cancelPromise = cancelAssignment(itemKey);
+            const cancelPromise = cancelAssignment(itemKey, false);
 
             cancelPromise
-              .then((data) => {
+              .then(data => {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
@@ -199,11 +216,22 @@ export default function Assignment(props /* : AssignmentProps */) {
           break;
         }
 
+        case 'rejectCase': {
+          const rejectPromise = rejectCase(itemKey);
+
+          rejectPromise
+            .then(() => {})
+            .catch(() => {
+              showToast(`${localizedVal('Rejection failed!', localeCategory)}`);
+            });
+
+          break;
+        }
+
         default:
           break;
       }
     } else if (sButtonType === 'primary') {
-      // eslint-disable-next-line sonarjs/no-small-switch
       switch (sAction) {
         case 'finishAssignment': {
           const finishPromise = finishAssignment(itemKey);
@@ -212,6 +240,18 @@ export default function Assignment(props /* : AssignmentProps */) {
             .then(() => {})
             .catch(() => {
               showToast(`${localizedVal('Submit failed!', localeCategory)}`);
+            });
+
+          break;
+        }
+
+        case 'approveCase': {
+          const approvePromise = approveCase(itemKey);
+
+          approvePromise
+            .then(() => {})
+            .catch(() => {
+              showToast(`${localizedVal('Approve failed!', localeCategory)}`);
             });
 
           break;
@@ -228,7 +268,7 @@ export default function Assignment(props /* : AssignmentProps */) {
     if (!refreshConditions) {
       return [];
     }
-    return refreshConditions.filter((item) => item.event && item.event === 'Changes').map((item) => [item.field, item.field?.substring(1)]) || [];
+    return refreshConditions.filter(item => item.event && item.event === 'Changes').map(item => [item.field, item.field?.substring(1)]) || [];
   }
 
   // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
@@ -242,12 +282,15 @@ export default function Assignment(props /* : AssignmentProps */) {
   // refresh api registration
   const refreshProps = getRefreshProps(refreshConditions);
   const caseKey = thePConn.getCaseInfo().getKey();
-  const refreshOptions = { autoDetectRefresh: true, preserveClientChanges: false };
+  const refreshOptions = {
+    autoDetectRefresh: true,
+    preserveClientChanges: false
+  };
   if (refreshProps.length > 0) {
-    refreshProps.forEach((prop) => {
+    refreshProps.forEach(prop => {
       PCore.getRefreshManager().registerForRefresh(
         'PROP_CHANGE',
-        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, null, pageReference, {
+        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, '', pageReference, {
           ...refreshOptions,
           refreshFor: prop[0]
         }),
@@ -259,10 +302,10 @@ export default function Assignment(props /* : AssignmentProps */) {
   }
 
   return (
-    <div id="Assignment">
+    <div id='Assignment'>
       {banners}
       {bHasNavigation ? (
-        <React.Fragment>
+        <>
           <MultiStep
             getPConnect={getPConnect}
             itemKey={itemKey}
@@ -280,14 +323,14 @@ export default function Assignment(props /* : AssignmentProps */) {
             onClose={handleSnackbarClose}
             message={snackbarMessage}
             action={
-              <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
-                <CloseIcon fontSize="small" />
+              <IconButton size='small' aria-label='close' color='inherit' onClick={handleSnackbarClose}>
+                <CloseIcon fontSize='small' />
               </IconButton>
             }
           />
-        </React.Fragment>
+        </>
       ) : (
-        <React.Fragment>
+        <>
           <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
             {children}
           </AssignmentCard>
@@ -297,12 +340,12 @@ export default function Assignment(props /* : AssignmentProps */) {
             onClose={handleSnackbarClose}
             message={snackbarMessage}
             action={
-              <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
-                <CloseIcon fontSize="small" />
+              <IconButton size='small' aria-label='close' color='inherit' onClick={handleSnackbarClose}>
+                <CloseIcon fontSize='small' />
               </IconButton>
             }
           />
-        </React.Fragment>
+        </>
       )}
     </div>
   );

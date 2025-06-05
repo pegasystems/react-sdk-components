@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import CurrencyTextField from '@unicef/material-ui-currency-textfield';
+import { useEffect, useState } from 'react';
+import { NumericFormat } from 'react-number-format';
+import { TextField } from '@mui/material';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { getCurrencyCharacters, getCurrencyOptions } from './currency-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
 
-// Using control from: https://github.com/unicef/material-ui-currency-textfield
-
+/* Using react-number-format component here, since it allows formatting decimal values,
+as per the locale.
+*/
 interface CurrrencyProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Currency here
   currencyISOCode?: string;
+  allowDecimals: boolean;
 }
 
 export default function Currency(props: CurrrencyProps) {
@@ -32,80 +35,76 @@ export default function Currency(props: CurrrencyProps) {
     displayMode,
     hideLabel,
     currencyISOCode = 'USD',
-    placeholder
+    placeholder,
+    allowDecimals
   } = props;
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
-  const propName = pConn.getStateProps()['value'];
+  const propName = (pConn.getStateProps() as any).value;
   const helperTextToDisplay = validatemessage || helperText;
+  const [values, setValues] = useState(value.toString());
 
-  // console.log(`Currency: label: ${label} value: ${value}`);
-
-  const testProp = {
-    'data-test-id': testId
-  };
-
-  const [currValue, setCurrValue] = useState(value.toString());
-  const [theCurrSym, setCurrSym] = useState('$');
-  const [theCurrDec, setCurrDec] = useState('.');
-  const [theCurrSep, setCurrSep] = useState(',');
+  const testProp = { 'data-test-id': testId };
 
   useEffect(() => {
-    // currencySymbols looks like this: { theCurrencySymbol: '$', theDecimalIndicator: '.', theSeparator: ',' }
-    const theSymbols = getCurrencyCharacters(currencyISOCode);
-    setCurrSym(theSymbols.theCurrencySymbol);
-    setCurrDec(theSymbols.theDecimalIndicator);
-    setCurrSep(theSymbols.theDigitGroupSeparator);
-  }, [currencyISOCode]);
+    setValues(value.toString());
+  }, [value]);
+
+  // currencySymbols looks like this: { theCurrencySymbol: '$', theDecimalIndicator: '.', theSeparator: ',' }
+  const theSymbols = getCurrencyCharacters(currencyISOCode);
+  const theCurrSym = theSymbols.theCurrencySymbol;
+  const theCurrDec = theSymbols.theDecimalIndicator;
+  const theCurrSep = theSymbols.theDigitGroupSeparator;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
-  const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+  const formattedValue = format(value, pConn.getComponentName()?.toLowerCase(), theCurrencyOptions);
 
-  if (displayMode === 'LABELS_LEFT') {
+  let readOnlyProp = {}; // Note: empty if NOT ReadOnly
+
+  if (readOnly) {
+    readOnlyProp = { readOnly: true };
+  }
+
+  let currencyProp = {};
+  currencyProp = { prefix: theCurrSym, decimalSeparator: theCurrDec, thousandSeparator: theCurrSep };
+
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
   }
 
-  function currOnChange(event) {
-    // console.log(`Currency currOnChange inValue: ${inValue}`);
-
-    // update internal value
-    setCurrValue(event?.target?.value);
+  function currOnBlur() {
+    handleEvent(actions, 'changeNblur', propName, values);
   }
 
-  function currOnBlur(event, inValue) {
-    // console.log(`Currency currOnBlur inValue: ${inValue}`);
-    handleEvent(actions, 'changeNblur', propName, inValue !== '' ? Number(inValue) : inValue);
-  }
-
-  // console.log(`theCurrSym: ${theCurrSym} | theCurrDec: ${theCurrDec} | theCurrSep: ${theCurrSep}`);
+  const handleChange = val => {
+    setValues(val.value);
+  };
 
   return (
-    <CurrencyTextField
-      fullWidth
-      variant={readOnly ? 'standard' : 'outlined'}
+    <NumericFormat
+      valueIsNumericString
+      label={label}
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
       required={required}
       disabled={disabled}
-      readOnly={!!readOnly}
-      error={status === 'error'}
-      label={label}
-      value={currValue}
-      type="text"
-      outputFormat="number"
-      textAlign="left"
-      InputProps={{ inputProps: { ...testProp, value: currValue } }}
-      currencySymbol={theCurrSym}
-      decimalCharacter={theCurrDec}
-      digitGroupSeparator={theCurrSep}
-      onChange={currOnChange}
+      onValueChange={val => {
+        handleChange(val);
+      }}
       onBlur={!readOnly ? currOnBlur : undefined}
+      error={status === 'error'}
+      name='numberformat'
+      value={values}
+      {...currencyProp}
+      decimalScale={allowDecimals !== false ? 2 : 0}
+      fixedDecimalScale={allowDecimals}
+      InputProps={{ ...readOnlyProp, inputProps: { ...testProp } }}
+      customInput={TextField}
     />
   );
 }

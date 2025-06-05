@@ -3,6 +3,5 @@
   "description": "SemanticLink",
   "type": "Field",
   "subtype": "ACTION",
-  "properties": [
-  ]
+  "properties": []
 }

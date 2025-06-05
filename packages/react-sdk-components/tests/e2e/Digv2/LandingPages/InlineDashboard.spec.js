@@ -1,6 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
-
 const { test, expect } = require('@playwright/test');
 
 const config = require('../../../config');
@@ -21,7 +18,7 @@ test.describe('E2E test', () => {
     await expect(worklist).toBeVisible();
 
     /** Creating a Complex Fields case-type */
-    let complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
+    const complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
     await complexFieldsCase.click();
 
     const caseID = await page.locator('div[id="caseId"]').textContent();
@@ -29,7 +26,7 @@ test.describe('E2E test', () => {
     await page.locator('button:has-text("submit")').click();
 
     /* Testing InlineDashboard landing page */
-    let inlineDashboard = page.locator('div[role="button"]:has-text("Inline Dashboard")');
+    const inlineDashboard = page.locator('div[role="button"]:has-text("Inline Dashboard")');
 
     await inlineDashboard.click();
 
@@ -37,24 +34,30 @@ test.describe('E2E test', () => {
     const complexFieldsList = page.locator('h6:has-text("Complex  Fields - List")');
     await expect(complexFieldsList).toBeVisible();
 
+    const table = await page.locator('div[id="list-view"] >> nth=0');
+    const numOfRows = await table.locator('tbody >> tr').count();
+
     /** Testing My Work List presence */
     const myworkList = page.locator('h6:has-text("My Work List")');
     await expect(myworkList).toBeVisible();
 
     /* Testing the filters */
-    let filters = page.locator('div[id="filters"]');
+    const filters = page.locator('div[id="filters"]');
     const caseIdFilter = filters.locator('div:has-text("Case ID")');
-    caseIdFilter.locator('input').type(caseID);
+    caseIdFilter.locator('input').fill(caseID);
 
-    await expect(page.locator(`td >> text=${caseID}`)).toBeVisible();
-    await expect(page.locator('td >> text="Complex  Fields" >> nth=1')).toBeVisible();
-    await expect(page.locator('td >> text="User DigV2"')).toBeVisible();
-    await expect(page.locator('td >> text="New" >> nth=1')).toBeVisible();
+    const pagination = page.locator('div[id="pagination"]');
+    await expect(pagination.locator('p:has-text("1–1 of 1")')).toBeVisible();
+
+    await expect(table.locator(`td >> text=${caseID}`)).toBeVisible();
+    await expect(table.locator('td >> text="Complex  Fields"')).toBeVisible();
+    await expect(table.locator('td >> text="User DigV2"')).toBeVisible();
+    await expect(table.locator('td >> text="New"')).toBeVisible();
 
     const dateFilter = filters.locator('div:has-text("Create date/time")');
     dateFilter.locator('input').click();
     const datePicker = filters.locator(
-      'div[class="react-datepicker-popper"] div[class="react-datepicker"] div[class="react-datepicker__month-container"] div[role="listbox"]'
+      'div[class="react-datepicker-popper"] div[class="react-datepicker"] div[class="react-datepicker__month-container"]'
     );
     const day = new Date();
     const nextDay = new Date(day);
@@ -65,16 +68,17 @@ test.describe('E2E test', () => {
     await currentMonthSelector.locator(`text="${day.getDate().toString()}"`).click();
     await currentMonthSelector.locator(`text="${nextDay.getDate().toString()}"`).click();
 
-    const complexTable = page.locator('div[id="list-view"] >> nth=0');
-
-    await expect(complexTable.locator(`td:has-text("${day.getDate().toString().padStart(2, '0')}")`)).toBeVisible();
-
-    let pagination = page.locator('div[id="pagination"]');
-    await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeVisible();
+    const dateCol = await table.locator('td >> nth=2');
+    await expect(dateCol.getByText(`${new Date().getDate().toString().padStart(2, '0')}`)).toBeVisible();
 
     await page.locator('a:has-text("Clear All")').click();
 
-    await expect(pagination.locator('p:has-text("1-1 of 1")')).toBeHidden();
+    await page.waitForLoadState('networkidle');
+
+    await expect(await caseIdFilter.locator('input').inputValue()).toEqual('');
+    await expect(await dateFilter.locator('input').inputValue()).toEqual('');
+
+    await expect(await table.locator('tbody >> tr')).toHaveCount(numOfRows);
   }, 10000);
 });
 

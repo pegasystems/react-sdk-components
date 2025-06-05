@@ -1,32 +1,25 @@
 /* eslint-disable react/jsx-boolean-value */
 
-import React, { useState, useEffect, useContext } from 'react';
-import { Utils } from '../../helpers/utils';
-import { Card, CardHeader, Avatar, Typography, Divider } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import { PropsWithChildren, ReactElement, useContext, useEffect, useState } from 'react';
+import { Avatar, Card, CardHeader, Divider, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
+import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  icon: string,
-  children: Array<any>,
-  subheader: string,
-  header: string,
-  showIconInHeader: boolean,
-  caseInfo: any,
+  icon: string;
+  subheader: string;
+  header: string;
+  showIconInHeader: boolean;
+  caseInfo: any;
 }
-
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 2 errors)
-declare const PCore: any;
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,11 +48,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CaseView(props: CaseViewProps) {
+export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   // Get emitted components from map (so we can get any override that may exist)
-  const CaseViewActionsMenu = getComponentFromMap("CaseViewActionsMenu");
-  const VerticalTabs = getComponentFromMap("VerticalTabs");
-  const DeferLoad = getComponentFromMap("DeferLoad");
+  const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
+  const VerticalTabs = getComponentFromMap('VerticalTabs');
+  const DeferLoad = getComponentFromMap('DeferLoad');
 
   const {
     getPConnect,
@@ -67,16 +60,11 @@ export default function CaseView(props: CaseViewProps) {
     header,
     subheader,
     children = [],
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showIconInHeader = true,
-    caseInfo: {
-      availableActions = [],
-      availableProcesses = [],
-      hasNewAttachments,
-      caseTypeID = '',
-      caseTypeName = ''
-    }
+    caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
+
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
 
@@ -97,15 +85,9 @@ export default function CaseView(props: CaseViewProps) {
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
   function getChildRegionByName(inName: string): any {
-    for (const child of children) {
-      const theMetadataType: string = child.props
-        .getPConnect()
-        .getRawMetadata()
-        ['type'].toLowerCase();
-      const theMetadataName: string = child.props
-        .getPConnect()
-        .getRawMetadata()
-        ['name'].toLowerCase();
+    for (const child of children as ReactElement[]) {
+      const theMetadataType: string = (child as ReactElement).props.getPConnect().getRawMetadata().type.toLowerCase();
+      const theMetadataName: string = (child as ReactElement).props.getPConnect().getRawMetadata().name.toLowerCase();
 
       if (theMetadataType === 'region' && theMetadataName === inName) {
         return child;
@@ -132,10 +114,10 @@ export default function CaseView(props: CaseViewProps) {
   const theTabsRegionChildren = theTabsRegion.props.getPConnect().getChildren();
 
   // vertTabInfo is sent to VerticalTabs component
-  const vertTabInfo: Array<Object> = [];
+  const vertTabInfo: Object[] = [];
 
   // deferLoadInfo is sent to DeferLoad component (currently selected entry)
-  const deferLoadInfo: Array<any> = [];
+  const deferLoadInfo: any[] = [];
 
   if (theTabsRegionChildren) {
     // populate vertTabInfo and deferLoadInfo
@@ -187,10 +169,7 @@ export default function CaseView(props: CaseViewProps) {
 
   useEffect(() => {
     if (hasNewAttachments) {
-      PCore.getPubSubUtils().publish(
-        PCore.getEvents().getCaseEvent().CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
-        true
-      );
+      PCore.getPubSubUtils().publish((PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW, true);
     }
   }, [hasNewAttachments]);
 
@@ -198,14 +177,15 @@ export default function CaseView(props: CaseViewProps) {
     const actionsAPI = thePConn.getActionsApi();
     const openLocalAction = actionsAPI.openLocalAction.bind(actionsAPI);
 
-    openLocalAction(editAction.ID, { ...editAction });
+    openLocalAction(editAction.ID, { ...editAction, containerName: 'modal', type: 'express' });
   }
 
   function getActionButtonsHtml(): any {
-    const aBHtml = (
+    return (
       <Box>
         {editAction && (
           <Button
+            id='edit'
             onClick={() => {
               _editClick();
             }}
@@ -222,8 +202,6 @@ export default function CaseView(props: CaseViewProps) {
         />
       </Box>
     );
-
-    return aBHtml;
   }
 
   function getContainerContents() {
@@ -239,7 +217,7 @@ export default function CaseView(props: CaseViewProps) {
               <CardHeader
                 className={classes.caseViewHeader}
                 title={
-                  <Typography variant='h6' component='div'>
+                  <Typography variant='h6' component='div' id='case-name'>
                     {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
                   </Typography>
                 }
@@ -265,13 +243,7 @@ export default function CaseView(props: CaseViewProps) {
           <Grid item xs={6}>
             {theStagesRegion}
             {theTodoRegion}
-            {deferLoadInfo.length > 0 && (
-              <DeferLoad
-                getPConnect={getPConnect}
-                name={deferLoadInfo[activeVertTab].config.name}
-                isTab
-              />
-            )}
+            {deferLoadInfo.length > 0 && <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab />}
           </Grid>
 
           <Grid item xs={3}>
@@ -279,16 +251,15 @@ export default function CaseView(props: CaseViewProps) {
           </Grid>
         </Grid>
       );
-    } else {
-      // displayOnlyFA - only show the "todo" region
-      return (
-        <Grid container>
-          <Grid item xs={12}>
-            {theTodoRegion}
-          </Grid>
-        </Grid>
-      );
     }
+    // displayOnlyFA - only show the "todo" region
+    return (
+      <Grid container>
+        <Grid item xs={12}>
+          {theTodoRegion}
+        </Grid>
+      </Grid>
+    );
   }
 
   return getContainerContents();

@@ -1,6 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
-
 const { test, expect } = require('@playwright/test');
 
 const config = require('../../../config');
@@ -49,7 +46,7 @@ test.describe('E2E test', () => {
     const requiredDateInput = requiredDate.locator('input');
     await requiredDateInput.click();
     const futureDate = common.getFutureDate();
-    await requiredDateInput.type(futureDate);
+    await requiredDateInput.pressSequentially(futureDate);
 
     await expect(page.locator('p.Mui-error.Mui-required')).toBeHidden();
 
@@ -99,7 +96,7 @@ test.describe('E2E test', () => {
     const editableDate = page.locator('div[data-test-id="80f5dcc587f457378158bb305ec858a8"]');
     const editableDateInput = editableDate.locator('input');
     await editableDateInput.click();
-    await editableDateInput.type(futureDate);
+    await editableDateInput.pressSequentially(futureDate);
     attributes = await common.getAttributes(editableDateInput);
     await expect(attributes.includes('readonly')).toBeFalsy();
 
@@ -124,5 +121,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-const outputDir = './test-reports/e2e/DigV2/FormFields/Date'
+const outputDir = './test-reports/e2e/DigV2/FormFields/Date';
 test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

@@ -4,6 +4,5 @@
   "description": "Details (Two column)",
   "type": "Template",
   "subtype": "DETAILS",
-  "properties": [
-  ]
+  "properties": []
 }

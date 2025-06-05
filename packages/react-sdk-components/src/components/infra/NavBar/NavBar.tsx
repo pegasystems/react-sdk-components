@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useEffect, useState } from 'react';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
-import { Utils } from '../../helpers/utils';
-import './NavBar.css';
+
 import {
   Drawer,
   List,
@@ -16,41 +16,47 @@ import {
   Menu,
   MenuItem,
   Typography
-} from '@material-ui/core';
-
-import PersonOutlineIcon from '@material-ui/icons/PersonOutlineOutlined';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import AddIcon from '@material-ui/icons/Add';
-import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
-import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-
-import { useNavBar } from '../../helpers/reactContextHelpers';
+} from '@mui/material';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutlineOutlined';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import TabletAndroidOutlineIcon from '@mui/icons-material/TabletAndroidOutlined';
+import AirportShuttleOutlinedIcon from '@mui/icons-material/AirportShuttleOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import AddIcon from '@mui/icons-material/Add';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
-import type { PConnProps } from '../../../types/PConnProps';
+import { useNavBar } from '../../helpers/reactContextHelpers';
+import { Utils } from '../../helpers/utils';
+import { PConnProps } from '../../../types/PConnProps';
 
+import './NavBar.css';
 
 interface NavBarProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   // eslint-disable-next-line react/no-unused-prop-types
-  appName?: string,
-  pages?: Array<any>,
-  caseTypes: Array<any>,
-  pConn?: any
+  appName?: string;
+  pages?: any[];
+  caseTypes: any[];
+  pConn?: any;
 }
-
 
 const iconMap = {
   'pi pi-headline': <HomeOutlinedIcon fontSize='large' />,
   'pi pi-flag-solid': <FlagOutlinedIcon fontSize='large' />,
-  'pi pi-home-solid': <HomeOutlinedIcon fontSize='large' />
+  'pi pi-home-solid': <HomeOutlinedIcon fontSize='large' />,
+  'pi pi-tablet': <TabletAndroidOutlineIcon fontSize='large' />,
+  'pi pi-ambulance': <AirportShuttleOutlinedIcon fontSize='large' />,
+  'pi pi-ink-solid': <EditOutlinedIcon fontSize='large' />,
+  'pi pi-columns': <HomeOutlinedIcon fontSize='large' />
 };
 
 const drawerWidth = 300;
@@ -118,13 +124,13 @@ export default function NavBar(props: NavBarProps) {
   const [bShowCaseTypes, setBShowCaseTypes] = useState(true);
   const [bShowOperatorButtons, setBShowOperatorButtons] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const localeUtils = PCore.getLocaleUtils();
+  const localeReference = pConn.getValue('.pyLocaleReference');
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'AppShell';
 
-  const portalLogoImage = Utils.getIconPath(Utils.getSDKStaticConentUrl()).concat(
-    'pzpega-logo-mark.svg'
-  );
+  const portalLogoImage = Utils.getIconPath(Utils.getSDKStaticConentUrl()).concat('pzpega-logo-mark.svg');
   const portalOperator = PCore.getEnvironmentInfo().getOperatorName();
   const portalApp = PCore.getEnvironmentInfo().getApplicationLabel();
 
@@ -205,7 +211,7 @@ export default function NavBar(props: NavBarProps) {
               }
             />
             <ListItemSecondaryAction>
-              <IconButton edge='end' onClick={handleDrawerOpen}>
+              <IconButton edge='end' onClick={handleDrawerOpen} size='large'>
                 <ChevronLeftIcon className={classes.appListIcon} />
               </IconButton>
             </ListItemSecondaryAction>
@@ -213,22 +219,12 @@ export default function NavBar(props: NavBarProps) {
         </List>
       ) : (
         <div className={classes.appListDiv} onClick={handleDrawerOpen}>
-          <ChevronRightIcon
-            className={classes.appListIcon}
-            id='chevron-right-icon'
-            fontSize='large'
-          />
+          <ChevronRightIcon className={classes.appListIcon} id='chevron-right-icon' fontSize='large' />
         </div>
       )}
       <List>
         <ListItem button onClick={handleCaseItemClick}>
-          <ListItemIcon>
-            {bShowCaseTypes && open ? (
-              <ClearOutlinedIcon fontSize='large' />
-            ) : (
-              <AddIcon fontSize='large' />
-            )}
-          </ListItemIcon>
+          <ListItemIcon>{bShowCaseTypes && open ? <ClearOutlinedIcon fontSize='large' /> : <AddIcon fontSize='large' />}</ListItemIcon>
           <ListItemText primary='Create' />
           {bShowCaseTypes ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
@@ -245,7 +241,7 @@ export default function NavBar(props: NavBarProps) {
               <ListItemIcon>
                 <WorkOutlineIcon fontSize='large' />
               </ListItemIcon>
-              <ListItemText primary={caseType.pyLabel} />
+              <ListItemText primary={localeUtils.getLocaleValue(caseType.pyLabel, '', localeReference)} />
             </ListItem>
           ))}
         </List>
@@ -254,7 +250,7 @@ export default function NavBar(props: NavBarProps) {
         {navPages.map(page => (
           <ListItem button onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
             <ListItemIcon>{iconMap[page.pxPageViewIcon]}</ListItemIcon>
-            <ListItemText primary={page.pyLabel} />
+            <ListItemText primary={localeUtils.getLocaleValue(page.pyLabel, '', localeReference)} />
           </ListItem>
         ))}
       </List>
@@ -262,13 +258,13 @@ export default function NavBar(props: NavBarProps) {
       <List className='marginTopAuto'>
         <>
           <ListItem onClick={navPanelOperatorButtonClick}>
-            <ListItemIcon>
+            <ListItemIcon id='person-icon'>
               <PersonOutlineIcon fontSize='large' />
             </ListItemIcon>
             <ListItemText primary={portalOperator} />
             {open && (
               <ListItemSecondaryAction>
-                <IconButton edge='end' onClick={navPanelOperatorButtonClick}>
+                <IconButton edge='end' onClick={navPanelOperatorButtonClick} size='large'>
                   <ChevronRightIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -292,7 +288,7 @@ export default function NavBar(props: NavBarProps) {
               <ListItemIcon>
                 <ArrowBackIcon fontSize='large' />
               </ListItemIcon>
-              <Typography variant='inherit'>{localizedVal('Logout', localeCategory)}</Typography>
+              <Typography variant='inherit'>{localizedVal('Log off', localeCategory)}</Typography>
             </MenuItem>
           </Menu>
         </>

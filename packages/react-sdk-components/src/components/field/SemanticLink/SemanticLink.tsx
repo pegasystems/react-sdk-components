@@ -1,14 +1,14 @@
-import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 /* although this is called the SemanticLink component, we are not yet displaying as a
 SemanticLink in SDK and only showing the value as a read only text field. */
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -52,17 +52,17 @@ export default function SemanticLink(props: SemanticLinkProps) {
   const { text, displayMode, label, hideLabel } = props;
   const classes = useStyles();
 
-  if (displayMode === 'LABELS_LEFT' || (!displayMode && label !== undefined)) {
+  if (displayMode === 'DISPLAY_ONLY' || (!displayMode && label !== undefined)) {
     const value = text || '---';
     return (
-      <Grid container spacing={1} style={{ padding: '4px 0px' }} id="semantic-link-grid">
+      <Grid container spacing={1} style={{ padding: '4px 0px' }} id='semantic-link-grid'>
         <Grid item xs={6}>
-          <Typography variant="body2" component="span" className={`${classes.fieldLabel} ${classes.fieldMargin}`}>
+          <Typography variant='body2' component='span' className={`${classes.fieldLabel} ${classes.fieldMargin}`}>
             {label}
           </Typography>
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="body2" component="span" className={classes.fieldValue}>
+          <Typography variant='body2' component='span' className={classes.fieldValue}>
             {value}
           </Typography>
         </Grid>
@@ -71,6 +71,6 @@ export default function SemanticLink(props: SemanticLinkProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={text} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={text} variant='stacked' />;
   }
 }

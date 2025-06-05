@@ -1,6 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
-
 const { test, expect } = require('@playwright/test');
 
 const config = require('../../../config');
@@ -48,7 +45,7 @@ test.describe('E2E test', () => {
     const requiredDecimal = page.locator('input[data-test-id="9de2a78c2dd0d4dfff4a9bf33349197d"]');
     requiredDecimal.click();
     await requiredDecimal.clear();
-    await requiredDecimal.type('12345');
+    await requiredDecimal.fill('12345');
     requiredDecimal.blur();
     await expect(page.locator('p.Mui-error.Mui-required')).toBeHidden();
 
@@ -92,10 +89,15 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeTruthy();
 
     const editableDecimal = page.locator('input[data-test-id="3e8f5b4dd3786ae5d79fd2dfa2e53cac"]');
-    editableDecimal.type('12345');
+    editableDecimal.fill('12345');
 
     attributes = await common.getAttributes(editableDecimal);
     await expect(attributes.includes('readonly')).toBeFalsy();
+
+    const decimalAsCurrency = page.locator('input[data-test-id="9e438afab6d7ec67b5582bded10f5172"]');
+    attributes = await common.getAttributes(decimalAsCurrency);
+    await expect(attributes.includes('readonly')).toBeTruthy();
+    await expect(await decimalAsCurrency.inputValue()).toBe('$20');
 
     /** Selecting Visibility from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');

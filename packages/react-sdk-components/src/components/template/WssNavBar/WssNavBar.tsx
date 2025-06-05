@@ -1,32 +1,29 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
-import Toolbar from '@material-ui/core/Toolbar';
-import Container from '@material-ui/core/Container';
-import { IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
-import { Button } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import MenuIcon from '@material-ui/icons/Menu';
+import makeStyles from '@mui/styles/makeStyles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
+import { IconButton, Menu, MenuItem, Typography, Button } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import MenuIcon from '@mui/icons-material/Menu';
 import { logout } from '@pega/auth/lib/sdk-auth-manager';
+import { PConnProps } from '../../../types/PConnProps';
 import './WssNavBar.css';
 
-// WssNavBar does NOT have getPConnect. So, no need to extend from PConnProps
-
-interface WssNavBarProps {
+interface WssNavBarProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  appInfo: any,
-  navLinks: Array<any>
-  operator: { currentUserInitials: string },
-  navDisplayOptions: { alignment: string, position: string},
+  appInfo: any;
+  navLinks: any[];
+  operator: { currentUserInitials: string };
+  navDisplayOptions: { alignment: string; position: string };
   // eslint-disable-next-line react/no-unused-prop-types
-  portalName: string,
-  imageSrc: string,
+  portalName: string;
+  imageSrc: string;
   // eslint-disable-next-line react/no-unused-prop-types
-  fullImageSrc: string,
-   appName: any
+  fullImageSrc: string;
+  appName: any;
 }
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -57,6 +54,9 @@ export default function WssNavBar(props: WssNavBarProps) {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'AppShell';
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -73,10 +73,7 @@ export default function WssNavBar(props: WssNavBarProps) {
   };
 
   const navLinksContent = (
-    <Box id="nav-links"
-      sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}
-      style={{ justifyContent: alignment }}
-    >
+    <Box id='nav-links' sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} style={{ justifyContent: alignment }}>
       {navLinks.map(link => (
         <Button className='link-style' key={link.text} onClick={link.onClick}>
           {link.text}
@@ -90,7 +87,7 @@ export default function WssNavBar(props: WssNavBarProps) {
       <AppBar position='static' color='primary'>
         <Container maxWidth='xl'>
           <Toolbar disableGutters style={{ justifyContent: 'space-between' }}>
-            <Button id="appName" style={{ textTransform: 'capitalize' }} onClick={appInfo.onClick}>
+            <Button id='appName' style={{ textTransform: 'capitalize' }} onClick={appInfo.onClick}>
               <img src={appInfo.imageSrc} className={classes.appListLogo} />
               <span className={classes.appName}>{appInfo.appName}</span>
             </Button>
@@ -131,7 +128,7 @@ export default function WssNavBar(props: WssNavBarProps) {
             {position === 'inline' && <>{navLinksContent}</>}
 
             <Box sx={{ flexGrow: 0 }}>
-              <IconButton onClick={handleOpenUserMenu}>
+              <IconButton onClick={handleOpenUserMenu} size='large'>
                 <Avatar>{operator.currentUserInitials}</Avatar>
               </IconButton>
               <Menu
@@ -150,7 +147,7 @@ export default function WssNavBar(props: WssNavBarProps) {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={logout}>
-                  <Typography>Logout</Typography>
+                  <Typography>{localizedVal('Log off', localeCategory)}</Typography>
                 </MenuItem>
               </Menu>
             </Box>

@@ -1,8 +1,4 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
-
 const { test, expect } = require('@playwright/test');
-
 const config = require('../../../config');
 const common = require('../../../common');
 
@@ -34,7 +30,7 @@ test.describe('E2E test', () => {
     /** selecting user from autocomplete field  */
     const searchBoxInputDiv = page.locator('div[data-test-id="75c6db46c48c2d7bb102c91d13ed766e"]');
     const searchBoxInput = searchBoxInputDiv.locator('input[aria-autocomplete="list"]');
-    await searchBoxInput.type('user');
+    await searchBoxInput.fill('user');
     const firstSearchboxOption = page.locator('div[role="presentation"] ul[role="listbox"]>li:first-child');
     await firstSearchboxOption.click();
 

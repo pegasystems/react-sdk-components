@@ -1,30 +1,24 @@
-/* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable operator-assignment */
-import { useRef, useEffect, useState, Fragment, forwardRef } from 'react';
+import { forwardRef, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { TextField } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'throttle-debounce';
-import { createFilter, combineFilters, getFormattedDate } from './filterUtils';
-import { getFilterExpression } from './filterUtils';
-import { TextField } from '@material-ui/core';
-import React from 'react';
 import DatePicker from 'react-datepicker';
+
+import { createFilter, combineFilters, getFormattedDate, getFilterExpression } from './filterUtils';
+import { PConnProps } from '../../../types/PConnProps';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import type { PConnProps } from '../../../types/PConnProps';
-
 interface DashboardFilterProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children?: Array<any>,
-  name: string,
-  filterProp: string,
-  type?: string,
-  metadata?: any
+  name: string;
+  filterProp: string;
+  type?: string;
+  metadata?: any;
 }
 
-
-export default function DashboardFilter(props: DashboardFilterProps) {
+export default function DashboardFilter(props: PropsWithChildren<DashboardFilterProps>) {
   const { children = [], name, filterProp, type = '', metadata = null, getPConnect } = props;
   const { current: filterId } = useRef(uuidv4());
 
@@ -40,7 +34,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
         } else if (type === 'RadioButtons') {
           const reference = getPConnect().getFullReference() + filterProp;
           const radList = document.getElementsByName(reference);
-          for (let i = 0; i < radList.length; i = i + 1) {
+          for (let i = 0; i < radList.length; i += 1) {
             if ((radList[i] as HTMLInputElement).value === '') {
               (radList[i] as HTMLInputElement).checked = true;
             } else {
@@ -74,10 +68,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
       filterExpression: getFilterExpression(filterValue, name, metadata)
     };
 
-    PCore.getPubSubUtils().publish(
-      PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
-      filterData
-    );
+    PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE, filterData);
   };
 
   const fireFilterChangeDebounced = debounce(500, fireFilterChange);
@@ -97,10 +88,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
         filterId,
         filterExpression: combineFilters([startFilter, endFilter], null)
       };
-      PCore.getPubSubUtils().publish(
-        PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
-        filterData
-      );
+      PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE, filterData);
     }
   };
 
@@ -108,8 +96,7 @@ export default function DashboardFilter(props: DashboardFilterProps) {
     metadata.config.onRecordChange = e => {
       fireFilterChange(e.id);
     };
-    return getPConnect().createComponent(metadata,
-      '', '', {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
+    return getPConnect().createComponent(metadata, '', 0, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
   };
 
   const onChange = dates => {
@@ -123,24 +110,15 @@ export default function DashboardFilter(props: DashboardFilterProps) {
 
   const label = metadata.config.label.substring(3);
 
-  const CustomDateInput = forwardRef<HTMLInputElement, TextProps>(
-    ({ value, onClick }, ref: any) => (
-      <TextField
-        label={label}
-        variant='outlined'
-        fullWidth
-        value={value}
-        size='small'
-        onClick={onClick}
-        ref={ref}
-      >
-        {value}
-      </TextField>
-    )
-  );
+  // eslint-disable-next-line react/no-unstable-nested-components
+  const CustomDateInput = forwardRef<HTMLInputElement, TextProps>(({ value, onClick }, ref: any) => (
+    <TextField label={label} variant='outlined' fullWidth value={value} size='small' onClick={onClick} ref={ref}>
+      {value}
+    </TextField>
+  ));
 
   return (
-    <Fragment>
+    <>
       {type === 'DateTime' && (
         <DatePicker
           onChange={onChange}
@@ -171,6 +149,6 @@ export default function DashboardFilter(props: DashboardFilterProps) {
           {children}
         </span>
       )}
-    </Fragment>
+    </>
   );
 }

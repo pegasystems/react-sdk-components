@@ -1,8 +1,4 @@
-import React from 'react';
 import { getComponentFromMap } from '../../bridge/helpers/sdk_component_map';
-
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
-declare const PCore: any;
 
 /**
  * Function that accepts array of messages as input and group them by their type and returns the resulting object
@@ -25,7 +21,7 @@ function getMessagesGrouped(inputMessages) {
   const messages = {};
 
   if (inputMessages && inputMessages instanceof Array && inputMessages.length > 0) {
-    inputMessages.forEach((item) => {
+    inputMessages.forEach(item => {
       const { message, type } = item;
       messages[type] = [...(messages[type] || []), message];
     });
@@ -69,7 +65,7 @@ function getBanners(config) {
   const banners: any = [];
   const groupedPageMessages = getMessagesGrouped(pageMessages);
 
-  Object.keys(groupedPageMessages).forEach((type) => {
+  Object.keys(groupedPageMessages).forEach(type => {
     const messagesByType = groupedPageMessages[type];
     const variant = getVariant(type);
     const pageMessagesBannerID = `${target}_${PAGE}_${type}`.toLowerCase().replace('/', '_');
@@ -86,7 +82,7 @@ function getBanners(config) {
                   category: PAGE,
                   type,
                   context: target
-                });
+                } as any);
               }
         }
       />
@@ -94,7 +90,7 @@ function getBanners(config) {
   });
 
   if (httpMessages && httpMessages.length > 0) {
-    banners.push(<AlertBanner id="modalViewContainerBanner" variant="urgent" messages={httpMessages} />);
+    banners.push(<AlertBanner id='modalViewContainerBanner' variant='urgent' messages={httpMessages} />);
   }
 
   return banners;

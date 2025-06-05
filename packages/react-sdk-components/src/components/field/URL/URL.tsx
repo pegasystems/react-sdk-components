@@ -1,7 +1,9 @@
-import React from 'react';
-import { TextField } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import { TextField } from '@mui/material';
+
+import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from '../../../types/PConnProps';
+import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface URLComponentProps extends PConnFieldProps {
   // If any, enter additional props that only exist on URLComponent here
@@ -16,14 +18,13 @@ export default function URLComponent(props: URLComponentProps) {
   const TextInput = getComponentFromMap('TextInput');
 
   const {
+    getPConnect,
     label,
     required,
     disabled,
     value = '',
     validatemessage,
     status,
-    onChange,
-    onBlur,
     readOnly,
     testId,
     helperText,
@@ -33,12 +34,22 @@ export default function URLComponent(props: URLComponentProps) {
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
-  if (displayMode === 'LABELS_LEFT') {
+  const [inputValue, setInputValue] = useState('');
+
+  const pConn = getPConnect();
+  const actions = pConn.getActionsApi();
+  const propName = (pConn.getStateProps() as any).value;
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant="stacked" />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
@@ -51,21 +62,29 @@ export default function URLComponent(props: URLComponentProps) {
     'data-test-id': testId
   };
 
+  const handleChange = event => {
+    setInputValue(event?.target?.value);
+  };
+
+  function handleBlur() {
+    handleEvent(actions, 'changeNblur', propName, inputValue);
+  }
+
   return (
     <TextField
-      type="url"
+      type='url'
       fullWidth
-      variant="outlined"
+      variant='outlined'
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}
-      size="small"
+      size='small'
       required={required}
       disabled={disabled}
-      onChange={onChange}
-      onBlur={!readOnly ? onBlur : undefined}
+      onChange={handleChange}
+      onBlur={!readOnly ? handleBlur : undefined}
       error={status === 'error'}
       label={label}
-      value={value}
+      value={inputValue}
       InputProps={{ inputProps: { ...testProp } }}
     />
   );

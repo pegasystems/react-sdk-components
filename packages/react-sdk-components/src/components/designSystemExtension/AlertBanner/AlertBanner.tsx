@@ -1,17 +1,14 @@
-import React from 'react';
-import { Alert } from '@material-ui/lab';
-
+import { Alert } from '@mui/material';
 
 // AlertBanner is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
 interface AlertBannerProps {
   // If any, enter additional props that only exist on Date here
-  id: string,
-  variant: string,
-  messages: Array<string>,
-  onDismiss?: any
+  id: string;
+  variant: string;
+  messages: string[];
+  onDismiss?: any;
 }
-
 
 const SEVERITY_MAP = {
   urgent: 'error',
@@ -20,7 +17,7 @@ const SEVERITY_MAP = {
   info: 'info'
 };
 
-export default function AlertBanner(props:AlertBannerProps) {
+export default function AlertBanner(props: AlertBannerProps) {
   const { id, variant, messages, onDismiss } = props;
   let additionalProps = {};
 
@@ -33,12 +30,7 @@ export default function AlertBanner(props:AlertBannerProps) {
   return (
     <div id={id}>
       {messages.map(message => (
-        <Alert
-          key={message}
-          variant='outlined'
-          severity={SEVERITY_MAP[variant]}
-          {...additionalProps}
-        >
+        <Alert key={message} variant='outlined' severity={SEVERITY_MAP[variant]} {...additionalProps}>
           {message}
         </Alert>
       ))}

@@ -4,6 +4,5 @@
   "description": "TwoColumn Template",
   "type": "Template",
   "subtype": "FORM",
-  "properties": [
-  ]
+  "properties": []
 }

@@ -1,28 +1,25 @@
-import React from "react";
+import { PConnProps } from '../../../types/PConnProps';
 
-// import type { PConnProps } from '../../../types/PConnProps';
+interface ReferenceProps extends PConnProps {
+  // If any, enter additional props that only exist on this component
+  visibility?: boolean;
+  context?: string;
+  readOnly?: boolean;
+  displayMode?: string;
+}
 
-// ReferenceProps can't be used until getComponentConfig() is NOT private
-// interface ReferenceProps extends PConnProps {
-//   // If any, enter additional props that only exist on this component
-//   visibility?: boolean,
-//   context?: string,
-//   readOnly?: boolean,
-//   displayMode?: string
-// }
-
-
-export default function Reference(props /*: ReferenceProps */) {
+export default function Reference(props: ReferenceProps) {
   const { visibility = true, context = '', getPConnect, readOnly = false, displayMode = '' } = props;
 
   const pConnect = getPConnect();
+  // @ts-ignore - Property 'getComponentConfig' is private and only accessible within class 'C11nEnv'.
   const referenceConfig = { ...pConnect.getComponentConfig() } || {};
 
   delete referenceConfig?.name;
   delete referenceConfig?.type;
   delete referenceConfig?.visibility;
 
-  const viewMetadata = pConnect.getReferencedView();
+  const viewMetadata: any = pConnect.getReferencedView();
 
   if (!viewMetadata) {
     // console.log("View not found ", pConnect.getComponentConfig());
@@ -37,8 +34,9 @@ export default function Reference(props /*: ReferenceProps */) {
     }
   };
 
-  const viewComponent = pConnect.createComponent(viewObject, null, null, {
-    pageReference: context
+  // @ts-ignore - Argument of type 'null' is not assignable to parameter of type 'string'.
+  const viewComponent: any = pConnect.createComponent(viewObject, null, null, {
+    pageReference: context && context.startsWith('@CLASS') ? '' : context
   });
 
   viewComponent.props.getPConnect().setInheritedConfig({
@@ -48,7 +46,7 @@ export default function Reference(props /*: ReferenceProps */) {
   });
 
   if (visibility !== false) {
-    return <React.Fragment>{viewComponent}</React.Fragment>;
+    return <>{viewComponent}</>;
   }
   return null;
 }

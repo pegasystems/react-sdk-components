@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Utils } from '../../helpers/utils';
-import Avatar from '@material-ui/core/Avatar';
-import { NavContext } from '../../helpers/reactContextHelpers';
-import './AppShell.css';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { PropsWithChildren, useEffect, useState } from 'react';
+import makeStyles from '@mui/styles/makeStyles';
+import Avatar from '@mui/material/Avatar';
 
-import type { PConnProps } from '../../../types/PConnProps';
+import { Utils } from '../../helpers/utils';
+import { NavContext } from '../../helpers/reactContextHelpers';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { PConnProps } from '../../../types/PConnProps';
+
+import './AppShell.css';
 
 interface AppShellProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  showAppName: boolean,
-  pages: Array<{
-    pxPageViewIcon: string,
-    pyClassName: string,
-    pyLabel: string,
-    pyRuleName: string,
-    pyURLContent: string,
-
-  }>,
-  caseTypes?:Array<object>,
-  children?: Array<any>,
-  portalTemplate: string,
-  portalName: string,
-  portalLogo : string,
-  navDisplayOptions: { alignment: string, position: string }
+  showAppName: boolean;
+  pages: {
+    pxPageViewIcon: string;
+    pyClassName: string;
+    pyLabel: string;
+    pyRuleName: string;
+    pyURLContent: string;
+  }[];
+  caseTypes?: object[];
+  portalTemplate: string;
+  portalName: string;
+  portalLogo: string;
+  navDisplayOptions: { alignment: string; position: string };
+  httpMessages: string[];
+  pageMessages: string[];
 }
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,14 +47,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// Remove this and use "real" PCore type once .d.ts is fixed (currently shows 1 error)
-declare const PCore: any;
-
-
-export default function AppShell(props:AppShellProps) {
+export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   // Get emitted components from map (so we can get any override that may exist)
-  const NavBar = getComponentFromMap("NavBar");
-  const WssNavBar = getComponentFromMap("WssNavBar");
+  const NavBar = getComponentFromMap('NavBar');
+  const WssNavBar = getComponentFromMap('WssNavBar');
+  const AlertBanner = getComponentFromMap('AlertBanner');
 
   const {
     pages = [],
@@ -62,6 +59,8 @@ export default function AppShell(props:AppShellProps) {
     showAppName,
     children = [],
     getPConnect,
+    httpMessages = [],
+    pageMessages = [],
     portalTemplate,
     portalName,
     portalLogo,
@@ -69,33 +68,42 @@ export default function AppShell(props:AppShellProps) {
   } = props;
 
   const [open, setOpen] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeTab, setActiveTab] = useState(!pages ? null : pages[0]?.pyRuleName);
   const pConn = getPConnect();
   const envInfo = PCore.getEnvironmentInfo();
   const imageKey = envInfo.getOperatorImageInsKey();
-  const userName = envInfo.getOperatorName();
+  const userName = envInfo.getOperatorName() || '';
   const currentUserInitials = Utils.getInitials(userName);
   const appNameToDisplay = showAppName ? envInfo.getApplicationLabel() : '';
-  const portalClass = pConn.getValue('.classID', '');  // 2nd arg empty string until typedef marked correctly
+  const portalClass = pConn.getValue('.classID', ''); // 2nd arg empty string until typedef marked correctly
   const envPortalName = envInfo.getPortalName();
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
 
   const classes = useStyles();
   const actionsAPI = pConn.getActionsApi();
-  const localeReference = pConn.getValue('.pyLocaleReference', '');  // 2nd arg empty string until typedef marked correctly
-  const [imageBlobUrl, setImageBlobUrl] = useState(null);
+  const localeReference = pConn.getValue('.pyLocaleReference', ''); // 2nd arg empty string until typedef marked correctly
+  const [imageBlobUrl, setImageBlobUrl] = useState<string | null>(null);
   // useState for appName and mapChildren - note these are ONLY updated once (on component mount!)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [appName, setAppName] = useState('');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mapChildren, setMapChildren] = useState([]);
 
+  const messages = [...httpMessages, ...pageMessages];
+
+  const hasBanner = messages && messages.length ? messages.length > 0 : false;
+  let banners: any = null;
+  banners = hasBanner && (
+    <div style={{ display: 'flex', flexDirection: 'column', padding: '1em 0' }}>
+      <AlertBanner id='AppShell' variant='urgent' messages={messages} />
+    </div>
+  );
   // Initial setting of appName and mapChildren
   useEffect(() => {
-    setAppName(PCore.getEnvironmentInfo().getApplicationName());
+    setAppName(PCore.getEnvironmentInfo().getApplicationName() || '');
 
-    const tempMap: any = pConn.getChildren()?.["map"]((child: any, index) => {
+    const tempMap: any = (pConn.getChildren() as any)?.map((child: any, index) => {
       const theChildComp = child.getPConnect().getComponentName();
       const theKey = `.${index}`;
       return (
@@ -108,6 +116,25 @@ export default function AppShell(props:AppShellProps) {
     setMapChildren(tempMap);
   }, []);
 
+  useEffect(() => {
+    // @ts-ignore
+    const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
+    if (caseTypesAvailableToCreateDP) {
+      const portalID = pConn.getValue('.pyOwner');
+      PCore.getDataPageUtils()
+        .getPageDataAsync(caseTypesAvailableToCreateDP, pConn.getContextName(), {
+          PortalName: portalID
+        })
+        .then((response: { pyCaseTypesAvailableToCreate?: any }) => {
+          if (response?.pyCaseTypesAvailableToCreate) {
+            pConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
+              skipDirtyValidation: true
+            });
+          }
+        });
+    }
+  }, []);
+
   const [iconURL, setIconURL] = useState('');
   const [fullIconURL, setFullIconURL] = useState('');
   useEffect(() => {
@@ -118,9 +145,7 @@ export default function AppShell(props:AppShellProps) {
       portalLogo.toLowerCase().includes('py-logo') ||
       portalLogo.toLowerCase().includes('py-full-logo')
     ) {
-      const portalLogoImage = Utils.getIconPath(Utils.getSDKStaticConentUrl()).concat(
-        'pzpega-logo-mark.svg'
-      );
+      const portalLogoImage = Utils.getIconPath(Utils.getSDKStaticConentUrl()).concat('pzpega-logo-mark.svg');
       setIconURL(portalLogoImage);
       setFullIconURL(`${Utils.getSDKStaticConentUrl()}static/py-full-logo.svg`);
     }
@@ -134,10 +159,8 @@ export default function AppShell(props:AppShellProps) {
           setFullIconURL(data);
         })
         .catch(() => {
-           // eslint-disable-next-line no-console
-          console.error(
-            `${localizedVal('Unable to load the image for the portal logo/icon with the insName', 'AppShell')}:${portalLogo}`
-          );
+          // eslint-disable-next-line no-console
+          console.error(`${localizedVal('Unable to load the image for the portal logo/icon with the insName', 'AppShell')}:${portalLogo}`);
         });
     }
   }, [portalLogo]);
@@ -176,10 +199,7 @@ export default function AppShell(props:AppShellProps) {
           name,
           icon: page.pxPageViewIcon.replace('pi pi-', ''),
           active: page.pyRuleName === activeTab,
-          onClick: () =>
-            !page.pyURLContent || page.pyURLContent === ''
-              ? showPage(page.pyRuleName, page.pyClassName)
-              : openURL(page.pyURLContent)
+          onClick: () => (!page.pyURLContent || page.pyURLContent === '' ? showPage(page.pyRuleName, page.pyClassName) : openURL(page.pyURLContent))
         };
       });
 
@@ -198,18 +218,10 @@ export default function AppShell(props:AppShellProps) {
           portalName={portalName}
           imageSrc={iconURL}
           fullImageSrc={fullIconURL}
-          appName={localizedVal(
-            appNameToDisplay,
-            '',
-            `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()
-          )}
+          appName={localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase())}
           appInfo={{
             imageSrc: iconURL,
-            appName: localizedVal(
-              appNameToDisplay,
-              '',
-              `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()
-            ),
+            appName: localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()),
             onClick: links[0] && /* links[0].onClick ? */ links[0].onClick /* : undefined */
           }}
           navLinks={links.filter((link, index) => {
@@ -218,27 +230,30 @@ export default function AppShell(props:AppShellProps) {
           operator={getOperator()}
           navDisplayOptions={navDisplayOptions}
         />
-        <div className={classes.wsscontent}>{children}</div>
+        <div className={classes.wsscontent}>
+          {banners}
+          {children}
+        </div>
       </div>
-
     );
   }
 
   return (
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <NavContext.Provider value={{ open, setOpen }}>
       <div id='AppShell' className={classes.root}>
         <NavBar
           getPConnect={getPConnect}
           pConn={getPConnect()}
-          appName={localizedVal(
-            appNameToDisplay,
-            '',
-            `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()
-          )}
+          appName={localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase())}
           pages={pages}
           caseTypes={caseTypes}
-        ></NavBar>
-        <div className={classes.content}>{children}</div>
+        />
+
+        <div className={classes.content}>
+          {banners}
+          {children}
+        </div>
       </div>
     </NavContext.Provider>
   );

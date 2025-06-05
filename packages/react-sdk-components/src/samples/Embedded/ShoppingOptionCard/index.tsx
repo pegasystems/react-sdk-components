@@ -1,12 +1,10 @@
-/* eslint-disable react/button-has-type */
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   swatchHeader: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: '#333000',
+    backgroundColor: '#333000'
   },
   swatchPackage: {
     display: 'flex',
@@ -35,8 +33,7 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: 'normal',
     alignItems: 'center',
     backgroundColor: theme.palette.primary.main,
-    width: '100px',
-
+    width: '100px'
   },
   swatchCount: {
     letterSpacing: 'normal',
@@ -47,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   swatchLabel: {
     letterSpacing: 'normal',
     color: 'white',
-    fontSize: '17px',
+    fontSize: '17px'
   },
   swatchBody: {
     letterSpacing: 'normal',
@@ -111,65 +108,54 @@ const useStyles = makeStyles((theme) => ({
     margin: '20px',
     padding: '10px 30px'
   }
-
 }));
 
-
-export default function EmbeddedSwatch(props) {
+export default function ShoppingOptionCard(props) {
   const classes = useStyles();
 
-  const { play, level, channels, channels_full: channelsFull, banner, price, internetSpeed, calling, pcore } = props;
+  const { play, level, channels, channels_full: channelsFull, banner, price, internetSpeed, calling } = props;
 
   return (
-  <div>
-    <div className={classes.swatchHeader}>
+    <div>
+      <div className={classes.swatchHeader}>
         <div className={classes.swatchPackage}>
-            <div className={classes.swatchPlay}>
-              {play}
-            </div>
-            <div className={classes.swatchLevel}>
-              {level}
-            </div>
+          <div className={classes.swatchPlay}>{play}</div>
+          <div className={classes.swatchLevel}>{level}</div>
         </div>
         <div className={classes.swatchChannels}>
-            <div className={classes.swatchCount}>
-                {channels}
-            </div>
-            <div className={classes.swatchLabel}>
-                Channels
-            </div>
+          <div className={classes.swatchCount}>{channels}</div>
+          <div className={classes.swatchLabel}>Channels</div>
         </div>
-    </div>
-    <div className={classes.swatchBody}>
-        <div className={classes.swatchBanner}>
-            {banner}
-        </div>
+      </div>
+      <div className={classes.swatchBody}>
+        <div className={classes.swatchBanner}>{banner}</div>
         <ul>
-            <li>{channelsFull} channels plus FREE HD</li>
-            <li>Thousands of On Demand choices</li>
-            <li>Watch on the { pcore ? pcore.getEnvironmentInfo().getApplicationLabel() : null} App</li>
-            <li>Up to {internetSpeed} Internet Speeds</li>
-            <li>Unlimited nationwide calling {calling}</li>
+          <li>{channelsFull} channels plus FREE HD</li>
+          <li>Thousands of On Demand choices</li>
+          <li>Watch on the {PCore.getEnvironmentInfo().getApplicationLabel()} App</li>
+          <li>Up to {internetSpeed} Internet Speeds</li>
+          <li>Unlimited nationwide calling {calling}</li>
         </ul>
 
         <div className={classes.swatchPrice}>
-            <div className={classes.swatchFromGroup}>
-                <div className={classes.swatchFrom}>From</div>
-                <div className={classes.swatchCurrency}>$</div>
-            </div>
+          <div className={classes.swatchFromGroup}>
+            <div className={classes.swatchFrom}>From</div>
+            <div className={classes.swatchCurrency}>$</div>
+          </div>
 
-            <div className={classes.swatchDollars}>{price.substring(0, price.indexOf("."))}</div>
-            <div className={classes.swatchMonthly}>
-                <div className={classes.swatchCents}>{price.substring(price.indexOf(".") + 1)}</div>
-                <div>for 12 months</div>
-                <div>when bundled</div>
-            </div>
+          <div className={classes.swatchDollars}>{price.substring(0, price.indexOf('.'))}</div>
+          <div className={classes.swatchMonthly}>
+            <div className={classes.swatchCents}>{price.substring(price.indexOf('.') + 1)}</div>
+            <div>for 12 months</div>
+            <div>when bundled</div>
+          </div>
         </div>
         <div>
-            <button className={classes.swatchShopButton} onClick={ () => (props.onClick(level))}>SHOP NOW</button>
+          <button className={classes.swatchShopButton} type='button' onClick={() => props.onClick(level)}>
+            SHOP NOW
+          </button>
         </div>
       </div>
     </div>
   );
-
 }

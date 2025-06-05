@@ -6,6 +6,12 @@ body {
   margin: 0px;
 }
 
+*, ::before, ::after {
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
+
 #app-nopega {
   margin: 8px;
 }

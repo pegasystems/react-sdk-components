@@ -1,6 +1,37 @@
-### React SDK - Release Announcement - v23.1.10 (08 November 2023)
+### React SDK - Release Announcement - v24.1.10 (05 July 2024)
 
-This release - **SDK-R v23.1.10** - is **only compatible with Pega Infinity 23**. This release is related to the [**main** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/main).
+This release - **SDK-R v24.1.10** - is **only compatible with Pega Infinity 24**. This release is related to the [**release/24.1.10** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/release/24.1.10).
+<br>
+
+The SDK-R v24.1.10 release allow React SDK users to to take advantage of the latest [SDK enhancements and fixes noted in **What's New in the SDK?**](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/react-sdk-updates.html) including:
+
+* Support has been added for the approve and reject case actions
+* Formatting of currency values now works as expected
+* Bug fixes
+* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/pulls?q=is%3Apr+is%3Amerged+base%3Amaster+). This release includes all PRs since (and including) #348.
+<br />
+<hr />
+
+### Previous Releases
+
+#### React SDK - v23.1.11 (10 April 2024)
+This release - **SDK-R v23.1.11** - is **only compatible with Pega Infinity 23**. This release is related to the [**release/23.1.11** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/release/23.1.11).
+<br>
+
+The SDK-R v23.1.11 release allow React SDK users to to take advantage of the latest [SDK enhancements and fixes noted in **What's New in the SDK?**](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/react-sdk-updates.html) including:
+
+* React version upgrade to 17
+* Additional functionality including FieldGroup support, Multiple Attachement, Optional Process flows
+* Added modal dialog edit view in table
+* Added Lint support to improve code quality and Prettier support for code formatting.
+* Bug fixes
+* The @pega/react-sdk-components package (version 23.1.12) released in May 2024, you can check what has been added as part of this release in [**What's New in the SDK?**](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/react-sdk-updates.html)
+* Full set of merged PRs can be found in the [react-sdk-components GitHub repo list of merged PRs](https://github.com/pegasystems/react-sdk-components/commits/release/23.1). This release includes all PRs since (and including) #232 and #354.
+<hr />
+
+#### React SDK - v23.1.10 (08 November 2023)
+
+This release - **SDK-R v23.1.10** - is **only compatible with Pega Infinity 23**. This release is related to the [**release/23.1.10** branch of the React SDK repository](https://github.com/pegasystems/react-sdk/tree/release/23.1.10).
 <br>
 (If you currently are using the React SDK with Pega Infinity 8.8, update your SDK to
 the [SDK-R v8.8.20 - release/8.8.20 branch](https://github.com/pegasystems/react-sdk/tree/release/8.8.20).)
@@ -17,8 +48,6 @@ For more information, see [Using type definitions - update link when published](
 
 
 <hr />
-
-### Previous Releases
 
 #### **Release SDK-R-C 8.23.11 (10 August 2023)**
 

@@ -4,6 +4,5 @@
   "description": "Followers",
   "type": "Widget",
   "subtype": "CASE",
-  "properties": [
-  ]
+  "properties": []
 }

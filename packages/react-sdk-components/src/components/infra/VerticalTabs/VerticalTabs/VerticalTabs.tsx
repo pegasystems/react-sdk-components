@@ -1,31 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react';
+import makeStyles from '@mui/styles/makeStyles';
+import Tabs from '@mui/material/Tabs';
 
-import Tabs from '@material-ui/core/Tabs';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
 // VerticalTabs does NOT have getPConnect. So, no need to extend from PConnProps
 interface VerticalTabsProps {
   // If any, enter additional props that only exist on this component
-  tabconfig: Array<any>
+  tabconfig: any[];
 }
-
 
 // The MuiTabs-indicator class is in a span whose parent is div (under the Tabs root component)
 //  So, we're going to make the selected vertical tab indicator use a color from our theme.
-const useStyles = makeStyles((theme) => (
-    {
-    tabs: {
-      '& div > span': {
-        backgroundColor: theme.palette.info.dark,
-        width: "3px"
-      },
-    },
+const useStyles = makeStyles(theme => ({
+  tabs: {
+    '& div > span': {
+      backgroundColor: theme.palette.info.dark,
+      width: '3px'
+    }
+  }
 }));
 
 // Implementation of custom event inspired by:
 //  https://betterprogramming.pub/master-your-react-skills-with-event-listeners-ebc01dde4fad
-const createCustomEvent = (eventName: string, additionalData: {[key: string]: string}): CustomEvent | null => {
+const createCustomEvent = (eventName: string, additionalData: { [key: string]: string }): CustomEvent | null => {
   if (window) {
     return new CustomEvent(eventName, {
       detail: { additionalData }
@@ -35,10 +33,9 @@ const createCustomEvent = (eventName: string, additionalData: {[key: string]: st
   return null;
 };
 
-
 export default function VerticalTabs(props: VerticalTabsProps) {
   // Get emitted components from map (so we can get any override that may exist)
-  const LeftAlignVerticalTab = getComponentFromMap("LeftAlignVerticalTabs");
+  const LeftAlignVerticalTab = getComponentFromMap('LeftAlignVerticalTabs');
 
   // Get a React warning when we use tabConfig as mixed case. So all lowercase tabconfig
   const { tabconfig = [] } = props;
@@ -46,14 +43,12 @@ export default function VerticalTabs(props: VerticalTabsProps) {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-
-    const eventData = {"itemClicked": value.toString()};
+    const eventData = { itemClicked: value.toString() };
     const myEvent = createCustomEvent('VerticalTabClick', eventData);
 
     if (myEvent !== null) {
-      document.dispatchEvent( myEvent );
+      document.dispatchEvent(myEvent);
     }
-
   }, [value]);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -61,15 +56,13 @@ export default function VerticalTabs(props: VerticalTabsProps) {
   };
 
   return (
-    <div id="VerticalTabs">
+    <div id='VerticalTabs'>
       {/* VerticalTabs: {JSON.stringify(tabconfig)} */}
-      <Tabs
-        className={classes.tabs}
-        orientation="vertical"
-        value={value}
-        onChange={handleChange}>
-        {tabconfig.map((tab) => <LeftAlignVerticalTab {...props} label={tab.name} key={tab.name} />)}
+      <Tabs className={classes.tabs} orientation='vertical' value={value} onChange={handleChange}>
+        {tabconfig.map(tab => (
+          <LeftAlignVerticalTab {...props} label={tab.name} key={tab.name} />
+        ))}
       </Tabs>
     </div>
-  )
+  );
 }

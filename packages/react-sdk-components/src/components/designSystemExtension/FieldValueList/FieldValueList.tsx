@@ -1,18 +1,16 @@
-import React from 'react';
-
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 
 // FieldValueList is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
-interface FieldValueListProps{
+interface FieldValueListProps {
   // If any, enter additional props that only exist on this component
-  name?: string,
-  value: any,
-  variant?: string
+  name?: string;
+  value: any;
+  variant?: string;
+  isHtml?: boolean;
 }
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,16 +46,12 @@ function formatItemValue(value) {
 }
 
 export default function FieldValueList(props: FieldValueListProps) {
-  const { name, value, variant = 'inline' } = props;
+  const { name, value, variant = 'inline', isHtml = false } = props;
   const classes = useStyles();
 
   function getGridItemLabel() {
     return (
-      <Grid
-        item
-        xs={variant === 'stacked' ? 12 : 6}
-        className={variant === 'stacked' ? classes.noPaddingBottom : ''}
-      >
+      <Grid item xs={variant === 'stacked' ? 12 : 4} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
         <Typography variant='body2' component='span' className={`${classes.fieldLabel}`}>
           {name}
         </Typography>
@@ -69,28 +63,23 @@ export default function FieldValueList(props: FieldValueListProps) {
     const formattedValue = formatItemValue(value);
 
     return (
-      <Grid
-        item
-        xs={variant === 'stacked' ? 12 : 6}
-        className={variant === 'stacked' ? classes.noPaddingTop : ''}
-      >
-        <Typography
-          variant={variant === 'stacked' ? 'h6' : 'body2'}
-          component='span'
-          className={classes.fieldValue}
-        >
-          {formattedValue}
-        </Typography>
+      <Grid item xs={variant === 'stacked' ? 12 : 8} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
+        {isHtml ? (
+          // eslint-disable-next-line react/no-danger
+          <div dangerouslySetInnerHTML={{ __html: formattedValue }} />
+        ) : (
+          <Typography variant={variant === 'stacked' ? 'h6' : 'body2'} component='span' className={classes.fieldValue}>
+            {formattedValue}
+          </Typography>
+        )}
       </Grid>
     );
   }
 
   return (
-    <React.Fragment>
-      <Grid container spacing={4} justifyContent='space-between'>
-        {getGridItemLabel()}
-        {getGridItemValue()}
-      </Grid>
-    </React.Fragment>
+    <Grid container spacing={4} justifyContent='space-between'>
+      {getGridItemLabel()}
+      {getGridItemValue()}
+    </Grid>
   );
-};
+}

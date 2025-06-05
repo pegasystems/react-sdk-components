@@ -2,13 +2,13 @@
 
 const handleEvent = (actions: any, eventType: string, propName: string, value: string) => {
   switch (eventType) {
-    case "change":
+    case 'change':
       actions.updateFieldValue(propName, value);
       break;
-    case "blur":
+    case 'blur':
       actions.triggerFieldChange(propName, value);
       break;
-    case "changeNblur":
+    case 'changeNblur':
       actions.updateFieldValue(propName, value);
       actions.triggerFieldChange(propName, value);
       break;

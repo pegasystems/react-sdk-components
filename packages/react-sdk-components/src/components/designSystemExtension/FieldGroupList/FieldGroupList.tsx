@@ -1,8 +1,6 @@
-import React from 'react';
-
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
 
 import { Utils } from '../../helpers/utils';
 
@@ -10,19 +8,15 @@ import { Utils } from '../../helpers/utils';
 //  So, no need to extend PConnProps
 interface FieldGroupListProps {
   // If any, enter additional props that only exist on this component
-  items: Array<any> | any,
-  onDelete: any,
-  onAdd: any
+  items: any[] | any;
+  onDelete: any;
+  onAdd: any;
 }
-
 
 export default function FieldGroupList(props: FieldGroupListProps) {
   let menuIconOverride$ = 'trash';
   if (menuIconOverride$) {
-    menuIconOverride$ = Utils.getImageSrc(
-      menuIconOverride$,
-      Utils.getSDKStaticConentUrl()
-    );
+    menuIconOverride$ = Utils.getImageSrc(menuIconOverride$, Utils.getSDKStaticConentUrl());
   }
 
   return (
@@ -43,7 +37,7 @@ export default function FieldGroupList(props: FieldGroupListProps) {
                     props.onDelete(item.id);
                   }}
                 >
-                  <img className='psdk-utility-card-action-svg-icon' src={menuIconOverride$}></img>
+                  <img className='psdk-utility-card-action-svg-icon' src={menuIconOverride$} />
                 </button>
               )}
               {item.children}
@@ -53,7 +47,7 @@ export default function FieldGroupList(props: FieldGroupListProps) {
             </Grid>
           ))}
           {props.onAdd && (
-            <Link onClick={props.onAdd} style={{ cursor: 'pointer' }}>
+            <Link onClick={props.onAdd} style={{ cursor: 'pointer' }} underline='hover'>
               +Add
             </Link>
           )}
@@ -61,4 +55,4 @@ export default function FieldGroupList(props: FieldGroupListProps) {
       </Grid>
     </Grid>
   );
-};
+}

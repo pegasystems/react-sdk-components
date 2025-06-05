@@ -34,10 +34,8 @@ const getDefaultConfig = (fieldMeta, classID, show) => {
   };
 };
 
-
 export default function getDefaultViewMeta(fieldMeta, classID, showField) {
-  const { type, name, displayAs, fieldID, isUserReference, associationID, datasource, label, fieldType } =
-    fieldMeta;
+  const { type, name, displayAs, fieldID, isUserReference, associationID, datasource, label, fieldType } = fieldMeta;
   const mapperKey = type && displayAs ? type.concat(':').concat(displayAs) : type;
   const defaultConfig = getDefaultConfig(fieldMeta, classID, showField);
   let viewMeta;

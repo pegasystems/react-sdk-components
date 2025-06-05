@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import isDeepEqual from 'fast-deep-equal/react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getCurrencyOptions } from '../../field/Currency/currency-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -12,22 +13,21 @@ import { format } from '../../helpers/formatters';
 
 // CaseSummaryFields is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
-interface CaseSummaryFieldsProps{
+interface CaseSummaryFieldsProps {
   // If any, enter additional props that only exist on this component
-  status?: string,
-  showStatus?: boolean,
-  theFields: Array<any> | any | never
+  status?: string;
+  showStatus?: boolean;
+  theFields: any[] | any | never;
 }
-
 
 export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   // Get emitted components from map (so we can get any override that may exist)
-  const Operator = getComponentFromMap("Operator");
+  const Operator = getComponentFromMap('Operator');
 
   const { status, showStatus, theFields } = props;
 
   const [theFieldsToRender, setFieldsToRender] = useState([]);
-  const [theFieldsAsGridItems, setFieldsAsGridItems] = useState<Array<any>>([]);
+  const [theFieldsAsGridItems, setFieldsAsGridItems] = useState<any[]>([]);
 
   function getFieldValue(field: any): any {
     const fieldTypeLower = field.type.toLowerCase();
@@ -37,12 +37,13 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       // eslint-disable-next-line sonarjs/no-small-switch
       switch (fieldTypeLower) {
         case 'caseoperator':
-          return <Operator caseOpConfig={field.config} />;
+          return <Operator {...field.config} />;
           break;
 
         default:
           return (
             <TextField
+              variant='standard'
               value='---'
               label={field.config.label}
               InputProps={{
@@ -61,6 +62,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       case 'dropdown':
         return (
           <TextField
+            variant='standard'
             value={field.config.value}
             label={field.config.label}
             InputProps={{
@@ -77,6 +79,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
 
         return (
           <TextField
+            variant='standard'
             value={fieldValue}
             label={fieldLabel}
             InputProps={{
@@ -90,6 +93,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       case 'status':
         return (
           <TextField
+            variant='standard'
             className='psdk-csf-status-style'
             value={field.config.value}
             label={field.config.label}
@@ -105,11 +109,15 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         return (
           <a href={`tel:${displayPhone}`}>
             <TextField
+              variant='standard'
               value={field.config.value}
               label={field.config.label}
               InputProps={{
                 readOnly: true,
-                inputProps: { style: { cursor: 'pointer' }, disableUnderline: true }
+                inputProps: {
+                  style: { cursor: 'pointer' },
+                  disableUnderline: true
+                }
               }}
             />
           </a>
@@ -121,6 +129,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         return (
           <a href={`mailto:${displayEmail}`}>
             <TextField
+              variant='standard'
               value={field.config.value}
               label={field.config.label}
               InputProps={{
@@ -137,11 +146,15 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       case 'datetime': {
         const theDateFormatInfo = getDateFormatInfo();
         // console.log(`theDateFormatInfo: ${theDateFormatInfo}`);
-        const theFormat = (fieldTypeLower === 'datetime') ? `${theDateFormatInfo.dateFormatStringLong} hh:mm a` : theDateFormatInfo.dateFormatStringLong
+        const theFormat =
+          fieldTypeLower === 'datetime' ? `${theDateFormatInfo.dateFormatStringLong} hh:mm a` : theDateFormatInfo.dateFormatStringLong;
 
         return (
           <TextField
-            value={format(field.config.value, field.type, { format: theFormat })}
+            variant='standard'
+            value={format(field.config.value, field.type, {
+              format: theFormat
+            })}
             label={field.config.label}
             InputProps={{
               readOnly: true,
@@ -149,12 +162,13 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
             }}
           />
         );
-    }
+      }
 
       case 'currency': {
         const theCurrencyOptions = getCurrencyOptions(field.config?.currencyISOCode);
         return (
           <TextField
+            variant='standard'
             value={format(field.config.value, field.type, theCurrencyOptions)}
             label={field.config.label}
             InputProps={{
@@ -163,14 +177,13 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
             }}
           />
         );
-
       }
-
 
       case 'boolean':
       case 'userreference':
         return (
           <TextField
+            variant='standard'
             value={format(field.config.value, field.type)}
             label={field.config.label}
             InputProps={{
@@ -181,7 +194,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         );
 
       case 'caseoperator':
-        return <Operator caseOpConfig={field.config} />;
+        return <Operator {...field.config} />;
 
       default:
         return (
@@ -214,7 +227,10 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   // Special Case: if showStatus is true, splice the status value to be 2nd in theFields
   //  if it's not already there
   if (showStatus && theFields?.[1].type !== 'status') {
-    const oStatus = { type: 'status', config: { value: status, label: 'Status' } };
+    const oStatus = {
+      type: 'status',
+      config: { value: status, label: 'Status' }
+    };
 
     const count = theFieldsModifiable.length;
     if (count < 2) {
@@ -231,10 +247,8 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   }
 
   return (
-    <React.Fragment>
-      <Grid container className='psdk-case-summary-fields'>
-        {theFieldsAsGridItems}
-      </Grid>
-    </React.Fragment>
+    <Grid container className='psdk-case-summary-fields'>
+      {theFieldsAsGridItems}
+    </Grid>
   );
 }

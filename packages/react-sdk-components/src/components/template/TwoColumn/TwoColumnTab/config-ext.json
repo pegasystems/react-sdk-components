@@ -4,6 +4,5 @@
   "description": "Two column",
   "type": "Template",
   "subtype": "TAB",
-  "properties": [
-  ]
+  "properties": []
 }

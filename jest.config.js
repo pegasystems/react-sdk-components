@@ -7,5 +7,5 @@ module.exports = {
     '^.+\\.(t|j)sx?$': 'ts-jest'
   },
   setupFilesAfterEnv: ['<rootDir>/packages/react-sdk-components/tests/setupTests.js'],
-  coverageDirectory: "tests/coverage"
+  coverageDirectory: 'tests/coverage'
 };

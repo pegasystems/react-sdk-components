@@ -1,6 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-undef */
-
 const { test, expect } = require('@playwright/test');
 
 const config = require('../../../config');
@@ -43,13 +40,19 @@ test.describe('E2E test', () => {
     await page.locator('button:has-text("submit")').click();
 
     /** Required tests */
-    const requiredPercentage = page.locator('input[data-test-id="86a805ca8375ed5df057777df74dd085"]');
-    attributes = await common.getAttributes(requiredPercentage);
-    await expect(attributes.includes('required')).toBeTruthy();
-
     const notrequiredPercentage = page.locator('input[data-test-id="b1de2a4d96400570b2f6de9defed1adc"]');
     attributes = await common.getAttributes(notrequiredPercentage);
     await expect(attributes.includes('required')).toBeFalsy();
+
+    const requiredPercentage = page.locator('input[data-test-id="86a805ca8375ed5df057777df74dd085"]');
+    requiredPercentage.pressSequentially('10');
+    notrequiredPercentage.click();
+    attributes = await common.getAttributes(requiredPercentage);
+    await expect(attributes.includes('required')).toBeTruthy();
+    await expect(attributes.includes('placeholder')).toBeTruthy();
+    await expect(page.locator('div >> label').filter({ hasText: 'Required Percentage *' })).toBeVisible();
+    await expect(page.locator('div >> p:has-text("Percentage helpertext")')).toBeVisible();
+    await expect(await requiredPercentage.inputValue()).toBe('10%');
 
     /** Selecting Disable from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
@@ -84,7 +87,7 @@ test.describe('E2E test', () => {
     await expect(attributes.includes('readonly')).toBeTruthy();
 
     const editablePercentage = page.locator('input[data-test-id="2cf58b575154624084c009d2648659ad"]');
-    editablePercentage.type('10000');
+    editablePercentage.fill('10000');
 
     attributes = await common.getAttributes(editablePercentage);
     await expect(attributes.includes('readonly')).toBeFalsy();
@@ -110,5 +113,5 @@ test.describe('E2E test', () => {
   }, 10000);
 });
 
-const outputDir = './test-reports/e2e/DigV2/FormFields/Percentage'
+const outputDir = './test-reports/e2e/DigV2/FormFields/Percentage';
 test.afterEach(async ({ page }) => await common.calculateCoverage(page, outputDir));

@@ -1,25 +1,23 @@
-import { useMemo, Children } from 'react';
-import React from 'react';
+import { Children, PropsWithChildren, useMemo } from 'react';
+
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { PConnProps } from '../../../types/PConnProps';
 
-// BannerPage does NOT have getPConnect. So, no need to extend from PConnProps
-
-interface BannerPageProps {
+interface BannerPageProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  children: Array<any>,
-  layout?: string,
-  heading?: string,
-  message?: string,
-  imageTheme?: string,
-  backgroundImage?: string,
-  backgroundColor?: string,
-  tintImage?: boolean
+  layout?: string;
+  heading?: string;
+  message?: string;
+  imageTheme?: string;
+  backgroundImage?: string;
+  backgroundColor?: string;
+  tintImage?: boolean;
 }
 
 /*
  * BannerPage template.
  */
-export default function BannerPage(props: BannerPageProps) {
+export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
   // Get emitted components from map (so we can get any override that may exist)
   const Banner = getComponentFromMap('Banner');
 

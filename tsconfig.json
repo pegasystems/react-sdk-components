@@ -1,27 +1,18 @@
 {
   "extends": "@pega/tsconfig/index.json",
-  "include": [
-    "./**/*"
-  ],
-  "exclude": [
-    "**/lib/**/*",
-    "**/node_modules/**",
-    "**/dist/**/*",
-    "**/tests/**",
-    "playwright.config.js"
-    ],
+  "include": ["./**/*"],
+  "exclude": ["**/lib/**/*", "**/node_modules/**", "**/dist/**/*", "**/tests/**", "playwright.config.js"],
   "compilerOptions": {
-
     // Copied from SDK-R - JEA
     "experimentalDecorators": true,
     "strict": true,
     "sourceMap": true,
-    "module": "es2020",
-    "target": "es2020",
-    "lib": [ "es2021", "dom" ],
-    "moduleResolution": "node",
-    "jsx": "react",     // May be different options for this with newer versions of React
-    "allowJs": true,    // must be false for @pega/pcore-pconnect-typedefs
+    "module": "ES2022",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "moduleResolution": "Node",
+    "jsx": "react-jsx", // May be different options for this with newer versions of React
+    "allowJs": true, // must be false for @pega/pcore-pconnect-typedefs
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     // End of copied from SDK-R
@@ -33,11 +24,11 @@
     // Override with only specific types for other configurations.
 
     "typeRoots": ["node_modules/@types", "node_modules/@pega"],
-    "types": [ "jest", "@testing-library/jest-dom", "pcore-pconnect-typedefs" ],
+    "types": ["jest", "@testing-library/jest-dom", "pcore-pconnect-typedefs"],
 
-    "noEmit": false,    // JEA - was false
+    "noEmit": false, // JEA - was false
     "incremental": true,
-    "inlineSources": true,  // JEA - was true
+    "inlineSources": true, // JEA - was true
 
     // Update to usage of "import type" so these can inherit "error" and true from @pega/tsconfig.
     "importsNotUsedAsValues": "remove",

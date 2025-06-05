@@ -1,22 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
+
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-
-import type { PConnProps } from '../../../types/PConnProps';
+import { PConnProps } from '../../../types/PConnProps';
 
 interface FieldGroupTemplateProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  referenceList?: Array<any>,
-  contextClass: string,
-  renderMode?: string,
-  heading?: string,
-  lookForChildInConfig?: boolean,
-  displayMode?: string,
-  fieldHeader?: string,
-  allowTableEdit: boolean
+  referenceList?: any[];
+  contextClass: string;
+  renderMode?: string;
+  heading?: string;
+  lookForChildInConfig?: boolean;
+  displayMode?: string;
+  fieldHeader?: string;
+  allowTableEdit: boolean;
 }
-
 
 export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   // Get emitted components from map (so we can get any override that may exist)
@@ -38,8 +37,15 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   const resolvedList = getReferenceList(pConn);
   pConn.setReferenceList(resolvedList);
   const pageReference = `${pConn.getPageReference()}${resolvedList}`;
-  const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT';
+  const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY';
   const HEADING = heading ?? 'Row';
+
+  useLayoutEffect(() => {
+    if (!isReadonlyMode) {
+      // @ts-ignore - Expected 3 arguments, but got 1
+      pConn.getListActions().initDefaultPageInstructions(resolvedList);
+    }
+  }, [referenceList?.length]);
 
   const getDynamicHeaderProp = (item, index) => {
     if (fieldHeader === 'propertyRef' && heading && item[heading.substring(1)]) {
@@ -52,7 +58,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
     } else {
-      pConn.getListActions().insert({}, referenceList.length, null);  // 3rd arg null until typedef marked correctly as optional
+      pConn.getListActions().insert({}, referenceList.length);
     }
   };
 
@@ -64,7 +70,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
       if (PCore.getPCoreVersion()?.includes('8.7')) {
         pConn.getListActions().deleteEntry(index, pageReference);
       } else {
-        pConn.getListActions().deleteEntry(index, null);  // 2nd arg null until typedef marked correctly as optional
+        pConn.getListActions().deleteEntry(index);
       }
     };
     if (referenceList.length === 0 && allowAddEdit !== false) {
@@ -74,10 +80,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     const MemoisedChildren = useMemo(() => {
       return referenceList.map((item, index) => ({
         id: index,
-        name:
-          fieldHeader === 'propertyRef'
-            ? getDynamicHeaderProp(item, index)
-            : `${HEADING} ${index + 1}`,
+        name: fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`,
         children: buildView(pConn, index, lookForChildInConfig)
       }));
     }, [referenceList?.length]);
@@ -91,15 +94,12 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     );
   }
 
-  pConn.setInheritedProp('displayMode', 'LABELS_LEFT');
+  pConn.setInheritedProp('displayMode', 'DISPLAY_ONLY');
   const memoisedReadOnlyList = useMemo(() => {
     return referenceList.map((item, index) => {
       const key = item[heading] || `field-group-row-${index}`;
       return (
-        <FieldGroup
-          key={key}
-          name={fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`}
-        >
+        <FieldGroup key={key} name={fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`}>
           {buildView(pConn, index, lookForChildInConfig)}
         </FieldGroup>
       );
