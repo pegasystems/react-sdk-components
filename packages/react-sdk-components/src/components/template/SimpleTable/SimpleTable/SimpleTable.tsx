@@ -50,11 +50,9 @@ export default function SimpleTable(props: SimpleTableProps) {
 
   let { contextClass } = props;
   if (!contextClass) {
-    // @ts-ignore - Property 'getComponentConfig' is private and only accessible within class 'C11nEnv'.
     let listName = getPConnect().getComponentConfig().referenceList;
     listName = PCore.getAnnotationUtils().getPropertyName(listName);
     // was... contextClass = getPConnect().getFieldMetadata(listName)?.pageClass;
-    // @ts-ignore - Property 'getFieldMetadata' is private and only accessible within class 'C11nEnv'.
     const theFieldMetadata = getPConnect().getFieldMetadata(listName);
     if (theFieldMetadata) {
       contextClass = theFieldMetadata.pageClass;

@@ -179,7 +179,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
       }
     };
 
-    if (prevRootConfig && !PCore.isDeepEqual(currentRootConfig, prevRootConfig)) {
+    if (prevRootConfig === null || !PCore.isDeepEqual(currentRootConfig, prevRootConfig)) {
       rootView.current = createElement(createPConnectComponent(), PCore.createPConnect(currentRootConfig)) as any;
     }
 
