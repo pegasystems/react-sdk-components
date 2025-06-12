@@ -18,10 +18,8 @@ function getDateObject(text): Date {
   const day = parseInt(timeStamp.substr(6, 2), 10);
 
   const date = new Date();
-
-  date.setDate(day);
-  date.setMonth(month);
-  date.setFullYear(year);
+  // Fix to handle all the dates, raised via https://github.com/pegasystems/react-sdk-components/issues/442
+  date.setFullYear(year, month, day);
 
   if (isDateTime) {
     const hours = parseInt(timeStamp.substr(9, 2), 10);
