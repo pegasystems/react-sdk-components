@@ -216,7 +216,7 @@ test.describe('E2E test', () => {
     let selectProducts = page.locator('div[role="combobox"]');
     await selectProducts.click();
     await page.locator('li:has-text("Mobile")').click();
-    await page.locator('li:has-text("Telivision")').click();
+    await page.locator('li:has-text("Television")').click();
     await expect(selectProducts).toBeVisible();
 
     await page.locator('button:has-text("Next")').click();
@@ -224,12 +224,12 @@ test.describe('E2E test', () => {
     assignment = page.locator('div[id="Assignment"]');
 
     await expect(assignment.locator('td >> text="Mobile"')).toBeVisible();
-    await expect(assignment.locator('td >> text="Telivision"')).toBeVisible();
+    await expect(assignment.locator('td >> text="Television"')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
 
     await expect(selectProducts.locator('div[role="button"]:has-text("Mobile")')).toBeVisible();
-    await expect(selectProducts.locator('div[role="button"]:has-text("Telivision")')).toBeVisible();
+    await expect(selectProducts.locator('div[role="button"]:has-text("Television")')).toBeVisible();
 
     let deleteProduct = await selectProducts.locator('div[role="button"]:has-text("Mobile")');
     await deleteProduct.locator('svg[focusable="false"]').click();
@@ -240,7 +240,7 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("Previous")').click();
 
-    deleteProduct = await selectProducts.locator('div[role="button"]:has-text("Telivision")');
+    deleteProduct = await selectProducts.locator('div[role="button"]:has-text("Television")');
     await deleteProduct.locator('svg[focusable="false"]').click();
 
     /** Checkbox group mode type test */
