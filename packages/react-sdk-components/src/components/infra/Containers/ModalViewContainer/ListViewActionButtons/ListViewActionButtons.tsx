@@ -49,10 +49,15 @@ function ListViewActionButtons(props: ListViewActionButtonsProps) {
           getPConnect()
             .getActionsApi()
             .submitEmbeddedDataModal(context)
-            .then(() => {})
+            .then(() => {
+              closeActionsDialog();
+            })
+            .catch(err => {
+              // eslint-disable-next-line no-console
+              console.log(err);
+            })
             .finally(() => {
               setIsDisabled(false);
-              closeActionsDialog();
             });
         }}
       >

@@ -10,7 +10,6 @@
       //  3) Awaits a message from the host page and when received immediately postMessages back with the code
 
       // For enabling logging via debugger (do not let it be a const...then can't change in debugger)
-      // eslint-disable-next-line prefer-const
       let bDebug = false;
 
       const queryString = window.location.search;
@@ -20,14 +19,12 @@
       const error = urlParams.get('error');
       const errorDesc = urlParams.get('error_description');
       // Silent authentication will work with just regular console.log
-      // eslint-disable-next-line no-console
       let fnLog = console.log;
       try {
         // Check if in a popup window.  If so use main window console.
         if (window.opener.console.log) {
           fnLog = window.opener.console.log;
         }
-        // eslint-disable-next-line no-empty
       } catch (e0) {}
       const doLog = arg => {
         if (bDebug) {
@@ -44,7 +41,6 @@
           if (state) {
             embedOrigin = window.atob(state.split('.')[0]);
           }
-          // eslint-disable-next-line no-empty
         } catch (e) {}
         if (!embedOrigin) {
           embedOrigin = window.location.origin;
@@ -52,7 +48,6 @@
         return embedOrigin;
       };
 
-      // eslint-disable-next-line sonarjs/cognitive-complexity
       function main() {
         if (code || error) {
           try {

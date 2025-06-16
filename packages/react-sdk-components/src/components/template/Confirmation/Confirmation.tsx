@@ -41,7 +41,7 @@ export default function Confirmation(props: PropsWithChildren<ConfirmationProps>
   // Not using whatsNext at the moment, need to figure out the use of it
   // const whatsNext = datasource?.source;
   // const items = whatsNext.length > 0 ? whatsNext.map(item => item.label) : '';
-  const activeContainerItemID = PCore.getContainerUtils().getActiveContainerItemName(getPConnect().getTarget());
+  const activeContainerItemID = PCore.getContainerUtils().getActiveContainerItemName(getPConnect().getTarget() || '');
   const rootInfo = PCore.getContainerUtils().getContainerItemData(getPConnect().getTarget(), activeContainerItemID);
   const onConfirmViewClose = () => {
     setShowConfirmView(false);

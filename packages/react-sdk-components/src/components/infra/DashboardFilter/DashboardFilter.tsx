@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable operator-assignment */
 import { forwardRef, PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { TextField } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,7 +34,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
         } else if (type === 'RadioButtons') {
           const reference = getPConnect().getFullReference() + filterProp;
           const radList = document.getElementsByName(reference);
-          for (let i = 0; i < radList.length; i = i + 1) {
+          for (let i = 0; i < radList.length; i += 1) {
             if ((radList[i] as HTMLInputElement).value === '') {
               (radList[i] as HTMLInputElement).checked = true;
             } else {

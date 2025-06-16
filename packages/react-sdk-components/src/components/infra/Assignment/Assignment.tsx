@@ -147,7 +147,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   }
 
   function onSaveActionSuccess(data) {
-    actionsAPI.cancelAssignment(itemKey).then(() => {
+    actionsAPI.cancelAssignment(itemKey, false).then(() => {
       PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CREATE_STAGE_SAVED, data);
     });
   }
@@ -174,7 +174,6 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
 
           savePromise
             .then(() => {
-              // @ts-ignore - Property 'c11nEnv' is private and only accessible within class 'CaseInfo'.
               const caseType = thePConn.getCaseInfo().c11nEnv.getValue(PCore.getConstants().CASE_INFO.CASE_TYPE_ID);
               onSaveActionSuccess({ caseType, caseID, assignmentID });
             })
@@ -189,10 +188,8 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
           // check if create stage (modal)
           const { PUB_SUB_EVENTS } = PCore.getConstants();
           const { publish } = PCore.getPubSubUtils();
-          // @ts-ignore - Property 'isAssignmentInCreateStage' is private and only accessible within class 'CaseInfo'
           const isAssignmentInCreateStage = thePConn.getCaseInfo().isAssignmentInCreateStage();
           const isLocalAction =
-            // @ts-ignore - Property 'isLocalAction' is private and only accessible within class 'CaseInfo'.
             thePConn.getCaseInfo().isLocalAction() ||
             (PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION && getPConnect().getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION));
           if (isAssignmentInCreateStage && isInModal && !isLocalAction) {
@@ -206,7 +203,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
                 showToast(`${localizedVal('Cancel failed!', localeCategory)}`);
               });
           } else {
-            const cancelPromise = cancelAssignment(itemKey);
+            const cancelPromise = cancelAssignment(itemKey, false);
 
             cancelPromise
               .then(data => {
@@ -275,7 +272,6 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   }
 
   // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
-  // @ts-ignore - Property 'getActionRefreshConditions' is private and only accessible within class 'CaseInfo'
   const refreshConditions = thePConn.getCaseInfo()?.getActionRefreshConditions();
   const context = thePConn.getContextName();
   const pageReference = thePConn.getPageReference();

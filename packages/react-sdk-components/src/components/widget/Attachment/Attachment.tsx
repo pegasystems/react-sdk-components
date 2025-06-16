@@ -33,7 +33,7 @@ const updateAttachmentState = (pConn, key, attachments) => {
 };
 
 export default function Attachment(props: AttachmentProps) {
-  const { value, getPConnect, label, validatemessage, allowMultiple, extensions, displayMode } = props;
+  const { value, getPConnect, label, validatemessage, allowMultiple, extensions, displayMode, helperText } = props;
   /* this is a temporary fix because required is supposed to be passed as a boolean and NOT as a string */
   let { required, disabled } = props;
   [required, disabled] = [required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
@@ -155,11 +155,9 @@ export default function Attachment(props: AttachmentProps) {
               const context = pConn.getContextName();
               // set errors to property to block submit even on errors in file upload
               PCore.getMessageManager().addMessages({
-                // @ts-ignore
                 messages: [
                   {
                     type: 'error',
-                    // @ts-ignore - Type '{ type: string; message: string; }' is not assignable to type 'MessagesConfigObject'.
                     message: pConn.getLocalizedValue('Error with one or more files', '', '')
                   }
                 ],
@@ -192,7 +190,6 @@ export default function Attachment(props: AttachmentProps) {
   const clearFieldErrorMessages = () => {
     const fieldName = (pConn.getStateProps() as any).value;
     const context = pConn.getContextName();
-    // @ts-ignore
     PCore.getMessageManager().clearMessages({
       type: PCore.getConstants().MESSAGES.MESSAGES_TYPE_ERROR,
       property: fieldName,
@@ -231,11 +228,9 @@ export default function Attachment(props: AttachmentProps) {
           const fieldName = (pConn.getStateProps() as any).value;
           const context = pConn.getContextName();
           PCore.getMessageManager().addMessages({
-            // @ts-ignore
             messages: [
               {
                 type: 'error',
-                // @ts-ignore - Type '{ type: string; message: string; }' is not assignable to type 'MessagesConfigObject'.
                 message: pConn.getLocalizedValue('Error with one or more files', '', '')
               }
             ],
@@ -461,7 +456,7 @@ export default function Attachment(props: AttachmentProps) {
     <div className='file-upload-container'>
       <span className={`label ${required ? 'file-label' : ''}`}>{label}</span>
       {((files.length === 0 && allowMultiple !== 'true') || allowMultiple === 'true') && <section>{content}</section>}
-      {validatemessage !== '' ? <span className='file-error'>{validatemessage}</span> : ''}
+      {validatemessage !== '' ? <span className='file-error'>{validatemessage}</span> : <span style={{ fontSize: '14px' }}>{helperText}</span>}
       {files && files.length > 0 && <section>{fileDisplay}</section>}
     </div>
   );

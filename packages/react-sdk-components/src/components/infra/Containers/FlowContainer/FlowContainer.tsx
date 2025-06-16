@@ -117,12 +117,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
     if (caseViewMode && caseViewMode === 'review') {
       return true;
     }
-    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-    if (caseViewMode && caseViewMode === 'perform') {
-      return false;
-    }
-
-    return true;
+    return !(caseViewMode && caseViewMode === 'perform');
   }
 
   function initComponent() {
@@ -181,11 +176,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
 
     const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS, ''); // 2nd arg empty string until typedefs properly allow optional
     // const allAssignments = [];
-    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-    if (childCases && childCases.length > 0) {
-      return true;
-    }
-    return false;
+    return !!(childCases && childCases.length > 0);
   }
 
   function hasAssignments() {
@@ -276,7 +267,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
       setShowConfirm(true);
 
       // publish this "assignmentFinished" for mashup, need to get approved as a standard
-      // @ts-ignore - second parameter “payload” for publish method should be optional
       PCore.getPubSubUtils().publish('assignmentFinished');
 
       // debugger;
@@ -290,7 +280,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
 
   const caseId = thePConn.getCaseSummary().content.pyID;
   const urgency = getPConnect().getCaseSummary().assignments ? getPConnect().getCaseSummary().assignments?.[0].urgency : '';
-  const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName());
+  const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName() || '');
 
   const bShowBanner = showBanner(getPConnect);
 

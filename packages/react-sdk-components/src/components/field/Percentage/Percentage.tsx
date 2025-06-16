@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { TextField } from '@mui/material';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
@@ -50,7 +50,11 @@ export default function Percentage(props: PercentageProps) {
   const helperTextToDisplay = validatemessage || helperText;
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
-  const formattedValue = format(value, pConn.getComponentName().toLowerCase(), theCurrencyOptions);
+  const formattedValue = format(value, pConn.getComponentName()?.toLowerCase(), theCurrencyOptions);
+
+  useEffect(() => {
+    setValues(value.toString());
+  }, [value]);
 
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly
 

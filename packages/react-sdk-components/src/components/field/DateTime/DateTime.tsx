@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs, { Dayjs } from 'dayjs';
-
+import DateFormatter from '../../helpers/formatters/Date';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
@@ -19,7 +19,10 @@ export default function DateTime(props: DateTimeProps) {
 
   const { getPConnect, label, required, disabled, value = '', validatemessage, status, readOnly, testId, helperText, displayMode, hideLabel } = props;
 
-  const [dateValue, setDateValue] = useState<Dayjs | null>(value ? dayjs(value) : null);
+  const environmentInfo = PCore.getEnvironmentInfo();
+  const timezone = environmentInfo && environmentInfo.getTimeZone();
+
+  const [dateValue, setDateValue] = useState<Dayjs | null>(value ? dayjs(DateFormatter.convertToTimezone(value, { timezone })) : null);
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
@@ -33,6 +36,10 @@ export default function DateTime(props: DateTimeProps) {
   dateFormatInfo.dateFormatString = theDateFormat.dateFormatString;
   dateFormatInfo.dateFormatStringLC = theDateFormat.dateFormatStringLC;
   dateFormatInfo.dateFormatMask = theDateFormat.dateFormatMask;
+
+  useEffect(() => {
+    setDateValue(dayjs(DateFormatter.convertToTimezone(value, { timezone })));
+  }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
     const formattedDateTime = format(props.value, 'datetime', {
@@ -60,8 +67,9 @@ export default function DateTime(props: DateTimeProps) {
   };
 
   const handleChange = date => {
-    setDateValue(date);
-    const changeValue = date && date.isValid() ? date.toISOString() : null;
+    const timeZoneDateTime = dayjs.tz(date.format('YYYY-MM-DDTHH:mm:ss'), timezone);
+    const changeValue = timeZoneDateTime && timeZoneDateTime.isValid() ? timeZoneDateTime.toISOString() : '';
+    setDateValue(timeZoneDateTime);
     handleEvent(actions, 'changeNblur', propName, changeValue);
   };
 
