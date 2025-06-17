@@ -34,7 +34,8 @@ export default function DetailsSubTabs(props: PropsWithChildren<DetailsSubTabsPr
 
   const handleTabClick = (id, index: string) => {
     setCurrentTabId(index);
-    tabClick(index, availableTabs, currentTabId, setCurrentTabId, tabItems);
+    tabClick(id, availableTabs, currentTabId, setCurrentTabId);
+    // tabClick(index, availableTabs, currentTabId, setCurrentTabId, tabItems);
   };
 
   return (

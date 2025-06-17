@@ -1,0 +1,13 @@
+{
+  "name": "SearchGroup",
+  "type": "SearchGroup",
+  "typeLabel": "Search group",
+  "properties": [
+    {
+      "name": "label",
+      "label": "Label",
+      "format": "TEXT",
+      "required": true
+    }
+  ]
+}

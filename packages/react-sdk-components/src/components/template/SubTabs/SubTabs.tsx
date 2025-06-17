@@ -25,7 +25,9 @@ export default function SubTabs(props: PropsWithChildren<SubTabsProps>) {
 
   const handleTabClick = (id, index: string) => {
     setCurrentTabId(index);
-    tabClick(index, availableTabs, currentTabId, setCurrentTabId, tabItems);
+    // @ts-ignore
+    // tabClick(index, availableTabs, currentTabId, setCurrentTabId, tabItems);
+    tabClick(id, availableTabs, currentTabId, setCurrentTabId);
   };
 
   return (

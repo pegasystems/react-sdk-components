@@ -37,7 +37,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Radio } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
-
+import { v4 as uuidv4 } from 'uuid';
 import { filterData } from '../../helpers/simpleTableHelpers';
 
 import './ListView.css';
@@ -62,6 +62,9 @@ interface ListViewProps extends PConnProps {
   showDynamicFields?: boolean;
   readonlyContextList?: any;
   value: any;
+  viewName?: string;
+  showRecords?: boolean;
+  displayAs?: string;
 }
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -88,9 +91,12 @@ export default function ListView(props: ListViewProps) {
     parameters,
     compositeKeys,
     showDynamicFields,
+    viewName,
     readonlyContextList: selectedValues,
-    value
+    value,
+    displayAs
   } = props;
+  let { showRecords }  = props;
   const ref = useRef({}).current;
   const cosmosTableRef = useRef();
   // List component context
@@ -98,6 +104,7 @@ export default function ListView(props: ListViewProps) {
   const { meta } = listContext;
   const xRayApis = PCore.getDebugger().getXRayRuntime();
   const xRayUid = xRayApis.startXRay();
+  const { current: uniqueId } = useRef(uuidv4());
 
   useInit({
     ...props,
@@ -258,18 +265,24 @@ export default function ListView(props: ListViewProps) {
         theField = theField.substring(1);
       }
       const colIndex = fields.findIndex(ele => ele.name === theField);
-      const displayAsLink = field.config.displayAsLink;
+      // const displayAsLink = field.config.displayAsLink;
+      const { additionalDetails = {} } = field.config;
+      let shouldDisplayAsSemanticLink = additionalDetails.type === 'DISPLAY_LINK';
+      // TODO: This "if" check has been added for backward compatibility, to be removed once the users are notified about the changes in view metadata of US-517164
+      if (!shouldDisplayAsSemanticLink) {
+        shouldDisplayAsSemanticLink = 'displayAsLink' in field.config && field.config.displayAsLink;
+      }
       const headerRow: any = {};
       headerRow.id = fields[index].id;
       headerRow.type = field.type;
-      headerRow.displayAsLink = displayAsLink;
+      headerRow.displayAsLink = shouldDisplayAsSemanticLink;
       headerRow.numeric = field.type === 'Decimal' || field.type === 'Integer' || field.type === 'Percentage' || field.type === 'Currency' || false;
       headerRow.disablePadding = false;
       headerRow.label = fields[index].label;
       if (colIndex > -1) {
         headerRow.classID = fields[colIndex].classID;
       }
-      if (displayAsLink) {
+      if (shouldDisplayAsSemanticLink) {
         headerRow.isAssignmentLink = AssignDashObjects.includes(headerRow.classID);
         if (field.config.value?.startsWith('@CA')) {
           headerRow.isAssociation = true;
@@ -305,32 +318,41 @@ export default function ListView(props: ListViewProps) {
 
   // Will be triggered when EVENT_DASHBOARD_FILTER_CHANGE fires
   function processFilterChange(data) {
-    const { filterId, filterExpression } = data;
+    let filterId;
+    let filterExpression, isDateRange;
+    let field;
     let dashboardFilterPayload: any = {
       query: {
         filter: {},
         select: []
       }
     };
+    if (displayAs === 'advancedSearch') {
+      Object.entries(data).reduce((acc, [item, value]) => {
+        const { filterId, filterExpression } = value as any;
+        filters.current[filterId] = filterExpression;
+        return acc; // Ensure the accumulator is returned
+      }, {});
+    } else {
+      ({ filterId, filterExpression } = data);
+      filters.current[filterId] = filterExpression;
+      isDateRange = data.filterExpression?.AND;
+      field = getFieldFromFilter(filterExpression, isDateRange);
+      selectParam = [];
+      // Constructing the select parameters list (will be sent in dashboardFilterPayload)
+      columnList.current.forEach(col => {
+        selectParam.push({
+          field: col
+        });
+      });
 
-    filters.current[filterId] = filterExpression;
-    let isDateRange = data.filterExpression?.AND;
+      // Checking if the triggered filter is applicable for this list
+      if (data.filterExpression !== null && !(columnList.current?.length && columnList.current?.includes(field))) {
+        return;
+      }
+    }
     // Will be AND by default but making it dynamic in case we support dynamic relational ops in future
     const relationalOp = 'AND';
-
-    let field = getFieldFromFilter(filterExpression, isDateRange);
-    selectParam = [];
-    // Constructing the select parameters list (will be sent in dashboardFilterPayload)
-    columnList.current.forEach(col => {
-      selectParam.push({
-        field: col
-      });
-    });
-
-    // Checking if the triggered filter is applicable for this list
-    if (data.filterExpression !== null && !(columnList.current?.length && columnList.current?.includes(field))) {
-      return;
-    }
     // This is a flag which will be used to reset dashboardFilterPayload in case we don't find any valid filters
     let validFilter = false;
 
@@ -376,7 +398,7 @@ export default function ListView(props: ListViewProps) {
       } else {
         dashboardFilterPayload.query.filter.filterConditions = {
           ...dashboardFilterPayload.query.filter.filterConditions,
-          [`T${index++}`]: { ...filter.condition, ignoreCase: true }
+          [`T${index++}`]: { ...filter.condition, ...(filter.condition.comparator === "CONTAINS" ? { ignoreCase: true } : {}) }
         };
 
         if (dashboardFilterPayload.query.filter.logic) {
@@ -404,6 +426,9 @@ export default function ListView(props: ListViewProps) {
   }
 
   function fetchAllData(fields): any {
+    if (displayAs === "advancedSearch" && !showRecords) {
+      return Promise.resolve({ data: null });
+    }
     let query: any = null;
     if (payload) {
       query = payload.query;
@@ -554,8 +579,38 @@ export default function ListView(props: ListViewProps) {
     };
   }
 
+  function prepareFilters(data) {
+    const filters = Object.entries(data.payload).reduce((acc, [field, value]) => {
+      if (value) {
+        let comparator = 'EQ';
+        const filterRecord = listContext.meta.fieldDefs.filter(item => item.id === field);
+        if (filterRecord?.[0].meta.type === 'TextInput') {
+          comparator = 'CONTAINS';
+        }
+        acc[field] = {
+          filterExpression: {
+            condition: {
+              lhs: {
+                field
+              },
+              comparator,
+              rhs: {
+                value
+              }
+            }
+          },
+          filterId: field
+        }
+      }
+      return acc;
+    }, {});
+
+    return filters;
+  }
+
   useEffect(() => {
     if (listContext.meta) {
+      const identifier = `promoted-filters-queryable-${uniqueId}`;
       fetchDataFromServer();
       setTimeout(() => {
         PCore.getPubSubUtils().subscribe(
@@ -577,6 +632,15 @@ export default function ListView(props: ListViewProps) {
           false,
           getPConnect().getContextName()
         );
+        PCore.getPubSubUtils().subscribe(
+          PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS,
+          data => {
+            showRecords = data.showRecords;
+            const filterData = prepareFilters(data);
+            processFilterChange(filterData);
+          },
+          identifier
+        );
       }, 0);
 
       return function cleanupSubscriptions() {
@@ -590,6 +654,7 @@ export default function ListView(props: ListViewProps) {
           `dashboard-component-${'id'}`,
           getPConnect().getContextName()
         );
+        PCore.getPubSubUtils().unsubscribe(PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS, identifier);
       };
     }
   }, [listContext]);
@@ -1128,7 +1193,7 @@ export default function ListView(props: ListViewProps) {
                         })}
                   </TableBody>
                 </Table>
-                {arRows && arRows.length === 0 && <div className='no-records'>No records found.</div>}
+                {((arRows && arRows.length === 0) || !arRows) && <div className='no-records'>No records found.</div>}
               </TableContainer>
             )}
           </>
