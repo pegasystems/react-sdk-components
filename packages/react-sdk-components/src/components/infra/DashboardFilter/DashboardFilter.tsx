@@ -19,7 +19,7 @@ interface DashboardFilterProps extends PConnProps {
 }
 
 export default function DashboardFilter(props: PropsWithChildren<DashboardFilterProps>) {
-  const { children = [], name, filterProp, type = '', metadata = null, getPConnect } = props;
+  const { children, name, filterProp, type = '', metadata = null, getPConnect } = props;
   const { current: filterId } = useRef(uuidv4());
 
   const [startDate, setStartDate] = useState(null);

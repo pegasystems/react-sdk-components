@@ -77,7 +77,7 @@ export const buildFilterComponents = (getPConnect, allFilters) => {
   const filterComponents = allFilters.children.map((filter, index) => createFilterComponent(getPConnect, filter, index));
   if (filterComponents && filterComponents.length > 0) {
     filterComponents.push(
-      <Grid>
+      <Grid style={{display: 'flex', alignItems: 'center'}}>
         <Link
           style={{ cursor: 'pointer' }}
           onClick={() => {
