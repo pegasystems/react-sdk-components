@@ -608,8 +608,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 return (
                   <TableCell key={`head-${displayedColumns[index]}`} className={classes.tableCell}>
                     {(readOnlyMode || allowEditingInModal) && field.cellRenderer !== 'DeleteIcon' ? (
-                      <div>
+                      <div style={{ display: 'flex' }}>
                         <TableSortLabel
+                          style={{ width: '75%' }}
                           active={orderBy === displayedColumns[index]}
                           direction={orderBy === displayedColumns[index] ? order : 'asc'}
                           onClick={createSortHandler(displayedColumns[index])}
@@ -621,8 +622,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                           ) : null}
                         </TableSortLabel>
                         <MoreIcon
+                          style={{ cursor: 'pointer', zIndex: 1000 }}
                           id='menu-icon'
-                          className={classes.moreIcon}
                           onClick={event => {
                             _menuClick(event, field.name, field.meta.type, field.label);
                           }}
@@ -706,7 +707,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 })}
           </TableBody>
         </Table>
-        {referenceList && referenceList.length === 0 && (
+        {rowData && rowData.length === 0 && (
           <div className='no-records' id='no-records'>
             No records found.
           </div>

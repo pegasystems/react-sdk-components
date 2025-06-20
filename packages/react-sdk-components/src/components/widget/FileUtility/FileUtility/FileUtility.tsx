@@ -512,7 +512,7 @@ export default function FileUtility(props: FileUtilityProps) {
           >
             <MoreVertIcon />
           </IconButton>
-          <Menu style={{ marginTop: '3rem' }} id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+          <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
             <MenuItem style={{ fontSize: '14px' }} onClick={onAddFilesClick}>
               {thePConn.getLocalizedValue('Add files', '', '')}
             </MenuItem>{' '}
