@@ -221,11 +221,12 @@ export default function ListView(props: ListViewProps) {
 
   type Order = 'asc' | 'desc';
 
-  function getComparator<Key extends keyof any>(
-    theOrder: Order,
-    orderedBy: Key
-  ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
-    return theOrder === 'desc' ? (a, b) => descendingComparator(a, b, orderedBy) : (a, b) => -descendingComparator(a, b, orderedBy);
+  interface Comparator<T> {
+    (a: T, b: T): number;
+  }
+
+  function getComparator<T, Key extends keyof T>(theOrder: Order, orderedBy: Key): Comparator<T> {
+    return theOrder === 'desc' ? (a: T, b: T) => descendingComparator(a, b, orderedBy) : (a: T, b: T) => -descendingComparator(a, b, orderedBy);
   }
 
   function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {

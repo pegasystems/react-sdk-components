@@ -406,11 +406,12 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   type Order = 'asc' | 'desc';
 
-  function getComparator<Key extends keyof any>(
-    theOrder: Order,
-    orderedBy: Key
-  ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
-    return theOrder === 'desc' ? (a, b) => descendingComparator(a, b, orderedBy) : (a, b) => -descendingComparator(a, b, orderedBy);
+  interface Comparator<T> {
+    (a: T, b: T): number;
+  }
+
+  function getComparator<Key extends keyof any, T extends Record<Key, any>>(theOrder: Order, orderedBy: Key): Comparator<T> {
+    return theOrder === 'desc' ? (a: T, b: T) => descendingComparator<T>(a, b, orderedBy) : (a: T, b: T) => -descendingComparator<T>(a, b, orderedBy);
   }
 
   function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
