@@ -186,6 +186,8 @@ export default function Dropdown(props: DropdownProps) {
         />
       );
     }
+
+    return null;
   };
 
   if (displayMode) {
