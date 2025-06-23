@@ -67,7 +67,7 @@ export default function DateTime(props: DateTimeProps) {
   };
 
   const handleChange = date => {
-    const timeZoneDateTime = dayjs.tz(date.format('YYYY-MM-DDTHH:mm:ss'), timezone);
+    const timeZoneDateTime = (dayjs as any).tz(date.format('YYYY-MM-DDTHH:mm:ss'), timezone);
     const changeValue = timeZoneDateTime && timeZoneDateTime.isValid() ? timeZoneDateTime.toISOString() : '';
     setDateValue(timeZoneDateTime);
     handleEvent(actions, 'changeNblur', propName, changeValue);
