@@ -273,13 +273,95 @@ const processRelativeComponentRef = function (inMatch, splitSep, compLocMap) {
   return retString;
 };
 
+/** This function finds the number of levels we need to traverse up in the middlePath
+    to get to the correct relative path to the component
+ *
+ * @param {*} inMatch  import statement that we're processing
+ * @param {*} splitSep split separator we're using
+ * @returns {number} number of levels we need to traverse up in the middlePath
+ */
+const findLevels = function (inMatch, splitSep) {
+  const levels = inMatch.split(splitSep).length - 1; // number of occurrences of splitSep in inMatch
+  return levels;
+};
+
+/** This function gets the middle part of the filePath that is between 'lib/' and the last '/'
+ *
+ * @param {*} filePath path of the file being processed
+ * @returns {string} middle part of the filePath
+ */
+const getMiddlePath = function (filePath) {
+  const libIndex = filePath.indexOf('lib');
+  const trailingSlashIndex = filePath.lastIndexOf('/');
+  return filePath.slice(libIndex + 4, trailingSlashIndex);
+};
+
+/** This function traverses the middlePath by the number of levels we need to traverse up
+ *  to get to the correct relative path to the component
+ * @param {*} middlePath middle part of the filePath that is between 'lib/' and the last '/'
+ * @param {*} levels number of levels we need to traverse up in the middlePath
+ * @returns {string} middlePath after traversing up the number of levels
+ */
+const getTraversedMiddlePath = function (middlePath, levels) {
+  while (levels) {
+    const startingIndex = 0;
+    const lastTrailingSlashIndex = middlePath.lastIndexOf('/');
+    middlePath = middlePath.slice(startingIndex, lastTrailingSlashIndex);
+    levels--;
+  }
+  return middlePath;
+};
+
+/** This function is used to process relative paths that are within the same component sub-directory
+  middlePath is the part of the filePath that is between 'lib/' and the last '/'
+  ex: if filePath is 'packages/react-sdk-overrides/lib/components/designSystemExtension/FieldValueList.js'
+  then middlePath will be 'components/designSystemExtension'
+
+   @param {*} filePath path of the file being processed
+   @param {*} inMatch import statement that we're processing
+   @returns {string} string that should replace inMatch (with relative path replacements)
+  */
+
+const processRelativePathToSameCompSubDir = (filePath, inMatch) => {
+  let middlePath = getMiddlePath(filePath);
+
+  const splitWith = '../';
+  // levels is the number of '../' in the inMatch string that we need to traverse up
+  //  to get to the correct relative path to the component
+  // ex: if inMatch is "import FieldValueList from '../../designSystemExtension/FieldValueList';"
+  // then levels will be 2 because there are 2 occurrences of '../' in the inMatch string
+  //  and we need to traverse up 2 levels in the middlePath
+  let levels = findLevels(inMatch, splitWith);
+  let replacementString;
+  // initialPartOfImport is the part of the import statement before the relative path
+  // ex: if inMatch is "import FieldValueList from '../../designSystemExtension/FieldValueList';"
+  // then initialPartOfImport will be "import FieldValueList from "
+  // NOTE: we add 1 to the indexOf to include the single quote at the end of the import statement
+  const initialPartOfImport = inMatch.slice(0, inMatch.indexOf("'") + 1);
+
+  // We need to traverse up the middlePath by the number of levels we have in the inMatch string
+  //  ex: if levels is 2, then we need to traverse up 2 levels in the middlePath
+  middlePath = getTraversedMiddlePath(middlePath, levels);
+
+  // tailPartOfImport is the part of the import statement after the relative path
+  // ex: if inMatch is "import FieldValueList from '../../designSystemExtension/FieldValueList';"
+  // then tailPartOfImport will be "/FieldValueList';"
+  // NOTE: we add 2 to the lastIndexOf to include the single quote at the end of the import statement
+  //  and the semicolon at the end of the import statement
+  //  (the semicolon is not included in the inMatch string, but we need it for the replacement)
+  const tailPartOfImport = inMatch.slice(inMatch.lastIndexOf('../') + 2);
+
+  replacementString = initialPartOfImport + relativePathReplacementComponents + middlePath + tailPartOfImport;
+  return replacementString;
+};
+
 /**
  * processImportLine
  *
  * @param {*} inMatch - should be a line starting with import
  * @returns string that inMatch should be replaced with (possible import path updates)
  */
-const processImportLine = function (inMatch) {
+const processImportLine = function (inMatch, filePath) {
   // console.log(`  in processImportLine: |${inMatch}|`);
 
   let retString = inMatch; // default to return incoming matched string
@@ -308,7 +390,7 @@ const processImportLine = function (inMatch) {
     return replacementString;
   }
 
-  //  3. If inMatch does contain '../' followed by sdkHooksDir then process as relative bridge reference
+  //  3. If inMatch does contain '../' followed by sdkHooksDir then process as relative hooks reference
   if (hasRelativeDir(inMatch, splitWith, overrideConstants.SDK_HOOKS_DIR)) {
     const replacementString = processRelativeRef(inMatch, splitWith, overrideConstants.SDK_HOOKS_DIR);
     console.log(`  --> replacing with: ${replacementString}`);
@@ -352,6 +434,20 @@ const processImportLine = function (inMatch) {
     return replacementString;
   }
 
+  // 8. This should handle any relative path within the same components sub-directory
+  if (
+    inMatch.includes(splitWith) &&
+    overrideConstants.SDK_COMP_SUBDIRS.some(dir => {
+      console.log(`  checking dir: ${dir}`);
+      return filePath.includes(dir);
+    })
+  ) {
+    const replacementString = processRelativePathToSameCompSubDir(filePath, inMatch);
+    console.log(`  --> replacing with: ${replacementString}`);
+    iPathReplacements = iPathReplacements + 1;
+    return replacementString;
+  }
+
   // more work to do
   console.log(` ----> More work to do: ${inMatch}`);
   iMayNeedPathReplacement = iMayNeedPathReplacement + 1;
@@ -379,7 +475,7 @@ const processOverrideFile = function (filePath) {
   const options = {
     files: filePath,
     from: /^import .+/gm,
-    to: match => processImportLine(match),
+    to: match => processImportLine(match, filePath),
     countMatches: true
   };
 
