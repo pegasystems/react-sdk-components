@@ -19,6 +19,7 @@ interface CaseViewProps extends PConnProps {
   header: string;
   showIconInHeader: boolean;
   caseInfo: any;
+  lastUpdateCaseTime: any;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -64,10 +65,11 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     showIconInHeader = true,
     caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
+  const { lastUpdateCaseTime = getPConnect().getValue('caseInfo.lastUpdateTime') } = props;
 
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
-
+  const [isLastUpdateCaseTimeChanged, setIsLastUpdateCaseTimeChanged] = useState(false);
   const { displayOnlyFA } = useContext<any>(StoreContext);
 
   const thePConn = getPConnect();
@@ -79,7 +81,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'CaseView';
   const localeKey = `${caseTypeID}!CASE!${caseTypeName}`.toUpperCase();
-
   /**
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
@@ -106,6 +107,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const svgCase = Utils.getImageSrc(icon, Utils.getSDKStaticConentUrl());
 
   const [activeVertTab, setActiveVertTab] = useState(0);
+  const [dataUpdated, setDataUpdated] = useState(false);
 
   // const tmpLoadData1 = { config: { label: "Details", name: "pyDetailsTabContent" }, type: "DeferLoad" };
   // const tmpLoadData2 = { config: { label: "Case History", name: "CaseHistory" }, type: "DeferLoad" };
@@ -166,6 +168,17 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
       });
     };
   }, []);
+
+  useEffect(() => {
+    setIsLastUpdateCaseTimeChanged(true);
+    setDataUpdated(true);
+  }, [lastUpdateCaseTime]);
+
+  useEffect(() => {
+    setIsLastUpdateCaseTimeChanged(false);
+    setDataUpdated(false);
+
+  }, [isLastUpdateCaseTimeChanged]);
 
   useEffect(() => {
     if (hasNewAttachments) {
@@ -243,7 +256,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
           <Grid item xs={6}>
             {theStagesRegion}
             {theTodoRegion}
-            {deferLoadInfo.length > 0 && <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab />}
+            {deferLoadInfo.length > 0 && <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab dataUpdated={dataUpdated} />}
           </Grid>
 
           <Grid item xs={3}>

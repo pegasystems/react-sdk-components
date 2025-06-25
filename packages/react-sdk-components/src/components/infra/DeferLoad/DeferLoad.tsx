@@ -12,6 +12,7 @@ interface DeferLoadProps extends PConnProps {
   isChildDeferLoad?: boolean;
   isTab: boolean;
   deferLoadId: string;
+  dataUpdated: boolean;
 }
 
 //
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function DeferLoad(props: DeferLoadProps) {
-  const { getPConnect, name, deferLoadId, isTab } = props;
+  const { getPConnect, name, deferLoadId, isTab, dataUpdated } = props;
   const [content, setContent] = useState<any>(null);
   const [isLoading, setLoading] = useState(true);
   const [currentLoadedAssignment, setCurrentLoadedAssignment] = useState('');
@@ -144,7 +145,7 @@ export default function DeferLoad(props: DeferLoadProps) {
           console.log(`deferload: ${error}`);
         });
     }
-  }, [name, getPConnect, currentLoadedAssignment]);
+  }, [name, getPConnect, currentLoadedAssignment, dataUpdated]);
   /* TODO Cosmos need to handle for now added a wrapper div with pos relative */
   let deferLoadContent;
   if (isLoading) {
