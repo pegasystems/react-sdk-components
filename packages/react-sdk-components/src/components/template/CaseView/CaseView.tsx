@@ -69,7 +69,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
 
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
-  const [isLastUpdateCaseTimeChanged, setIsLastUpdateCaseTimeChanged] = useState(false);
   const { displayOnlyFA } = useContext<any>(StoreContext);
 
   const thePConn = getPConnect();
@@ -169,14 +168,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   }, []);
 
   useEffect(() => {
-    setIsLastUpdateCaseTimeChanged(true);
-  }, [lastUpdateCaseTime]);
-
-  useEffect(() => {
-    setIsLastUpdateCaseTimeChanged(false);
-  }, [isLastUpdateCaseTimeChanged]);
-
-  useEffect(() => {
     if (hasNewAttachments) {
       PCore.getPubSubUtils().publish((PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW, true);
     }
@@ -253,7 +244,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
             {theStagesRegion}
             {theTodoRegion}
             {deferLoadInfo.length > 0 && (
-              <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab dataUpdated={isLastUpdateCaseTimeChanged} />
+              <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab lastUpdateCaseTime={lastUpdateCaseTime} />
             )}
           </Grid>
 
