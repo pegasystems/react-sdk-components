@@ -177,7 +177,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   useEffect(() => {
     setIsLastUpdateCaseTimeChanged(false);
     setDataUpdated(false);
-
   }, [isLastUpdateCaseTimeChanged]);
 
   useEffect(() => {
@@ -256,7 +255,9 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
           <Grid item xs={6}>
             {theStagesRegion}
             {theTodoRegion}
-            {deferLoadInfo.length > 0 && <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab dataUpdated={dataUpdated} />}
+            {deferLoadInfo.length > 0 && (
+              <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab dataUpdated={dataUpdated} />
+            )}
           </Grid>
 
           <Grid item xs={3}>
