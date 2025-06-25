@@ -107,7 +107,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const svgCase = Utils.getImageSrc(icon, Utils.getSDKStaticConentUrl());
 
   const [activeVertTab, setActiveVertTab] = useState(0);
-  const [dataUpdated, setDataUpdated] = useState(false);
 
   // const tmpLoadData1 = { config: { label: "Details", name: "pyDetailsTabContent" }, type: "DeferLoad" };
   // const tmpLoadData2 = { config: { label: "Case History", name: "CaseHistory" }, type: "DeferLoad" };
@@ -171,12 +170,10 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
 
   useEffect(() => {
     setIsLastUpdateCaseTimeChanged(true);
-    setDataUpdated(true);
   }, [lastUpdateCaseTime]);
 
   useEffect(() => {
     setIsLastUpdateCaseTimeChanged(false);
-    setDataUpdated(false);
   }, [isLastUpdateCaseTimeChanged]);
 
   useEffect(() => {
@@ -256,7 +253,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
             {theStagesRegion}
             {theTodoRegion}
             {deferLoadInfo.length > 0 && (
-              <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab dataUpdated={dataUpdated} />
+              <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab dataUpdated={isLastUpdateCaseTimeChanged} />
             )}
           </Grid>
 
