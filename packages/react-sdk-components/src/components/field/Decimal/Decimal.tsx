@@ -113,6 +113,7 @@ export default function Decimal(props: DecimalProps) {
       }}
       onBlur={!readOnly ? decimalOnBlur : undefined}
       prefix={readOnly && formatter === 'Currency' ? theCurrSym : ''}
+      suffix={readOnly && formatter === 'Percentage' ? '%' : ''}
       decimalSeparator={theCurrDec}
       thousandSeparator={showGroupSeparators ? theCurrSep : ''}
       decimalScale={readOnly && formatter === 'Currency' ? undefined : decimalPrecision}
