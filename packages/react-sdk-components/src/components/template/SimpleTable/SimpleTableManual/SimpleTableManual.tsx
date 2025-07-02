@@ -496,7 +496,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     setOpen(true);
   }
 
-  function _groupMenu() { }
+  function _groupMenu() {}
 
   function _closeDialog() {
     setOpen(false);
