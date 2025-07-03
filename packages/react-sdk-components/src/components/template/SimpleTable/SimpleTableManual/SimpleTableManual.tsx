@@ -146,7 +146,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const [displayDialogDateFilter, setDisplayDialogDateFilter] = useState<string>('notequal');
   const [displayDialogDateValue, setDisplayDialogDateValue] = useState<string>('');
   const selectedRowIndex: any = useRef(null);
-
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'SimpleTable';
   const parameters = fieldMetadata?.datasource?.parameters;
   const { referenceListStr } = getContext(getPConnect());
   const label = labelProp || propertyLabel;
@@ -708,7 +709,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 })}
           </TableBody>
         </Table>
-        {rowData && rowData.length === 0 && (
+        {((readOnlyMode && (!rowData || rowData?.length === 0)) || (editableMode && (!referenceList || referenceList?.length === 0))) && (
           <div className='no-records' id='no-records'>
             No records found.
           </div>
@@ -717,7 +718,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       {showAddRowButton && (
         <div style={{ fontSize: '1rem' }}>
           <Link style={{ cursor: 'pointer' }} onClick={addRecord} underline='hover'>
-            + Add
+            + {localizedVal('Add', localeCategory)}
           </Link>
         </div>
       )}
