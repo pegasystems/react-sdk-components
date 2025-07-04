@@ -266,9 +266,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
       setHasCaseMessages(true);
       setShowConfirm(true);
 
-      // publish this "assignmentFinished" for mashup, need to get approved as a standard
-      PCore.getPubSubUtils().publish('assignmentFinished');
-
       // debugger;
       setCheckSvg(Utils.getImageSrc('check', Utils.getSDKStaticConentUrl()));
     } else {
