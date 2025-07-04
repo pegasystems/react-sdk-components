@@ -27,7 +27,7 @@ import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { Utils } from '../../../helpers/utils';
 import { getReferenceList } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
-import { getLocalizedNoRecordsMessage } from '../../../helpers/common-utils';
+import { getGenericFieldsLocalizedValue } from '../../../helpers/common-utils';
 import { buildFieldsForTable, filterData, getContext } from '../../../helpers/simpleTableHelpers';
 import { PConnProps } from '../../../../types/PConnProps';
 import { format } from '../../../helpers/formatters';
@@ -712,7 +712,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         </Table>
         {((readOnlyMode && (!rowData || rowData?.length === 0)) || (editableMode && (!referenceList || referenceList?.length === 0))) && (
           <div className='no-records' id='no-records'>
-            {getLocalizedNoRecordsMessage()}
+            {getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}
           </div>
         )}
       </TableContainer>
