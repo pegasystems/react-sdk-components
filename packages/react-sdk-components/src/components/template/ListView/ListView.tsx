@@ -43,6 +43,7 @@ import { filterData } from '../../helpers/simpleTableHelpers';
 import './ListView.css';
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getCurrencyOptions } from '../../field/Currency/currency-utils';
+import { getGenericFieldsLocalizedValue } from '../../helpers/common-utils';
 import { format } from '../../helpers/formatters';
 
 import useInit from './hooks';
@@ -1129,7 +1130,9 @@ export default function ListView(props: ListViewProps) {
                         })}
                   </TableBody>
                 </Table>
-                {arRows && arRows.length === 0 && <div className='no-records'>No records found.</div>}
+                {arRows && arRows.length === 0 && (
+                  <div className='no-records'>{getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}</div>
+                )}
               </TableContainer>
             )}
           </>
