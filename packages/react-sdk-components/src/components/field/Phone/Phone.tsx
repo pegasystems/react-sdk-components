@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MuiTelInput } from 'mui-tel-input';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 
@@ -10,9 +10,6 @@ interface PhoneProps extends PConnFieldProps {
 }
 
 export default function Phone(props: PhoneProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const {
     getPConnect,
     label,
@@ -46,11 +43,11 @@ export default function Phone(props: PhoneProps) {
   };
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {

@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid';
 
 import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface CaseViewProps extends PConnProps {
@@ -50,11 +50,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
-  const VerticalTabs = getComponentFromMap('VerticalTabs');
-  const DeferLoad = getComponentFromMap('DeferLoad');
-
   const {
     getPConnect,
     icon = '',
@@ -193,7 +188,8 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
             {localizedVal('Edit', localeCategory)}
           </Button>
         )}
-        <CaseViewActionsMenu
+        <LazyLoad
+          componentName='CaseViewActionsMenu'
           getPConnect={getPConnect}
           availableActions={availableActions}
           availableProcesses={availableProcesses}
@@ -236,7 +232,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
               <Divider />
               {theSummaryRegion}
               <Divider />
-              {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
+              {vertTabInfo.length > 1 && <LazyLoad componentName='VerticalTabs' tabconfig={vertTabInfo} />}
             </Card>
           </Grid>
 
@@ -244,7 +240,13 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
             {theStagesRegion}
             {theTodoRegion}
             {deferLoadInfo.length > 0 && (
-              <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab lastUpdateCaseTime={lastUpdateCaseTime} />
+              <LazyLoad
+                componentName='DeferLoad'
+                getPConnect={getPConnect}
+                name={deferLoadInfo[activeVertTab].config.name}
+                isTab
+                lastUpdateCaseTime={lastUpdateCaseTime}
+              />
             )}
           </Grid>
 

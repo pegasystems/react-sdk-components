@@ -3,7 +3,7 @@ import { Radio, RadioGroup, FormControl, FormControlLabel, FormLabel, FormHelper
 
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 // Can't use RadioButtonProps until getLocaleRuleNameFromKeys is NOT private
@@ -14,9 +14,6 @@ interface RadioButtonsProps extends PConnFieldProps {
 }
 
 export default function RadioButtons(props: RadioButtonsProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const {
     getPConnect,
     label,
@@ -63,7 +60,8 @@ export default function RadioButtons(props: RadioButtonsProps) {
 
   if (displayMode === 'DISPLAY_ONLY') {
     return (
-      <FieldValueList
+      <LazyLoad
+        componentName='FieldValueList'
         name={hideLabel ? '' : label}
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
       />
@@ -72,7 +70,8 @@ export default function RadioButtons(props: RadioButtonsProps) {
 
   if (displayMode === 'STACKED_LARGE_VAL') {
     return (
-      <FieldValueList
+      <LazyLoad
+        componentName='FieldValueList'
         name={hideLabel ? '' : label}
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         variant='stacked'

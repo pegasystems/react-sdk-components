@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 
 import handleEvent from '../../helpers/event-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IntegerProps extends PConnFieldProps {
@@ -10,10 +10,6 @@ interface IntegerProps extends PConnFieldProps {
 }
 
 export default function Integer(props: IntegerProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const TextInput = getComponentFromMap('TextInput');
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const {
     getPConnect,
     label,
@@ -43,15 +39,15 @@ export default function Integer(props: IntegerProps) {
   }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
-    return <TextInput {...props} />;
+    return <LazyLoad componentName='TextInput' {...props} />;
   }
 
   let testProp = {};

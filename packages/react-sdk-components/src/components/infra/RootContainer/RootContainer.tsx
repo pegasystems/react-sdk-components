@@ -1,9 +1,8 @@
 import { Children, createElement, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Box, CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import StoreContext from '../../../bridge/Context/StoreContext';
-import { LazyMap as LazyComponentMap } from '../../../components_map';
 import { isEmptyObject } from '../../helpers/common-utils';
 import { PConnProps } from '../../../types/PConnProps';
 
@@ -220,15 +219,12 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
     );
   }
   if (skeleton) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const LoadingComponent = LazyComponentMap[skeleton];
+    const LoadingComponent = PCore.getComponentsRegistry().getLazyComponent(skeleton);
 
     return (
       <div id='root-container'>
         {/* <div>RootContainer: Trying to show skeleton</div> */}
-        <Box textAlign='center'>
-          <CircularProgress />
-        </Box>
+        <Box textAlign='center'>{LoadingComponent}</Box>
       </div>
     );
   }

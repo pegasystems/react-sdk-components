@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 /* Using react-number-format component here, since it allows formatting decimal values,
@@ -20,9 +20,6 @@ interface DecimalProps extends PConnFieldProps {
 }
 
 export default function Decimal(props: DecimalProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const {
     getPConnect,
     label,
@@ -76,11 +73,11 @@ export default function Decimal(props: DecimalProps) {
   }
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={formattedValue} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
   }
 
   const testProp = {

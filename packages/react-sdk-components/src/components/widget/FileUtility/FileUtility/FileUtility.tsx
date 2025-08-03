@@ -11,7 +11,7 @@ import { IconButton, Menu, MenuItem, Button, CircularProgress } from '@mui/mater
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 import { PConnProps } from '../../../../types/PConnProps';
 
 interface FileUtilityProps extends PConnProps {
@@ -19,10 +19,6 @@ interface FileUtilityProps extends PConnProps {
 }
 
 export default function FileUtility(props: FileUtilityProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const SummaryList = getComponentFromMap('SummaryList');
-  const ActionButtonsForFileUtil = getComponentFromMap('ActionButtonsForFileUtil');
-
   const { getPConnect } = props;
   const thePConn = getPConnect();
   const required = true;
@@ -526,7 +522,7 @@ export default function FileUtility(props: FileUtilityProps) {
       </div>
       {list.data.length > 0 && (
         <div style={{ marginTop: '1rem' }}>
-          <SummaryList arItems$={list.data} />
+          <LazyLoad componentName='SummaryList' arItems$={list.data} />
         </div>
       )}
       {list.count > 3 && (
@@ -552,11 +548,17 @@ export default function FileUtility(props: FileUtilityProps) {
               </div>
               {fileData.fileList.length > 0 && (
                 <div style={{ marginTop: '1rem' }}>
-                  <SummaryList menuIconOverride$='trash' arItems$={fileData.fileList} menuIconOverrideAction$={removeFileFromList} />
+                  <LazyLoad
+                    componentName='SummaryList'
+                    menuIconOverride$='trash'
+                    arItems$={fileData.fileList}
+                    menuIconOverrideAction$={removeFileFromList}
+                  />
                 </div>
               )}
               {fileData.fileList.length === 0 && <div />}
-              <ActionButtonsForFileUtil
+              <LazyLoad
+                componentName='ActionButtonsForFileUtil'
                 arMainButtons={fileData.fileMainButtons}
                 arSecondaryButtons={fileData.fileSecondaryButtons}
                 primaryAction={onAttachFiles}
@@ -612,10 +614,16 @@ export default function FileUtility(props: FileUtilityProps) {
               </div>
               {linkData.linksList.length > 0 && (
                 <div style={{ marginTop: '1rem' }}>
-                  <SummaryList menuIconOverride$='trash' arItems$={linkData.linksList} menuIconOverrideAction$={removeLinksFromList} />
+                  <LazyLoad
+                    componentName='SummaryList'
+                    menuIconOverride$='trash'
+                    arItems$={linkData.linksList}
+                    menuIconOverrideAction$={removeLinksFromList}
+                  />
                 </div>
               )}
-              <ActionButtonsForFileUtil
+              <LazyLoad
+                componentName='ActionButtonsForFileUtil'
                 arMainButtons={linkData.linkMainButtons}
                 arSecondaryButtons={linkData.linkSecondaryButtons}
                 primaryAction={onAttachLinks}
@@ -636,7 +644,7 @@ export default function FileUtility(props: FileUtilityProps) {
               </button>
             </div>
             <div className='psdk-view-all-body'>
-              <SummaryList arItems$={vaItems} />
+              <LazyLoad componentName='SummaryList' arItems$={vaItems} />
             </div>
           </div>
         </div>

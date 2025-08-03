@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import Grid, { GridSize } from '@mui/material/Grid';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 
 import { PConnProps } from '../../../../types/PConnProps';
 
@@ -16,9 +16,6 @@ interface WideNarrowDetailsProps extends PConnProps {
 const COLUMN_WIDTHS = [8, 4];
 
 export default function WideNarrowDetails(props: WideNarrowDetailsProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldGroup = getComponentFromMap('FieldGroup');
-
   const { label, showLabel = true, getPConnect, showHighlightedData = false } = props;
 
   // Get the inherited props from the parent to determine label settings
@@ -64,7 +61,7 @@ export default function WideNarrowDetails(props: WideNarrowDetailsProps) {
   }
 
   return (
-    <FieldGroup name={theName}>
+    <LazyLoad componentName='FieldGroup' name={theName}>
       {showHighlightedData && highlightedDataArr.length > 0 && (
         <Grid container spacing={1} style={{ padding: '0 0 1em' }}>
           {highlightedDataArr.map((child, i) => (
@@ -81,6 +78,6 @@ export default function WideNarrowDetails(props: WideNarrowDetailsProps) {
           </Grid>
         ))}
       </Grid>
-    </FieldGroup>
+    </LazyLoad>
   );
 }

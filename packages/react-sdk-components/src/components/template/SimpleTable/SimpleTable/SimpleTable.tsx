@@ -2,7 +2,7 @@
 import { useRef } from 'react';
 
 import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 
 import { PConnProps } from '../../../../types/PConnProps';
 
@@ -26,11 +26,6 @@ interface SimpleTableProps extends PConnProps {
 }
 
 export default function SimpleTable(props: SimpleTableProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const ListView = getComponentFromMap('ListView');
-  const FieldGroupTemplate = getComponentFromMap('FieldGroupTemplate');
-  const SimpleTableManual = getComponentFromMap('SimpleTableManual');
-
   const {
     getPConnect,
     multiRecordDisplayAs,
@@ -62,7 +57,7 @@ export default function SimpleTable(props: SimpleTableProps) {
   }
   if (multiRecordDisplayAs === 'fieldGroup') {
     const fieldGroupProps = { ...props, contextClass };
-    return <FieldGroupTemplate {...fieldGroupProps} />;
+    return <LazyLoad componentName='FieldGroupTemplate' {...fieldGroupProps} />;
   }
 
   const label = labelProp || propertyLabel;
@@ -115,7 +110,7 @@ export default function SimpleTable(props: SimpleTableProps) {
       fieldName: authorContext,
       bInForm: true
     };
-    return <ListView {...listViewProps} />;
+    return <LazyLoad componentName='ListView' {...listViewProps} />;
   }
   const simpleTableManualProps: any = { ...props, contextClass };
   if (allowTableEdit === false) {
@@ -123,5 +118,5 @@ export default function SimpleTable(props: SimpleTableProps) {
     simpleTableManualProps.hideDeleteRow = true;
     simpleTableManualProps.disableDragDrop = true;
   }
-  return <SimpleTableManual {...simpleTableManualProps} />;
+  return <LazyLoad componentName='SimpleTableManual' {...simpleTableManualProps} />;
 }

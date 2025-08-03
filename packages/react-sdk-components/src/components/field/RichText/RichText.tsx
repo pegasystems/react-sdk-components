@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 
 import handleEvent from '../../helpers/event-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface RichTextProps extends PConnFieldProps {
@@ -10,10 +10,6 @@ interface RichTextProps extends PConnFieldProps {
 }
 
 export default function RichText(props: RichTextProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
-  const RichTextEditor = getComponentFromMap('RichTextEditor');
-
   const { getPConnect, value, placeholder, validatemessage, label, hideLabel, helperText, testId, displayMode, additionalProps } = props;
   const pConn = getPConnect();
   const editorRef: any = useRef(null);
@@ -24,11 +20,11 @@ export default function RichText(props: RichTextProps) {
   const helperTextToDisplay = validatemessage || helperText;
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} isHtml />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} isHtml />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} isHtml variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} isHtml variant='stacked' />;
   }
 
   let richTextComponent;
@@ -36,7 +32,8 @@ export default function RichText(props: RichTextProps) {
   if (readOnly) {
     // Rich Text read-only component
     richTextComponent = (
-      <RichTextEditor
+      <LazyLoad
+        componentName='RichTextEditor'
         {...additionalProps}
         label={label}
         labelHidden={hideLabel}
@@ -74,7 +71,8 @@ export default function RichText(props: RichTextProps) {
     };
 
     richTextComponent = (
-      <RichTextEditor
+      <LazyLoad
+        componentName='RichTextEditor'
         {...additionalProps}
         label={label}
         labelHidden={hideLabel}

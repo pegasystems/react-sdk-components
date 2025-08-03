@@ -7,7 +7,7 @@ import { Alert, Card, CardHeader, Avatar, Typography } from '@mui/material';
 import StoreContext from '../../../../bridge/Context/StoreContext';
 import { Utils } from '../../../helpers/utils';
 import { isContainerInitialized } from '../container-helpers';
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 
 import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
@@ -52,11 +52,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const FlowContainer = (props: FlowContainerProps) => {
-  // Get the proper implementation (local or Pega-provided) for these components that are emitted below
-  const Assignment = getComponentFromMap('Assignment');
-  const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
-  const AlertBanner = getComponentFromMap('AlertBanner');
-
   const pCoreConstants = PCore.getConstants();
   const PCoreVersion = PCore.getPCoreVersion();
   const { TODO } = pCoreConstants;
@@ -285,7 +280,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
     let hasBanner = false;
     const messages = pageMessages ? pageMessages.map(msg => localizedVal(msg.message, 'Messages')) : pageMessages;
     hasBanner = messages && messages.length > 0;
-    return hasBanner && <AlertBanner id='flowContainerBanner' variant='urgent' messages={messages} />;
+    return hasBanner && <LazyLoad componentName='AlertBanner' id='flowContainerBanner' variant='urgent' messages={messages} />;
   };
 
   return (
@@ -302,9 +297,9 @@ export const FlowContainer = (props: FlowContainerProps) => {
               />
               {displayPageMessages()}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Assignment getPConnect={getPConnect} itemKey={itemKey}>
+                <LazyLoad componentName='Assignment' getPConnect={getPConnect} itemKey={itemKey}>
                   {rootViewElement}
-                </Assignment>
+                </LazyLoad>
               </LocalizationProvider>
             </Card>
           ) : (
@@ -312,15 +307,16 @@ export const FlowContainer = (props: FlowContainerProps) => {
               <Typography variant='h6'>{localizedVal(containerName, undefined, key)}</Typography>
               {displayPageMessages()}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Assignment getPConnect={getPConnect} itemKey={itemKey}>
+                <LazyLoad componentName='Assignment' getPConnect={getPConnect} itemKey={itemKey}>
                   {rootViewElement}
-                </Assignment>
+                </LazyLoad>
               </LocalizationProvider>
             </Card>
           )
         ) : (
           <div>
-            <ToDo
+            <LazyLoad
+              name='Todo'
               key={Math.random()}
               getPConnect={getPConnect}
               caseInfoID={todo_caseInfoID}

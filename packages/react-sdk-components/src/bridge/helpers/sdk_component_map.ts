@@ -1,6 +1,8 @@
 // Helper singleton class to assist with loading and
 //  accessing the SDK components
 // import localSdkComponentMap from '../../sdk-local-component-map';
+import { createElement } from 'react';
+import LazyLoad from '../LazyLoad';
 import pegaSdkComponentMap from '../../sdk-pega-component-map';
 
 // Statically load all "local" components
@@ -98,6 +100,13 @@ class ComponentMap {
 }
 
 export function getComponentFromMap(inComponentName: string): any {
+  const ComponentsRegistry = PCore.getComponentsRegistry();
+  const componentObj = ComponentsRegistry.getComponent(inComponentName);
+
+  if (componentObj) {
+    return createElement(LazyLoad, { name: inComponentName });
+  }
+
   let theComponentImplementation = null;
   const theLocalComponent = SdkComponentMap.getLocalComponentMap()[inComponentName];
   if (theLocalComponent !== undefined) {

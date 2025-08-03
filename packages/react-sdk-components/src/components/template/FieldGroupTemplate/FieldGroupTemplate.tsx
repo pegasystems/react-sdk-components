@@ -2,7 +2,7 @@
 import { useLayoutEffect, useMemo } from 'react';
 
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface FieldGroupTemplateProps extends PConnProps {
@@ -18,10 +18,6 @@ interface FieldGroupTemplateProps extends PConnProps {
 }
 
 export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldGroup = getComponentFromMap('FieldGroup');
-  const FieldGroupList = getComponentFromMap('FieldGroupList');
-
   const {
     referenceList = [],
     renderMode,
@@ -86,7 +82,8 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     }, [referenceList?.length]);
 
     return (
-      <FieldGroupList
+      <LazyLoad
+        componentName='FieldGroupList'
         items={MemoisedChildren}
         onAdd={allowAddEdit !== false ? addFieldGroupItem : undefined}
         onDelete={allowAddEdit !== false ? deleteFieldGroupItem : undefined}
@@ -99,9 +96,13 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     return referenceList.map((item, index) => {
       const key = item[heading] || `field-group-row-${index}`;
       return (
-        <FieldGroup key={key} name={fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`}>
+        <LazyLoad
+          componentName='FieldGroup'
+          key={key}
+          name={fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`}
+        >
           {buildView(pConn, index, lookForChildInConfig)}
-        </FieldGroup>
+        </LazyLoad>
       );
     });
   }, []);

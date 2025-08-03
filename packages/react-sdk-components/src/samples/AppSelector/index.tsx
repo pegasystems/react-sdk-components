@@ -1,7 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 
-import Embedded from '../Embedded';
-import FullPortal from '../FullPortal';
+const Embedded = lazy(() => import('../Embedded'));
+const FullPortal = lazy(() => import('../FullPortal'));
 
 // NOTE: You should update this to be the same value that's in
 //  the src/index.html <base href="value"> to allow the React Router
@@ -16,16 +17,18 @@ const baseURL = '/';
 const AppSelector = () => {
   return (
     <div>
-      <Routes>
-        <Route path={`${baseURL}`} element={<Embedded />} />
-        <Route path={`${baseURL}index.html`} element={<Embedded />} />
-        <Route path={`${baseURL}embedded`} element={<Embedded />} />
-        <Route path={`${baseURL}embedded.html`} element={<Embedded />} />
-        <Route path={`${baseURL}portal`} element={<FullPortal />} />
-        <Route path={`${baseURL}portal.html`} element={<FullPortal />} />
-        <Route path={`${baseURL}prweb/*`} element={<FullPortal />} />
-        <Route path='*' element={<Embedded />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path={`${baseURL}`} element={<Embedded />} />
+          <Route path={`${baseURL}index.html`} element={<Embedded />} />
+          <Route path={`${baseURL}embedded`} element={<Embedded />} />
+          <Route path={`${baseURL}embedded.html`} element={<Embedded />} />
+          <Route path={`${baseURL}portal`} element={<FullPortal />} />
+          <Route path={`${baseURL}portal.html`} element={<FullPortal />} />
+          <Route path={`${baseURL}prweb/*`} element={<FullPortal />} />
+          <Route path='*' element={<Embedded />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };

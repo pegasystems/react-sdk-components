@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { PConnProps } from '../../../types/PConnProps';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 
 interface AssignmentCardProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -10,9 +10,6 @@ interface AssignmentCardProps extends PConnProps {
 }
 
 export default function AssignmentCard(props: PropsWithChildren<AssignmentCardProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const ActionButtons = getComponentFromMap('ActionButtons');
-
   const { children, actionButtons, onButtonPress } = props;
 
   const [arMainButtons, setArMainButtons] = useState([]);
@@ -33,7 +30,7 @@ export default function AssignmentCard(props: PropsWithChildren<AssignmentCardPr
     <>
       {children}
       {arMainButtons && arSecondaryButtons && (
-        <ActionButtons arMainButtons={arMainButtons} arSecondaryButtons={arSecondaryButtons} onButtonPress={buttonPress} />
+        <LazyLoad componentName='ActionButtons' arMainButtons={arMainButtons} arSecondaryButtons={arSecondaryButtons} onButtonPress={buttonPress} />
       )}
     </>
   );

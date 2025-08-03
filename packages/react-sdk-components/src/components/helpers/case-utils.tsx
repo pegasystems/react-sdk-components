@@ -1,5 +1,4 @@
-import { getComponentFromMap } from '../../bridge/helpers/sdk_component_map';
-
+import LazyLoad from '../../bridge/LazyLoad';
 /**
  * Function that accepts array of messages as input and group them by their type and returns the resulting object
  * @param {Array} inputMessages
@@ -58,7 +57,6 @@ function getVariant(type) {
 }
 
 function getBanners(config) {
-  const AlertBanner = getComponentFromMap('AlertBanner');
   const { target, pageMessages, httpMessages } = config;
   const { PAGE } = PCore.getConstants();
   const { clearMessages } = PCore.getMessageManager();
@@ -70,7 +68,8 @@ function getBanners(config) {
     const variant = getVariant(type);
     const pageMessagesBannerID = `${target}_${PAGE}_${type}`.toLowerCase().replace('/', '_');
     banners.push(
-      <AlertBanner
+      <LazyLoad
+        componentName='AlertBanner'
         id={pageMessagesBannerID}
         variant={variant}
         messages={messagesByType}
@@ -90,7 +89,7 @@ function getBanners(config) {
   });
 
   if (httpMessages && httpMessages.length > 0) {
-    banners.push(<AlertBanner id='modalViewContainerBanner' variant='urgent' messages={httpMessages} />);
+    banners.push(<LazyLoad componentName='AlertBanner' id='modalViewContainerBanner' variant='urgent' messages={httpMessages} />);
   }
 
   return banners;

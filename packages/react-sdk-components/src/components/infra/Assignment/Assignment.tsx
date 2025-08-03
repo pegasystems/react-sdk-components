@@ -3,7 +3,7 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { useFocusFirstField, useScrolltoTop } from '../../../hooks';
 
 import { PConnProps } from '../../../types/PConnProps';
@@ -18,10 +18,6 @@ interface AssignmentProps extends PConnProps {
 }
 
 export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const AssignmentCard = getComponentFromMap('AssignmentCard');
-  const MultiStep = getComponentFromMap('MultiStep');
-
   const { getPConnect, children, itemKey = '', isInModal = false, banners = [] } = props;
   const thePConn = getPConnect();
 
@@ -306,7 +302,8 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
       {banners}
       {bHasNavigation ? (
         <>
-          <MultiStep
+          <LazyLoad
+            componentName='MultiStep'
             getPConnect={getPConnect}
             itemKey={itemKey}
             actionButtons={actionButtons}
@@ -316,7 +313,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
             arNavigationSteps={arNavigationSteps}
           >
             {children}
-          </MultiStep>
+          </LazyLoad>
           <Snackbar
             open={showSnackbar}
             autoHideDuration={3000}
@@ -331,9 +328,15 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
         </>
       ) : (
         <>
-          <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
+          <LazyLoad
+            componentName='AssignmentCard'
+            getPConnect={getPConnect}
+            itemKey={itemKey}
+            actionButtons={actionButtons}
+            onButtonPress={buttonPress}
+          >
             {children}
-          </AssignmentCard>
+          </LazyLoad>
           <Snackbar
             open={showSnackbar}
             autoHideDuration={3000}

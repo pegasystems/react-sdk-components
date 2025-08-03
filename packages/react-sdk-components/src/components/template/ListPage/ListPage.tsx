@@ -1,4 +1,4 @@
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface ListPageProps extends PConnProps {
@@ -7,10 +7,7 @@ interface ListPageProps extends PConnProps {
 }
 
 export default function ListPage(props: ListPageProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const ListView = getComponentFromMap('ListView');
-
   // special case for ListView - add in a prop
   const listViewProps = { ...props, bInForm: false };
-  return <ListView {...listViewProps} />;
+  return <LazyLoad componentName='ListView' {...listViewProps} />;
 }

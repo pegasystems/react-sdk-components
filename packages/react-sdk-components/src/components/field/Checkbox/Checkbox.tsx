@@ -4,7 +4,7 @@ import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, For
 import makeStyles from '@mui/styles/makeStyles';
 
 import handleEvent from '../../helpers/event-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../helpers/instructions-utils';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
@@ -31,9 +31,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function CheckboxComponent(props: CheckboxProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const {
     getPConnect,
     label,
@@ -78,11 +75,11 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }, [thePConn]);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} variant='stacked' />;
   }
 
   const handleChange = event => {

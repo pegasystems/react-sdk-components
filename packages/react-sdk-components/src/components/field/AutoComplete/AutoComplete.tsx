@@ -6,7 +6,7 @@ import isDeepEqual from 'fast-deep-equal/react';
 import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
@@ -52,10 +52,6 @@ interface AutoCompleteProps extends PConnFieldProps {
 }
 
 export default function AutoComplete(props: AutoCompleteProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const TextInput = getComponentFromMap('TextInput');
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const {
     getPConnect,
     label,
@@ -151,11 +147,11 @@ export default function AutoComplete(props: AutoCompleteProps) {
   }, []);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (value) {
@@ -181,7 +177,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
 
   if (readOnly) {
     const theValAsString = options?.find(opt => opt.key === value)?.value;
-    return <TextInput {...props} value={theValAsString} />;
+    return <LazyLoad componentName='TextInput' {...props} value={theValAsString} />;
   }
   // Need to use both getOptionLabel and getOptionSelected to map our
   //  key/value structure to what Autocomplete expects

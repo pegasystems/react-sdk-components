@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import Grid from '@mui/material/Grid';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 import { PConnProps } from '../../../../types/PConnProps';
 
 interface DetailsThreeColumnProps extends PConnProps {
@@ -13,9 +13,6 @@ interface DetailsThreeColumnProps extends PConnProps {
 }
 
 export default function DetailsThreeColumn(props: DetailsThreeColumnProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldGroup = getComponentFromMap('FieldGroup');
-
   const { label, showLabel = true, getPConnect, showHighlightedData = false } = props;
 
   // Get the inherited props from the parent to determine label settings
@@ -51,7 +48,7 @@ export default function DetailsThreeColumn(props: DetailsThreeColumnProps) {
   }
 
   return (
-    <FieldGroup name={propsToUse.showLabel ? propsToUse.label : ''}>
+    <LazyLoad componentName='FieldGroup' name={propsToUse.showLabel ? propsToUse.label : ''}>
       {showHighlightedData && highlightedDataArr.length > 0 && (
         <Grid container spacing={1} style={{ padding: '0 0 1em' }}>
           {highlightedDataArr.map((child, i) => (
@@ -68,6 +65,6 @@ export default function DetailsThreeColumn(props: DetailsThreeColumnProps) {
           </Grid>
         ))}
       </Grid>
-    </FieldGroup>
+    </LazyLoad>
   );
 }

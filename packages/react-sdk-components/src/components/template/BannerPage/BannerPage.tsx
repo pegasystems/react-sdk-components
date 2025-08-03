@@ -1,6 +1,6 @@
 import { Children, PropsWithChildren, useMemo } from 'react';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface BannerPageProps extends PConnProps {
@@ -18,9 +18,6 @@ interface BannerPageProps extends PConnProps {
  * BannerPage template.
  */
 export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const Banner = getComponentFromMap('Banner');
-
   const {
     children,
     layout = 'two-column',
@@ -37,7 +34,8 @@ export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
   }, [children]);
 
   return (
-    <Banner
+    <LazyLoad
+      componentName='Banner'
       variant={layout}
       a={childArray[0]}
       b={childArray[1]}

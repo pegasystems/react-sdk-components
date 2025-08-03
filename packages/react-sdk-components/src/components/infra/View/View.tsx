@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect } from 'react';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { getAllFields } from '../../helpers/template-utils';
 import { PConnProps } from '../../../types/PConnProps';
 
@@ -100,9 +100,6 @@ export default function View(props: PropsWithChildren<ViewProps>) {
   // it will be loaded, otherwise fall back to single column
   //  JA - React SDK not using LazyComponentMap yet
   if (template /* && LazyComponentMap[template] */) {
-    // const ViewTemplate = LazyComponentMap[template];
-    const ViewTemplate: any = getComponentFromMap(template);
-
     if (template === 'ListView') {
       // special case for ListView - add in a prop
       const bInForm = true;
@@ -114,9 +111,9 @@ export default function View(props: PropsWithChildren<ViewProps>) {
 
     // spreading because all props should go to the template
     let RenderedTemplate = (
-      <ViewTemplate key={key} {...props}>
+      <LazyLoad componentName={template} key={key} {...props}>
         {children}
-      </ViewTemplate>
+      </LazyLoad>
     );
 
     if (FORMTEMPLATES.includes(template) && showLabel) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { InputAdornment, TextField } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 
@@ -11,10 +11,6 @@ interface EmailProps extends PConnFieldProps {
 }
 
 export default function Email(props: EmailProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const TextInput = getComponentFromMap('TextInput');
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const {
     getPConnect,
     label,
@@ -44,15 +40,15 @@ export default function Email(props: EmailProps) {
   }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={value} variant='stacked' />;
   }
 
   if (readOnly) {
-    return <TextInput {...props} />;
+    return <LazyLoad componentName='TextInput' {...props} />;
   }
 
   let testProp = {};

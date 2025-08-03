@@ -5,7 +5,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 // Will return the date string in YYYY-MM-DD format which we'll be POSTing to the server
@@ -18,10 +18,6 @@ interface DateProps extends PConnFieldProps {
 }
 
 export default function Date(props: DateProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const TextInput = getComponentFromMap('TextInput');
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const { getPConnect, label, required, disabled, value, validatemessage, status, readOnly, testId, helperText, displayMode, hideLabel } = props;
 
   const [dateValue, setDateValue] = useState<Dayjs | null>(value ? dayjs(value) : null);
@@ -47,19 +43,19 @@ export default function Date(props: DateProps) {
     const formattedDate = format(props.value, 'date', {
       format: dateFormatInfo.dateFormatString
     });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDate} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={formattedDate} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
     const formattedDate = format(props.value, 'date', {
       format: dateFormatInfo.dateFormatString
     });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDate} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={formattedDate} variant='stacked' />;
   }
 
   if (readOnly) {
     // const theReadOnlyComp = <TextInput props />
-    return <TextInput {...props} />;
+    return <LazyLoad componentName='TextInput' {...props} />;
   }
 
   let testProp = {};

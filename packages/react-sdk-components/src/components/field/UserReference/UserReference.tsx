@@ -1,10 +1,9 @@
 import { memo, useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
-import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
 
 const DROPDOWN_LIST = 'Drop-down list';
@@ -31,10 +30,6 @@ interface UserReferenceProps extends PConnProps {
 }
 
 const UserReference = (props: UserReferenceProps) => {
-  // Get emitted components from map (so we can get any override that may exist)
-  const AutoComplete = getComponentFromMap('AutoComplete');
-  const Dropdown = getComponentFromMap('Dropdown');
-
   const {
     label = '',
     displayAs = '',
@@ -98,11 +93,11 @@ const UserReference = (props: UserReferenceProps) => {
   let userReferenceComponent: any = null;
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={userName || ''} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={userName || ''} variant='stacked' />;
   }
 
   if (readOnly && showAsFormattedText) {
@@ -139,7 +134,8 @@ const UserReference = (props: UserReferenceProps) => {
       ];
 
       userReferenceComponent = (
-        <AutoComplete
+        <LazyLoad
+          componentName='AutoComplete'
           additionalProps={additionalProps}
           label={label}
           getPConnect={getPConnect}
@@ -161,7 +157,8 @@ const UserReference = (props: UserReferenceProps) => {
     }
     if (displayAs === DROPDOWN_LIST) {
       userReferenceComponent = (
-        <Dropdown
+        <LazyLoad
+          componentName='Dropdown'
           additionalProps={additionalProps}
           datasource={dropDownDataSource}
           listType='associated'

@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import { isEmptyObject } from '../../helpers/common-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import './PromotedFilters.css';
 
 import { PConnProps } from '../../../types/PConnProps';
@@ -67,9 +67,6 @@ function isValidInput(input) {
 }
 
 export default function PromotedFilters(props: PromotedFilterProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const ListView = getComponentFromMap('ListView');
-
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const { getPConnect, viewName, filters, listViewProps, pageClass, parameters } = props;
   const [initTable, setInitTable] = useState(false);
@@ -156,7 +153,8 @@ export default function PromotedFilters(props: PromotedFilterProps) {
         </Button>
       </div>
       {initTable && (
-        <ListView
+        <LazyLoad
+          componentName='ListView'
           {...listViewProps}
           title=''
           payload={payload}

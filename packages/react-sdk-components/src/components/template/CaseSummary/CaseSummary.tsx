@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement } from 'react';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface CaseSummaryProps extends PConnProps {
@@ -7,9 +7,6 @@ interface CaseSummaryProps extends PConnProps {
 }
 
 export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const CaseSummaryFields = getComponentFromMap('CaseSummaryFields');
-
   const { getPConnect, children } = props;
 
   const thePConn = getPConnect();
@@ -90,8 +87,8 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
 
   return (
     <div id='CaseSummary'>
-      <CaseSummaryFields status={status} showStatus={showStatus} theFields={arPrimaryFields} />
-      <CaseSummaryFields theFields={arSecondaryFields} />
+      <LazyLoad componentName='CaseSummaryFields' status={status} showStatus={showStatus} theFields={arPrimaryFields} />
+      <LazyLoad componentName='CaseSummaryFields' theFields={arSecondaryFields} />
     </div>
   );
 }

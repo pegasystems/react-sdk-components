@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 // ScalarListProps can't extend PConnFieldProps because its 'value' has a different type
@@ -26,9 +26,6 @@ function CommaSeparatedList(props) {
 }
 
 export default function ScalarList(props: ScalarListProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const { label, getPConnect, componentType, value: scalarValues, displayMode, hideLabel, ...restProps } = props;
 
   const items = scalarValues?.map(scalarValue => {
@@ -60,5 +57,5 @@ export default function ScalarList(props: ScalarListProps) {
 
   const displayComp = <CommaSeparatedList items={items} />;
 
-  return <FieldValueList name={hideLabel ? '' : label} value={displayComp} variant='stacked' />;
+  return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={displayComp} variant='stacked' />;
 }

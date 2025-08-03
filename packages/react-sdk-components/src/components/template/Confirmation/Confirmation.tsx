@@ -4,7 +4,7 @@ import { Button, Card } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface ConfirmationProps extends PConnProps {
@@ -29,10 +29,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Confirmation(props: PropsWithChildren<ConfirmationProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const ToDo = getComponentFromMap('Todo'); // NOTE: ConstellationJS Engine uses "Todo" and not "ToDo"!!!
-  const Details = getComponentFromMap('Details');
-
   const classes = useStyles();
   const CONSTS = PCore.getConstants();
   const [showConfirmView, setShowConfirmView] = useState(true);
@@ -54,10 +50,18 @@ export default function Confirmation(props: PropsWithChildren<ConfirmationProps>
   return showConfirmView ? (
     <Card className={classes.root}>
       <h2 id='confirm-label'>{props.showLabel ? props.label : ''}</h2>
-      {showDetails ? <Details {...detailProps} /> : undefined}
+      {showDetails ? <LazyLoad componentName='Details' {...detailProps} /> : undefined}
       {showTasks ? (
         toDoList && toDoList.length > 0 ? (
-          <ToDo {...todoProps} datasource={{ source: toDoList }} getPConnect={getPConnect} type={CONSTS.TODO} headerText='Open Tasks' isConfirm />
+          <LazyLoad
+            componentName='Todo'
+            {...todoProps}
+            datasource={{ source: toDoList }}
+            getPConnect={getPConnect}
+            type={CONSTS.TODO}
+            headerText='Open Tasks'
+            isConfirm
+          />
         ) : undefined
       ) : undefined}
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -68,7 +72,15 @@ export default function Confirmation(props: PropsWithChildren<ConfirmationProps>
     </Card>
   ) : toDoList && toDoList.length > 0 ? (
     <Card className={classes.root}>
-      <ToDo {...props} datasource={{ source: toDoList }} getPConnect={getPConnect} type={CONSTS.TODO} headerText='Tasks' isConfirm />
+      <LazyLoad
+        componentName='Todo'
+        {...props}
+        datasource={{ source: toDoList }}
+        getPConnect={getPConnect}
+        type={CONSTS.TODO}
+        headerText='Tasks'
+        isConfirm
+      />
     </Card>
   ) : null;
 }

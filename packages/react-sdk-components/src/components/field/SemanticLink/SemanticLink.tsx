@@ -2,7 +2,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 /* although this is called the SemanticLink component, we are not yet displaying as a
@@ -46,9 +46,6 @@ interface SemanticLinkProps extends PConnFieldProps {
 }
 
 export default function SemanticLink(props: SemanticLinkProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const { text, displayMode, label, hideLabel } = props;
   const classes = useStyles();
 
@@ -71,6 +68,6 @@ export default function SemanticLink(props: SemanticLinkProps) {
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={text} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={text} variant='stacked' />;
   }
 }

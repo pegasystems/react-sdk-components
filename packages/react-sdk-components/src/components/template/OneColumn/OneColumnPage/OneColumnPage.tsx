@@ -1,4 +1,4 @@
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 import { PConnProps } from '../../../../types/PConnProps';
 
 interface OneColumnPageProps extends PConnProps {
@@ -10,8 +10,5 @@ interface OneColumnPageProps extends PConnProps {
  *  and mapping to the TwoColumn template.
  */
 export default function OneColumnPage(props: OneColumnPageProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const OneColumn = getComponentFromMap('OneColumn');
-
-  return <OneColumn {...props} />;
+  return <LazyLoad componentName='OneColumn' {...props} />;
 }

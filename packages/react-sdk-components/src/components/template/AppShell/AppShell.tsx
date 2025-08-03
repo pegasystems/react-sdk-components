@@ -4,7 +4,7 @@ import Avatar from '@mui/material/Avatar';
 
 import { Utils } from '../../helpers/utils';
 import { NavContext } from '../../helpers/reactContextHelpers';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 import './AppShell.css';
@@ -48,11 +48,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AppShell(props: PropsWithChildren<AppShellProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const NavBar = getComponentFromMap('NavBar');
-  const WssNavBar = getComponentFromMap('WssNavBar');
-  const AlertBanner = getComponentFromMap('AlertBanner');
-
   const {
     pages = [],
     caseTypes = [],
@@ -96,7 +91,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   let banners: any = null;
   banners = hasBanner && (
     <div style={{ display: 'flex', flexDirection: 'column', padding: '1em 0' }}>
-      <AlertBanner id='AppShell' variant='urgent' messages={messages} />
+      <LazyLoad componentName='AlertBanner' id='AppShell' variant='urgent' messages={messages} />
     </div>
   );
   // Initial setting of appName and mapChildren
@@ -214,7 +209,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   if (portalTemplate === 'wss') {
     return (
       <div id='AppShell'>
-        <WssNavBar
+        <LazyLoad
+          componentName='WssNavBar'
           portalName={portalName}
           imageSrc={iconURL}
           fullImageSrc={fullIconURL}
@@ -242,7 +238,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     // eslint-disable-next-line react/jsx-no-constructed-context-values
     <NavContext.Provider value={{ open, setOpen }}>
       <div id='AppShell' className={classes.root}>
-        <NavBar
+        <LazyLoad
+          componentName='NavBar'
           getPConnect={getPConnect}
           pConn={getPConnect()}
           appName={localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase())}

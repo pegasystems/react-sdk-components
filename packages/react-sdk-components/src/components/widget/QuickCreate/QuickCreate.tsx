@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Utils } from '../../helpers/utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 interface QuickCreateProps extends PConnProps {
@@ -11,9 +11,6 @@ interface QuickCreateProps extends PConnProps {
 }
 
 export default function QuickCreate(props: QuickCreateProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const WssQuickCreate = getComponentFromMap('WssQuickCreate');
-
   const { getPConnect, heading, showCaseIcons, classFilter } = props;
   const pConn = getPConnect();
   const createCase = className => {
@@ -83,7 +80,7 @@ export default function QuickCreate(props: QuickCreateProps) {
 
   return (
     <div>
-      <WssQuickCreate heading={heading} actions={quickCreatecases} />
+      <LazyLoad componentName='WssQuickCreate' heading={heading} actions={quickCreatecases} />
     </div>
   );
 }

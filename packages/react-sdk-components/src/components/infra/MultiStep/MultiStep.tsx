@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 import './MultiStep.css';
@@ -15,9 +15,6 @@ interface MultiStepProps extends PConnProps {
 }
 
 export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const AssignmentCard = getComponentFromMap('AssignmentCard');
-
   const { getPConnect, children, itemKey = '', actionButtons, onButtonPress } = props;
   const { bIsVertical, arNavigationSteps } = props;
 
@@ -112,9 +109,15 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                             </div>
                             {subStep.visited_status === 'current' && (
                               <div>
-                                <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
+                                <LazyLoad
+                                  componentName='AssignmentCard'
+                                  getPConnect={getPConnect}
+                                  itemKey={itemKey}
+                                  actionButtons={actionButtons}
+                                  onButtonPress={buttonPress}
+                                >
                                   {children}
-                                </AssignmentCard>
+                                </LazyLoad>
                               </div>
                             )}
                           </li>;
@@ -122,9 +125,15 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                       </ul>
                     )}
                     {!mainStep?.steps && mainStep.visited_status === 'current' && (
-                      <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
+                      <LazyLoad
+                        componentName='AssignmentCard'
+                        getPConnect={getPConnect}
+                        itemKey={itemKey}
+                        actionButtons={actionButtons}
+                        onButtonPress={buttonPress}
+                      >
                         {children}
-                      </AssignmentCard>
+                      </LazyLoad>
                     )}
                   </div>
                 </div>
@@ -169,18 +178,30 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                           {subStep.visited_status !== 'current' && <label className='psdk-sub-step-not-current'>{subStep.name}</label>}
                         </div>
                         {subStep.visited_status === 'current' && (
-                          <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
+                          <LazyLoad
+                            componentName='AssignmentCard'
+                            getPConnect={getPConnect}
+                            itemKey={itemKey}
+                            actionButtons={actionButtons}
+                            onButtonPress={buttonPress}
+                          >
                             {children}
-                          </AssignmentCard>
+                          </LazyLoad>
                         )}
                       </li>
                     ))}
                   </ul>
                 )}
                 {!mainStep?.steps && mainStep.ID === currentStep?.ID && (
-                  <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
+                  <LazyLoad
+                    componentName='AssignmentCard'
+                    getPConnect={getPConnect}
+                    itemKey={itemKey}
+                    actionButtons={actionButtons}
+                    onButtonPress={buttonPress}
+                  >
                     {children}
-                  </AssignmentCard>
+                  </LazyLoad>
                 )}
               </React.Fragment>
             );

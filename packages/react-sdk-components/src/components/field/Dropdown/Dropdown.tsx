@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import isDeepEqual from 'fast-deep-equal/react';
+
 import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IOption {
@@ -59,9 +60,6 @@ interface DropdownProps extends PConnFieldProps {
 }
 
 export default function Dropdown(props: DropdownProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const {
     getPConnect,
     label,
@@ -168,7 +166,8 @@ export default function Dropdown(props: DropdownProps) {
   const displayFn = (displayM, val) => {
     if (displayM === 'DISPLAY_ONLY') {
       return (
-        <FieldValueList
+        <LazyLoad
+          componentName='FieldValueList'
           name={hideLabel ? '' : label}
           // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
           value={thePConn.getLocalizedValue(val, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
@@ -178,7 +177,8 @@ export default function Dropdown(props: DropdownProps) {
 
     if (displayM === 'STACKED_LARGE_VAL') {
       return (
-        <FieldValueList
+        <LazyLoad
+          componentName='FieldValueList'
           name={hideLabel ? '' : label}
           // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
           value={thePConn.getLocalizedValue(val, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}

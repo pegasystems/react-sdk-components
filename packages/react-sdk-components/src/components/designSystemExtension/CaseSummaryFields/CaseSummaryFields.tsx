@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getCurrencyOptions } from '../../field/Currency/currency-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 
 import './CaseSummaryFields.css';
 
@@ -21,9 +21,6 @@ interface CaseSummaryFieldsProps {
 }
 
 export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const Operator = getComponentFromMap('Operator');
-
   const { status, showStatus, theFields } = props;
 
   const [theFieldsToRender, setFieldsToRender] = useState([]);
@@ -37,8 +34,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       // eslint-disable-next-line sonarjs/no-small-switch
       switch (fieldTypeLower) {
         case 'caseoperator':
-          return <Operator {...field.config} />;
-          break;
+          return <LazyLoad componentName='Operator' {...field.config} />;
 
         default:
           return (
@@ -194,7 +190,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
         );
 
       case 'caseoperator':
-        return <Operator {...field.config} />;
+        return <LazyLoad componentName='Operator' {...field.config} />;
 
       default:
         return (

@@ -1,4 +1,4 @@
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 
 import { PConnProps } from '../../../../types/PConnProps';
 
@@ -25,11 +25,6 @@ const isSelfReferencedProperty = (param, referenceProp) => {
  * @param {*} props - props
  */
 export default function SimpleTableSelect(props: SimpleTableSelectProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const ListView = getComponentFromMap('ListView');
-  const SimpleTable = getComponentFromMap('SimpleTable');
-  const PromotedFilters = getComponentFromMap('PromotedFilters');
-
   const { label, getPConnect, renderMode = '', showLabel = true, viewName = '', parameters, dataRelationshipContext = null } = props;
 
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
@@ -43,7 +38,7 @@ export default function SimpleTableSelect(props: SimpleTableSelectProps) {
   const isMultiSelectMode = selectionMode === MULTI;
 
   if (isMultiSelectMode && renderMode === 'ReadOnly') {
-    return <SimpleTable {...props} showLabel={propsToUse.showLabel} />;
+    return <LazyLoad componentName='SimpleTable' {...props} showLabel={propsToUse.showLabel} />;
   }
 
   const pageReference = pConn.getPageReference();
@@ -108,7 +103,8 @@ export default function SimpleTableSelect(props: SimpleTableSelectProps) {
 
   if (isSearchable) {
     return (
-      <PromotedFilters
+      <LazyLoad
+        componentName='PromotedFilters'
         getPConnect={getPConnect}
         viewName={viewName}
         filters={filters}
@@ -118,5 +114,5 @@ export default function SimpleTableSelect(props: SimpleTableSelectProps) {
       />
     );
   }
-  return <ListView {...listViewProps} />;
+  return <LazyLoad componentName='ListView' {...listViewProps} />;
 }

@@ -8,8 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import difference from 'lodash.difference';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
-// Need to get correct implementation from component map for Assignment and CancelAlert
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 import { getBanners } from '../../../helpers/case-utils';
 import { PConnProps } from '../../../../types/PConnProps';
 
@@ -104,11 +103,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ModalViewContainer(props: ModalViewContainerProps) {
-  // Get the proper implementation (local or Pega-provided) for these components that are emitted below
-  const Assignment = getComponentFromMap('Assignment');
-  const CancelAlert = getComponentFromMap('CancelAlert');
-  const ListViewActionButtons = getComponentFromMap('ListViewActionButtons');
-
   const classes = useStyles();
 
   const modalCollection = useRef({});
@@ -316,7 +310,8 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         <DialogContent className={`${classes.dlgContent} psdk-dialog-content`}>
           {bShowModal ? (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Assignment
+              <LazyLoad
+                componentName='Assignment'
                 getPConnect={createdView.configObject.getPConnect}
                 itemKey={itemKey}
                 isInModal
@@ -326,20 +321,21 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
                 })}
               >
                 {arNewChildrenAsReact}
-              </Assignment>
+              </LazyLoad>
             </LocalizationProvider>
           ) : null}
         </DialogContent>
 
         {isMultiRecordData && (
-          <ListViewActionButtons
+          <LazyLoad
+            componentName='ListViewActionButtons'
             getPConnect={createdView.configObject.getPConnect}
             context={createdView.latestItem.context}
             closeActionsDialog={closeActionsDialog}
           />
         )}
       </Dialog>
-      {bShowCancelAlert && <CancelAlert {...cancelAlertProps} dismiss={dismissCancelAlert} />}
+      {bShowCancelAlert && <LazyLoad componentName='CancelAlert' {...cancelAlertProps} dismiss={dismissCancelAlert} />}
     </>
   );
 }

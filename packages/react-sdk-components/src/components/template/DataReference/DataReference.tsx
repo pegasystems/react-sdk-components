@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactElement, useEffect, useMemo, useState } from 'react';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnProps } from '../../../types/PConnProps';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private
@@ -21,10 +21,6 @@ interface DataReferenceProps extends PConnProps {
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
 export default function DataReference(props: PropsWithChildren<DataReferenceProps>) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const SingleReferenceReadonly = getComponentFromMap('SingleReferenceReadOnly');
-  const MultiReferenceReadonly = getComponentFromMap('MultiReferenceReadOnly');
-
   const {
     children,
     getPConnect,
@@ -190,7 +186,8 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       });
       if (!canBeChangedInReviewMode && isDisplayModeEnabled && selectionMode === SELECTION_MODE.SINGLE) {
         return (
-          <SingleReferenceReadonly
+          <LazyLoad
+            componentName='SingleReferenceReadonly'
             config={config}
             getPConnect={firstChildPConnect}
             label={propsToUse.label}
@@ -206,7 +203,15 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       }
 
       if (isDisplayModeEnabled && selectionMode === SELECTION_MODE.MULTI) {
-        return <MultiReferenceReadonly config={config} getPConnect={firstChildPConnect} label={propsToUse.label} hideLabel={hideLabel} />;
+        return (
+          <LazyLoad
+            componentName='MultiReferenceReadonly'
+            config={config}
+            getPConnect={firstChildPConnect}
+            label={propsToUse.label}
+            hideLabel={hideLabel}
+          />
+        );
       }
 
       // In the case of a datasource with parameters you cannot load the dropdown before the parameters

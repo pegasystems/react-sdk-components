@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import Tabs from '@mui/material/Tabs';
 
-import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../../bridge/LazyLoad';
 
 // VerticalTabs does NOT have getPConnect. So, no need to extend from PConnProps
 interface VerticalTabsProps {
@@ -34,9 +34,6 @@ const createCustomEvent = (eventName: string, additionalData: { [key: string]: s
 };
 
 export default function VerticalTabs(props: VerticalTabsProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const LeftAlignVerticalTab = getComponentFromMap('LeftAlignVerticalTabs');
-
   // Get a React warning when we use tabConfig as mixed case. So all lowercase tabconfig
   const { tabconfig = [] } = props;
   const classes = useStyles();
@@ -60,7 +57,7 @@ export default function VerticalTabs(props: VerticalTabsProps) {
       {/* VerticalTabs: {JSON.stringify(tabconfig)} */}
       <Tabs className={classes.tabs} orientation='vertical' value={value} onChange={handleChange}>
         {tabconfig.map(tab => (
-          <LeftAlignVerticalTab {...props} label={tab.name} key={tab.name} />
+          <LazyLoad componentName='LeftAlignVerticalTab' {...props} label={tab.name} key={tab.name} />
         ))}
       </Tabs>
     </div>

@@ -3,7 +3,6 @@ import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { connect, shallowEqual } from 'react-redux';
 
-import ComponentMap, { LazyMap as LazyComponentMap } from '../components_map'; // was '../../../../../src/components_map';
 import ErrorBoundary from '../components/infra/ErrorBoundary';
 
 import StoreContext from './Context/StoreContext';
@@ -15,6 +14,7 @@ import StoreContext from './Context/StoreContext';
 //    below in getComponent!
 
 import { SdkComponentMap } from './helpers/sdk_component_map';
+import { registerComponentMap } from '../components_map';
 
 const isClassIDCompare = (key, prev, next) => {
   return !(key === 'classID' && (!prev[key] || !next[key]));
@@ -117,7 +117,10 @@ const getComponent = c11nEnv => {
   const componentType = (componentObj && componentObj.component) || type;
 
   // JEA - modifying logic before bailing to RootContainer logic to work around async loading problem
-  let component = LazyComponentMap[componentType]; /* || window[componentType] */
+  let component =
+    PCore.getComponentsRegistry().getLazyComponent(componentType) ||
+    window[componentType] ||
+    PCore.getComponentsRegistry().getLazyComponent('ErrorBoundary');
 
   // NOTE: Until we get lazy loading working, maintain this for each component we add
   if (component === undefined) {
@@ -145,10 +148,6 @@ const getComponent = c11nEnv => {
       // eslint-disable-next-line no-console
       console.error(`SdkComponentMap not defined! Unable to process component: ${componentType}`);
     }
-  } else {
-    // eslint-disable-next-line no-console
-    console.log(`getComponent doesn't have an entry for component ${component}`);
-    component = ErrorBoundary;
   }
 
   if (c11nEnv.isConditionExist()) {
@@ -314,7 +313,7 @@ PConnect.defaultProps = {
 };
 
 // Move these into SdkConstellationReady so PCore is available
-document.addEventListener('SdkConstellationReady', () => {
+document.addEventListener('SdkConstellationReady', async () => {
   PCore.registerComponentCreator((c11nEnv, additionalProps = {}) => {
     return createElement(PConnect, {
       ...c11nEnv,
@@ -324,35 +323,7 @@ document.addEventListener('SdkConstellationReady', () => {
     });
   });
 
-  PCore.getAssetLoader().register('component-loader', async (componentNames = []) => {
-    const promises = [];
-    componentNames.forEach(comp => {
-      if (/^[A-Z]/.test(comp) && !LazyComponentMap[comp]) {
-        if (!ComponentMap[comp]) {
-          const srcUrl = `${PCore.getAssetLoader().getConstellationServiceUrl()}/v860/${PCore.getAssetLoader().getAppAlias()}/component/${comp}.js`;
-          promises.push(PCore.getAssetLoader().getLoader()(srcUrl, 'script'));
-        } else {
-          if (ComponentMap[comp].modules && ComponentMap[comp].modules.length) {
-            ComponentMap[comp].modules.forEach(module => {
-              LazyComponentMap[comp] = module;
-            });
-          }
-          if (ComponentMap[comp].scripts && ComponentMap[comp].scripts.length) {
-            ComponentMap[comp].scripts.forEach(script => {
-              promises.push(PCore.getAssetLoader().getLoader()(script, 'script'));
-            });
-          }
-        }
-      }
-    });
-    /* Promise.all rejects or accepts all or none. This causes entire component loader to fail
-      in case there is a single failure.
-      Using allSettled to allow Promise to be resolved even if there are failed components
-      Note : This is a liberty taken at component loader and unwise to be used at
-      asset loader which will still use Promise.all
-      */
-    await Promise.allSettled(promises);
-  });
+  await registerComponentMap();
 });
 
 /**

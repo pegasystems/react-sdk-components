@@ -5,7 +5,7 @@ import DateFormatter from '../../helpers/formatters/Date';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import LazyLoad from '../../../bridge/LazyLoad';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
 interface DateTimeProps extends PConnFieldProps {
@@ -13,10 +13,6 @@ interface DateTimeProps extends PConnFieldProps {
 }
 
 export default function DateTime(props: DateTimeProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const TextInput = getComponentFromMap('TextInput');
-  const FieldValueList = getComponentFromMap('FieldValueList');
-
   const { getPConnect, label, required, disabled, value = '', validatemessage, status, readOnly, testId, helperText, displayMode, hideLabel } = props;
 
   const environmentInfo = PCore.getEnvironmentInfo();
@@ -45,19 +41,19 @@ export default function DateTime(props: DateTimeProps) {
     const formattedDateTime = format(props.value, 'datetime', {
       format: `${dateFormatInfo.dateFormatString} hh:mm a`
     });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={formattedDateTime} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
     const formattedDateTime = format(props.value, 'datetime', {
       format: `${dateFormatInfo.dateFormatString} hh:mm a`
     });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant='stacked' />;
+    return <LazyLoad componentName='FieldValueList' name={hideLabel ? '' : label} value={formattedDateTime} variant='stacked' />;
   }
 
   if (readOnly) {
     const formattedDateTime = format(props.value, 'datetime');
-    return <TextInput {...props} value={formattedDateTime} />;
+    return <LazyLoad componentName='TextInput' {...props} value={formattedDateTime} />;
   }
 
   let testProp = {};
