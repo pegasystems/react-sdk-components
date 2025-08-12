@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 
 import { getTabLabel } from '../../src/components/template/SubTabs/tabUtils';
 
-const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCaseTime, isTabRefresh, template]) => {
+const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
   const pConn = deferLoadedTabs.props.getPConnect();
   const [availableTabs] = useState(deferLoadedTabs.props.getPConnect().getChildren() || []);
   const [data, setData] = useState<any[]>([]);
@@ -29,7 +29,7 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCas
   };
 
   const getTabsData = useCallback(
-    (overideTabContent) =>
+    overideTabContent =>
       availableTabs.map((tab, index) => {
         const config = tab.getPConnect().getConfigProps();
         const name = getTabLabel(tab.getPConnect());
@@ -44,7 +44,11 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCas
           loaded: tabId === currentTabId || Boolean(data[index]?.content),
           visibility: () => {
             const tabConfig = tab.getPConnect().getConfigProps();
-            return !('visibility' in tabConfig) || tabConfig.visibility === true;
+            const isVisible = !('visibility' in tabConfig) || tabConfig.visibility === true;
+            if (!isVisible) {
+              tab.getPConnect().removeNode();
+            }
+            return isVisible;
           },
           count
         };
@@ -57,9 +61,9 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCas
       availableTabs.reduce(
         (prev, tab, index) => {
           const config = tab.getPConnect().getConfigProps();
-          const { value: showTabCount } = config.inheritedProps?.find((item) => item.prop === 'showTabCount') || {};
-          const { value } = config.inheritedProps?.find((item) => item.prop === 'count') || {};
-          const tabCountSource = config.inheritedProps?.find((item) => item.prop === 'tabCount');
+          const { value: showTabCount } = config.inheritedProps?.find(item => item.prop === 'showTabCount') || {};
+          const { value } = config.inheritedProps?.find(item => item.prop === 'count') || {};
+          const tabCountSource = config.inheritedProps?.find(item => item.prop === 'tabCount');
           const name = getTabLabel(tab.getPConnect());
           const tabId = `${viewName}-${config.name || name}-${index}`;
           if (showTabCount) {
@@ -72,9 +76,7 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCas
                   {
                     dataPageName: tabCountSource.value.source,
                     tabId,
-                    tabCountProp: isPrefixedByDot
-                      ? tabCountSource.value.fields.count.substring(1)
-                      : tabCountSource.value.fields.count,
+                    tabCountProp: isPrefixedByDot ? tabCountSource.value.fields.count.substring(1) : tabCountSource.value.fields.count,
                     dataViewParameters: tabCountSource.value?.parameters || {}
                   }
                 ]
@@ -117,31 +119,22 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCas
     []
   );
 
-  let forceRefresh = false;
-
-  useEffect(() => {
-    forceRefresh = true;
-  }, [lastUpdateCaseTime, isTabRefresh]);
-
   useEffect(() => {
     setCurrentTabId(selectedTabId);
   }, [selectedTabId]);
 
   useEffect(() => {
-    setData(getTabsData(forceRefresh));
-  }, [countMetadata, currentTabId, lastUpdateCaseTime, isTabRefresh]);
+    // @ts-ignore
+    setData(getTabsData());
+  }, [countMetadata, currentTabId]);
 
   useEffect(() => {
     const { dataPageSources, calculatedFields } = tabCountSources;
-    const calculatedFieldsWithoutValue = calculatedFields.filter((item) => item.propertyName);
+    const calculatedFieldsWithoutValue = calculatedFields.filter(item => item.propertyName);
     if (dataPageSources.length) {
       setLoading(true);
-      Promise.all(
-        dataPageSources.map((item) =>
-          PCore.getDataPageUtils().getPageDataAsync(item.dataPageName, '', item.dataViewParameters)
-        )
-      )
-        .then((res) => {
+      Promise.all(dataPageSources.map(item => PCore.getDataPageUtils().getPageDataAsync(item.dataPageName, '', item.dataViewParameters)))
+        .then(res => {
           const temp = res.map((r, index) => ({
             ...dataPageSources[index],
             count: r[dataPageSources[index].tabCountProp]
@@ -149,13 +142,14 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCas
           setCountMetadata(temp);
           setLoading(false);
         })
-        .catch((err) => {
+        .catch(err => {
           setError(err);
           setLoading(false);
         });
     } else if (calculatedFieldsWithoutValue.length) {
-      //@ts-ignore
-      PCore.getViewRuleApi().getCalculatedFields(
+      PCore.getViewRuleApi()
+        // @ts-ignore
+        .getCalculatedFields(
           pConn.getCaseInfo().getKey(),
           pConn.getCurrentView(),
           calculatedFieldsWithoutValue.map(({ propertyName, context }) => ({
@@ -163,21 +157,21 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCas
             context
           }))
         )
-        .then((res) => {
+        .then(res => {
           const values = res?.data?.caseInfo?.content || {};
-          const temp = calculatedFields.map((field) => ({
+          const temp = calculatedFields.map(field => ({
             ...field,
             count: values[field.propertyName?.substring(1)] || field.count
           }));
           setCountMetadata(temp);
         })
-        .catch((err) => {
+        .catch(err => {
           setError(err);
           setLoading(false);
         });
     } else {
       setCountMetadata(
-        calculatedFields.map((field) => ({
+        calculatedFields.map(field => ({
           ...field,
           count: field.count
         }))
@@ -190,7 +184,8 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, ...[lastUpdateCas
     data,
     loading,
     error,
-    updateCurrentTabId: setCurrentTabId
+    updateCurrentTabId: setCurrentTabId,
+    refreshTabData: () => setData(getTabsData(true))
   };
 };
 

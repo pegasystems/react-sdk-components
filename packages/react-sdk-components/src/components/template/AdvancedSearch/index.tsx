@@ -7,15 +7,12 @@ import SearchGroups from './SearchGroups';
 
 export default function AdvancedSearch(props) {
   const { getPConnect, targetObjectClass, localeReference } = props;
-  //@ts-ignore
-  const { dataReferenceConfigToChild, isCreateNewReferenceEnabled, disableStartingFieldsForReference, pyID, searchSelectCacheKey
-  } = useContext(DataReferenceAdvancedSearchContext);
 
-  const {
-    selectionMode,
-    value: singleSelectFieldValue,
-    readonlyContextList: multiSelectField
-  } = dataReferenceConfigToChild;
+  const { dataReferenceConfigToChild, isCreateNewReferenceEnabled, disableStartingFieldsForReference, pyID, searchSelectCacheKey } = useContext(
+    DataReferenceAdvancedSearchContext
+  ) as any;
+
+  const { selectionMode, value: singleSelectFieldValue, readonlyContextList: multiSelectField } = dataReferenceConfigToChild;
 
   let isSelectionExist = false;
   const { MULTI } = PCore.getConstants().LIST_SELECTION_MODE;
@@ -33,8 +30,8 @@ export default function AdvancedSearch(props) {
 
   const searchFieldsSet = new Set();
   const searchFields: any = [];
-  rawViewMetadata.config.searchGroups.forEach((group) => {
-    group.children.forEach((child) => {
+  rawViewMetadata.config.searchGroups.forEach(group => {
+    group.children.forEach(child => {
       if (!searchFieldsSet.has(child.config.value) && !child.config.validator) {
         searchFields.push(child);
         searchFieldsSet.add(child.config.value);

@@ -13,9 +13,7 @@ export function getFieldMeta(getPConnect, dataRelationshipContext) {
   const isMultiSelectMode = selectionMode === MULTI;
 
   const pageReference = pConn.getPageReference();
-  let referenceProp = isMultiSelectMode
-    ? selectionList.substring(1)
-    : pageReference.substring(pageReference.lastIndexOf('.') + 1);
+  let referenceProp = isMultiSelectMode ? selectionList.substring(1) : pageReference.substring(pageReference.lastIndexOf('.') + 1);
   // Replace here to use the context name instead
   let contextPageReference = null;
   if (dataRelationshipContext !== null && selectionMode === 'single') {
@@ -24,12 +22,10 @@ export function getFieldMeta(getPConnect, dataRelationshipContext) {
   }
 
   const fieldMetadata =
-    (isMultiSelectMode
-      ? pConn.getFieldMetadata(`${referenceProp}`)
-      : pConn.getCurrentPageFieldMetadata(contextPageReference)) ?? {};
+    (isMultiSelectMode ? pConn.getFieldMetadata(`${referenceProp}`) : pConn.getCurrentPageFieldMetadata(contextPageReference)) ?? {};
   const { datasource: { parameters: fieldParameters = {} } = {} } = fieldMetadata;
   const compositeKeys = [];
-  Object.values(fieldParameters).forEach((param) => {
+  Object.values(fieldParameters).forEach(param => {
     if (isSelfReferencedProperty(param, referenceProp)) compositeKeys.push(param.substring(param.lastIndexOf('.') + 1));
   });
 
@@ -44,7 +40,7 @@ const getCompositeKeys = (pConnect, property) => {
   const fieldMetadata = pConnect.getFieldMetadata(property) || {};
   const { datasource: { parameters: fieldParameters = {} } = {} } = fieldMetadata;
   const compositeKeys = [];
-  Object.values(fieldParameters).forEach((param) => {
+  Object.values(fieldParameters).forEach(param => {
     if (isSelfReferencedProperty(param, property)) {
       compositeKeys.push(param);
     }
@@ -74,10 +70,8 @@ export const getFirstChildConfig = ({
     referenceList: config.referenceList ?? rawViewMetadata.config.referenceList,
     parameters: rawViewMetadata.config.parameters,
     localeReference: rawViewMetadata.config.localeReference,
-    contextClass:
-      config.contextClass || rawViewMetadata?.config?.contextClass || rawViewMetadata?.config?.targetObjectClass,
-    allowAddingNewRecords:
-      firstChildMeta.type === 'SimpleTableSelect' && isCreateNewReferenceEnabled ? true : undefined,
+    contextClass: config.contextClass || rawViewMetadata?.config?.contextClass || rawViewMetadata?.config?.targetObjectClass,
+    allowAddingNewRecords: firstChildMeta.type === 'SimpleTableSelect' && isCreateNewReferenceEnabled ? true : undefined,
     actions: firstChildMeta.type === 'SimpleTableSelect' &&
       isCreateNewReferenceEnabled && [
         {

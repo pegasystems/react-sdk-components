@@ -32,8 +32,7 @@ class DataApi {
   originalPropertyToMappedProperty: any;
   promotedFilters: any;
   showRecords: any;
-  constructor(
-    promotedFilters = undefined, showRecords = true) {
+  constructor(promotedFilters = undefined, showRecords = true) {
     this.promotedFilters = promotedFilters;
     this.showRecords = showRecords;
     this.originalPropertyToMappedProperty = {};
@@ -74,7 +73,6 @@ class DataApi {
 
 export async function getContext(componentConfig) {
   const {
-    showRecords,
     promisesArray = [] // array of promises which can be invoked paralelly,
   } = componentConfig;
   const promisesResponseArray = await Promise.all(promisesArray);

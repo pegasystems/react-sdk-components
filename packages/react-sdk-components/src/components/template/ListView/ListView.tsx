@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-shadow */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Theme } from '@mui/material/styles';
 import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
@@ -96,7 +96,7 @@ export default function ListView(props: ListViewProps) {
     value,
     displayAs
   } = props;
-  let { showRecords }  = props;
+  let { showRecords } = props;
   const ref = useRef({}).current;
   const cosmosTableRef = useRef();
   // List component context
@@ -114,6 +114,8 @@ export default function ListView(props: ListViewProps) {
     xRayUid,
     cosmosTableRef
   });
+
+  useClearSelectionsAndUpdateTable({ getPConnect, uniqueId, viewName });
 
   const thePConn = getPConnect();
   const componentConfig = thePConn.getComponentConfig();
@@ -204,6 +206,36 @@ export default function ListView(props: ListViewProps) {
   );
 
   const classes = useStyles();
+
+  function useClearSelectionsAndUpdateTable({ getPConnect, uniqueId, viewName }) {
+    const clearSelectionsAndRefreshList = useCallback(
+      ({ viewName: name, clearSelections }) => {
+        if (name === viewName) {
+          const { selectionMode } = getPConnect().getRawConfigProps();
+          if (!selectionMode) {
+            return;
+          }
+          if (clearSelections) {
+            if (selectionMode === 'single') {
+              getPConnect().getListActions().setSelectedRows({});
+            } else {
+              getPConnect().getListActions().clearSelectedRows();
+            }
+          }
+        }
+      },
+      [getPConnect, viewName]
+    );
+
+    useEffect(() => {
+      const identifier = `clear-and-update-advanced-search-selections-${uniqueId}`;
+      PCore.getPubSubUtils().subscribe('update-advanced-search-selections', clearSelectionsAndRefreshList, identifier);
+
+      return () => {
+        PCore.getPubSubUtils().unsubscribe('update-advanced-search-selections', identifier);
+      };
+    }, [uniqueId, clearSelectionsAndRefreshList]);
+  }
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -319,7 +351,8 @@ export default function ListView(props: ListViewProps) {
   // Will be triggered when EVENT_DASHBOARD_FILTER_CHANGE fires
   function processFilterChange(data) {
     let filterId;
-    let filterExpression, isDateRange;
+    let filterExpression;
+    let isDateRange;
     let field;
     let dashboardFilterPayload: any = {
       query: {
@@ -328,6 +361,7 @@ export default function ListView(props: ListViewProps) {
       }
     };
     if (displayAs === 'advancedSearch') {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       Object.entries(data).reduce((acc, [item, value]) => {
         const { filterId, filterExpression } = value as any;
         filters.current[filterId] = filterExpression;
@@ -398,7 +432,7 @@ export default function ListView(props: ListViewProps) {
       } else {
         dashboardFilterPayload.query.filter.filterConditions = {
           ...dashboardFilterPayload.query.filter.filterConditions,
-          [`T${index++}`]: { ...filter.condition, ...(filter.condition.comparator === "CONTAINS" ? { ignoreCase: true } : {}) }
+          [`T${index++}`]: { ...filter.condition, ...(filter.condition.comparator === 'CONTAINS' ? { ignoreCase: true } : {}) }
         };
 
         if (dashboardFilterPayload.query.filter.logic) {
@@ -426,7 +460,7 @@ export default function ListView(props: ListViewProps) {
   }
 
   function fetchAllData(fields): any {
-    if (displayAs === "advancedSearch" && !showRecords) {
+    if (displayAs === 'advancedSearch' && !showRecords) {
       return Promise.resolve({ data: null });
     }
     let query: any = null;
@@ -580,11 +614,11 @@ export default function ListView(props: ListViewProps) {
   }
 
   function prepareFilters(data) {
-    const filters = Object.entries(data.payload).reduce((acc, [field, value]) => {
+    return Object.entries(data.payload).reduce((acc, [field, value]) => {
       if (value) {
         let comparator = 'EQ';
         const filterRecord = listContext.meta.fieldDefs.filter(item => item.id === field);
-        if (filterRecord?.[0].meta.type === 'TextInput') {
+        if (filterRecord?.[0]?.meta.type === 'TextInput') {
           comparator = 'CONTAINS';
         }
         acc[field] = {
@@ -600,12 +634,10 @@ export default function ListView(props: ListViewProps) {
             }
           },
           filterId: field
-        }
+        };
       }
       return acc;
     }, {});
-
-    return filters;
   }
 
   useEffect(() => {

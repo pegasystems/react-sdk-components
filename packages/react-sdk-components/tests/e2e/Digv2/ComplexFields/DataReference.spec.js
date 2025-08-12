@@ -292,7 +292,7 @@ test.describe('E2E test', () => {
 
     await page.locator('span:has-text("Product Name")').click();
 
-    const table = page.locator('div[id="list-view"]');
+    let table = page.locator('div[id="list-view"]');
     let tableCell = table.locator('tbody >> tr >> td >> nth=1');
     // "---" should come at the top in the ascending order, since it's a Falsy value
     await expect(await tableCell.textContent()).toBe('---');
@@ -300,18 +300,53 @@ test.describe('E2E test', () => {
     await page.locator('span:has-text("Product Name")').click();
 
     tableCell = table.locator('tbody >> tr >> td >> nth=1');
-    // "Luxury Product" should be at the top in the descending order
-    await expect(await tableCell.textContent()).toBe('Luxury Product');
 
-    const lastRow = table.locator('tbody >> tr >> nth=3');
+    // "Luxury Product" should be at the top in the descending order
+    await expect(await tableCell.textContent()).toBe('Red Item');
+
+    const lastRow = table.locator('tbody >> tr >> nth=6');
     tableCell = lastRow.locator('td >> nth=1');
     // "---" should be at the bottom in the descending order
     await expect(await tableCell.textContent()).toBe('---');
 
     await page.locator('button:has-text("Next")').click();
 
+    await page.locator('button:has-text("Previous")').click();
+
+    /** Testing Advanced Search */
+    selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
+    await selectedSubCategory.click();
+    await page.locator('li:has-text("DataPatterns")').click();
+
+    selectedTestName = page.locator('div[data-test-id="6f64b45d01d11d8efd1693dfcb63b735"]');
+    await selectedTestName.click();
+    await page.locator('li:has-text("Advanced search")').click();
+
+    await page.locator('button:has-text("Search")').click();
+
+    const productName = page.locator('input[data-test-id="85c72bcef3da32c2abc605764537c6a1"]');
+    await productName.fill('item');
+
+    await page.locator('button:has-text("Search")').click();
+
+    table = page.locator('div[id="list-view"] >> nth = 0');
+    tableCell = table.locator('tbody >> tr >> td >> nth=1');
+
+    await expect(await tableCell.textContent()).toContain('Item');
+
+    const radiobutton = page.locator('div[role="radiogroup"]');
+    const requiredDateInput = radiobutton.locator('label >> span >> input >> nth=1');
+    await requiredDateInput.click();
+
+    await page.locator('button:has-text("Discard")').click();
+
+    const price = page.locator('input[data-test-id="3601146c4e948c32b6424d2c0a7f0118"]');
+    await price.fill('12');
+
+    await page.locator('button:has-text("Search")').click();
+
     /** Submitting the case */
-    await page.locator('button:has-text("submit")').click();
+    await page.locator('button:has-text("Next")').click();
   }, 10000);
 });
 

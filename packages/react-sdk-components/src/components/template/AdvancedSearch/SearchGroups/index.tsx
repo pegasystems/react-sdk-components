@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
 import React, { createElement, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Grid, Select, MenuItem, Box, Typography } from '@mui/material';
+import { Button, Grid, Select, MenuItem, Box } from '@mui/material';
 
 import PConnectHOC from '../../../../bridge/react_pconnect';
 import TemplateContext from '../TemplateContext';
@@ -11,14 +10,9 @@ import { useCacheWhenListViewReady } from './hooks';
 
 const PComponent = PConnectHOC();
 
-export const initializeSearchFields = (
-  searchFields,
-  getPConnect,
-  referenceListClassID,
-  searchFieldRestoreValues = {}
-) => {
+export const initializeSearchFields = (searchFields, getPConnect, referenceListClassID, searchFieldRestoreValues = {}) => {
   const filtersProperties = {};
-  searchFields.forEach((field) => {
+  searchFields.forEach(field => {
     let val = '';
     const { value, defaultValue = '' } = field.config;
     const propPath = PCore.getAnnotationUtils().getPropertyName(value);
@@ -41,7 +35,7 @@ export const initializeSearchFields = (
     if (valueSplit.length) {
       let path = '';
       let currentClassID = referenceListClassID;
-      valueSplit.forEach((item) => {
+      valueSplit.forEach(item => {
         path = path.length ? `${path}.${item}` : item;
         currentClassID = (PCore.getMetadataUtils().getPropertyMetadata(item, currentClassID) as any).pageClass;
         if (currentClassID) {
@@ -53,13 +47,13 @@ export const initializeSearchFields = (
   return filtersProperties;
 };
 
-const flattenObj = (obj) => {
+const flattenObj = obj => {
   const result = {};
-  Object.keys(obj).forEach((key) => {
+  Object.keys(obj).forEach(key => {
     if (!['context_data', 'pageInstructions'].includes(key)) {
       if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
         const temp = flattenObj(obj[key]);
-        Object.keys(temp).forEach((nestedKey) => {
+        Object.keys(temp).forEach(nestedKey => {
           result[`${key}.${nestedKey}`] = temp[nestedKey];
         });
       } else {
@@ -86,16 +80,16 @@ export default function SearchGroups(props) {
   const viewName = getPConnect().getCurrentView();
 
   const rawGroupsConfig = getPConnect().getRawConfigProps().searchGroups;
-  const activeGroupIndex = groups.findIndex((group) => group.config.id === activeGroupId);
+  const activeGroupIndex = groups.findIndex(group => group.config.id === activeGroupId);
   const { children: searchFieldsChildren = [] } = activeGroupIndex !== -1 ? rawGroupsConfig[activeGroupIndex] : {};
-  const searchFields = searchFieldsChildren.map((field) => ({
+  const searchFields = searchFieldsChildren.map(field => ({
     ...field,
     config: { ...field.config, isSearchField: true }
   }));
 
   const searchByRef = useRef(null);
   const searchFieldsRef = useRef(null);
-  const isValidatorField = searchFields.some((field) => field.config.validator);
+  const isValidatorField = searchFields.some(field => field.config.validator);
   const { classID: referenceListClassID } = PCore.getMetadataUtils().getDataPageMetadata(referenceList) as any;
 
   const initialSearchFields = useMemo(
@@ -139,20 +133,13 @@ export default function SearchGroups(props) {
       includeDisabledFields: true
     });
 
-    if (
-      Object.keys(cache.searchFields ?? {}).length > 0 &&
-      Object.keys(changes).length === 1
-    ) {
+    if (Object.keys(cache.searchFields ?? {}).length > 0 && Object.keys(changes).length === 1) {
       changes = cache.searchFields;
     }
 
     const formValues = flattenObj(changes);
 
-    if (
-      !PCore.isDeepEqual(previousFormValues, formValues) &&
-      PCore.getFormUtils().isFormValid(transientItemID) &&
-      isValidInput(formValues)
-    ) {
+    if (!PCore.isDeepEqual(previousFormValues, formValues) && PCore.getFormUtils().isFormValid(transientItemID) && isValidInput(formValues)) {
       if (isValidatorField) {
         // @ts-ignore
         PCore.getMessageManager().clearContextMessages({ context: transientItemID });
@@ -189,13 +176,8 @@ export default function SearchGroups(props) {
 
   const searchDropdown = groups.length > 1 && (
     <Grid container spacing={2}>
-      <Select
-        value={activeGroupId}
-        onChange={(e) => setActiveGroupId(e.target.value)}
-        ref={searchByRef}
-        fullWidth
-      >
-        {groups.map((group) => (
+      <Select value={activeGroupId} onChange={e => setActiveGroupId(e.target.value)} ref={searchByRef} fullWidth>
+        {groups.map(group => (
           <MenuItem key={group.config.id} value={group.config.id}>
             {group.config.label}
           </MenuItem>
@@ -205,11 +187,11 @@ export default function SearchGroups(props) {
   );
 
   const actionButtons = (
-    <Box display="flex" gap={2}>
-      <Button variant="outlined" onClick={resetFilterData}>
+    <Box display='flex' gap={2}>
+      <Button variant='outlined' onClick={resetFilterData}>
         {localizedVal('Reset', 'SimpleTable')}
       </Button>
-      <Button variant="contained" onClick={getFilterData}>
+      <Button variant='contained' onClick={getFilterData}>
         {localizedVal('Search', 'SimpleTable')}
       </Button>
     </Box>
@@ -255,8 +237,9 @@ export default function SearchGroups(props) {
   const childrenToRender = [searchDropdown, searchFieldsViewComp, actionButtons];
 
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
+    <Box display='flex' flexDirection='column' gap={2}>
       {childrenToRender.map((child, index) => (
+        // eslint-disable-next-line react/no-array-index-key
         <React.Fragment key={index}>{child}</React.Fragment>
       ))}
     </Box>

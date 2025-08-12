@@ -71,11 +71,9 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   const rawViewMetadata: any = pConn.getRawMetadata();
   const refFieldMetadata = pConn.getFieldMetadata(rawViewMetadata.config?.authorContext);
 
-  const viewName = rawViewMetadata.name;
   const [firstChildMeta] = rawViewMetadata.children;
   const refList = rawViewMetadata.config.referenceList;
   const canBeChangedInReviewMode = allowAndPersistChangesInReviewMode && (displayAs === 'autocomplete' || displayAs === 'dropdown');
-  let propName;
   const isDisplayModeEnabled = ['STACKED_LARGE_VAL', 'DISPLAY_ONLY'].includes(displayMode);
   const isDDSourceDeferred =
     (firstChildMeta?.type === 'Dropdown' && selectionMode === SELECTION_MODE.SINGLE && refFieldMetadata?.descriptors) ||
@@ -90,13 +88,9 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
 
   let firstChildPConnect;
 
-  const localizedPlaceholderOption = (placeholder) => {
+  const localizedPlaceholderOption = placeholder => {
     const { GENERIC_BUNDLE_KEY } = PCore.getLocaleUtils?.() ?? {};
-    const localizedDefaultPlaceholder = pConn.getLocalizedValue(
-      'select_placeholder_default',
-      'CosmosFields',
-      GENERIC_BUNDLE_KEY
-    );
+    const localizedDefaultPlaceholder = pConn.getLocalizedValue('select_placeholder_default', 'CosmosFields', GENERIC_BUNDLE_KEY);
     // If we have a placeholder, push that option in the list of items
     if (placeholder === 'Select...' && localizedDefaultPlaceholder !== 'select_placeholder_default') {
       return localizedDefaultPlaceholder;
@@ -127,31 +121,31 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
             ''
           ) as Promise<any>
         )
-        .then(res => {
-          if (res.data.data !== null) {
-            const ddDataSource = firstChildMeta.config.datasource.filterDownloadedFields
-            ? res.data.data
-            : res.data.data
-              .map(listItem => ({
-                key: listItem[key.split(' .', 2)[1]],
-                text: listItem[text.split(' .', 2)[1]],
-                value: listItem[value.split(' .', 2)[1]]
-              }))
-              .filter(item => item.key);
-            // Filtering out undefined entries that will break preview
-            setDropDownDataSource(ddDataSource);
-          } else {
-            const ddDataSource: any = [];
-            setDropDownDataSource(ddDataSource);
-          }
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err?.stack);
-          return Promise.resolve({
-            data: { data: [] }
+          .then(res => {
+            if (res.data.data !== null) {
+              const ddDataSource = firstChildMeta.config.datasource.filterDownloadedFields
+                ? res.data.data
+                : res.data.data
+                    .map(listItem => ({
+                      key: listItem[key.split(' .', 2)[1]],
+                      text: listItem[text.split(' .', 2)[1]],
+                      value: listItem[value.split(' .', 2)[1]]
+                    }))
+                    .filter(item => item.key);
+              // Filtering out undefined entries that will break preview
+              setDropDownDataSource(ddDataSource);
+            } else {
+              const ddDataSource: any = [];
+              setDropDownDataSource(ddDataSource);
+            }
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.error(err?.stack);
+            return Promise.resolve({
+              data: { data: [] }
+            });
           });
-        });
       }
     }
   }, [firstChildMeta, rawViewMetadata, parameters]);
@@ -177,11 +171,6 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     // set displayMode conditionally
     if (!canBeChangedInReviewMode) {
       firstChildMeta.config.displayMode = displayMode;
-    }
-    if (firstChildMeta.type === 'SimpleTableSelect' && selectionMode === SELECTION_MODE.MULTI) {
-      propName = PCore.getAnnotationUtils().getPropertyName(firstChildMeta.config.selectionList);
-    } else {
-      propName = PCore.getAnnotationUtils().getPropertyName(firstChildMeta.config.value);
     }
   }
 
@@ -214,7 +203,10 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
           pgRef = pageReference.replace('caseInfo.content', '');
         }
         const viewName = rawViewMetadata.name;
-        getPConnect().getActionsApi().refreshCaseView(caseKey, viewName, pgRef, refreshOptions);
+        getPConnect()
+          .getActionsApi()
+          .refreshCaseView(caseKey, viewName, pgRef, refreshOptions)
+          .catch(() => {});
       }
     } else if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
       (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then(caseResponse => {
@@ -297,7 +289,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       );
     }
 
-     /* Editable variants */
+    /* Editable variants */
     // Datasource w/ parameters cannot load the dropdown before the parameters
     if (type === 'Dropdown' && dropDownDataSource === null && !isDDSourceDeferred && rawViewMetadata.config?.parameters) {
       return null;
@@ -307,7 +299,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       delete firstChildMeta.config.readOnly;
     }
 
-     // 2) Set datasource
+    // 2) Set datasource
     if (
       ['Dropdown', 'Checkbox', 'RadioButtons'].includes(firstChildMeta?.type) &&
       !firstChildMeta.config.deferDatasource &&
@@ -343,22 +335,18 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       if (rawViewMetadata.config?.parameters) {
         fieldMetaData.datasourceMetadata.datasource.parameters = parameters;
       }
-      fieldMetaData.datasourceMetadata.datasource.propertyForDisplayText =
-        firstChildMeta?.config?.datasource?.fields?.text.startsWith('@P')
-          ? firstChildMeta?.config?.datasource?.fields?.text?.substring(3)
-          : firstChildMeta?.config?.datasource?.fields?.text;
-      fieldMetaData.datasourceMetadata.datasource.propertyForValue =
-        firstChildMeta?.config?.datasource?.fields?.value.startsWith('@P')
-          ? firstChildMeta?.config?.datasource?.fields?.value?.substring(3)
-          : firstChildMeta?.config?.datasource?.fields?.value;
+      fieldMetaData.datasourceMetadata.datasource.propertyForDisplayText = firstChildMeta?.config?.datasource?.fields?.text.startsWith('@P')
+        ? firstChildMeta?.config?.datasource?.fields?.text?.substring(3)
+        : firstChildMeta?.config?.datasource?.fields?.text;
+      fieldMetaData.datasourceMetadata.datasource.propertyForValue = firstChildMeta?.config?.datasource?.fields?.value.startsWith('@P')
+        ? firstChildMeta?.config?.datasource?.fields?.value?.substring(3)
+        : firstChildMeta?.config?.datasource?.fields?.value;
       fieldMetaData.datasourceMetadata.datasource.name = rawViewMetadata.config?.referenceList;
     }
     // @ts-ignore
-    const { disableStartingFieldsForReference = false } =
-    PCore.getEnvironmentInfo().environmentInfoObject?.features?.form || {};
+    const { disableStartingFieldsForReference = false } = PCore.getEnvironmentInfo().environmentInfoObject?.features?.form || {};
     // @ts-ignore
-    let { isCreateNewReferenceEnabled = false } =
-      PCore.getEnvironmentInfo().environmentInfoObject?.features?.form || {};
+    let { isCreateNewReferenceEnabled = false } = PCore.getEnvironmentInfo().environmentInfoObject?.features?.form || {};
 
     if (isCreateNewReferenceEnabled) {
       // @ts-ignore
@@ -389,41 +377,37 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       : undefined;
 
     const dataReferenceConfigToChild = {
-        selectionMode,
-        additionalInfo,
-        descriptors: selectionMode === SELECTION_MODE.SINGLE ? refFieldMetadata?.descriptors : null,
-        datasourceMetadata: fieldMetaData?.datasourceMetadata,
-        required: propsToUse.required,
-        visibility: propsToUse.visibility,
-        disabled: propsToUse.disabled,
-        label: propsToUse.label,
-        displayAs,
-        readOnly: false,
-        ...(selectionMode === SELECTION_MODE.SINGLE && {
-          referenceType
+      selectionMode,
+      additionalInfo,
+      descriptors: selectionMode === SELECTION_MODE.SINGLE ? refFieldMetadata?.descriptors : null,
+      datasourceMetadata: fieldMetaData?.datasourceMetadata,
+      required: propsToUse.required,
+      visibility: propsToUse.visibility,
+      disabled: propsToUse.disabled,
+      label: propsToUse.label,
+      displayAs,
+      readOnly: false,
+      ...(selectionMode === SELECTION_MODE.SINGLE && {
+        referenceType
+      }),
+      ...(selectionMode === SELECTION_MODE.SINGLE &&
+        displayAs === 'advancedSearch' && {
+          value: rawViewMetadata.config.value,
+          contextPage: rawViewMetadata.config.contextPage
         }),
-        ...(selectionMode === SELECTION_MODE.SINGLE &&
-          displayAs === 'advancedSearch' && {
-            value: rawViewMetadata.config.value,
-            contextPage: rawViewMetadata.config.contextPage
-          }),
-        ...(selectionMode === SELECTION_MODE.MULTI &&
-          displayAs === 'advancedSearch' && {
-            selectionList,
-            readonlyContextList: rawViewMetadata.config.readonlyContextList
-          }),
-        dataRelationshipContext:
-          rawViewMetadata.config.contextClass && rawViewMetadata.config.name ? rawViewMetadata.config.name : null,
-        hideLabel,
-        onRecordChange: handleSelection,
-        createNewRecord: isCreateNewReferenceEnabled ? createNewRecord : undefined,
-        inline
+      ...(selectionMode === SELECTION_MODE.MULTI &&
+        displayAs === 'advancedSearch' && {
+          selectionList,
+          readonlyContextList: rawViewMetadata.config.readonlyContextList
+        }),
+      dataRelationshipContext: rawViewMetadata.config.contextClass && rawViewMetadata.config.name ? rawViewMetadata.config.name : null,
+      hideLabel,
+      onRecordChange: handleSelection,
+      createNewRecord: isCreateNewReferenceEnabled ? createNewRecord : undefined,
+      inline
     };
 
-    const searchSelectCacheKey = componentCachePersistUtils.getComponentStateKey(
-      getPConnect,
-      rawViewMetadata.config.name
-    );
+    const searchSelectCacheKey = componentCachePersistUtils.getComponentStateKey(getPConnect, rawViewMetadata.config.name);
 
     const dataReferenceAdvancedSearchContext = {
       dataReferenceConfigToChild,
@@ -434,7 +418,6 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     };
 
     if (displayAs === 'advancedSearch') {
-      console.log('DataReference displayAs advancedSearch', children);
       return (
         <DataReferenceAdvancedSearchContext.Provider value={dataReferenceAdvancedSearchContext}>
           <SearchForm getPConnect={getPConnect} searchSelectCacheKey={searchSelectCacheKey}>
@@ -444,7 +427,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       );
     }
 
-    const editableField = firstChildPConnect().createComponent({
+    return firstChildPConnect().createComponent({
       type,
       config: {
         ...getFirstChildConfig({
@@ -459,16 +442,13 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
         })
       }
     });
-
-    return editableField;
-
   }, [firstChildMeta.config?.datasource?.source, parameters, dropDownDataSource, propsToUse.required, propsToUse.disabled]);
 
   // Only include the views region for rendering when it has content
   if (firstChildMeta?.type !== 'Region') {
     const viewsRegion = rawViewMetadata.children[1];
     if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
-      viewsRegion.children.map((child) => {
+      viewsRegion.children.map(child => {
         child.config.isEmbeddedInDataReference = true;
         return child;
       });
@@ -481,10 +461,11 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   }
 
   return childrenToRender.length === 1 ? (
-    childrenToRender[0] ?? null
+    (childrenToRender[0] ?? null)
   ) : (
     <div>
       {childrenToRender.map((child, index) => (
+        // eslint-disable-next-line react/no-array-index-key
         <React.Fragment key={index}>{child}</React.Fragment>
       ))}
     </div>

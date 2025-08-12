@@ -5,7 +5,7 @@ const listViewConstants = {
   EVENTS: {
     LIST_VIEW_READY: 'LIST_VIEW_READY'
   }
-}
+};
 /**
  * This hook registers a callback for the whenever list view component is ready
  * then makes a call to get the data using the search fields pre-filled with cache data.
@@ -32,10 +32,7 @@ export function useCacheWhenListViewReady(
     }
 
     return () => {
-      PCore.getPubSubUtils().unsubscribe(
-        listViewConstants.EVENTS.LIST_VIEW_READY,
-        `${searchSelectCacheKey}-listview-ready`
-      );
+      PCore.getPubSubUtils().unsubscribe(listViewConstants.EVENTS.LIST_VIEW_READY, `${searchSelectCacheKey}-listview-ready`);
     };
   }, []);
 }
