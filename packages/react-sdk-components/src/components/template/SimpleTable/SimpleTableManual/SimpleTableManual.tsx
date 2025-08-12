@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import React, { PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -28,6 +27,7 @@ import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { Utils } from '../../../helpers/utils';
 import { getReferenceList } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
+import { getGenericFieldsLocalizedValue } from '../../../helpers/common-utils';
 import { buildFieldsForTable, filterData, getContext } from '../../../helpers/simpleTableHelpers';
 import { PConnProps } from '../../../../types/PConnProps';
 import { format } from '../../../helpers/formatters';
@@ -147,7 +147,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const [displayDialogDateFilter, setDisplayDialogDateFilter] = useState<string>('notequal');
   const [displayDialogDateValue, setDisplayDialogDateValue] = useState<string>('');
   const selectedRowIndex: any = useRef(null);
-
+  const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localeCategory = 'SimpleTable';
   const parameters = fieldMetadata?.datasource?.parameters;
   const { referenceListStr } = getContext(getPConnect());
   const label = labelProp || propertyLabel;
@@ -193,13 +194,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   });
 
   useEffect(() => {
-    if (editableMode && !allowEditingInModal) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      buildElementsForTable();
-    }
-  }, [referenceList.length]);
-
-  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    buildElementsForTable();
     if (readOnlyMode || allowEditingInModal) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       generateRowsData();
@@ -364,7 +360,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       const data: any = [];
       rawFields.forEach(item => {
         // removing label field from config to hide title in the table cell
-        item = { ...item, config: { ...item.config, label: '' } };
+        item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'DISPLAY_ONLY' : undefined } };
         const referenceListData = getReferenceList(pConn);
         const isDatapage = referenceListData.startsWith('D_');
         const pageReferenceValue = isDatapage
@@ -412,11 +408,12 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   type Order = 'asc' | 'desc';
 
-  function getComparator<Key extends keyof any>(
-    theOrder: Order,
-    orderedBy: Key
-  ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
-    return theOrder === 'desc' ? (a, b) => descendingComparator(a, b, orderedBy) : (a, b) => -descendingComparator(a, b, orderedBy);
+  interface Comparator<T> {
+    (a: T, b: T): number;
+  }
+
+  function getComparator<Key extends keyof any, T extends Record<Key, any>>(theOrder: Order, orderedBy: Key): Comparator<T> {
+    return theOrder === 'desc' ? (a: T, b: T) => descendingComparator<T>(a, b, orderedBy) : (a: T, b: T) => -descendingComparator<T>(a, b, orderedBy);
   }
 
   function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
@@ -428,7 +425,11 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       return a[1] - b[1];
     });
 
-    return stabilizedThis.map(el => el[0]);
+    const newElements = new Array(stabilizedThis.length);
+    stabilizedThis.forEach((el, index) => {
+      newElements[index] = elements[el[1]];
+    });
+    return newElements;
   }
 
   function _menuClick(event, columnId: string, columnType: string, labelValue: string) {
@@ -609,9 +610,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
               {fieldDefs.map((field: any, index) => {
                 return (
                   <TableCell key={`head-${displayedColumns[index]}`} className={classes.tableCell}>
-                    {readOnlyMode ? (
-                      <div>
+                    {(readOnlyMode || allowEditingInModal) && field.cellRenderer !== 'DeleteIcon' ? (
+                      <div style={{ display: 'flex' }}>
                         <TableSortLabel
+                          style={{ width: '75%' }}
                           active={orderBy === displayedColumns[index]}
                           direction={orderBy === displayedColumns[index] ? order : 'asc'}
                           onClick={createSortHandler(displayedColumns[index])}
@@ -623,8 +625,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                           ) : null}
                         </TableSortLabel>
                         <MoreIcon
+                          style={{ cursor: 'pointer', zIndex: 1000 }}
                           id='menu-icon'
-                          className={classes.moreIcon}
                           onClick={event => {
                             _menuClick(event, field.name, field.meta.type, field.label);
                           }}
@@ -640,6 +642,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           </TableHead>
           <TableBody>
             {editableMode &&
+              !allowEditingInModal &&
               elements.map((row: any, index) => {
                 const theKey = `row-${index}`;
                 return (
@@ -677,53 +680,46 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                   return (
                     // eslint-disable-next-line react/no-array-index-key
                     <TableRow key={index}>
-                      {displayedColumns.map(colKey => {
+                      {row.map((item, childIndex) => {
+                        const theColKey = displayedColumns[childIndex];
                         return (
-                          <TableCell key={colKey} className={classes.tableCell}>
-                            {showDeleteButton && colKey === 'DeleteIcon' ? (
-                              <div>
-                                <MoreIcon
-                                  id='table-edit-menu-icon'
-                                  className={classes.moreIcon}
-                                  onClick={event => {
-                                    editMenuClick(event, index);
-                                  }}
-                                />
-                                <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
-                                  <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
-                                  <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
-                                </Menu>
-                              </div>
-                            ) : typeof row[colKey] === 'boolean' && !row[colKey] ? (
-                              'False'
-                            ) : typeof row[colKey] === 'boolean' && row[colKey] ? (
-                              'True'
-                            ) : (
-                              row[colKey] || '---'
-                            )}
+                          <TableCell key={theColKey} className={classes.tableCell}>
+                            {item}
                           </TableCell>
                         );
                       })}
+                      {showDeleteButton && (
+                        <TableCell key='DeleteIcon' className={classes.tableCell}>
+                          <div>
+                            <MoreIcon
+                              id='table-edit-menu-icon'
+                              className={classes.moreIcon}
+                              onClick={event => {
+                                editMenuClick(event, index);
+                              }}
+                            />
+                            <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
+                              <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
+                              <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
+                            </Menu>
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}
           </TableBody>
         </Table>
-        {readOnlyMode && rowData && rowData.length === 0 && (
+        {((readOnlyMode && (!rowData || rowData?.length === 0)) || (editableMode && (!referenceList || referenceList?.length === 0))) && (
           <div className='no-records' id='no-records'>
-            No records found.
-          </div>
-        )}
-        {editableMode && referenceList && referenceList.length === 0 && (
-          <div className='no-records' id='no-records'>
-            No records found.
+            {getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}
           </div>
         )}
       </TableContainer>
       {showAddRowButton && (
         <div style={{ fontSize: '1rem' }}>
           <Link style={{ cursor: 'pointer' }} onClick={addRecord} underline='hover'>
-            + Add
+            + {localizedVal('Add', localeCategory)}
           </Link>
         </div>
       )}

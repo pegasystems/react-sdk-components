@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -38,6 +38,10 @@ export default function Date(props: DateProps) {
   dateFormatInfo.dateFormatString = theDateFormat.dateFormatString;
   dateFormatInfo.dateFormatStringLC = theDateFormat.dateFormatStringLC;
   dateFormatInfo.dateFormatMask = theDateFormat.dateFormatMask;
+
+  useEffect(() => {
+    setDateValue(dayjs(value));
+  }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
     const formattedDate = format(props.value, 'date', {

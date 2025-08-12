@@ -43,6 +43,7 @@ import { filterData } from '../../helpers/simpleTableHelpers';
 import './ListView.css';
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getCurrencyOptions } from '../../field/Currency/currency-utils';
+import { getGenericFieldsLocalizedValue } from '../../helpers/common-utils';
 import { format } from '../../helpers/formatters';
 
 import useInit from './hooks';
@@ -260,11 +261,12 @@ export default function ListView(props: ListViewProps) {
 
   type Order = 'asc' | 'desc';
 
-  function getComparator<Key extends keyof any>(
-    theOrder: Order,
-    orderedBy: Key
-  ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
-    return theOrder === 'desc' ? (a, b) => descendingComparator(a, b, orderedBy) : (a, b) => -descendingComparator(a, b, orderedBy);
+  interface Comparator<T> {
+    (a: T, b: T): number;
+  }
+
+  function getComparator<T, Key extends keyof T>(theOrder: Order, orderedBy: Key): Comparator<T> {
+    return theOrder === 'desc' ? (a: T, b: T) => descendingComparator(a, b, orderedBy) : (a: T, b: T) => -descendingComparator(a, b, orderedBy);
   }
 
   function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
@@ -421,9 +423,8 @@ export default function ListView(props: ListViewProps) {
           [`T${index++}`]: { ...filter[relationalOp][1].condition }
         };
         if (dashboardFilterPayload.query.filter.logic) {
-          dashboardFilterPayload.query.filter.logic = `${dashboardFilterPayload.query.filter.logic} ${relationalOp} (T${
-            index - 2
-          } ${dateRelationalOp} T${index - 1})`;
+          dashboardFilterPayload.query.filter.logic = `${dashboardFilterPayload.query.filter.logic} ${relationalOp} (T${index - 2
+            } ${dateRelationalOp} T${index - 1})`;
         } else {
           dashboardFilterPayload.query.filter.logic = `(T${index - 2} ${relationalOp} T${index - 1})`;
         }
@@ -482,9 +483,9 @@ export default function ListView(props: ListViewProps) {
     // getDataAsync isn't returning correct data for the Page(i.e. ListView within a page) case
     return !bInForm
       ? // @ts-ignore - 3rd parameter "context" should be optional in getData method
-        PCore.getDataApiUtils().getData(referenceList, payload)
+      PCore.getDataApiUtils().getData(referenceList, payload)
       : // @ts-ignore - Argument of type 'null' is not assignable to parameter of type 'object'
-        PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
+      PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
   }
 
   const buildSelect = (fieldDefs, colId, patchQueryFields = [], compositeKeys = []) => {
@@ -1225,7 +1226,9 @@ export default function ListView(props: ListViewProps) {
                         })}
                   </TableBody>
                 </Table>
-                {((arRows && arRows.length === 0) || !arRows) && <div className='no-records'>No records found.</div>}
+                {((arRows && arRows.length === 0) || !arRows) && (
+                  <div className='no-records'>{getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}</div>
+                )}
               </TableContainer>
             )}
           </>

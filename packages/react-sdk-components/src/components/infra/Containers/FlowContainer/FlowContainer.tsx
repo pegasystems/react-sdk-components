@@ -6,7 +6,7 @@ import { Alert, Card, CardHeader, Avatar, Typography } from '@mui/material';
 
 import StoreContext from '../../../../bridge/Context/StoreContext';
 import { Utils } from '../../../helpers/utils';
-import { isContainerInitialized } from '../helpers';
+import { isContainerInitialized } from '../container-helpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 
@@ -265,9 +265,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
       setCaseMessages(theCaseMessages || localizedVal('Thank you! The next step in this case has been routed appropriately.', localeCategory));
       setHasCaseMessages(true);
       setShowConfirm(true);
-
-      // publish this "assignmentFinished" for mashup, need to get approved as a standard
-      PCore.getPubSubUtils().publish('assignmentFinished');
 
       // debugger;
       setCheckSvg(Utils.getImageSrc('check', Utils.getSDKStaticConentUrl()));

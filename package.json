@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "24.2.10",
+  "version": "24.2.11",
   "description": "React SDK packaging: bridge and components, overrides",
   "main": "index.ts",
   "scripts": {
@@ -75,7 +75,7 @@
   },
   "devDependencies": {
     "@pega/configs": "^0.7.1",
-    "@pega/constellationjs": "~24.2.1",
+    "@pega/constellationjs": "~24.2.2",
     "@pega/eslint-config": "^0.7.2",
     "@pega/pcore-pconnect-typedefs": "~3.2.2",
     "@pega/tsconfig": "^0.6.0",
@@ -115,7 +115,7 @@
     "shx": "^0.3.4",
     "style-loader": "^3.3.4",
     "stylelint": "^16.19.1",
-    "tinymce": "^7.9.0",
+    "tinymce": "^6.8.6",
     "ts-jest": "^29.3.4",
     "ts-loader": "^9.5.2",
     "typescript": "^4.9.5",

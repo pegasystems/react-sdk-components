@@ -1,6 +1,6 @@
 import { NumericFormat } from 'react-number-format';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
@@ -58,6 +58,10 @@ export default function Decimal(props: DecimalProps) {
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
 
+  useEffect(() => {
+    setValues(value.toString());
+  }, [value]);
+
   let readOnlyProp = {}; // Note: empty if NOT ReadOnly
 
   if (readOnly) {
@@ -109,6 +113,7 @@ export default function Decimal(props: DecimalProps) {
       }}
       onBlur={!readOnly ? decimalOnBlur : undefined}
       prefix={readOnly && formatter === 'Currency' ? theCurrSym : ''}
+      suffix={readOnly && formatter === 'Percentage' ? '%' : ''}
       decimalSeparator={theCurrDec}
       thousandSeparator={showGroupSeparators ? theCurrSep : ''}
       decimalScale={readOnly && formatter === 'Currency' ? undefined : decimalPrecision}

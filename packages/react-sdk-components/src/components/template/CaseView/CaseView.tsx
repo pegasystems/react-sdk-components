@@ -19,6 +19,7 @@ interface CaseViewProps extends PConnProps {
   header: string;
   showIconInHeader: boolean;
   caseInfo: any;
+  lastUpdateCaseTime: any;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -64,10 +65,10 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     showIconInHeader = true,
     caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
+  const { lastUpdateCaseTime = getPConnect().getValue('caseInfo.lastUpdateTime') } = props;
 
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
-
   const { displayOnlyFA } = useContext<any>(StoreContext);
 
   const thePConn = getPConnect();
@@ -79,7 +80,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'CaseView';
   const localeKey = `${caseTypeID}!CASE!${caseTypeName}`.toUpperCase();
-
   /**
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
@@ -243,7 +243,9 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
           <Grid item xs={6}>
             {theStagesRegion}
             {theTodoRegion}
-            {deferLoadInfo.length > 0 && <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab />}
+            {deferLoadInfo.length > 0 && (
+              <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab lastUpdateCaseTime={lastUpdateCaseTime} />
+            )}
           </Grid>
 
           <Grid item xs={3}>

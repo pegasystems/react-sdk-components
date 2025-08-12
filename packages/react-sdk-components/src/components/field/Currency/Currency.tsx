@@ -88,6 +88,7 @@ export default function Currency(props: CurrrencyProps) {
   return (
     <NumericFormat
       valueIsNumericString
+      variant={readOnly ? 'standard' : 'outlined'}
       label={label}
       helperText={helperTextToDisplay}
       placeholder={placeholder ?? ''}

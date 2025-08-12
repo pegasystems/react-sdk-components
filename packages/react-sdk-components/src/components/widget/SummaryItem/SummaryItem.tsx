@@ -73,7 +73,7 @@ export default function SummaryItem(props: SummaryItemProps) {
             >
               <MoreVertIcon />
             </IconButton>
-            <Menu style={{ marginTop: '3rem' }} id='file-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+            <Menu id='file-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
               {item.actions &&
                 item.actions.map(option => (
                   <MenuItem style={{ fontSize: '14px' }} key={option.id || option.text} onClick={option.onClick}>

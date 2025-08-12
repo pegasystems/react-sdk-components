@@ -19,7 +19,8 @@ export const getVisibleTabs = (allTabs, uuid) => {
         const { name: viewName, deferLoadId = `${viewName}_${uuid}_${index}` } = config;
         child.getPConnect().registerAdditionalProps({
           deferLoadId,
-          isChildDeferLoad: true
+          isChildDeferLoad: true,
+          lastUpdateCaseTime: '@P caseInfo.lastUpdateTime'
         });
       }
       index += 1;
