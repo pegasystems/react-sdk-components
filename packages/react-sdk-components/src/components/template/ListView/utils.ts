@@ -10,30 +10,11 @@ export const formatConstants = {
   WorkLink: 'WorkLink'
 };
 
-function formatPromotedFilters(promotedFilters) {
-  return Object.entries(promotedFilters).reduce((acc, [field, value]) => {
-    if (value) {
-      acc[field] = {
-        lhs: {
-          field
-        },
-        comparator: 'EQ',
-        rhs: {
-          value
-        }
-      };
-    }
-    return acc;
-  }, {});
-}
-
 class DataApi {
   mappedPropertyToOriginalProperty: any;
   originalPropertyToMappedProperty: any;
-  promotedFilters: any;
   showRecords: any;
-  constructor(promotedFilters = undefined, showRecords = true) {
-    this.promotedFilters = promotedFilters;
+  constructor(showRecords = true) {
     this.showRecords = showRecords;
     this.originalPropertyToMappedProperty = {};
     this.mappedPropertyToOriginalProperty = {};
@@ -65,10 +46,6 @@ class DataApi {
   getOriginalProperty(propertyName) {
     return this.mappedPropertyToOriginalProperty[propertyName] ?? propertyName;
   }
-
-  updatePromotedFilters(promotedFilters, formatRequired = true) {
-    this.promotedFilters = formatRequired ? formatPromotedFilters(promotedFilters) : promotedFilters;
-  }
 }
 
 export async function getContext(componentConfig) {
@@ -79,7 +56,6 @@ export async function getContext(componentConfig) {
   const dataApi = new DataApi();
   return {
     promisesResponseArray,
-    updatePromotedFilters: dataApi.updatePromotedFilters,
     setPropertyMaps: dataApi.setPropertyMaps,
     getMappedProperty: dataApi.getMappedProperty,
     getOriginalProperty: dataApi.getOriginalProperty
@@ -707,10 +683,9 @@ export function updatePageFieldsConfig(configFields, parentClassID) {
 
 export const readContextResponse = async (context, params) => {
   const { getPConnect, apiContext, setListContext, children, showDynamicFields, referenceList, isDataObject, ref } = params;
-  const { promisesResponseArray, updatePromotedFilters, setShowRecords, apiContext: otherContext } = context;
+  const { promisesResponseArray, setShowRecords, apiContext: otherContext } = context;
   // eslint-disable-next-line sonarjs/no-unused-collection
   const listOfComponents: any[] = [];
-  ref.updatePromotedFilters = updatePromotedFilters;
   ref.setShowRecords = setShowRecords;
   const {
     data: { fields: metaFields, classID, isQueryable }

@@ -3,8 +3,8 @@ import React, { PropsWithChildren, ReactElement, useEffect, useMemo, useState } 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnProps } from '../../../types/PConnProps';
 import useIsMount from './useIsMount';
-import componentCachePersistUtils from './persistUtils';
-import { getMappedKey } from './persistUtils';
+import componentCachePersistUtils from '../AdvancedSearch/SearchGroup/persistUtils';
+import { getMappedKey } from '../AdvancedSearch/SearchGroup/persistUtils';
 import DataReferenceAdvancedSearchContext from './DataReferenceAdvancedSearchContext';
 import { getFirstChildConfig } from './utils';
 import SearchForm from './SearchForm';

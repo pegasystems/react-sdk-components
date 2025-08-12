@@ -1,6 +1,12 @@
-import { getMappedKey } from '../../DataReference/persistUtils';
-
 const SKIP_CACHE_KEY = '';
+
+export function getMappedKey(key) {
+  const mappedKey = PCore.getEnvironmentInfo().getKeyMapping(key);
+  if (!mappedKey) {
+    return key;
+  }
+  return mappedKey;
+}
 
 const getComponentStateKey = (getPConnect, propertyName: string) => {
   const pConnect = getPConnect();
@@ -39,8 +45,7 @@ const setComponentCache = ({
   options: ReturnType<typeof getComponentStateOptions>;
 }) => {
   if (cacheKey !== SKIP_CACHE_KEY) {
-    // @ts-ignore
-    PCore.getNavigationUtils().setComponentCache(cacheKey, state, options);
+    (PCore.getNavigationUtils() as any).setComponentCache(cacheKey, state, options);
   }
 };
 
