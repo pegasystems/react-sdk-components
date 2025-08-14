@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 
-import { getTabLabel } from '../../src/components/template/SubTabs/tabUtils';
+import { getTabLabel } from '../components/template/SubTabs/tabUtils';
 
 const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
   const pConn = deferLoadedTabs.props.getPConnect();

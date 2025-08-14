@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import equal from 'fast-deep-equal';
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from 'lodash.clonedeep';
 import { updateNewInstuctions, insertInstruction, deleteInstruction } from '../../helpers/instructions-utils';
 
 export const setVisibilityForList = (c11nEnv, visibility) => {
