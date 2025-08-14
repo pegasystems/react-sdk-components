@@ -3,9 +3,9 @@
 //  This file should import and expose ALL of the components that may be
 //  dynamically rendered at runtime via calls to react_pconnect or the View component
 
-import ActionButtons from '../src/components/infra/ActionButtons';
-
+import ActionButtons from './components/infra/ActionButtons';
 import ActionButtonsForFileUtil from './components/widget/FileUtility/ActionButtonsForFileUtil';
+import AdvancedSearch from './components/template/AdvancedSearch';
 import AlertBanner from './components/designSystemExtension/AlertBanner';
 import AppAnnouncement from './components/widget/AppAnnouncement';
 import AppShell from './components/template/AppShell/AppShell';
@@ -79,6 +79,8 @@ import RichText from './components/field/RichText';
 import RichTextEditor from './components/designSystemExtension/RichTextEditor';
 import RootContainer from './components/infra/RootContainer/RootContainer';
 import ScalarList from './components/field/ScalarList';
+import SearchForm from './components/template/DataReference/SearchForm';
+import SearchGroups from './components/template/AdvancedSearch/SearchGroups';
 import SemanticLink from './components/field/SemanticLink';
 import SimpleTable from './components/template/SimpleTable/SimpleTable';
 import SimpleTableManual from './components/template/SimpleTable/SimpleTableManual';
@@ -120,6 +122,7 @@ import WssQuickCreate from './components/designSystemExtension/WssQuickCreate';
 const pegaSdkComponentMap = {
   ActionButtons,
   ActionButtonsForFileUtil,
+  AdvancedSearch,
   AlertBanner,
   AppAnnouncement,
   AppShell,
@@ -193,6 +196,8 @@ const pegaSdkComponentMap = {
   RichTextEditor,
   RootContainer,
   ScalarList,
+  SearchForm,
+  SearchGroups,
   SemanticLink,
   SimpleTable,
   SimpleTableManual,

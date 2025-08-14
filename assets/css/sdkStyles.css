@@ -59,3 +59,8 @@ input[readonly]+svg {
 #flowContainerBanner {
   padding: 10px 0;
 }
+
+.search-form > div {
+  margin: 0 !important;
+  padding: 0 !important;
+}

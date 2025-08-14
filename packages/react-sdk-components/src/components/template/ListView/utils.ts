@@ -13,12 +13,19 @@ export const formatConstants = {
 class DataApi {
   mappedPropertyToOriginalProperty: any;
   originalPropertyToMappedProperty: any;
-  constructor() {
+  showRecords: any;
+  constructor(showRecords = true) {
+    this.showRecords = showRecords;
     this.originalPropertyToMappedProperty = {};
     this.mappedPropertyToOriginalProperty = {};
+    this.setShowRecords = this.setShowRecords.bind(this);
     this.setPropertyMaps = this.setPropertyMaps.bind(this);
     this.getMappedProperty = this.getMappedProperty.bind(this);
     this.getOriginalProperty = this.getOriginalProperty.bind(this);
+  }
+
+  setShowRecords(showRecords) {
+    this.showRecords = showRecords;
   }
 
   setPropertyMaps(originalToMappedPropertyObj = {}, mappedToOriginalPropertyObj = {}) {
@@ -536,6 +543,28 @@ function prepareExtraFields(metaFields, configFields, configFieldSet, reportColu
 
 const AssignDashObjects = ['Assign-Worklist', 'Assign-WorkBasket'];
 
+function isFLProperty(label) {
+  return label?.startsWith('@FL');
+}
+
+function getFieldLabel(fieldConfig) {
+  const { label, classID, caption } = fieldConfig;
+  let fieldLabel = (label ?? caption)?.substring(4);
+  const labelSplit = fieldLabel?.split('.');
+  const propertyName = labelSplit?.pop();
+  const fieldMetaData: any = PCore.getMetadataUtils().getPropertyMetadata(propertyName, classID) ?? {};
+  fieldLabel = fieldMetaData.label ?? fieldMetaData.caption ?? propertyName;
+
+  const definedOnClassID = fieldMetaData.definedOnClassID;
+  const localeValue = PCore.getLocaleUtils().getLocaleValue(
+    fieldLabel,
+    `${definedOnClassID ?? fieldMetaData.classID ?? classID}.${propertyName}`,
+    PCore.getLocaleUtils().FIELD_LABELS_BUNDLE_KEY,
+    null
+  );
+  return localeValue || fieldLabel;
+}
+
 function populateRenderingOptions(name, config, field) {
   const shouldDisplayAsSemanticLink = 'displayAsLink' in field.config && field.config.displayAsLink;
   if (shouldDisplayAsSemanticLink) {
@@ -550,6 +579,7 @@ function populateRenderingOptions(name, config, field) {
     config.cellRenderer = formatConstants.Integer;
   }
 }
+
 export function initializeColumns(fields: any[] = [], getMappedProperty: any = null) {
   return fields.map((field, originalColIndex) => {
     let name = field.config.value;
@@ -562,7 +592,9 @@ export function initializeColumns(fields: any[] = [], getMappedProperty: any = n
 
     let label = field.config.label || field.config.caption;
     const { show = true, displayAs } = field.config;
-    if (label.startsWith('@')) {
+    if (isFLProperty(label)) {
+      label = getFieldLabel(field.config);
+    } else if (label.startsWith('@')) {
       label = label.substring(3);
     }
 
@@ -650,10 +682,11 @@ export function updatePageFieldsConfig(configFields, parentClassID) {
 }
 
 export const readContextResponse = async (context, params) => {
-  const { getPConnect, apiContext, setListContext, children, showDynamicFields, referenceList, isDataObject } = params;
-  const { promisesResponseArray, apiContext: otherContext } = context;
+  const { getPConnect, apiContext, setListContext, children, showDynamicFields, referenceList, isDataObject, ref } = params;
+  const { promisesResponseArray, setShowRecords, apiContext: otherContext } = context;
   // eslint-disable-next-line sonarjs/no-unused-collection
   const listOfComponents: any[] = [];
+  ref.setShowRecords = setShowRecords;
   const {
     data: { fields: metaFields, classID, isQueryable }
   } = promisesResponseArray[0];
