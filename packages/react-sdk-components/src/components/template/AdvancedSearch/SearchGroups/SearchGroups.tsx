@@ -1,14 +1,12 @@
 import React, { createElement, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Grid, Select, MenuItem, Box } from '@mui/material';
 
-import PConnectHOC from '../../../../bridge/react_pconnect';
+import createPConnectComponent from '../../../../bridge/react_pconnect';
 import TemplateContext from '../TemplateContext';
 import componentCachePersistUtils from '../SearchGroup/persistUtils';
 
 import { getCacheInfo, isValidInput } from './utils';
 import { useCacheWhenListViewReady } from './hooks';
-
-const PComponent = PConnectHOC();
 
 export const initializeSearchFields = (searchFields, getPConnect, referenceListClassID, searchFieldRestoreValues = {}) => {
   const filtersProperties = {};
@@ -230,7 +228,7 @@ export default function SearchGroups(props) {
 
   const searchFieldsViewComp = transientItemID ? (
     <TemplateContext.Provider value={templateContextValue}>
-      <div ref={searchFieldsRef}>{createElement(PComponent, { ...searchFieldsC11nEnv })}</div>
+      <div ref={searchFieldsRef}>{createElement(createPConnectComponent(), { ...searchFieldsC11nEnv })}</div>
     </TemplateContext.Provider>
   ) : null;
 
