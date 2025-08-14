@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import { forwardRef, type PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { TextField } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import { debounce } from 'throttle-debounce';
 import DatePicker from 'react-datepicker';
 
@@ -20,7 +19,7 @@ interface DashboardFilterProps extends PConnProps {
 
 export default function DashboardFilter(props: PropsWithChildren<DashboardFilterProps>) {
   const { children, name, filterProp, type = '', metadata = null, getPConnect } = props;
-  const { current: filterId } = useRef(uuidv4());
+  const { current: filterId } = useRef(crypto.randomUUID());
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
