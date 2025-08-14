@@ -1,0 +1,9 @@
+{
+  "name": "AdvancedSearch",
+  "label": "Advanced search",
+  "type": "Template",
+  "icon": "AdvancedSearch.svg",
+  "subtype": "SEARCH",
+  "hideTemplateEdit": true,
+  "properties": []
+}
