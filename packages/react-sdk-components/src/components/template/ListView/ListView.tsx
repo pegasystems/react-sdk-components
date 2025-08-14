@@ -423,8 +423,9 @@ export default function ListView(props: ListViewProps) {
           [`T${index++}`]: { ...filter[relationalOp][1].condition }
         };
         if (dashboardFilterPayload.query.filter.logic) {
-          dashboardFilterPayload.query.filter.logic = `${dashboardFilterPayload.query.filter.logic} ${relationalOp} (T${index - 2
-            } ${dateRelationalOp} T${index - 1})`;
+          dashboardFilterPayload.query.filter.logic = `${dashboardFilterPayload.query.filter.logic} ${relationalOp} (T${
+            index - 2
+          } ${dateRelationalOp} T${index - 1})`;
         } else {
           dashboardFilterPayload.query.filter.logic = `(T${index - 2} ${relationalOp} T${index - 1})`;
         }
@@ -483,9 +484,9 @@ export default function ListView(props: ListViewProps) {
     // getDataAsync isn't returning correct data for the Page(i.e. ListView within a page) case
     return !bInForm
       ? // @ts-ignore - 3rd parameter "context" should be optional in getData method
-      PCore.getDataApiUtils().getData(referenceList, payload)
+        PCore.getDataApiUtils().getData(referenceList, payload)
       : // @ts-ignore - Argument of type 'null' is not assignable to parameter of type 'object'
-      PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
+        PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
   }
 
   const buildSelect = (fieldDefs, colId, patchQueryFields = [], compositeKeys = []) => {

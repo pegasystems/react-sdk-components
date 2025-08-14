@@ -82,8 +82,8 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   const { allowImplicitRefresh } = isInfinity
     ? PCore.getFieldDefaultUtils().fieldDefaults.DataReference || {}
     : {
-      allowImplicitRefresh: true
-    };
+        allowImplicitRefresh: true
+      };
 
   let firstChildPConnect;
 
@@ -125,12 +125,12 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
               const ddDataSource = firstChildMeta.config.datasource.filterDownloadedFields
                 ? res.data.data
                 : res.data.data
-                  .map(listItem => ({
-                    key: listItem[key.split(' .', 2)[1]],
-                    text: listItem[text.split(' .', 2)[1]],
-                    value: listItem[value.split(' .', 2)[1]]
-                  }))
-                  .filter(item => item.key);
+                    .map(listItem => ({
+                      key: listItem[key.split(' .', 2)[1]],
+                      text: listItem[text.split(' .', 2)[1]],
+                      value: listItem[value.split(' .', 2)[1]]
+                    }))
+                    .filter(item => item.key);
               // Filtering out undefined entries that will break preview
               setDropDownDataSource(ddDataSource);
             } else {
@@ -205,7 +205,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
         getPConnect()
           .getActionsApi()
           .refreshCaseView(caseKey, viewName, pgRef, refreshOptions)
-          .catch(() => { });
+          .catch(() => {});
       }
     } else if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
       (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then(caseResponse => {
@@ -306,7 +306,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     ) {
       firstChildMeta.config.datasource.source =
         (firstChildMeta.config.variant === 'card' && dropDownDataSource) ||
-          (firstChildMeta.config.variant !== 'card' && rawViewMetadata.config?.parameters)
+        (firstChildMeta.config.variant !== 'card' && rawViewMetadata.config?.parameters)
           ? dropDownDataSource
           : '@DATASOURCE '.concat(refList).concat('.pxResults');
     } else if (firstChildMeta?.type === 'AutoComplete') {
@@ -371,8 +371,8 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
 
     const additionalInfo = refFieldMetadata?.additionalInformation
       ? {
-        content: refFieldMetadata.additionalInformation
-      }
+          content: refFieldMetadata.additionalInformation
+        }
       : undefined;
 
     const dataReferenceConfigToChild = {
@@ -391,14 +391,14 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       }),
       ...(selectionMode === SELECTION_MODE.SINGLE &&
         displayAs === 'advancedSearch' && {
-        value: rawViewMetadata.config.value,
-        contextPage: rawViewMetadata.config.contextPage
-      }),
+          value: rawViewMetadata.config.value,
+          contextPage: rawViewMetadata.config.contextPage
+        }),
       ...(selectionMode === SELECTION_MODE.MULTI &&
         displayAs === 'advancedSearch' && {
-        selectionList,
-        readonlyContextList: rawViewMetadata.config.readonlyContextList
-      }),
+          selectionList,
+          readonlyContextList: rawViewMetadata.config.readonlyContextList
+        }),
       dataRelationshipContext: rawViewMetadata.config.contextClass && rawViewMetadata.config.name ? rawViewMetadata.config.name : null,
       hideLabel,
       onRecordChange: handleSelection,
