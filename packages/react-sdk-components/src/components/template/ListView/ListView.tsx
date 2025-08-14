@@ -37,7 +37,6 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Radio } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
-import { v4 as uuidv4 } from 'uuid';
 import { filterData } from '../../helpers/simpleTableHelpers';
 
 import './ListView.css';
@@ -105,7 +104,7 @@ export default function ListView(props: ListViewProps) {
   const { meta } = listContext;
   const xRayApis = PCore.getDebugger().getXRayRuntime();
   const xRayUid = xRayApis.startXRay();
-  const { current: uniqueId } = useRef(uuidv4());
+  const { current: uniqueId } = useRef(crypto.randomUUID());
 
   useInit({
     ...props,
@@ -424,9 +423,8 @@ export default function ListView(props: ListViewProps) {
           [`T${index++}`]: { ...filter[relationalOp][1].condition }
         };
         if (dashboardFilterPayload.query.filter.logic) {
-          dashboardFilterPayload.query.filter.logic = `${dashboardFilterPayload.query.filter.logic} ${relationalOp} (T${
-            index - 2
-          } ${dateRelationalOp} T${index - 1})`;
+          dashboardFilterPayload.query.filter.logic = `${dashboardFilterPayload.query.filter.logic} ${relationalOp} (T${index - 2
+            } ${dateRelationalOp} T${index - 1})`;
         } else {
           dashboardFilterPayload.query.filter.logic = `(T${index - 2} ${relationalOp} T${index - 1})`;
         }
@@ -485,9 +483,9 @@ export default function ListView(props: ListViewProps) {
     // getDataAsync isn't returning correct data for the Page(i.e. ListView within a page) case
     return !bInForm
       ? // @ts-ignore - 3rd parameter "context" should be optional in getData method
-        PCore.getDataApiUtils().getData(referenceList, payload)
+      PCore.getDataApiUtils().getData(referenceList, payload)
       : // @ts-ignore - Argument of type 'null' is not assignable to parameter of type 'object'
-        PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
+      PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
   }
 
   const buildSelect = (fieldDefs, colId, patchQueryFields = [], compositeKeys = []) => {

@@ -79,6 +79,8 @@ import RichText from './components/field/RichText';
 import RichTextEditor from './components/designSystemExtension/RichTextEditor';
 import RootContainer from './components/infra/RootContainer/RootContainer';
 import ScalarList from './components/field/ScalarList';
+import SearchForm from './components/template/DataReference/SearchForm';
+import SearchGroups from './components/template/AdvancedSearch/SearchGroups';
 import SemanticLink from './components/field/SemanticLink';
 import SimpleTable from './components/template/SimpleTable/SimpleTable';
 import SimpleTableManual from './components/template/SimpleTable/SimpleTableManual';
@@ -194,6 +196,8 @@ const pegaSdkComponentMap = {
   RichTextEditor,
   RootContainer,
   ScalarList,
+  SearchForm,
+  SearchGroups,
   SemanticLink,
   SimpleTable,
   SimpleTableManual,
