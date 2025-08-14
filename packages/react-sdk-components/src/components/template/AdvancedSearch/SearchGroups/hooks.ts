@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 
-// import listViewConstants from '../../ListView/constants';
 const listViewConstants = {
   EVENTS: {
     LIST_VIEW_READY: 'LIST_VIEW_READY'
