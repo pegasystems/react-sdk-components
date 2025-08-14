@@ -1,4 +1,3 @@
-// import { isSelfReferencedProperty } from '../../RepeatingStructures/lib/Utils';
 const isSelfReferencedProperty = (param, referenceProp) => {
   const [, parentPropName] = param.split('.');
   const referencePropParent = referenceProp?.split('.').pop();
@@ -48,7 +47,6 @@ const getCompositeKeys = (pConnect, property) => {
   return compositeKeys;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const getFirstChildConfig = ({
   firstChildMeta,
   getPConnect,
