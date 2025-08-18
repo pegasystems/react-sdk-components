@@ -3,7 +3,7 @@ import { useLayoutEffect, useMemo } from 'react';
 
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface FieldGroupTemplateProps extends PConnProps {
   // If any, enter additional props that only exist on this component

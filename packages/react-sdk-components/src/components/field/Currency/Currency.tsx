@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { TextField } from '@mui/material';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { getCurrencyCharacters, getCurrencyOptions } from './currency-utils';
@@ -45,7 +45,7 @@ export default function Currency(props: CurrrencyProps) {
   const helperTextToDisplay = validatemessage || helperText;
   const [values, setValues] = useState(value.toString());
 
-  const testProp = { 'data-test-id': testId };
+  const testProps: any = { 'data-test-id': testId };
 
   useEffect(() => {
     setValues(value.toString());
@@ -104,7 +104,7 @@ export default function Currency(props: CurrrencyProps) {
       {...currencyProp}
       decimalScale={allowDecimals !== false ? 2 : 0}
       fixedDecimalScale={allowDecimals}
-      InputProps={{ ...readOnlyProp, inputProps: { ...testProp } }}
+      slotProps={{ input: { ...readOnlyProp, inputProps: { ...testProps } } }}
       customInput={TextField}
     />
   );

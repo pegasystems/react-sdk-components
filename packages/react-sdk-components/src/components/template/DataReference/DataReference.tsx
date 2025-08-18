@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { type PropsWithChildren, type ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 import useIsMount from '../../../hooks/useIsMount';
 import componentCachePersistUtils from '../AdvancedSearch/SearchGroup/persistUtils';
 import { getMappedKey } from '../AdvancedSearch/SearchGroup/persistUtils';

@@ -6,7 +6,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../helpers/instructions-utils';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on Checkbox here

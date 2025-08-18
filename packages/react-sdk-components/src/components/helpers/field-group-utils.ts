@@ -1,4 +1,4 @@
-import { createElement, ReactElement } from 'react';
+import { createElement, type ReactElement } from 'react';
 
 import createPConnectComponent from '../../bridge/react_pconnect';
 

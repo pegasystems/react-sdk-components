@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';

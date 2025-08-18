@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import withStyles from '@mui/styles/withStyles';
 import createStyles from '@mui/styles/createStyles';
 import Table from '@mui/material/Table';
@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import isDeepEqual from 'fast-deep-equal/react';
 
 import { Utils } from '../../helpers/utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseHistoryProps extends PConnProps {
   // If any, enter additional props that only exist on this component

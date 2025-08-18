@@ -1,9 +1,9 @@
-import { Children, PropsWithChildren, useEffect, useState } from 'react';
+import { Children, type PropsWithChildren, useEffect, useState } from 'react';
 import { Tab, Tabs } from '@mui/material';
 import { TabContext, TabPanel } from '@mui/lab';
 
 import { getTransientTabs, getVisibleTabs, tabClick } from './tabUtils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface SubTabsProps extends PConnProps {
   // If any, enter additional props that only exist on this component

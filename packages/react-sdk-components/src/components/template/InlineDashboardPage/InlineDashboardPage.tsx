@@ -1,8 +1,8 @@
-import { useMemo, Children, useEffect, useState, PropsWithChildren } from 'react';
+import { useMemo, Children, useEffect, useState, type PropsWithChildren } from 'react';
 
 import { buildFilterComponents } from '../../infra/DashboardFilter/filterUtils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface InlineDashboardPageProps extends PConnProps {
   // If any, enter additional props that only exist on this component

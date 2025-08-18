@@ -6,7 +6,7 @@ import { isEmptyObject } from '../../helpers/common-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import './PromotedFilters.css';
 
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 // Can't use PromotedFilterProps until getContainerManager() knows about addTransientItem
 //  Currently just expects "object"

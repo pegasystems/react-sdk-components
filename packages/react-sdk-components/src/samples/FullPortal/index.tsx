@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable no-console */
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SdkConfigAccess, loginIfNecessary, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
@@ -87,7 +87,7 @@ export default function FullPortal() {
     //  top level Pega root element (likely a RootContainer)
 
     const { appPortal: thePortal, excludePortals } = SdkConfigAccess.getSdkConfigServer();
-    const defaultPortal = PCore.getEnvironmentInfo().getDefaultPortal() || '';
+    const defaultPortal = PCore?.getEnvironmentInfo?.().getDefaultPortal?.() || '';
     const queryPortal = sessionStorage.getItem('rsdk_portalName');
 
     // Note: myLoadPortal and myLoadDefaultPortal are set when bootstrapWithAuthHeader is invoked

@@ -4,7 +4,7 @@ import makeStyles from '@mui/styles/makeStyles';
 
 import createPConnectComponent from '../../../bridge/react_pconnect';
 
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface DeferLoadProps extends PConnProps {
   // If any, enter additional props that only exist on this component

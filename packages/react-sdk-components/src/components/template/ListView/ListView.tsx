@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
 import Table from '@mui/material/Table';
@@ -46,7 +46,7 @@ import { getGenericFieldsLocalizedValue } from '../../helpers/common-utils';
 import { format } from '../../helpers/formatters';
 
 import useInit from './hooks';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface ListViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component

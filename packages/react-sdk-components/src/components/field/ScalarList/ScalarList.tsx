@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 // ScalarListProps can't extend PConnFieldProps because its 'value' has a different type
 interface ScalarListProps extends PConnProps {

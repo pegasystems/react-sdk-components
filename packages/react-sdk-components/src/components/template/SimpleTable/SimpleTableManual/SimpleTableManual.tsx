@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { type PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -29,7 +29,7 @@ import { getReferenceList } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
 import { getGenericFieldsLocalizedValue } from '../../../helpers/common-utils';
 import { buildFieldsForTable, filterData, getContext } from '../../../helpers/simpleTableHelpers';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PConnProps } from '../../../../types/PConnProps';
 import { format } from '../../../helpers/formatters';
 
 interface SimpleTableManualProps extends PConnProps {

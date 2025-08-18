@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { type PropsWithChildren, useEffect, useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { useFocusFirstField, useScrolltoTop } from '../../../hooks';
 
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface AssignmentProps extends PConnProps {
   // If any, enter additional props that only exist on this component

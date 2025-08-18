@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface IntegerProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Integer here
@@ -54,11 +54,7 @@ export default function Integer(props: IntegerProps) {
     return <TextInput {...props} />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   function intOnChange(event) {
     // console.log(`Integer intOnChange inValue: ${event.target.value}`);
@@ -96,7 +92,9 @@ export default function Integer(props: IntegerProps) {
       label={label}
       value={inputValue}
       type='text'
-      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', ...testProp }}
+      slotProps={{
+        htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', ...testProps }
+      }}
     />
   );
 }
