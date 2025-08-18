@@ -11,25 +11,27 @@ on:
   pull_request:
     branches:
       - master
-      - 'release/**'  
+      - 'release/**'
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install dependencies, run build-sdk, and pack
         run: npm run ci
+
       - run: npm run build:dev
       - run: npm run build-sdk-complete
       - run: npm run pack-sdk
