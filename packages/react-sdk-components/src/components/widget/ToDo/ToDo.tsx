@@ -1,19 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Avatar,
-  Typography,
-  Badge,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction
-} from '@mui/material';
+import { Box, Button, Card, CardContent, CardHeader, Avatar, Typography, Badge, List, ListItem, ListItemText } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -347,13 +334,18 @@ export default function ToDo(props: ToDoProps) {
           <CardContent>
             <List>
               {assignments.map(assignment => (
-                <ListItem key={getAssignmentId(assignment)} dense divider onClick={() => clickGo(assignment)}>
-                  <ListItemText primary={getAssignmentName(assignment)} secondary={getListItemComponent(assignment)} />
-                  <ListItemSecondaryAction>
+                <ListItem
+                  key={getAssignmentId(assignment)}
+                  dense
+                  divider
+                  onClick={() => clickGo(assignment)}
+                  secondaryAction={
                     <IconButton onClick={() => clickGo(assignment)} size='large'>
                       <ArrowForwardIosOutlinedIcon />
                     </IconButton>
-                  </ListItemSecondaryAction>
+                  }
+                >
+                  <ListItemText primary={getAssignmentName(assignment)} secondary={getListItemComponent(assignment)} />
                 </ListItem>
               ))}
             </List>

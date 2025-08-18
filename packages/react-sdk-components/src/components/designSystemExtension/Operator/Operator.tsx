@@ -193,15 +193,16 @@ export default function Operator(props: OperatorProps) {
         defaultValue={caseOpName}
         label={caseOpLabel}
         onClick={showOperatorDetails}
-        InputProps={{
-          readOnly: true,
-          disableUnderline: true,
-          inputProps: { style: { cursor: 'pointer' } }
+        slotProps={{
+          input: {
+            readOnly: true,
+            disableUnderline: true,
+            inputProps: { style: { cursor: 'pointer' } }
+          }
         }}
       />
       <br />
       {Utils.generateDateTime(caseTime, 'DateTime-Since')}
-
       <Popover
         id={popoverId}
         open={popoverOpen}
@@ -209,7 +210,9 @@ export default function Operator(props: OperatorProps) {
         onClose={handlePopoverClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-        PaperProps={{ style: { maxWidth: '45ch' } }}
+        slotProps={{
+          paper: { style: { maxWidth: '45ch' } }
+        }}
       >
         {getPopoverGrid()}
       </Popover>

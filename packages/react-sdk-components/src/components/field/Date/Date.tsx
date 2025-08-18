@@ -62,11 +62,7 @@ export default function Date(props: DateProps) {
     return <TextInput {...props} />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   const handleChange = date => {
     if (date && date.isValid()) {
@@ -89,7 +85,7 @@ export default function Date(props: DateProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProp }
+          InputProps: { ...testProps }
         }
       }}
       onChange={handleChange}

@@ -54,11 +54,7 @@ export default function Integer(props: IntegerProps) {
     return <TextInput {...props} />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   function intOnChange(event) {
     // console.log(`Integer intOnChange inValue: ${event.target.value}`);
@@ -96,7 +92,9 @@ export default function Integer(props: IntegerProps) {
       label={label}
       value={inputValue}
       type='text'
-      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', ...testProp }}
+      slotProps={{
+        htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', ...testProps }
+      }}
     />
   );
 }

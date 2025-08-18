@@ -46,9 +46,11 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
               variant='standard'
               value='---'
               label={field.config.label}
-              InputProps={{
-                readOnly: true,
-                disableUnderline: true
+              slotProps={{
+                input: {
+                  readOnly: true,
+                  disableUnderline: true
+                }
               }}
             />
           );
@@ -65,9 +67,11 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
             variant='standard'
             value={field.config.value}
             label={field.config.label}
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
+            slotProps={{
+              input: {
+                readOnly: true,
+                disableUnderline: true
+              }
             }}
           />
         );
@@ -82,9 +86,11 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
             variant='standard'
             value={fieldValue}
             label={fieldLabel}
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
+            slotProps={{
+              input: {
+                readOnly: true,
+                disableUnderline: true
+              }
             }}
           />
         );
@@ -97,9 +103,11 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
             className='psdk-csf-status-style'
             value={field.config.value}
             label={field.config.label}
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
+            slotProps={{
+              input: {
+                readOnly: true,
+                disableUnderline: true
+              }
             }}
           />
         );
@@ -112,11 +120,13 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
               variant='standard'
               value={field.config.value}
               label={field.config.label}
-              InputProps={{
-                readOnly: true,
-                inputProps: {
-                  style: { cursor: 'pointer' },
-                  disableUnderline: true
+              slotProps={{
+                input: {
+                  readOnly: true,
+                  inputProps: {
+                    style: { cursor: 'pointer' },
+                    disableUnderline: true
+                  }
                 }
               }}
             />
@@ -132,10 +142,12 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
               variant='standard'
               value={field.config.value}
               label={field.config.label}
-              InputProps={{
-                readOnly: true,
-                disableUnderline: true,
-                inputProps: { style: { cursor: 'pointer' } }
+              slotProps={{
+                input: {
+                  readOnly: true,
+                  disableUnderline: true,
+                  inputProps: { style: { cursor: 'pointer' } }
+                }
               }}
             />
           </a>
@@ -156,9 +168,11 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
               format: theFormat
             })}
             label={field.config.label}
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
+            slotProps={{
+              input: {
+                readOnly: true,
+                disableUnderline: true
+              }
             }}
           />
         );
@@ -171,9 +185,11 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
             variant='standard'
             value={format(field.config.value, field.type, theCurrencyOptions)}
             label={field.config.label}
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
+            slotProps={{
+              input: {
+                readOnly: true,
+                disableUnderline: true
+              }
             }}
           />
         );
@@ -186,9 +202,11 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
             variant='standard'
             value={format(field.config.value, field.type)}
             label={field.config.label}
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
+            slotProps={{
+              input: {
+                readOnly: true,
+                disableUnderline: true
+              }
             }}
           />
         );

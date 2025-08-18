@@ -59,11 +59,7 @@ export default function TextInput(props: TextInputProps) {
     readOnlyProp = { readOnly: true };
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   function handleChange(event) {
     // update internal value
@@ -88,7 +84,9 @@ export default function TextInput(props: TextInputProps) {
       error={status === 'error'}
       label={label}
       value={inputValue}
-      InputProps={{ ...readOnlyProp, inputProps: { maxLength, ...testProp } }}
+      slotProps={{
+        input: { ...readOnlyProp, inputProps: { maxLength, ...testProps } }
+      }}
     />
   );
 }

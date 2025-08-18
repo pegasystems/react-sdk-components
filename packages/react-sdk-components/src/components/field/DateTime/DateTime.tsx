@@ -60,11 +60,7 @@ export default function DateTime(props: DateTimeProps) {
     return <TextInput {...props} value={formattedDateTime} />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   const handleChange = date => {
     const timeZoneDateTime = (dayjs as any).tz(date.format('YYYY-MM-DDTHH:mm:ss'), timezone);
@@ -89,7 +85,6 @@ export default function DateTime(props: DateTimeProps) {
       label={label}
       value={dateValue}
       onChange={handleChange}
-      data-test-id={testId}
       slotProps={{
         textField: {
           variant: 'outlined',
@@ -98,7 +93,7 @@ export default function DateTime(props: DateTimeProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProp }
+          InputProps: { ...testProps }
         }
       }}
     />

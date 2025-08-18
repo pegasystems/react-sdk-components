@@ -55,11 +55,7 @@ export default function Email(props: EmailProps) {
     return <TextInput {...props} />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   function handleChange(event) {
     // update internal value
@@ -85,13 +81,15 @@ export default function Email(props: EmailProps) {
       label={label}
       value={inputValue}
       type='email'
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position='start'>
-            <MailOutlineIcon />
-          </InputAdornment>
-        ),
-        inputProps: { ...testProp }
+      slotProps={{
+        input: {
+          startAdornment: (
+            <InputAdornment position='start'>
+              <MailOutlineIcon />
+            </InputAdornment>
+          ),
+          inputProps: { ...testProps }
+        }
       }}
     />
   );

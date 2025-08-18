@@ -198,9 +198,7 @@ export default function Dropdown(props: DropdownProps) {
     readOnlyProp = { readOnly: true };
   }
 
-  let testProp = {};
-
-  testProp = {
+  const testProps: any = {
     'data-test-id': testId
   };
 
@@ -228,7 +226,9 @@ export default function Dropdown(props: DropdownProps) {
       label={label}
       value={value === '' && !readOnly ? placeholder : value}
       select
-      InputProps={{ ...readOnlyProp, ...testProp }}
+      slotProps={{
+        input: { ...readOnlyProp, ...testProps }
+      }}
     >
       {options.map((option: any) => (
         <MenuItem key={option.key} value={option.key}>

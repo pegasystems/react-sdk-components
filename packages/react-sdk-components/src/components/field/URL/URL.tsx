@@ -56,11 +56,7 @@ export default function URLComponent(props: URLComponentProps) {
     return <TextInput {...props} />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   const handleChange = event => {
     setInputValue(event?.target?.value);
@@ -85,7 +81,9 @@ export default function URLComponent(props: URLComponentProps) {
       error={status === 'error'}
       label={label}
       value={inputValue}
-      InputProps={{ inputProps: { ...testProp } }}
+      slotProps={{
+        input: { inputProps: { ...testProps } }
+      }}
     />
   );
 }

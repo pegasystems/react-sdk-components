@@ -32,11 +32,7 @@ export default function Time(props: TimeProps) {
     return <TextInput {...props} />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   const handleChange = date => {
     const theValue = date && date.isValid() ? date.format('HH:mm:ss') : null;
@@ -75,7 +71,7 @@ export default function Time(props: TimeProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProp }
+          InputProps: { ...testProps }
         }
       }}
     />

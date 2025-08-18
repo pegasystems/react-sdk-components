@@ -69,9 +69,11 @@ export default function Phone(props: PhoneProps) {
           error={status === 'error'}
           label={label}
           value={value}
-          InputProps={{
-            readOnly: true,
-            inputProps: { ...testProp }
+          slotProps={{
+            input: {
+              readOnly: true,
+              ...testProp
+            }
           }}
           disableDropdown={disableDropdown}
         />
@@ -105,7 +107,7 @@ export default function Phone(props: PhoneProps) {
       error={status === 'error'}
       label={label}
       value={inputValue}
-      InputProps={{ ...testProp }}
+      slotProps={{ input: { ...testProp } }}
     />
   );
 }
