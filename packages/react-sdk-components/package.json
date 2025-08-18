@@ -38,7 +38,7 @@
     "tinymce": "^6.8.6"
   },
   "peerDependencies": {
-    "@pega/auth": "~0.2.30",
+    "@pega/auth": "~0.2",
     "react": "^17.0 || ^18.0",
     "react-dom": "^17.0 || ^18.0"
   },
