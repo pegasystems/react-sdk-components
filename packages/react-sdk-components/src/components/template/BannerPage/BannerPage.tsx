@@ -1,7 +1,7 @@
-import { Children, PropsWithChildren, useMemo } from 'react';
+import { Children, type PropsWithChildren, useMemo } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface BannerPageProps extends PConnProps {
   // If any, enter additional props that only exist on this component

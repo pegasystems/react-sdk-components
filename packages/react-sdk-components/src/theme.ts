@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material';
-import { Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 
 /**
  * Since makeStyles is now exported from @mui/styles package which does not know about Theme in the core package.

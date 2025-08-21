@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { TextField } from '@mui/material';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
@@ -70,11 +70,7 @@ export default function Percentage(props: PercentageProps) {
     return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant='stacked' />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   const theSymbols = getCurrencyCharacters(currencyISOCode);
   const theCurrDec = theSymbols.theDecimalIndicator;
@@ -109,7 +105,7 @@ export default function Percentage(props: PercentageProps) {
       thousandSeparator={showGroupSeparators ? theCurrSep : ''}
       decimalScale={decimalPrecision}
       suffix='%'
-      InputProps={{ ...readOnlyProp, inputProps: { ...testProp } }}
+      slotProps={{ input: { ...readOnlyProp, inputProps: { ...testProps } } }}
       customInput={TextField}
     />
   );

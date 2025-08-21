@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PConnProps } from '../../../../types/PConnProps';
 import './ActionButtonsForFileUtil.css';
 
 interface ActionButtonsForFileUtilProps extends PConnProps {

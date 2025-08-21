@@ -6,7 +6,7 @@ import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface DateTimeProps extends PConnFieldProps {
   // If any, enter additional props that only exist on DateTime here
@@ -60,11 +60,7 @@ export default function DateTime(props: DateTimeProps) {
     return <TextInput {...props} value={formattedDateTime} />;
   }
 
-  let testProp = {};
-
-  testProp = {
-    'data-test-id': testId
-  };
+  const testProps: any = { 'data-test-id': testId };
 
   const handleChange = date => {
     const timeZoneDateTime = (dayjs as any).tz(date.format('YYYY-MM-DDTHH:mm:ss'), timezone);
@@ -89,7 +85,6 @@ export default function DateTime(props: DateTimeProps) {
       label={label}
       value={dateValue}
       onChange={handleChange}
-      data-test-id={testId}
       slotProps={{
         textField: {
           variant: 'outlined',
@@ -98,7 +93,7 @@ export default function DateTime(props: DateTimeProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProp }
+          InputProps: { ...testProps }
         }
       }}
     />

@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-shadow */
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Theme } from '@mui/material/styles';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import type { Theme } from '@mui/material/styles';
 import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
 import Table from '@mui/material/Table';
@@ -37,7 +37,6 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Radio } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
-
 import { filterData } from '../../helpers/simpleTableHelpers';
 
 import './ListView.css';
@@ -47,7 +46,7 @@ import { getGenericFieldsLocalizedValue } from '../../helpers/common-utils';
 import { format } from '../../helpers/formatters';
 
 import useInit from './hooks';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface ListViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -63,6 +62,9 @@ interface ListViewProps extends PConnProps {
   showDynamicFields?: boolean;
   readonlyContextList?: any;
   value: any;
+  viewName?: string;
+  showRecords?: boolean;
+  displayAs?: string;
 }
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -89,9 +91,12 @@ export default function ListView(props: ListViewProps) {
     parameters,
     compositeKeys,
     showDynamicFields,
+    viewName,
     readonlyContextList: selectedValues,
-    value
+    value,
+    displayAs
   } = props;
+  let { showRecords } = props;
   const ref = useRef({}).current;
   const cosmosTableRef = useRef();
   // List component context
@@ -99,6 +104,7 @@ export default function ListView(props: ListViewProps) {
   const { meta } = listContext;
   const xRayApis = PCore.getDebugger().getXRayRuntime();
   const xRayUid = xRayApis.startXRay();
+  const { current: uniqueId } = useRef(crypto.randomUUID());
 
   useInit({
     ...props,
@@ -108,6 +114,8 @@ export default function ListView(props: ListViewProps) {
     xRayUid,
     cosmosTableRef
   });
+
+  useClearSelectionsAndUpdateTable({ getPConnect, uniqueId, viewName });
 
   const thePConn = getPConnect();
   const componentConfig = thePConn.getComponentConfig();
@@ -199,6 +207,37 @@ export default function ListView(props: ListViewProps) {
 
   const classes = useStyles();
 
+  // Hook to clear the selections and update table in AdvancedSearch template when switching between search views
+  function useClearSelectionsAndUpdateTable({ getPConnect, uniqueId, viewName }) {
+    const clearSelectionsAndRefreshList = useCallback(
+      ({ viewName: name, clearSelections }) => {
+        if (name === viewName) {
+          const { selectionMode } = getPConnect().getRawConfigProps();
+          if (!selectionMode) {
+            return;
+          }
+          if (clearSelections) {
+            if (selectionMode === 'single') {
+              getPConnect().getListActions().setSelectedRows({});
+            } else {
+              getPConnect().getListActions().clearSelectedRows();
+            }
+          }
+        }
+      },
+      [getPConnect, viewName]
+    );
+
+    useEffect(() => {
+      const identifier = `clear-and-update-advanced-search-selections-${uniqueId}`;
+      PCore.getPubSubUtils().subscribe('update-advanced-search-selections', clearSelectionsAndRefreshList, identifier);
+
+      return () => {
+        PCore.getPubSubUtils().unsubscribe('update-advanced-search-selections', identifier);
+      };
+    }, [uniqueId, clearSelectionsAndRefreshList]);
+  }
+
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof any) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -260,18 +299,24 @@ export default function ListView(props: ListViewProps) {
         theField = theField.substring(1);
       }
       const colIndex = fields.findIndex(ele => ele.name === theField);
-      const displayAsLink = field.config.displayAsLink;
+      // const displayAsLink = field.config.displayAsLink;
+      const { additionalDetails = {} } = field.config;
+      let shouldDisplayAsSemanticLink = additionalDetails.type === 'DISPLAY_LINK';
+      // TODO: This "if" check has been added for backward compatibility, to be removed once the users are notified about the changes in view metadata of US-517164
+      if (!shouldDisplayAsSemanticLink) {
+        shouldDisplayAsSemanticLink = 'displayAsLink' in field.config && field.config.displayAsLink;
+      }
       const headerRow: any = {};
       headerRow.id = fields[index].id;
       headerRow.type = field.type;
-      headerRow.displayAsLink = displayAsLink;
+      headerRow.displayAsLink = shouldDisplayAsSemanticLink;
       headerRow.numeric = field.type === 'Decimal' || field.type === 'Integer' || field.type === 'Percentage' || field.type === 'Currency' || false;
       headerRow.disablePadding = false;
       headerRow.label = fields[index].label;
       if (colIndex > -1) {
         headerRow.classID = fields[colIndex].classID;
       }
-      if (displayAsLink) {
+      if (shouldDisplayAsSemanticLink) {
         headerRow.isAssignmentLink = AssignDashObjects.includes(headerRow.classID);
         if (field.config.value?.startsWith('@CA')) {
           headerRow.isAssociation = true;
@@ -307,32 +352,43 @@ export default function ListView(props: ListViewProps) {
 
   // Will be triggered when EVENT_DASHBOARD_FILTER_CHANGE fires
   function processFilterChange(data) {
-    const { filterId, filterExpression } = data;
+    let filterId;
+    let filterExpression;
+    let isDateRange;
+    let field;
     let dashboardFilterPayload: any = {
       query: {
         filter: {},
         select: []
       }
     };
+    if (displayAs === 'advancedSearch') {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      Object.entries(data).reduce((acc, [item, value]) => {
+        const { filterId, filterExpression } = value as any;
+        filters.current[filterId] = filterExpression;
+        return acc; // Ensure the accumulator is returned
+      }, {});
+    } else {
+      ({ filterId, filterExpression } = data);
+      filters.current[filterId] = filterExpression;
+      isDateRange = data.filterExpression?.AND;
+      field = getFieldFromFilter(filterExpression, isDateRange);
+      selectParam = [];
+      // Constructing the select parameters list (will be sent in dashboardFilterPayload)
+      columnList.current.forEach(col => {
+        selectParam.push({
+          field: col
+        });
+      });
 
-    filters.current[filterId] = filterExpression;
-    let isDateRange = data.filterExpression?.AND;
+      // Checking if the triggered filter is applicable for this list
+      if (data.filterExpression !== null && !(columnList.current?.length && columnList.current?.includes(field))) {
+        return;
+      }
+    }
     // Will be AND by default but making it dynamic in case we support dynamic relational ops in future
     const relationalOp = 'AND';
-
-    let field = getFieldFromFilter(filterExpression, isDateRange);
-    selectParam = [];
-    // Constructing the select parameters list (will be sent in dashboardFilterPayload)
-    columnList.current.forEach(col => {
-      selectParam.push({
-        field: col
-      });
-    });
-
-    // Checking if the triggered filter is applicable for this list
-    if (data.filterExpression !== null && !(columnList.current?.length && columnList.current?.includes(field))) {
-      return;
-    }
     // This is a flag which will be used to reset dashboardFilterPayload in case we don't find any valid filters
     let validFilter = false;
 
@@ -378,7 +434,7 @@ export default function ListView(props: ListViewProps) {
       } else {
         dashboardFilterPayload.query.filter.filterConditions = {
           ...dashboardFilterPayload.query.filter.filterConditions,
-          [`T${index++}`]: { ...filter.condition, ignoreCase: true }
+          [`T${index++}`]: { ...filter.condition, ...(filter.condition.comparator === 'CONTAINS' ? { ignoreCase: true } : {}) }
         };
 
         if (dashboardFilterPayload.query.filter.logic) {
@@ -406,6 +462,9 @@ export default function ListView(props: ListViewProps) {
   }
 
   function fetchAllData(fields): any {
+    if (displayAs === 'advancedSearch' && !showRecords) {
+      return Promise.resolve({ data: null });
+    }
     let query: any = null;
     if (payload) {
       query = payload.query;
@@ -556,8 +615,36 @@ export default function ListView(props: ListViewProps) {
     };
   }
 
+  function prepareFilters(data) {
+    return Object.entries(data.payload).reduce((acc, [field, value]) => {
+      if (value) {
+        let comparator = 'EQ';
+        const filterRecord = listContext.meta.fieldDefs.filter(item => item.id === field);
+        if (filterRecord?.[0]?.meta.type === 'TextInput') {
+          comparator = 'CONTAINS';
+        }
+        acc[field] = {
+          filterExpression: {
+            condition: {
+              lhs: {
+                field
+              },
+              comparator,
+              rhs: {
+                value
+              }
+            }
+          },
+          filterId: field
+        };
+      }
+      return acc;
+    }, {});
+  }
+
   useEffect(() => {
     if (listContext.meta) {
+      const identifier = `promoted-filters-queryable-${uniqueId}`;
       fetchDataFromServer();
       setTimeout(() => {
         PCore.getPubSubUtils().subscribe(
@@ -579,6 +666,15 @@ export default function ListView(props: ListViewProps) {
           false,
           getPConnect().getContextName()
         );
+        PCore.getPubSubUtils().subscribe(
+          PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS,
+          data => {
+            showRecords = data.showRecords;
+            const filterData = prepareFilters(data);
+            processFilterChange(filterData);
+          },
+          identifier
+        );
       }, 0);
 
       return function cleanupSubscriptions() {
@@ -592,6 +688,7 @@ export default function ListView(props: ListViewProps) {
           `dashboard-component-${'id'}`,
           getPConnect().getContextName()
         );
+        PCore.getPubSubUtils().unsubscribe(PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS, identifier);
       };
     }
   }, [listContext]);
@@ -1130,7 +1227,7 @@ export default function ListView(props: ListViewProps) {
                         })}
                   </TableBody>
                 </Table>
-                {arRows && arRows.length === 0 && (
+                {(!arRows || arRows.length === 0) && (
                   <div className='no-records'>{getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}</div>
                 )}
               </TableContainer>

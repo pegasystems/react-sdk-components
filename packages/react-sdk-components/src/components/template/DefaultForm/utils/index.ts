@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 export const mapStateToProps: any = (_, ownProps) => {
   const { getPConnect } = ownProps;
 
@@ -24,5 +22,5 @@ export const getKeyForMappedField = field => {
     return JSON.stringify(pConnect.meta);
   }
 
-  return uuidv4();
+  return crypto.randomUUID();
 };

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Utils } from '../../helpers/utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 import './SummaryItem.css';
 

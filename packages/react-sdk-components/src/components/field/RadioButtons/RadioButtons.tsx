@@ -4,8 +4,7 @@ import { Radio, RadioGroup, FormControl, FormControlLabel, FormLabel, FormHelper
 import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
-import SelectableCard from '../SelectableCard/SelectableCard';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 // Can't use RadioButtonProps until getLocaleRuleNameFromKeys is NOT private
 interface RadioButtonsProps extends PConnFieldProps {
@@ -24,6 +23,7 @@ interface RadioButtonsProps extends PConnFieldProps {
 export default function RadioButtons(props: RadioButtonsProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldValueList = getComponentFromMap('FieldValueList');
+  const SelectableCard = getComponentFromMap('SelectableCard');
 
   const {
     getPConnect,

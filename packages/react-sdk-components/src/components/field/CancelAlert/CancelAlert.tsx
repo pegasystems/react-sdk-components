@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Grid, IconButton, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 import './CancelAlert.css';
 
 interface CancelAlertProps extends PConnFieldProps {

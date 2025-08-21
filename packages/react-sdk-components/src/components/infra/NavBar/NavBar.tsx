@@ -7,9 +7,9 @@ import {
   Drawer,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListItemSecondaryAction,
   Collapse,
   Divider,
   IconButton,
@@ -36,7 +36,7 @@ import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
 import { useNavBar } from '../../helpers/reactContextHelpers';
 import { Utils } from '../../helpers/utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 import './NavBar.css';
 
@@ -199,7 +199,14 @@ export default function NavBar(props: NavBarProps) {
     >
       {open ? (
         <List className={classes.appListItem}>
-          <ListItem onClick={handleDrawerOpen}>
+          <ListItem
+            onClick={handleDrawerOpen}
+            secondaryAction={
+              <IconButton edge='end' onClick={handleDrawerOpen} size='large'>
+                <ChevronLeftIcon className={classes.appListIcon} />
+              </IconButton>
+            }
+          >
             <ListItemIcon>
               <img src={portalLogoImage} className={classes.appListLogo} />
             </ListItemIcon>
@@ -210,11 +217,6 @@ export default function NavBar(props: NavBarProps) {
                 </Typography>
               }
             />
-            <ListItemSecondaryAction>
-              <IconButton edge='end' onClick={handleDrawerOpen} size='large'>
-                <ChevronLeftIcon className={classes.appListIcon} />
-              </IconButton>
-            </ListItemSecondaryAction>
           </ListItem>
         </List>
       ) : (
@@ -223,17 +225,16 @@ export default function NavBar(props: NavBarProps) {
         </div>
       )}
       <List>
-        <ListItem button onClick={handleCaseItemClick}>
+        <ListItemButton onClick={handleCaseItemClick}>
           <ListItemIcon>{bShowCaseTypes && open ? <ClearOutlinedIcon fontSize='large' /> : <AddIcon fontSize='large' />}</ListItemIcon>
           <ListItemText primary='Create' />
           {bShowCaseTypes ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
+        </ListItemButton>
       </List>
       <Collapse in={bShowCaseTypes && open} timeout='auto' unmountOnExit className='scrollable'>
         <List component='div' disablePadding>
           {caseTypes.map(caseType => (
-            <ListItem
-              button
+            <ListItemButton
               className={classes.nested}
               onClick={() => navPanelCreateCaseType(caseType.pyClassName, caseType.pyFlowType)}
               key={caseType.pyLabel}
@@ -242,33 +243,35 @@ export default function NavBar(props: NavBarProps) {
                 <WorkOutlineIcon fontSize='large' />
               </ListItemIcon>
               <ListItemText primary={localeUtils.getLocaleValue(caseType.pyLabel, '', localeReference)} />
-            </ListItem>
+            </ListItemButton>
           ))}
         </List>
       </Collapse>
       <List>
         {navPages.map(page => (
-          <ListItem button onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
+          <ListItemButton onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
             <ListItemIcon>{iconMap[page.pxPageViewIcon]}</ListItemIcon>
             <ListItemText primary={localeUtils.getLocaleValue(page.pyLabel, '', localeReference)} />
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
       <Divider />
       <List className='marginTopAuto'>
         <>
-          <ListItem onClick={navPanelOperatorButtonClick}>
+          <ListItem
+            onClick={navPanelOperatorButtonClick}
+            secondaryAction={
+              open ? (
+                <IconButton edge='end' onClick={navPanelOperatorButtonClick} size='large'>
+                  <ChevronRightIcon />
+                </IconButton>
+              ) : null
+            }
+          >
             <ListItemIcon id='person-icon'>
               <PersonOutlineIcon fontSize='large' />
             </ListItemIcon>
             <ListItemText primary={portalOperator} />
-            {open && (
-              <ListItemSecondaryAction>
-                <IconButton edge='end' onClick={navPanelOperatorButtonClick} size='large'>
-                  <ChevronRightIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            )}
           </ListItem>
           <Menu
             anchorEl={anchorEl}

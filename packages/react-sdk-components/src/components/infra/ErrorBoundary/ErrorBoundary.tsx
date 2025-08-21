@@ -1,4 +1,4 @@
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface ErrorBoundaryProps extends PConnProps {
   // If any, enter additional props that only exist on this component

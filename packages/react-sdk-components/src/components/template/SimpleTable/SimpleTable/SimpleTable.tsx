@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PConnProps } from '../../../../types/PConnProps';
 
 // Can't use SimpleTableProps until getComponentConfig() and getFieldMetadata() are NOT private
 interface SimpleTableProps extends PConnProps {

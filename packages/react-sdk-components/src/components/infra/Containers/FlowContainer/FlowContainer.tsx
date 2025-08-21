@@ -11,7 +11,7 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 import { withSimpleViewContainerRenderer } from '../SimpleView/SimpleView';
 
 import { addContainerItem, getToDoAssignments, showBanner, hasContainerItems } from './helpers';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PConnProps } from '../../../../types/PConnProps';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 

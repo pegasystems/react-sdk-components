@@ -1,7 +1,7 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface FollowersProps extends PConnProps {
   // If any, enter additional props that only exist on this component

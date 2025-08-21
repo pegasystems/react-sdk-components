@@ -1,11 +1,11 @@
 /* eslint-disable no-nested-ternary */
-import { PropsWithChildren, useState } from 'react';
+import { type PropsWithChildren, useState } from 'react';
 import { Button, Card } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 import { getToDoAssignments } from '../../infra/Containers/FlowContainer/helpers';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface ConfirmationProps extends PConnProps {
   // If any, enter additional props that only exist on this component

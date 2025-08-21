@@ -1,5 +1,5 @@
-import { PropsWithChildren } from 'react';
-import { PConnProps } from '../../../../types/PConnProps';
+import type { PropsWithChildren } from 'react';
+import type { PConnProps } from '../../../../types/PConnProps';
 
 interface OneColumnTabProps extends PConnProps {
   // If any, enter additional props that only exist on this component

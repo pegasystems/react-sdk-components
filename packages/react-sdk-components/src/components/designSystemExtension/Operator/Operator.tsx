@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 
 import Utils from '../../helpers/utils';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 // Operator is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
@@ -193,15 +193,16 @@ export default function Operator(props: OperatorProps) {
         defaultValue={caseOpName}
         label={caseOpLabel}
         onClick={showOperatorDetails}
-        InputProps={{
-          readOnly: true,
-          disableUnderline: true,
-          inputProps: { style: { cursor: 'pointer' } }
+        slotProps={{
+          input: {
+            readOnly: true,
+            disableUnderline: true,
+            inputProps: { style: { cursor: 'pointer' } }
+          }
         }}
       />
       <br />
       {Utils.generateDateTime(caseTime, 'DateTime-Since')}
-
       <Popover
         id={popoverId}
         open={popoverOpen}
@@ -209,7 +210,9 @@ export default function Operator(props: OperatorProps) {
         onClose={handlePopoverClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-        PaperProps={{ style: { maxWidth: '45ch' } }}
+        slotProps={{
+          paper: { style: { maxWidth: '45ch' } }
+        }}
       >
         {getPopoverGrid()}
       </Popover>

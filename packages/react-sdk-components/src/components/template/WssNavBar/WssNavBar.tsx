@@ -8,7 +8,7 @@ import { IconButton, Menu, MenuItem, Typography, Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import MenuIcon from '@mui/icons-material/Menu';
 import { logout } from '@pega/auth/lib/sdk-auth-manager';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 import './WssNavBar.css';
 
 interface WssNavBarProps extends PConnProps {

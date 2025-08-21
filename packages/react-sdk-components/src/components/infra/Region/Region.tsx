@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 // Region does NOT have getPConnect. So, no need to extend from PConnProps
 interface RegionProps {

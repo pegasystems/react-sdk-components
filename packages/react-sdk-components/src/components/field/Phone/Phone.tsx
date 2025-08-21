@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { MuiTelInput } from 'mui-tel-input';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnFieldProps } from '../../../types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 
 interface PhoneProps extends PConnFieldProps {
@@ -69,9 +69,11 @@ export default function Phone(props: PhoneProps) {
           error={status === 'error'}
           label={label}
           value={value}
-          InputProps={{
-            readOnly: true,
-            inputProps: { ...testProp }
+          slotProps={{
+            input: {
+              readOnly: true,
+              ...testProp
+            }
           }}
           disableDropdown={disableDropdown}
         />
@@ -105,7 +107,7 @@ export default function Phone(props: PhoneProps) {
       error={status === 'error'}
       label={label}
       value={inputValue}
-      InputProps={{ ...testProp }}
+      slotProps={{ input: { ...testProp } }}
     />
   );
 }

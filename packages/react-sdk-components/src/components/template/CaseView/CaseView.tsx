@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 
-import { PropsWithChildren, ReactElement, useContext, useEffect, useState } from 'react';
+import { type PropsWithChildren, type ReactElement, useContext, useEffect, useState } from 'react';
 import { Avatar, Card, CardHeader, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import Box from '@mui/material/Box';
@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid';
 import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import { PConnProps } from '../../../types/PConnProps';
+import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
