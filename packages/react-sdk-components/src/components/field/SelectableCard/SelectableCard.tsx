@@ -1,7 +1,6 @@
 import { Radio, Checkbox, FormControlLabel, Card, CardContent, Typography } from '@mui/material';
 import { resolveReferenceFields } from './utils';
 
-
 export default function SelectableCard(props) {
   const {
     getPConnect,
@@ -78,11 +77,27 @@ export default function SelectableCard(props) {
         const component = (
           <div style={{ paddingTop: '15px' }}>
             <Card className={className} style={{ display: 'flex', height: '500px' }} data-testid={testId}>
-              <CardContent style={{
-                ...(imagePosition === 'inline-start' && { display: 'flex' })
-              }}>
+              <CardContent
+                style={{
+                  ...(imagePosition === 'inline-start' && { display: 'flex' })
+                }}
+              >
                 <div>
-                  {image && <img src={image.src} alt={image.alt} style={{ width: '100%', backgroundColor: 'rgb(233, 238, 243)', aspectRatio: '16 / 9', maxHeight: '100%', height: '100%', objectFit: 'contain', maxWidth: '100%' }} />}
+                  {image && (
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      style={{
+                        width: '100%',
+                        backgroundColor: 'rgb(233, 238, 243)',
+                        aspectRatio: '16 / 9',
+                        maxHeight: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        maxWidth: '100%'
+                      }}
+                    />
+                  )}
                 </div>
                 <div>
                   {type === 'radio' ? (
@@ -100,7 +115,9 @@ export default function SelectableCard(props) {
                         />
                       }
                       label={<Typography variant='body1'>{item[cardLabel]}</Typography>}
-                    />) : (<FormControlLabel
+                    />
+                  ) : (
+                    <FormControlLabel
                       control={
                         <Checkbox
                           id={item[recordKey]}
@@ -115,11 +132,13 @@ export default function SelectableCard(props) {
                         />
                       }
                       label={<Typography variant='body1'>{item[cardLabel]}</Typography>}
-                    />)}
+                    />
+                  )}
 
                   {commonProps.fields.map((field, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <div key={index}
+                    <div
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
                       style={{
                         fontSize: '0.875rem',
                         ...(field.type !== 'TextArea' && { display: 'grid', gridTemplateColumns: '1fr 1fr' }),

@@ -225,10 +225,10 @@ export function resolveReferenceFields(
     return hideFieldLabels
       ? { id: `${item[recordKey]} - ${index}`, value: fieldInfo.value }
       : {
-        id: `${item[recordKey]} - ${index}`,
-        name: fieldInfo.name,
-        value: fieldInfo.value,
-        type: preset.type
-      };
+          id: `${item[recordKey]} - ${index}`,
+          name: fieldInfo.name,
+          value: fieldInfo.value,
+          type: preset.type
+        };
   });
 }
