@@ -82,6 +82,7 @@ import ScalarList from './components/field/ScalarList';
 import SearchForm from './components/template/DataReference/SearchForm';
 import SearchGroups from './components/template/AdvancedSearch/SearchGroups';
 import SemanticLink from './components/field/SemanticLink';
+import SelectableCard from './components/field/SelectableCard';
 import SimpleTable from './components/template/SimpleTable/SimpleTable';
 import SimpleTableManual from './components/template/SimpleTable/SimpleTableManual';
 import SimpleTableSelect from './components/template/SimpleTable/SimpleTableSelect';
@@ -198,6 +199,7 @@ const pegaSdkComponentMap = {
   ScalarList,
   SearchForm,
   SearchGroups,
+  SelectableCard,
   SemanticLink,
   SimpleTable,
   SimpleTableManual,
