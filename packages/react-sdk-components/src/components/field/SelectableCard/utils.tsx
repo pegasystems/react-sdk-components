@@ -1,5 +1,4 @@
 import { Link } from '@mui/material';
-import { ReactNode } from 'react';
 
 export const getResolvedConstantValue = (pConnect, key) => {
   // @ts-ignore
@@ -220,7 +219,7 @@ export function resolveReferenceFields(
     const meta = configObj.getPConnect().getMetadata();
     const fieldInfo: {
       name?: string;
-      value?: ReactNode;
+      value?: React.ReactNode;
     } = meta ? prepareComponentInCaseSummary(meta, configObj.getPConnect) : {};
     return hideFieldLabels
       ? { id: `${item[recordKey]} - ${index}`, value: fieldInfo.value }

@@ -49,10 +49,10 @@ export default function SelectableCard(props) {
 
         const image = item[imageField]
           ? {
-            src: item[imageField],
-            alt: showImageDescription && imageDescriptionKey ? item[imageDescriptionKey] : '',
-            style: { width: imageSize, objectPosition: imagePosition }
-          }
+              src: item[imageField],
+              alt: showImageDescription && imageDescriptionKey ? item[imageDescriptionKey] : '',
+              style: { width: imageSize, objectPosition: imagePosition }
+            }
           : undefined;
 
         const cardContent = (
