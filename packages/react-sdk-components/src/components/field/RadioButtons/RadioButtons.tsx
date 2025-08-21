@@ -5,12 +5,20 @@ import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { PConnFieldProps } from '../../../types/PConnProps';
+import SelectableCard from '../SelectableCard/SelectableCard';
 
 // Can't use RadioButtonProps until getLocaleRuleNameFromKeys is NOT private
 interface RadioButtonsProps extends PConnFieldProps {
   // If any, enter additional props that only exist on RadioButtons here
   inline: boolean;
   fieldMetadata?: any;
+  variant?: string;
+  hideFieldLabels?: boolean;
+  additionalProps?: any;
+  imagePosition?: string;
+  imageSize?: string;
+  showImageDescription?: boolean;
+  datasource?: any;
 }
 
 export default function RadioButtons(props: RadioButtonsProps) {
@@ -29,7 +37,14 @@ export default function RadioButtons(props: RadioButtonsProps) {
     inline,
     displayMode,
     hideLabel,
-    fieldMetadata
+    fieldMetadata,
+    variant,
+    hideFieldLabels,
+    additionalProps,
+    datasource,
+    imagePosition,
+    imageSize,
+    showImageDescription
   } = props;
   const [theSelectedButton, setSelectedButton] = useState(value);
 
@@ -65,6 +80,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
+        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
       />
     );
@@ -74,6 +90,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
+        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         variant='stacked'
       />
@@ -87,6 +104,36 @@ export default function RadioButtons(props: RadioButtonsProps) {
   const handleBlur = event => {
     thePConn.getValidationApi().validate(event.target.value, ''); // 2nd arg empty string until typedef marked correctly as optional
   };
+
+  if (variant === 'card') {
+    const stateProps = thePConn.getStateProps();
+    return (
+      <div>
+        <h4 style={{ marginTop: 0, marginBottom: 0 }}>{label}</h4>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 40ch), 1fr))', gridAutoRows: '1fr', gap: '0.5rem' }}>
+          <SelectableCard
+            hideFieldLabels={hideFieldLabels}
+            additionalProps={additionalProps}
+            getPConnect={getPConnect}
+            dataSource={datasource}
+            image={{
+              imagePosition,
+              imageSize,
+              showImageDescription,
+              imageField: stateProps.image?.split('.').pop(),
+              imageDescription: stateProps.imageDescription?.split('.').pop()
+            }}
+            onChange={handleChange}
+            recordKey={stateProps.value?.split('.').pop()}
+            cardLabel={stateProps.primaryField?.split('.').pop()}
+            radioBtnValue={value}
+            type='radio'
+            setIsRadioCardSelected={displayMode !== 'DISPLAY_ONLY' ? setSelectedButton : undefined}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <FormControl variant='standard' error={status === 'error'} required={required}>

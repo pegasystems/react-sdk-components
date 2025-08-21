@@ -7,6 +7,7 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../helpers/instructions-utils';
 import { PConnFieldProps } from '../../../types/PConnProps';
+import SelectableCard from '../SelectableCard/SelectableCard';
 
 interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on Checkbox here
@@ -21,6 +22,14 @@ interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   primaryField: string;
   readonlyContextList: any;
   referenceList: string;
+  variant?: string;
+  hideFieldLabels: boolean;
+  additionalProps: any;
+  imagePosition: string;
+  imageSize: string;
+  showImageDescription: string;
+  renderMode: string;
+  image: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -56,8 +65,17 @@ export default function CheckboxComponent(props: CheckboxProps) {
     selectionList,
     primaryField,
     referenceList,
-    readonlyContextList: selectedvalues
+    readonlyContextList: selectedvalues,
+    variant,
+    hideFieldLabels,
+    additionalProps,
+    imagePosition,
+    imageSize,
+    showImageDescription,
+    renderMode,
+    image
   } = props;
+  const [theSelectedButton, setSelectedButton] = useState(value);
   const classes = useStyles();
   const helperTextToDisplay = validatemessage || helperText;
   const thePConn = getPConnect();
@@ -77,6 +95,11 @@ export default function CheckboxComponent(props: CheckboxProps) {
     }
   }, [thePConn]);
 
+  useEffect(() => {
+    // This update theSelectedButton which will update the UI to show the selected button correctly
+    setSelectedButton(value);
+  }, [value]);
+
   if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} />;
   }
@@ -92,6 +115,66 @@ export default function CheckboxComponent(props: CheckboxProps) {
   const handleBlur = event => {
     thePConn.getValidationApi().validate(event.target.checked);
   };
+
+  const handleCheckboxChange = (event, item) => {
+    if (event.target.checked) {
+      insertInstruction(thePConn, selectionList, selectionKey, primaryField, item);
+    } else {
+      deleteInstruction(thePConn, selectionList, selectionKey, item);
+    }
+    thePConn.clearErrorMessages({ property: selectionList });
+  };
+
+  const actions = thePConn.getActionsApi();
+
+  const commonProps = {
+    ...additionalProps,
+    className: 'standard',
+    disabled,
+    readOnly,
+    onClick: (actions as any).onClick
+  };
+
+  if (variant === 'card') {
+    return (
+      <div>
+        <h4 style={{ marginTop: 0, marginBottom: 0 }}>{label}</h4>
+        <SelectableCard
+          {...commonProps}
+          testId={testId}
+          displayMode={displayMode}
+          dataSource={datasource}
+          getPConnect={getPConnect}
+          readOnly={renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY' || readOnly}
+          onChange={e => {
+            e.stopPropagation();
+            const recordKey = selectionKey?.split('.').pop();
+            const selectedItem = datasource?.source?.find(item => item[recordKey as any] === e.target.id) ?? {};
+            handleCheckboxChange(e, {
+              id: selectedItem[recordKey as any],
+              primary: selectedItem[recordKey as any]
+            });
+          }}
+          onBlur={() => {
+            thePConn.getValidationApi().validate(selectedvalues, selectionList);
+          }}
+          hideFieldLabels={hideFieldLabels}
+          recordKey={selectionKey?.split('.').pop()}
+          cardLabel={primaryField.split('.').pop()}
+          image={{
+            imagePosition,
+            imageSize,
+            showImageDescription,
+            imageField: image?.split('.').pop(),
+            imageDescription: (thePConn?.getRawMetadata()?.config as any).imageDescription?.split('.').pop()
+          }}
+          readOnlyList={selectedvalues}
+          type='checkbox'
+          showNoValue={(renderMode === 'ReadOnly' || readOnly || displayMode === 'DISPLAY_ONLY') && selectedvalues.length === 0}
+        />
+      </div>
+    );
+  }
 
   const handleChangeMultiMode = (event, element) => {
     if (event.target.checked) {
