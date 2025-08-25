@@ -30,7 +30,8 @@ interface AppShellProps extends PConnProps {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex'
+    display: 'flex',
+    backgroundColor: theme.backgroundColor
   },
   content: {
     flexGrow: 1,
@@ -212,7 +213,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
 
   if (portalTemplate === 'wss') {
     return (
-      <div id='AppShell'>
+      <div id='AppShell' className={classes.root}>
         <WssNavBar
           portalName={portalName}
           imageSrc={iconURL}

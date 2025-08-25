@@ -10,10 +10,7 @@ interface ActionButtonsProps {
   onButtonPress: any;
 }
 
-const useStyles = makeStyles((/* theme */) => ({
-  button: {
-    padding: '0px 5px'
-  },
+const useStyles = makeStyles(() => ({
   divider: {
     marginTop: '10px',
     marginBottom: '10px'
@@ -39,8 +36,9 @@ export default function ActionButtons(props: ActionButtonsProps) {
             {arSecondaryButtons.map((sButton) => (
               <Grid2 key={sButton.name}>
                 <Button
-                  variant='contained'
+                  // className={classes.secondaryButton}
                   color='secondary'
+                  variant='contained'
                   onClick={() => {
                     _onButtonPress(sButton.jsAction, 'secondary');
                   }}
@@ -56,8 +54,9 @@ export default function ActionButtons(props: ActionButtonsProps) {
             {arMainButtons.map((mButton) => (
               <Grid2 key={mButton.name}>
                 <Button
-                  variant='contained'
+                  // className={classes.primaryButton}
                   color='primary'
+                  variant='contained'
                   onClick={() => {
                     _onButtonPress(mButton.jsAction, 'primary');
                   }}

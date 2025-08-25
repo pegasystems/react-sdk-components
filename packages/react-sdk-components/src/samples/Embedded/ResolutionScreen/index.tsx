@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '28px',
     lineHeight: '40px',
     padding: '20px 20px',
-    color: 'darkslategray'
+    color: theme.embedded.resolutionTextColor
   },
   pegaPartAccompanimentImage: {
     width: '700px',
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px'
   },
   resolutionButton: {
-    color: 'white',
+    color: 'var(--app-text-color)',
     backgroundColor: theme.palette.warning.main,
     fontSize: '25px',
     fontWeight: 'bold',

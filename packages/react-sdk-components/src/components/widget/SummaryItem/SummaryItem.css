@@ -11,6 +11,10 @@
   flex-direction: row;
   padding: 0.25rem 0rem 0.25rem 0.25rem;
   margin-bottom: 0.5rem;
+  align-items: center;
+  border: 0.0625rem solid var(--utility-card-border-color);
+  border-radius: calc(0.25rem);
+  min-height: 3rem;
 }
 
 .psdk-utility-card-icon {
@@ -42,14 +46,6 @@
   display: inline-block;
 }
 
-.psdk-utility-card {
-  display: flex;
-  align-items: center;
-  border: 0.0625rem solid rgb(207, 207, 207);
-  border-radius: calc(0.25rem);
-  min-height: 3rem;
-}
-
 .psdk-utility-button {
   background: none;
   border: none;
@@ -68,11 +64,11 @@
   filter: invert(28%) sepia(20%) saturate(3903%) hue-rotate(209deg) brightness(101%) contrast(87%);
 }
 
-.psdk-link-button {
+.psdk-utility-link-button {
   background: none;
   border: none;
   align-items: center;
   display: flex;
   padding: 0;
-  color: #3f51b5;
+  color: var(--link-button-color);
 }

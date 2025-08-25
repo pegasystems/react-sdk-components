@@ -28,7 +28,7 @@ function RootComponent(props) {
   return <StoreContext.Provider value={contextValue}>{thePConnObj}</StoreContext.Provider>;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   embedMainScreen: {
     display: 'flex',
     flexDirection: 'column',
@@ -65,7 +65,7 @@ const useStyles = makeStyles(() => ({
     fontSize: '30px',
     lineHeight: '40px',
     padding: '20px 20px',
-    color: 'darkslategray'
+    color: theme.embedded.resolutionTextColor
   },
   pegaPartAccompanimentImage: {
     width: '100%',

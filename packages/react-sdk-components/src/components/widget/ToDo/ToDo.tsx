@@ -97,6 +97,17 @@ const useStyles = makeStyles((theme) => ({
     borderLeftColor: theme.palette.primary.light,
     padding: theme.spacing(1),
     margin: theme.spacing(1)
+  },
+  psdkTodoAssignmentStatus: {
+    backgroundColor: 'var(--app-neutral-light-color)',
+    borderRadius: '0.125rem',
+    color: theme.embedded.resolutionTextColor,
+    fontSize: '0.75rem',
+    fontWeight: 'bold',
+    lineHeight: 'calc(0.5rem * 2.5)',
+    height: 'calc(0.5rem * 2.5)',
+    padding: '0 0.5rem',
+    textTransform: 'uppercase'
   }
 }));
 

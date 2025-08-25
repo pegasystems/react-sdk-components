@@ -42,14 +42,14 @@ export default function CancelAlert(props: CancelAlertProps) {
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   function disableButton(id) {
-    setButtonsState((prevState) => ({
+    setButtonsState(prevState => ({
       ...prevState,
       [id]: true
     }));
   }
 
   function enableButton(id) {
-    setButtonsState((prevState) => ({
+    setButtonsState(prevState => ({
       ...prevState,
       [id]: false
     }));

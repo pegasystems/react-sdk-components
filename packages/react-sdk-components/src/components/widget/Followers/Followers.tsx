@@ -17,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1)
-    // borderLeft: "6px solid",
-    // borderLeftColor: green[300]
   }
 }));
 

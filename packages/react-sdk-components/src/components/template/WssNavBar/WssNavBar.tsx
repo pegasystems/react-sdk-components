@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     width: '3.6rem'
   },
   appName: {
-    color: 'white',
+    color: 'var(--app-text-color)',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(4),
     fontSize: '1.5rem'
