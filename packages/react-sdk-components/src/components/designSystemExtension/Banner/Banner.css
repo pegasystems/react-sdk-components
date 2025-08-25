@@ -8,7 +8,7 @@
 
 .background-style {
   background-color: transparent;
-  color: rgb(0, 0, 0);
+  color: var(--banner-text-color);
   width: 100%;
   height: 100%;
   text-align: center;

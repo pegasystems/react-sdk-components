@@ -18,7 +18,7 @@
 
   "serverConfig": {
     "infinityRestServerUrl_comment": "Full path to Infinity REST server",
-    "infinityRestServerUrl": "https://localhost:1080/prweb",
+    "infinityRestServerUrl": "https://dxaui242d.lab.pega.com/prweb",
 
     "appAlias_comment": "appAlias of the application which operators will be accessing (e.g., MediaCo)",
     "appAlias": "",
@@ -34,5 +34,9 @@
 
     "excludePortals_comment": "Array of specific portals to avoid attempting to load with SDK",
     "excludePortals": ["pxExpress", "Developer", "pxPredictionStudio", "pxAdminStudio", "pyCaseWorker", "pyCaseManager7"]
+  },
+
+  "sdkConfig": {
+    "theme": "dark"
   }
 }

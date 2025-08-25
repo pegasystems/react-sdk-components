@@ -124,7 +124,7 @@ export default function CancelAlert(props: CancelAlertProps) {
           <div>
             <p>{localizedVal(content, localeCategory)}</p>
           </div>
-          <div className='action-controls'>
+          <div>
             <Grid container spacing={4} justifyContent='space-between'>
               <Grid item>{leftButton}</Grid>
               <Grid item>{rightButton}</Grid>

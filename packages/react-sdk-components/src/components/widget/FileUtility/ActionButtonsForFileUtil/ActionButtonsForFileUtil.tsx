@@ -15,14 +15,14 @@ export default function ActionButtonsForFileUtil(props: ActionButtonsForFileUtil
     <div className='psdk-actions'>
       <div className='psdk-action-buttons'>
         {props.arSecondaryButtons.map(file => (
-          <Button className='secondary-button' key={file.actionID} onClick={props.secondaryAction}>
+          <Button className='secondary-button' color='secondary' variant='contained' key={file.actionID} onClick={props.secondaryAction}>
             {file.name}
           </Button>
         ))}
       </div>
       <div className='psdk-action-buttons'>
         {props.arMainButtons.map(file => (
-          <Button className='primary-button' key={file.actionID} onClick={props.primaryAction}>
+          <Button className='primary-button' color='primary' variant='contained' key={file.actionID} onClick={props.primaryAction}>
             {file.name}
           </Button>
         ))}
