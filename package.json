@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@pega/configs": "^0.16.3",
-    "@pega/constellationjs": "~24.2.2",
+    "@pega/constellationjs": "^0.25.1",
     "@pega/eslint-config": "^0.17.0",
     "@pega/pcore-pconnect-typedefs": "~3.2.2",
     "@pega/tsconfig": "^0.17.0",
