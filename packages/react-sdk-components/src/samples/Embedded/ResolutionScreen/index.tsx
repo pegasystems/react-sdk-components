@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
   pegaPartAccompanimentImage: {
     width: '700px',
     margin: '20px',
-    borderRadius: '10px'
+    borderRadius: '10px',
+    filter: 'var(--svg-color)'
   },
   resolutionButton: {
     color: 'var(--app-text-color)',

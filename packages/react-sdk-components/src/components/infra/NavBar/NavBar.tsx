@@ -93,7 +93,8 @@ const useStyles = makeStyles((theme) => ({
   },
   appListLogo: {
     marginRight: theme.spacing(2),
-    width: '3.6rem'
+    width: '3.6rem',
+    filter: 'var(--svg-color)'
   },
   appListIcon: {
     color: theme.palette.getContrastText(theme.palette.primary.light)

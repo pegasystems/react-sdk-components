@@ -27,6 +27,7 @@
 .psdk-utility-card-svg-icon {
   width: 2.5rem;
   display: inline-block;
+  filter: var(--svg-color);
 }
 
 .psdk-utility-card-main {
@@ -44,6 +45,7 @@
 .psdk-utility-card-action-svg-icon {
   width: 1.4rem;
   display: inline-block;
+  filter: var(--svg-color);
 }
 
 .psdk-utility-button {
@@ -61,7 +63,8 @@
   width: 1.4rem;
   display: inline-block;
   vertical-align: middle;
-  filter: invert(28%) sepia(20%) saturate(3903%) hue-rotate(209deg) brightness(101%) contrast(87%);
+  filter: var(--svg-color);
+  /* filter: invert(28%) sepia(20%) saturate(3903%) hue-rotate(209deg) brightness(101%) contrast(87%); */
 }
 
 .psdk-utility-link-button {

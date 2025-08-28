@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1)
   },
   caseViewIconImage: {
-    filter: 'invert(100%)'
+    filter: 'var(--svg-color)'
   }
 }));
 

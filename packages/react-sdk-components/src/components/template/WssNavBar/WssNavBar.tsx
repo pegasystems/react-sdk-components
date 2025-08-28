@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2)
   },
   appListLogo: {
-    width: '3.6rem'
+    width: '3.6rem',
+    filter: 'var(--svg-color)'
   },
   appName: {
     color: 'var(--app-text-color)',

@@ -58,6 +58,7 @@
 .psdk-utility-card-svg-icon {
   width: 2.5rem;
   display: inline-block;
+  filter: var(--svg-color);
 }
 
 .psdk-utility-card-main {
@@ -75,6 +76,7 @@
 .psdk-utility-card-action-svg-icon {
   width: 1.4rem;
   display: inline-block;
+  filter: var(--svg-color);
 }
 
 .psdk-utility-button {

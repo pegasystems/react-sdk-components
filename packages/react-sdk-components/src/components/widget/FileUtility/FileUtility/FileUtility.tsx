@@ -9,6 +9,7 @@ import download from 'downloadjs';
 import './FileUtility.css';
 import { IconButton, Menu, MenuItem, Button, CircularProgress } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AttachmentIcon from '@mui/icons-material/Attachment';
 
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
@@ -494,7 +495,10 @@ export default function FileUtility(props: FileUtilityProps) {
         </div>
       )}
       <div className='psdk-header'>
+        {/* <IconButton> */}
         <img className='psdk-file-utility-card-svg-icon' src={headerSvgIcon$} />
+        {/* <AttachmentIcon /> */}
+        {/* </IconButton> */}
         <div className='header-text'>{header}</div>
         <div className='psdk-utility-count' id='attachments-count'>
           {list.count}
