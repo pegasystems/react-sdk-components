@@ -16,6 +16,7 @@
 .psdk-file-utility-card-svg-icon {
   width: 1.4rem;
   display: inline-block;
+  filter: var(--svg-color);
 }
 
 .header-text {

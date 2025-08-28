@@ -70,7 +70,8 @@ const useStyles = makeStyles(theme => ({
   },
   pegaPartAccompanimentImage: {
     width: '100%',
-    borderRadius: '10px'
+    borderRadius: '10px',
+    filter: 'var(--svg-color)'
   }
 }));
 

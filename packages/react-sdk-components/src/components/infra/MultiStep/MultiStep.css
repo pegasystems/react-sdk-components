@@ -17,7 +17,8 @@
 
 .psdk-current-svg-icon {
   width: 1rem;
-  filter: var(--app-primary-color-filter);
+  /* filter: var(--app-primary-color-filter); */
+  filter: var(--svg-color);
 }
 
 .psdk-not-current-svg-icon {
@@ -178,7 +179,7 @@ mat-horizontal-stepper {
   padding: 0 24px;
 }
 
-.psdk-horizontal-step-icon{
+.psdk-horizontal-step-icon {
   background-color: var(--app-neutral-color);
   color: var(--app-text-color);
   border-radius: 50%;
@@ -212,7 +213,7 @@ mat-horizontal-stepper {
   flex: none;
 }
 
-.psdk-horizontal-step-label{
+.psdk-horizontal-step-label {
   color: rgba(0, 0, 0, 0.54);
   display: inline-block;
   min-width: 50px;

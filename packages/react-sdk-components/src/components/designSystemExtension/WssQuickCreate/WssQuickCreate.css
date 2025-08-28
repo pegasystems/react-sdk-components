@@ -26,7 +26,7 @@
   width: 1em;
   height: 1em;
   flex-shrink: 0;
-  filter: invert(100%);
+  filter: var(--svg-color);
 }
 
 .quick-link-button-span {

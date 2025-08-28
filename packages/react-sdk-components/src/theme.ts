@@ -73,7 +73,8 @@ const lightThemeColours = {
     '--table-header-background': '#f5f5f5',
     '--step-line-color': 'rgba(0, 0, 0, 0.12)',
     '--selected-step-label-color': 'rgba(0, 0, 0, 0.87)',
-    '--step-label-color': 'rgba(0, 0, 0, 0.54)'
+    '--step-label-color': 'rgba(0, 0, 0, 0.54)',
+    '--svg-color': 'invert(0%)'
   }
 };
 const darkThemeColours = {
@@ -113,7 +114,8 @@ const darkThemeColours = {
     '--table-header-background': '#18132c',
     '--step-line-color': 'rgba(0, 0, 0, 0.12)',
     '--selected-step-label-color': 'rgba(0, 0, 0, 0.87)',
-    '--step-label-color': 'rgba(0, 0, 0, 0.54)'
+    '--step-label-color': 'rgba(0, 0, 0, 0.54)',
+    '--svg-color': 'invert(100%)'
   }
 };
 
