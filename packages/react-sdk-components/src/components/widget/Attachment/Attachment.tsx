@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-nested-ternary */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { CircularProgress, IconButton, Menu, MenuItem, Button } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import download from 'downloadjs';
 
-import { buildFilePropsFromResponse, getIconFromFileType, validateMaxSize } from '../../helpers/attachmentHelpers';
+import { getIconFromFileType, isFileUploadedToServer, useFileDownload, validateMaxSize } from '../../helpers/attachmentHelpers';
+
 import { Utils } from '../../helpers/utils';
 import { PConnFieldProps } from '../../../types/PConnProps';
 
@@ -19,7 +19,9 @@ interface AttachmentProps extends Omit<PConnFieldProps, 'value'> {
   extensions: string;
 }
 
-const getAttachmentKey = (name = '') => (name ? `attachmentsList.${name}` : 'attachmentsList');
+const getAttachmentKey = (name, embeddedReference) => {
+  return `attachmentsList${embeddedReference}.${name}`;
+};
 
 const getCurrentAttachmentsList = (key, context) => {
   return PCore.getStoreValue(`.${key}`, 'context_data', context) || [];
@@ -38,61 +40,65 @@ export default function Attachment(props: AttachmentProps) {
   let { required, disabled } = props;
   [required, disabled] = [required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
   const pConn = getPConnect();
+
+  const actionSequencer = useMemo(() => PCore.getActionsSequencer(), []);
   const caseID = PCore.getStoreValue('.pyID', 'caseInfo.content', pConn.getContextName());
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'CosmosFields';
   const uploadMultipleFilesLabel = localizedVal('file_upload_text_multiple', localeCategory);
   const uploadSingleFileLabel = localizedVal('file_upload_text_one', localeCategory);
-  let categoryName = '';
-  if (value && value.pyCategoryName) {
-    categoryName = value.pyCategoryName;
-  }
   const deleteIcon = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
   const srcImg = Utils.getImageSrc('document-doc', Utils.getSDKStaticConentUrl());
   let valueRef = (pConn.getStateProps() as any).value;
   valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [files, setFiles] = useState<any[]>(() =>
-    value?.pxResults && +value.pyCount > 0 ? value.pxResults.map(f => buildFilePropsFromResponse(f)) : []
-  );
+
+  const rawValue = pConn.getComponentConfig().value;
+  const isAttachmentAnnotationPresent = typeof rawValue === 'object' ? false : rawValue?.includes('@ATTACHMENT');
+  const { hasUploadedFiles, attachments, categoryName } = isAttachmentAnnotationPresent
+    ? value
+    : PCore.getAttachmentUtils().prepareAttachmentData(value);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [files, setFiles] = useState<any[]>(attachments);
   const [filesWithError, setFilesWithError] = useState<any[]>([]);
   const [toggleUploadBegin, setToggleUploadBegin] = useState(false);
 
+  const context = pConn.getContextName();
+  const onFileDownload = useFileDownload(context);
+
+  let embeddedProperty = pConn
+    .getPageReference()
+    .replace(PCore.getConstants().CASE_INFO.CASE_INFO_CONTENT, '')
+    .replace(PCore.getConstants().DATA_INFO.DATA_INFO_CONTENT, '');
+
+  if (valueRef?.indexOf('.') > 0) {
+    embeddedProperty = valueRef.substring(0, valueRef.indexOf('.') + 1);
+  }
+
   const resetAttachmentStoredState = () => {
-    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(valueRef), undefined, {
+    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(valueRef, embeddedProperty), undefined, {
       pageReference: 'context_data',
       isArrayDeepMerge: false
     });
   };
 
-  const fileDownload = (data, fileName, ext) => {
-    const fileData = ext ? `${fileName}.${ext}` : fileName;
-    download(atob(data), fileData);
-  };
-
-  const downloadFile = (fileObj: any) => {
-    setAnchorEl(null);
-    PCore.getAttachmentUtils()
-      // @ts-ignore - 3rd parameter "responseEncoding" should be optional
-      .downloadAttachment(fileObj.pzInsKey, pConn.getContextName())
-      .then((content: any) => {
-        const extension = fileObj.pyAttachName.split('.').pop();
-        fileDownload(content.data, fileObj.pyFileName, extension);
-      })
-      .catch(() => {});
-  };
-
   const deleteFile = useCallback(
     file => {
       setAnchorEl(null);
+
+      // reset the file input so that it will allow re-uploading the same file after deletion
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Reset the input
+      }
+
       let attachmentsList: any[] = [];
-      let currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef), pConn.getContextName());
+      let currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef, embeddedProperty), pConn.getContextName());
 
       // If file to be deleted is the one added in previous stage i.e. for which a file instance is created in server
       // no need to filter currentAttachmentList as we will get another entry of file in redux with delete & label
-      // eslint-disable-next-line no-unsafe-optional-chaining
-      if (value && value?.pxResults && +value?.pyCount > 0 && file.responseProps && file?.responseProps?.pzInsKey !== 'temp') {
+      if (hasUploadedFiles && isFileUploadedToServer(file)) {
         const updatedAttachments = files.map(f => {
           if (f.responseProps && f.responseProps.pzInsKey === file.responseProps.pzInsKey) {
             return { ...f, delete: true, label: valueRef };
@@ -101,27 +107,26 @@ export default function Attachment(props: AttachmentProps) {
         });
 
         // updating the redux store to help form-handler in passing the data to delete the file from server
-        updateAttachmentState(pConn, getAttachmentKey(valueRef), [...updatedAttachments]);
+        updateAttachmentState(pConn, getAttachmentKey(valueRef, embeddedProperty), [...updatedAttachments]);
         setFiles(current => {
           const newlyAddedFiles = current.filter(f => !!f.ID);
-          const filesPostDelete = current.filter(
-            f => f.responseProps?.pzInsKey !== 'temp' && f.responseProps?.pzInsKey !== file.responseProps?.pzInsKey
-          );
+          const filesPostDelete = current.filter(f => isFileUploadedToServer(f) && f.responseProps?.ID !== file.responseProps?.ID);
           attachmentsList = [...filesPostDelete, ...newlyAddedFiles];
           return attachmentsList;
         });
       } //  if the file being deleted is the added in this stage  i.e. whose data is not yet created in server
       else {
         // filter newly added files in this stage, later the updated current stage files will be added to redux once files state is updated in below setFiles()
-        currentAttachmentList = currentAttachmentList.filter(f => f.label !== valueRef);
-        setFiles(current => {
-          attachmentsList = current.filter(f => f.ID !== file.ID);
-          return attachmentsList;
-        });
-        updateAttachmentState(pConn, getAttachmentKey(valueRef), [...currentAttachmentList, ...attachmentsList]);
+        currentAttachmentList = currentAttachmentList.filter(f => !f.props.error && (f.delete || f.label !== valueRef));
+        setFiles(current => current.filter(f => f.ID !== file.ID));
+        updateAttachmentState(pConn, getAttachmentKey(valueRef, embeddedProperty), [...currentAttachmentList, ...attachmentsList]);
         if (file.inProgress) {
           // @ts-ignore - 3rd parameter "responseEncoding" should be optional
           PCore.getAttachmentUtils().cancelRequest(file.ID, pConn.getContextName());
+          actionSequencer.deRegisterBlockingAction(pConn.getContextName()).catch(error => {
+            // eslint-disable-next-line no-console
+            console.log(error);
+          });
         }
       }
 
@@ -130,7 +135,7 @@ export default function Attachment(props: AttachmentProps) {
         return prevFilesWithError.filter(f => f.ID !== file.ID);
       });
     },
-    [pConn, value, valueRef, filesWithError]
+    [valueRef, pConn, hasUploadedFiles, filesWithError, hasUploadedFiles, actionSequencer]
   );
 
   const onUploadProgress = () => {};
@@ -152,7 +157,6 @@ export default function Attachment(props: AttachmentProps) {
               f.props.name = pConn.getLocalizedValue('Unable to upload file', '', '');
               f.inProgress = false;
               const fieldName = (pConn.getStateProps() as any).value;
-              const context = pConn.getContextName();
               // set errors to property to block submit even on errors in file upload
               PCore.getMessageManager().addMessages({
                 messages: [
@@ -189,7 +193,6 @@ export default function Attachment(props: AttachmentProps) {
 
   const clearFieldErrorMessages = () => {
     const fieldName = (pConn.getStateProps() as any).value;
-    const context = pConn.getContextName();
     PCore.getMessageManager().clearMessages({
       type: PCore.getConstants().MESSAGES.MESSAGES_TYPE_ERROR,
       property: fieldName,
@@ -226,7 +229,6 @@ export default function Attachment(props: AttachmentProps) {
         }
         if (f.props.error) {
           const fieldName = (pConn.getStateProps() as any).value;
-          const context = pConn.getContextName();
           PCore.getMessageManager().addMessages({
             messages: [
               {
@@ -315,12 +317,12 @@ export default function Attachment(props: AttachmentProps) {
 
   useEffect(() => {
     if (files.length > 0 && displayMode !== 'DISPLAY_ONLY') {
-      const currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef), pConn.getContextName());
+      const currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef, embeddedProperty), pConn.getContextName());
       // block duplicate files to redux store when added 1 after another to prevent multiple duplicates being added to the case on submit
       const tempFiles = files.filter(f => currentAttachmentList.findIndex(fr => fr.ID === f.ID) === -1 && !f.inProgress && f.responseProps);
 
       const updatedAttList = [...currentAttachmentList, ...tempFiles];
-      updateAttachmentState(pConn, getAttachmentKey(valueRef), updatedAttList);
+      updateAttachmentState(pConn, getAttachmentKey(valueRef, embeddedProperty), updatedAttList);
     }
   }, [files]);
 
@@ -331,7 +333,7 @@ export default function Attachment(props: AttachmentProps) {
   }, [filesWithError]);
 
   useEffect(() => {
-    let tempUploadedFiles = getCurrentAttachmentsList(getAttachmentKey(valueRef), pConn.getContextName());
+    let tempUploadedFiles = getCurrentAttachmentsList(getAttachmentKey(valueRef, embeddedProperty), pConn.getContextName());
     tempUploadedFiles = tempUploadedFiles.filter(f => f.label === valueRef);
     setFiles(current => {
       return [
@@ -349,9 +351,13 @@ export default function Attachment(props: AttachmentProps) {
         ...tempUploadedFiles
       ];
     });
-    PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, resetAttachmentStoredState, caseID);
+    if (displayMode !== 'DISPLAY_ONLY') {
+      PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, resetAttachmentStoredState, caseID);
+    }
     return () => {
-      PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, caseID);
+      if (displayMode !== 'DISPLAY_ONLY') {
+        PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, caseID);
+      }
     };
   }, []);
 
@@ -435,7 +441,10 @@ export default function Attachment(props: AttachmentProps) {
                       <MenuItem
                         style={{ fontSize: '14px' }}
                         key='download'
-                        onClick={() => downloadFile(item.responseProps ? item.responseProps : {})}
+                        onClick={() => {
+                          setAnchorEl(null);
+                          onFileDownload(item.responseProps ? item.responseProps : {});
+                        }}
                       >
                         Download
                       </MenuItem>
