@@ -123,10 +123,8 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
               slotProps={{
                 input: {
                   readOnly: true,
-                  inputProps: {
-                    style: { cursor: 'pointer' },
-                    disableUnderline: true
-                  }
+                  disableUnderline: true,
+                  inputProps: { style: { cursor: 'pointer' } }
                 }
               }}
             />
