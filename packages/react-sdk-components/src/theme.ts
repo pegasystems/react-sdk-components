@@ -74,7 +74,8 @@ const lightThemeColours = {
     '--step-line-color': 'rgba(0, 0, 0, 0.12)',
     '--selected-step-label-color': 'rgba(0, 0, 0, 0.87)',
     '--step-label-color': 'rgba(0, 0, 0, 0.54)',
-    '--svg-color': 'invert(0%)'
+    '--svg-color': 'invert(0%)',
+    '--secondary-button-text-color': '#ffffff'
   }
 };
 const darkThemeColours = {
@@ -115,11 +116,11 @@ const darkThemeColours = {
     '--step-line-color': 'rgba(0, 0, 0, 0.12)',
     '--selected-step-label-color': 'rgba(0, 0, 0, 0.87)',
     '--step-label-color': 'rgba(0, 0, 0, 0.54)',
-    '--svg-color': 'invert(100%)'
+    '--svg-color': 'invert(100%)',
+    '--secondary-button-text-color': '#1a103c'
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
 const lightTheme = createTheme({
   components: {
     MuiCssBaseline: {
