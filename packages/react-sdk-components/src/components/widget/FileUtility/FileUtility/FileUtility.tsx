@@ -9,7 +9,6 @@ import download from 'downloadjs';
 import './FileUtility.css';
 import { IconButton, Menu, MenuItem, Button, CircularProgress } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AttachmentIcon from '@mui/icons-material/Attachment';
 
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';

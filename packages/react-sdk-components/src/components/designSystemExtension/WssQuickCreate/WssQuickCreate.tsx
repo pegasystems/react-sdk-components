@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import './WssQuickCreate.css';
 
 // WssQuickCreate is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
@@ -16,7 +17,7 @@ export default function WssQuickCreate(props: WssQuickCreateProps) {
       <h1 id='quick-links-heading' className='quick-links-heading'>
         {heading}
       </h1>
-      <ul id='quick-links' className='quick-links-ul-list'>
+      <ul id='quick-links' className='quick-link-ul-list'>
         {actions &&
           actions.map((element) => {
             return (
