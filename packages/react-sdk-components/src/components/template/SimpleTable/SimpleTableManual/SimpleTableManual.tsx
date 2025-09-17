@@ -163,6 +163,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const menuIconOverride$ = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
 
   const resolvedFields = children?.[0]?.children || presets?.[0].children?.[0].children;
+  const primaryFieldsViewIndex = resolvedFields.findIndex(field => field.config.value === 'pyPrimaryFields');
   // NOTE: props has each child.config with datasource and value undefined
   //  but getRawMetadata() has each child.config with datasource and value showing their unresolved values (ex: "@P thePropName")
   //  We need to use the prop name as the "glue" to tie the table dataSource, displayColumns and data together.
@@ -208,7 +209,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   //  Constellation DX Components do). It will also have the "label", and "meta" contains the original,
   //  unchanged config info. For now, much of the info here is carried over from
   //  Constellation DX Components.
-  const fieldDefs = buildFieldsForTable(rawFields, resolvedFields, showDeleteButton);
+  const fieldDefs = buildFieldsForTable(rawFields, getPConnect(), showDeleteButton, {
+    primaryFieldsViewIndex,
+    fields: resolvedFields
+  });
 
   useLayoutEffect(() => {
     if (allowEditingInModal) {
@@ -360,23 +364,25 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       const data: any = [];
       rawFields.forEach(item => {
         // removing label field from config to hide title in the table cell
-        item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'DISPLAY_ONLY' : undefined } };
-        const referenceListData = getReferenceList(pConn);
-        const isDatapage = referenceListData.startsWith('D_');
-        const pageReferenceValue = isDatapage
-          ? `${referenceListData}[${index}]`
-          : `${pConn.getPageReference()}${referenceListData.substring(referenceListData.lastIndexOf('.'))}[${index}]`;
-        const config = {
-          meta: item,
-          options: {
-            context,
-            pageReference: pageReferenceValue,
-            referenceList: referenceListData,
-            hasForm: true
-          }
-        };
-        const view = PCore.createPConnect(config);
-        data.push(createElement(createPConnectComponent(), view));
+        if (!item.config.hide) {
+          item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'DISPLAY_ONLY' : undefined } };
+          const referenceListData = getReferenceList(pConn);
+          const isDatapage = referenceListData.startsWith('D_');
+          const pageReferenceValue = isDatapage
+            ? `${referenceListData}[${index}]`
+            : `${pConn.getPageReference()}${referenceListData.substring(referenceListData.lastIndexOf('.'))}[${index}]`;
+          const config = {
+            meta: item,
+            options: {
+              context,
+              pageReference: pageReferenceValue,
+              referenceList: referenceListData,
+              hasForm: true
+            }
+          };
+          const view = PCore.createPConnect(config);
+          data.push(createElement(createPConnectComponent(), view));
+        }
       });
       eleData.push(data);
     });
@@ -608,6 +614,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           <TableHead className={classes.header}>
             <TableRow>
               {fieldDefs.map((field: any, index) => {
+                if (field?.meta?.config?.hide) {
+                  return null; // Skip rendering if hide = true
+                }
                 return (
                   <TableCell key={`head-${displayedColumns[index]}`} className={classes.tableCell}>
                     {(readOnlyMode || allowEditingInModal) && field.cellRenderer !== 'DeleteIcon' ? (
