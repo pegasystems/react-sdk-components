@@ -102,8 +102,6 @@ export default function ListView(props: ListViewProps) {
   // List component context
   const [listContext, setListContext] = useState<any>({});
   const { meta } = listContext;
-  const xRayApis = PCore.getDebugger().getXRayRuntime();
-  const xRayUid = xRayApis.startXRay();
   const { current: uniqueId } = useRef(crypto.randomUUID());
 
   useInit({
@@ -111,7 +109,6 @@ export default function ListView(props: ListViewProps) {
     setListContext,
     ref,
     showDynamicFields,
-    xRayUid,
     cosmosTableRef
   });
 

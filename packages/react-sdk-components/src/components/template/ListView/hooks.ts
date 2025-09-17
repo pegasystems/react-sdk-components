@@ -14,7 +14,6 @@ export default function useInit(props) {
     ref,
     showDynamicFields,
     isDataObject,
-    xRayUid,
     cosmosTableRef
   } = props;
   let { editing, selectionMode } = props;
@@ -73,8 +72,7 @@ export default function useInit(props) {
         getPConnect,
         compositeKeys,
         isSearchable,
-        isCacheable: true,
-        xRayUid
+        isCacheable: true
       }).then(async context => {
         if (isCompStillMounted) {
           return readContextResponse(context, {
@@ -83,7 +81,6 @@ export default function useInit(props) {
             selectionCountThreshold,
             ref,
             selectionMode,
-            xRayUid,
             cosmosTableRef
           });
         }
