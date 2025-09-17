@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Box, TextField, Alert } from '@mui/material';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
 
 interface LocationProps extends PConnFieldProps {
   coordinates?: string;

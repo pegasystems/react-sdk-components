@@ -4,7 +4,6 @@
 
 // localSdkComponentMap is the JSON object where we'll store the components that are
 // found locally. If not found here, we'll look in the Pega-provided component map
-//import Location from './src/components/field/Location';
 
 const localSdkComponentMap = {
   /* map end - DO NOT REMOVE */

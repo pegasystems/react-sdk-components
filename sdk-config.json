@@ -13,13 +13,13 @@
     "mashupPassword": "",
 
     "portalClientId_comment": "Client ID from the OAuth 2.0 Client Registration record used for portal use case",
-    "portalClientId": "97650644182526911938"
+    "portalClientId": "25795373220702300272"
 
   },
 
   "serverConfig": {
     "infinityRestServerUrl_comment": "Full path to Infinity REST server",
-    "infinityRestServerUrl": "https://sde-bos-25-1.rpega.com/prweb",
+    "infinityRestServerUrl": "https://localhost:1080/prweb",
 
     "appAlias_comment": "appAlias of the application which operators will be accessing (e.g., MediaCo)",
     "appAlias": "",
