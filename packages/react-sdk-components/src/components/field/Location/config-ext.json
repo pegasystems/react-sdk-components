@@ -1,0 +1,80 @@
+{
+  "name": "Location",
+  "description": "Location input field with optional coordinates",
+  "type": "Field",
+  "subtype": "Text-Location",
+  "icon": "images/pz-text-input-active.svg",
+  "properties": [
+    {
+      "name": "label",
+      "label": "Label",
+      "format": "TEXT",
+      "required": true
+    },
+    {
+      "label": "Input settings",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "placeholder",
+          "label": "Placeholder",
+          "format": "TEXT"
+        },
+        {
+          "name": "helperText",
+          "label": "Helper text",
+          "format": "TEXT"
+        },
+        {
+          "name": "onlyCoordinates",
+          "label": "Only collect latitude and longitude",
+          "format": "BOOLEAN",
+          "additionalInfo": {
+            "heading": "Only collect latitude and longitude",
+            "content": "<p>Latitude and longitude are always collected as part of location data.</p><br/><p>However, there can be circumstances where desiring to collect these values could provide faulty street addresses as recommendations.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Conditions",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "required",
+          "label": "Required",
+          "format": "REQUIRED"
+        },
+        {
+          "name": "disabled",
+          "label": "Disabled",
+          "format": "DISABLED"
+        },
+        {
+          "name": "readOnly",
+          "label": "Read-only",
+          "format": "BOOLEAN"
+        }
+      ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
+    }
+  ],
+  "defaultConfig": {
+    "value": "@P .$this.name.Address",
+    "coordinates": "@P .$this.name.LatLon",
+    "label": "@L $this.label"
+  }
+}

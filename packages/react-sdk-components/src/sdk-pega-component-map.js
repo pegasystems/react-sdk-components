@@ -54,6 +54,7 @@ import LeftAlignVerticalTabs from './components/infra/VerticalTabs/LeftAlignVert
 import ListPage from './components/template/ListPage/ListPage';
 import ListView from './components/template/ListView';
 import ListViewActionButtons from './components/infra/Containers/ModalViewContainer/ListViewActionButtons';
+import Location from './components/field/Location';
 import ModalViewContainer from './components/infra/Containers/ModalViewContainer/ModalViewContainer';
 import MultiReferenceReadOnly from './components/template/MultiReferenceReadOnly';
 import Multiselect from './components/field/Multiselect/Multiselect';
@@ -110,6 +111,7 @@ import WideNarrowForm from './components/template/WideNarrow/WideNarrowForm';
 import WideNarrowPage from './components/template/WideNarrow/WideNarrowPage';
 import WssNavBar from './components/template/WssNavBar/WssNavBar';
 import WssQuickCreate from './components/designSystemExtension/WssQuickCreate';
+
 
 // pegaSdkComponentMap is the JSON object where we'll store the components that are
 // the default implementations provided by the SDK. These will be used if there isn't
@@ -172,6 +174,7 @@ const pegaSdkComponentMap = {
   ListPage,
   ListView,
   ListViewActionButtons,
+  Location,
   ModalViewContainer,
   MultiReferenceReadOnly,
   Multiselect,
