@@ -1,22 +1,17 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Box, TextField, Alert } from '@mui/material';
-import {
-  GoogleMap,
-  Marker,
-  useLoadScript
-} from '@react-google-maps/api';
+import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt'; 
-import InputAdornment from '@mui/material/InputAdornment'; 
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-
 
 interface LocationProps extends PConnFieldProps {
   coordinates?: string;
   onlyCoordinates?: boolean;
-  showMap?: boolean; 
+  showMap?: boolean;
   showMapReadOnly?: boolean;
 }
 
@@ -49,7 +44,7 @@ const GOOGLE_AUTOCOMPLETE_DROPDOWN_CLASS = '.pac-container';
 export default function Location(props: LocationProps) {
   const TextInput = getComponentFromMap('TextInput');
   const FieldValueList = getComponentFromMap('FieldValueList');
-    
+
   const {
     getPConnect,
     label,
@@ -60,14 +55,13 @@ export default function Location(props: LocationProps) {
     status,
     readOnly = false,
     // testId,
-    // helperText,
     displayMode,
     hideLabel = false,
     placeholder,
     coordinates = '',
     onlyCoordinates = false,
     showMap,
-    showMapReadOnly,
+    showMapReadOnly
   } = props;
 
   const pConn = getPConnect();
@@ -78,7 +72,7 @@ export default function Location(props: LocationProps) {
   const [inputValue, setInputValue] = useState<string>(value ?? '');
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [markerPosition, setMarkerPosition] = useState<google.maps.LatLngLiteral | null>(null);
-  
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
@@ -110,7 +104,7 @@ export default function Location(props: LocationProps) {
     }
     if (coordinates) {
       const [lat, lng] = coordinates.split(',').map(parseFloat);
-      // eslint-diable-next-line no-restricted-globals
+      // eslint-disable-next-line no-restricted-globals
       if (!isNaN(lat) && !isNaN(lng)) {
         setMapCenter({ lat, lng });
         setMarkerPosition({ lat, lng });
@@ -118,16 +112,19 @@ export default function Location(props: LocationProps) {
     }
   }, [value, coordinates, onlyCoordinates]);
 
-  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value ?? '';
-    setInputValue(newValue);
-    handleEvent(actions, 'changeNblur', propName, newValue);
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.value ?? '';
+      setInputValue(newValue);
+      handleEvent(actions, 'changeNblur', propName, newValue);
 
-    if (newValue === '' && coordPropName) {
-      actions.updateFieldValue(coordPropName, '');
-      setMarkerPosition(null);
-    }
-  }, [actions, propName, coordPropName]);
+      if (newValue === '' && coordPropName) {
+        actions.updateFieldValue(coordPropName, '');
+        setMarkerPosition(null);
+      }
+    },
+    [actions, propName, coordPropName]
+  );
 
   const handlePlaceChanged = useCallback(() => {
     if (autocompleteRef.current) {
@@ -165,11 +162,10 @@ export default function Location(props: LocationProps) {
     }
   }, [isLoaded, handlePlaceChanged]);
 
-
   const handleGetCurrentLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           const coordinateString = `${lat}, ${lng}`;
@@ -185,8 +181,8 @@ export default function Location(props: LocationProps) {
             }
           } else {
             const geocoder = new window.google.maps.Geocoder();
-            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-              if (status === 'OK' && results && results[0]) {
+            geocoder.geocode({ location: { lat, lng } }, (results, responseStatus) => {
+              if (responseStatus === 'OK' && results && results[0]) {
                 const address = results[0].formatted_address;
                 setInputValue(address);
                 handleEvent(actions, 'changeNblur', propName, address);
@@ -197,13 +193,13 @@ export default function Location(props: LocationProps) {
             });
           }
         },
-        (error) => {
+        error => {
+          // eslint-disable-next-line no-console
           console.error('Error getting current location: ', error);
         }
       );
     }
   }, [actions, propName, coordPropName, onlyCoordinates]);
-
 
   if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
@@ -216,13 +212,8 @@ export default function Location(props: LocationProps) {
   const map = (
     <div style={{ opacity: disabled ? 0.7 : 1 }}>
       <Box mt={1} style={{ flex: 1 }}>
-        <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            center={mapCenter}
-            zoom={14}
-            options={disabled ? disabledMapOptions : undefined}
-        >
-            {markerPosition && <Marker position={markerPosition} />}
+        <GoogleMap mapContainerStyle={mapContainerStyle} center={mapCenter} zoom={14} options={disabled ? disabledMapOptions : undefined}>
+          {markerPosition && <Marker position={markerPosition} />}
         </GoogleMap>
       </Box>
     </div>
@@ -230,16 +221,17 @@ export default function Location(props: LocationProps) {
 
   if (readOnly) {
     return (
-        <div>
-            <TextInput {...props} />
-            {isLoaded && showMapReadOnly && map}
-        </div>);
+      <div>
+        <TextInput {...props} />
+        {isLoaded && showMapReadOnly && map}
+      </div>
+    );
   }
 
   return (
     <div>
       {hasError && (
-        <Alert severity="error" sx={{ mb: 1 }}>
+        <Alert severity='error' sx={{ mb: 1 }}>
           {validatemessage}
         </Alert>
       )}
@@ -257,20 +249,16 @@ export default function Location(props: LocationProps) {
           inputRef={inputRef}
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleGetCurrentLocation}
-                  disabled={disabled}
-                  edge="end"
-                >
+              <InputAdornment position='end'>
+                <IconButton onClick={handleGetCurrentLocation} disabled={disabled} edge='end'>
                   <AddLocationAltIcon />
                 </IconButton>
               </InputAdornment>
-            ),
+            )
           }}
         />
       )}
-      
+
       {isLoaded && showMap && map}
     </div>
   );

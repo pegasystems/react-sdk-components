@@ -112,7 +112,6 @@ import WideNarrowPage from './components/template/WideNarrow/WideNarrowPage';
 import WssNavBar from './components/template/WssNavBar/WssNavBar';
 import WssQuickCreate from './components/designSystemExtension/WssQuickCreate';
 
-
 // pegaSdkComponentMap is the JSON object where we'll store the components that are
 // the default implementations provided by the SDK. These will be used if there isn't
 // an entry in the localSdkComponentMap
