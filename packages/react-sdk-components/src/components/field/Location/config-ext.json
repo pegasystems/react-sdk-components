@@ -4,10 +4,5 @@
   "type": "Field",
   "subtype": "Text-Location",
   "icon": "images/pz-text-input-active.svg",
-  "properties": [],
-  "defaultConfig": {
-    "value": "@P .$this.name.Address",
-    "coordinates": "@P .$this.name.LatLon",
-    "label": "@L $this.label"
-  }
+  "properties": []
 }
