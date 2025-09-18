@@ -54,6 +54,7 @@ import LeftAlignVerticalTabs from './components/infra/VerticalTabs/LeftAlignVert
 import ListPage from './components/template/ListPage/ListPage';
 import ListView from './components/template/ListView';
 import ListViewActionButtons from './components/infra/Containers/ModalViewContainer/ListViewActionButtons';
+import Location from './components/field/Location';
 import ModalViewContainer from './components/infra/Containers/ModalViewContainer/ModalViewContainer';
 import MultiReferenceReadOnly from './components/template/MultiReferenceReadOnly';
 import Multiselect from './components/field/Multiselect/Multiselect';
@@ -172,6 +173,7 @@ const pegaSdkComponentMap = {
   ListPage,
   ListView,
   ListViewActionButtons,
+  Location,
   ModalViewContainer,
   MultiReferenceReadOnly,
   Multiselect,
