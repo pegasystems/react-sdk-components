@@ -76,13 +76,18 @@ export default function SelectableCard(props) {
 
         const component = (
           <div style={{ paddingTop: '15px' }}>
-            <Card className={className} style={{ display: 'flex', height: '500px' }} data-testid={testId}>
+            <Card className={className} style={{ display: 'flex', flexDirection: 'column', height: '100%' }} data-testid={testId}>
               <CardContent
                 style={{
-                  ...(imagePosition === 'inline-start' && { display: 'flex' })
+                  ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { display: 'flex', height: '100%' }),
+                  ...(imagePosition === 'inline-end' && { flexDirection: 'row-reverse' })
                 }}
               >
-                <div>
+                <div
+                  style={{
+                    ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { width: '40%' })
+                  }}
+                >
                   {image && (
                     <img
                       src={image.src}
@@ -99,7 +104,11 @@ export default function SelectableCard(props) {
                     />
                   )}
                 </div>
-                <div>
+                <div
+                  style={{
+                    ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { width: '60%' })
+                  }}
+                >
                   {type === 'radio' ? (
                     <FormControlLabel
                       control={
