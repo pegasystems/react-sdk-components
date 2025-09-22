@@ -1,13 +1,11 @@
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
+import { Link } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
-import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
-/* although this is called the SemanticLink component, we are not yet displaying as a
-SemanticLink in SDK and only showing the value as a read only text field. */
+import semanticUtils from './utils';
 
+// eslint-disable-next-line
 const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(1),
@@ -43,34 +41,173 @@ interface SemanticLinkProps extends PConnFieldProps {
   // If any, enter additional props that only exist on SemanticLink here
   // from previous PropTypes
   text: string;
+  resourcePayload: any;
+  resourceParams: any;
+  previewKey: string | null;
+  onClick: (event: any) => void;
+  testId: string;
+  referenceType: string | null;
+  // previewable: boolean;
+  dataRelationshipContext: string | null;
+  contextPage: any;
+  // displayMode?: string; // not yet used
+  // label?: string; // not yet used
+  // hideLabel?: boolean; // not yet used
 }
 
 export default function SemanticLink(props: SemanticLinkProps) {
-  // Get emitted components from map (so we can get any override that may exist)
-  const FieldValueList = getComponentFromMap('FieldValueList');
+  const {
+    text,
+    resourcePayload = {},
+    resourceParams = {},
+    getPConnect,
+    previewKey,
+    onClick,
+    testId = '',
+    referenceType,
+    dataRelationshipContext = null,
+    contextPage,
+    ...restProps
+  } = props;
+  const { ACTION_OPENWORKBYHANDLE, ACTION_SHOWDATA }: any = PCore.getSemanticUrlUtils().getActions();
+  const pConnect = getPConnect();
+  const dataResourcePayLoad = resourcePayload?.resourceType === 'DATA' ? resourcePayload : null;
 
-  const { text, displayMode, label, hideLabel } = props;
-  const classes = useStyles();
+  const {
+    RESOURCE_TYPES: { DATA },
+    WORKCLASS,
+    CASE_INFO: { CASE_INFO_CLASSID }
+  } = PCore.getConstants();
 
-  if (displayMode === 'DISPLAY_ONLY' || (!displayMode && label !== undefined)) {
-    const value = text || '---';
-    return (
-      <Grid container spacing={1} style={{ padding: '4px 0px' }} id='semantic-link-grid'>
-        <Grid item xs={6}>
-          <Typography variant='body2' component='span' className={`${classes.fieldLabel} ${classes.fieldMargin}`}>
-            {label}
-          </Typography>
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant='body2' component='span' className={classes.fieldValue}>
-            {value}
-          </Typography>
-        </Grid>
-      </Grid>
+  let linkURL = '';
+  let payload = {};
+  let dataViewName;
+  let linkComponentProps = {
+    href: linkURL
+  };
+  if (text) {
+    (linkComponentProps as any).href = linkURL;
+  }
+  let isData = false;
+  const shouldTreatAsDataReference = !previewKey && resourcePayload.caseClassName;
+  if (contextPage?.classID) {
+    resourcePayload.caseClassName = contextPage.classID;
+  }
+  /* TODO : In case of duplicate search case the classID is Work- need to set it to
+  the current case class ID */
+  if (resourcePayload.caseClassName === WORKCLASS) {
+    resourcePayload.caseClassName = pConnect.getValue(CASE_INFO_CLASSID);
+  }
+
+  function showDataAction() {
+    if (dataResourcePayLoad && dataResourcePayLoad.resourceType === 'DATA') {
+      const { content } = dataResourcePayLoad;
+      const lookUpDataPageInfo = PCore.getDataTypeUtils().getLookUpDataPageInfo(dataResourcePayLoad?.className);
+      const lookUpDataPage = PCore.getDataTypeUtils().getLookUpDataPage(dataResourcePayLoad?.className);
+      if (lookUpDataPageInfo) {
+        const { parameters }: any = lookUpDataPageInfo;
+        payload = Object.keys(parameters).reduce((acc, param) => {
+          const paramValue = parameters[param];
+          return {
+            ...acc,
+            [param]: PCore.getAnnotationUtils().isProperty(paramValue) ? content[PCore.getAnnotationUtils().getPropertyName(paramValue)] : paramValue
+          };
+        }, {});
+      }
+      getPConnect()
+        .getActionsApi()
+        .showData('pyDetails', lookUpDataPage, {
+          ...payload
+        });
+    }
+    if ((referenceType && referenceType.toUpperCase() === DATA) || shouldTreatAsDataReference) {
+      getPConnect()
+        .getActionsApi()
+        .showData('pyDetails', dataViewName, {
+          ...payload
+        });
+    }
+  }
+
+  function openLinkClick(e) {
+    if (!e.metaKey && !e.ctrlKey) {
+      e.preventDefault();
+      if (
+        (dataResourcePayLoad && dataResourcePayLoad.resourceType === 'DATA') ||
+        (referenceType && referenceType.toUpperCase() === DATA) ||
+        shouldTreatAsDataReference
+      ) {
+        showDataAction();
+      } else if (previewKey) {
+        getPConnect().getActionsApi().openWorkByHandle(previewKey, resourcePayload.caseClassName);
+      }
+    }
+  }
+
+  if ((referenceType && referenceType.toUpperCase() === DATA) || shouldTreatAsDataReference) {
+    try {
+      isData = true;
+      // @ts-ignore
+      const dataRefContext = semanticUtils.getDataReferenceInfo(pConnect, dataRelationshipContext, contextPage);
+      dataViewName = dataRefContext.dataContext;
+      payload = dataRefContext.dataContextParameters as any;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('Error in getting the data reference info', error);
+    }
+  } else if (resourcePayload && resourcePayload.resourceType === 'DATA') {
+    isData = true;
+    dataViewName = PCore.getDataTypeUtils().getLookUpDataPage(resourcePayload.className);
+    const lookUpDataPageInfo = PCore.getDataTypeUtils().getLookUpDataPageInfo(resourcePayload.className);
+    const { content } = resourcePayload;
+    if (lookUpDataPageInfo) {
+      const { parameters }: any = lookUpDataPageInfo;
+      payload = Object.keys(parameters).reduce((acc, param) => {
+        const paramValue = parameters[param];
+        return {
+          ...acc,
+          [param]: PCore.getAnnotationUtils().isProperty(paramValue) ? content[PCore.getAnnotationUtils().getPropertyName(paramValue)] : paramValue
+        };
+      }, {});
+    } else {
+      const keysInfo = PCore.getDataTypeUtils().getDataPageKeys(dataViewName) ?? [];
+      payload = keysInfo.reduce((acc, curr) => {
+        return {
+          ...acc,
+          [curr.keyName]: content[curr.isAlternateKeyStorage ? curr.linkedField : curr.keyName]
+        };
+      }, {});
+    }
+  }
+
+  if (isData && dataViewName && payload) {
+    linkURL = PCore.getSemanticUrlUtils().getResolvedSemanticURL(
+      ACTION_SHOWDATA,
+      { pageName: 'pyDetails', dataViewName },
+      {
+        ...payload
+      }
     );
+  } else {
+    // BUG-678282 fix to handle scenario when workID was not populated.
+    // Check renderParentLink in Caseview / CasePreview
+    resourceParams.objectID = resourceParams.workID === '' && typeof previewKey === 'string' ? previewKey.split(' ')[1] : resourceParams.workID;
+    if (previewKey) {
+      resourceParams.id = previewKey;
+    }
+    linkURL = PCore.getSemanticUrlUtils().getResolvedSemanticURL(ACTION_OPENWORKBYHANDLE, resourcePayload, resourceParams);
   }
 
-  if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : label} value={text} variant='stacked' />;
+  if (text) {
+    linkComponentProps = {
+      ...linkComponentProps,
+      href: linkURL
+    };
   }
+
+  return (
+    <Link component='button' {...linkComponentProps} {...restProps} onClick={openLinkClick} data-testid={testId}>
+      {text}
+    </Link>
+  );
 }

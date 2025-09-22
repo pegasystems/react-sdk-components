@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { connect, shallowEqual } from 'react-redux';
