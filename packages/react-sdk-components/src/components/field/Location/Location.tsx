@@ -39,8 +39,6 @@ const disabledMapOptions = {
   fullscreenControl: false
 };
 
-const GOOGLE_AUTOCOMPLETE_DROPDOWN_CLASS = '.pac-container';
-
 export default function Location(props: LocationProps) {
   const TextInput = getComponentFromMap('TextInput');
   const FieldValueList = getComponentFromMap('FieldValueList');
@@ -82,19 +80,6 @@ export default function Location(props: LocationProps) {
   });
 
   const hasError = status === 'error' && !!validatemessage && !disabled;
-
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      ${GOOGLE_AUTOCOMPLETE_DROPDOWN_CLASS} {
-        z-index: 2147483647 !important;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
 
   useEffect(() => {
     if (onlyCoordinates && coordinates) {
