@@ -1,15 +1,28 @@
 import { useMemo } from 'react';
 
 import { Grid2 } from '@mui/material';
-import PropTypes from 'prop-types';
 
 import { SELECTION_MODE, generateColumns, getDataRelationshipContextFromKey } from './utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import type { PConnFieldProps } from 'packages/react-sdk-components/src/types/PConnProps';
 
-export default function ObjectReference(props) {
+interface ObjectReferenceProps extends Omit<PConnFieldProps, 'value'> {
+  // If any, enter additional props that only exist on ObjectReference here
+  getPConnect: any;
+  displayMode;
+  allowAndPersistChangesInReviewMode: any;
+  targetObjectType: any;
+  mode: string;
+  parameters: Object;
+  hideLabel: boolean;
+  inline: boolean;
+  showPromotedFilters: boolean;
+  additionalFields: any;
+}
+
+export default function ObjectReference(props: ObjectReferenceProps) {
   const {
     getPConnect,
-    label,
     displayMode,
     allowAndPersistChangesInReviewMode: editableInReview = false,
     targetObjectType,
@@ -30,7 +43,7 @@ export default function ObjectReference(props) {
   const refFieldMetadata = pConn.getFieldMetadata(rawViewMetadata?.config?.value?.split('.', 2)[1]);
 
   // Destructured properties
-  const propsToUse = { label, ...pConn.getInheritedProps(), ...props };
+  const propsToUse = { ...pConn.getInheritedProps(), ...props };
 
   // Computed variables
   const isDisplayModeEnabled = displayMode === 'DISPLAY_ONLY';
@@ -131,7 +144,6 @@ export default function ObjectReference(props) {
       });
     }
     if (isDisplayModeEnabled && !canBeChangedInReviewMode) {
-      // code coverage
       return (
         <SingleReferenceReadonly
           config={{
@@ -221,26 +233,3 @@ export default function ObjectReference(props) {
     </Grid2>
   );
 }
-
-ObjectReference.propTypes = {
-  getPConnect: PropTypes.func.isRequired,
-  label: PropTypes.string,
-  displayMode: PropTypes.string,
-  allowAndPersistChangesInReviewMode: PropTypes.bool,
-  mode: PropTypes.string,
-  parameters: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string,
-      value: PropTypes.string
-    })
-  ),
-  hideLabel: PropTypes.bool,
-  additionalFields: PropTypes.arrayOf(
-    PropTypes.shape({
-      source: PropTypes.string,
-      target: PropTypes.string
-    })
-  ),
-  inline: PropTypes.bool,
-  showPromotedFilters: PropTypes.bool
-};
