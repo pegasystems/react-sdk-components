@@ -337,6 +337,14 @@ export class Utils {
   static isObject(objValue) {
     return objValue && typeof objValue === 'object' && objValue.constructor === Object;
   }
+
+  static getMappedKey(key) {
+    const mappedKey = PCore.getEnvironmentInfo().getKeyMapping(key);
+    if (!mappedKey) {
+      return key;
+    }
+    return mappedKey;
+  }
 }
 
 export default Utils;

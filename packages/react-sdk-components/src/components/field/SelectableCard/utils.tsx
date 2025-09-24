@@ -1,17 +1,11 @@
 import { Link } from '@mui/material';
 
+import { Utils } from '../../helpers/utils';
+
 export const getResolvedConstantValue = (pConnect, key) => {
   // @ts-ignore
   return pConnect.getValue(PCore.getResolvedConstantValue(key)) || pConnect.getValue(key);
 };
-
-export function getMappedKey(key) {
-  const mappedKey = PCore.getEnvironmentInfo().getKeyMapping(key);
-  if (!mappedKey) {
-    return key;
-  }
-  return mappedKey;
-}
 
 export const resolveReferencedPConnect = pConnect => {
   if (!pConnect || !pConnect.meta) return undefined;
@@ -39,7 +33,7 @@ export function prepareComponentInCaseSummary(pConnectMeta: any, getPConnect: Fu
   let { type } = pConnectMeta;
   let showAddressLabel = true;
 
-  if (config && config.value === `@P .${getMappedKey('pyStatusWork')}`) {
+  if (config && config.value === `@P .${Utils.getMappedKey('pyStatusWork')}`) {
     config.displayAsStatus = true;
     type = 'TextInput'; // force the type to be TextInput for status field.
     // As TextInput is loaded forcefully sometimes, TextInput component might not be available in lazy map.
