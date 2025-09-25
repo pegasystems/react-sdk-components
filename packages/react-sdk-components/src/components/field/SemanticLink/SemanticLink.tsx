@@ -39,7 +39,6 @@ const useStyles = makeStyles(theme => ({
 
 interface SemanticLinkProps extends PConnFieldProps {
   // If any, enter additional props that only exist on SemanticLink here
-  // from previous PropTypes
   text: string;
   resourcePayload: any;
   resourceParams: any;
@@ -47,12 +46,8 @@ interface SemanticLinkProps extends PConnFieldProps {
   onClick: (event: any) => void;
   testId: string;
   referenceType: string | null;
-  // previewable: boolean;
   dataRelationshipContext: string | null;
   contextPage: any;
-  // displayMode?: string; // not yet used
-  // label?: string; // not yet used
-  // hideLabel?: boolean; // not yet used
 }
 
 export default function SemanticLink(props: SemanticLinkProps) {
