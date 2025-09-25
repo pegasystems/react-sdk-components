@@ -64,6 +64,7 @@ import NarrowWideDetails from './components/template/NarrowWide/NarrowWideDetail
 import NarrowWideForm from './components/template/NarrowWide/NarrowWideForm';
 import NarrowWidePage from './components/template/NarrowWide/NarrowWidePage';
 import NavBar from './components/infra/NavBar';
+import ObjectReference from './components/field/ObjectReference';
 import OneColumn from './components/template/OneColumn/OneColumn';
 import OneColumnPage from './components/template/OneColumn/OneColumnPage';
 import OneColumnTab from './components/template/OneColumn/OneColumnTab';
@@ -183,6 +184,7 @@ const pegaSdkComponentMap = {
   NarrowWideForm,
   NarrowWidePage,
   NavBar,
+  ObjectReference,
   OneColumn,
   OneColumnPage,
   OneColumnTab,
