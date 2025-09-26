@@ -1,4 +1,4 @@
-import { getMappedKey } from '../../template/AdvancedSearch/SearchGroup/persistUtils';
+import { Utils } from '../../helpers/utils';
 
 export const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
@@ -89,7 +89,7 @@ export const generateColumns = (config, pConn, referenceType) => {
     columns.push({
       secondary: 'true',
       display: 'true',
-      value: getMappedKey('pyID'),
+      value: Utils.getMappedKey('pyID'),
       useForSearch: true
     });
   }
