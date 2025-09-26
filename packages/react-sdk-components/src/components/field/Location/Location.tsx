@@ -52,10 +52,11 @@ export default function Location(props: LocationProps) {
     validatemessage,
     status,
     readOnly = false,
-    // testId,
+    testId,
     displayMode,
     hideLabel = false,
     placeholder,
+    helperText,
     coordinates = '',
     onlyCoordinates = false,
     showMap,
@@ -213,6 +214,8 @@ export default function Location(props: LocationProps) {
     );
   }
 
+  const testProps: any = { 'data-test-id': testId };
+
   return (
     <div>
       {hasError && (
@@ -229,17 +232,21 @@ export default function Location(props: LocationProps) {
           disabled={disabled}
           error={hasError}
           placeholder={placeholder ?? 'Search location'}
+          helperText={helperText}
           value={inputValue}
           onChange={handleChange}
           inputRef={inputRef}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton onClick={handleGetCurrentLocation} disabled={disabled} edge='end'>
-                  <AddLocationAltIcon />
-                </IconButton>
-              </InputAdornment>
-            )
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton onClick={handleGetCurrentLocation} disabled={disabled} edge='end'>
+                    <AddLocationAltIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              inputProps: { ...testProps }
+            }
           }}
         />
       )}
