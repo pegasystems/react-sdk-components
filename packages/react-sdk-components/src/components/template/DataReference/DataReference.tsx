@@ -4,8 +4,8 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
 import useIsMount from '../../../hooks/useIsMount';
 import componentCachePersistUtils from '../AdvancedSearch/SearchGroup/persistUtils';
-import { getMappedKey } from '../AdvancedSearch/SearchGroup/persistUtils';
 import DataReferenceAdvancedSearchContext from './DataReferenceAdvancedSearchContext';
+import { Utils } from '../../helpers/utils';
 import { getFirstChildConfig } from './utils';
 
 // ReferenceProps can't be used until getComponentConfig() is NOT private
@@ -77,7 +77,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   const isDDSourceDeferred =
     (firstChildMeta?.type === 'Dropdown' && selectionMode === SELECTION_MODE.SINGLE && refFieldMetadata?.descriptors) ||
     firstChildMeta.config.deferDatasource;
-  const pyID = getMappedKey('pyID');
+  const pyID = Utils.getMappedKey('pyID');
   const isInfinity = pyID === 'pyID';
   const { allowImplicitRefresh } = isInfinity
     ? PCore.getFieldDefaultUtils().fieldDefaults.DataReference || {}

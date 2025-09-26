@@ -1,16 +1,10 @@
-const SKIP_CACHE_KEY = '';
+import { Utils } from '../../../helpers/utils';
 
-export function getMappedKey(key) {
-  const mappedKey = PCore.getEnvironmentInfo().getKeyMapping(key);
-  if (!mappedKey) {
-    return key;
-  }
-  return mappedKey;
-}
+const SKIP_CACHE_KEY = '';
 
 const getComponentStateKey = (getPConnect, propertyName: string) => {
   const pConnect = getPConnect();
-  const caseID = `.${getMappedKey('pyID')}`; // Enhance this later when use-case arrives for data objects using S&S.
+  const caseID = `.${Utils.getMappedKey('pyID')}`; // Enhance this later when use-case arrives for data objects using S&S.
   const resolvedCaseID = pConnect.getValue(caseID);
 
   if (!resolvedCaseID) {
