@@ -170,10 +170,10 @@ export default function Operator(props: OperatorProps) {
           return (
             <React.Fragment key={field.id}>
               <Grid2 container size={{ xs: 12 }} spacing={1}>
-                <Grid2 size={{ xs: 12 }}>
+                <Grid2 size={{ xs: 6 }}>
                   <Typography variant='caption'>{field.name}</Typography>
                 </Grid2>
-                <Grid2 size={{ xs: 12 }}>
+                <Grid2 size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>{field.value}</Typography>
                 </Grid2>
               </Grid2>
