@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Grid2 } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
 
 import { SELECTION_MODE, generateColumns, getDataRelationshipContextFromKey } from './utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';

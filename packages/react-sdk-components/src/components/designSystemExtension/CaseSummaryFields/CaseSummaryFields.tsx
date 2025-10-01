@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import isDeepEqual from 'fast-deep-equal/react';
-import { Grid2 } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 
 import { getDateFormatInfo } from '../../helpers/date-format-utils';

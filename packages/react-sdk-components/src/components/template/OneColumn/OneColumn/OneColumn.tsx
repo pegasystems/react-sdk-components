@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import { Grid2 } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
 import makeStyles from '@mui/styles/makeStyles';
 import type { PConnProps } from '../../../../types/PConnProps';
 
