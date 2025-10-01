@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import isDeepEqual from 'fast-deep-equal/react';
-import Grid from '@mui/material/Grid';
+import { Grid2 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
 import { getDateFormatInfo } from '../../helpers/date-format-utils';
@@ -227,9 +227,9 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       // display the field when either visibility property doesn't exist or is true(if exists)
       if (field.config.visibility === undefined || field.config.visibility === true) {
         return (
-          <Grid item xs={6} key={field.config.label}>
+          <Grid2 size={{ xs: 6 }} key={field.config.label}>
             {getFieldValue(field)}
-          </Grid>
+          </Grid2>
         );
       }
 
@@ -263,8 +263,8 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   }
 
   return (
-    <Grid container className='psdk-case-summary-fields'>
+    <Grid2 container className='psdk-case-summary-fields'>
       {theFieldsAsGridItems}
-    </Grid>
+    </Grid2>
   );
 }

@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 
@@ -20,11 +20,11 @@ export default function FieldGroupList(props: FieldGroupListProps) {
   }
 
   return (
-    <Grid container spacing={4} justifyContent='space-between'>
-      <Grid item style={{ width: '100%' }}>
-        <Grid container spacing={1}>
+    <Grid2 container spacing={4} justifyContent='space-between'>
+      <Grid2 style={{ width: '100%' }}>
+        <Grid2 container spacing={1}>
           {props.items.map(item => (
-            <Grid item style={{ width: '100%' }}>
+            <Grid2 style={{ width: '100%' }}>
               <b>{item.name}</b>
               {props.onDelete && (
                 <button
@@ -44,15 +44,15 @@ export default function FieldGroupList(props: FieldGroupListProps) {
               <br />
               {props.onAdd && <Divider />}
               <br />
-            </Grid>
+            </Grid2>
           ))}
           {props.onAdd && (
             <Link onClick={props.onAdd} style={{ cursor: 'pointer' }} underline='hover'>
               +Add
             </Link>
           )}
-        </Grid>
-      </Grid>
-    </Grid>
+        </Grid2>
+      </Grid2>
+    </Grid2>
   );
 }

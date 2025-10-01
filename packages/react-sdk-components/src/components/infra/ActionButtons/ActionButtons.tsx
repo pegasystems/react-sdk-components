@@ -1,6 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
-import { Grid, Divider } from '@mui/material';
+import { Grid2, Divider } from '@mui/material';
 
 // ActionButtons does NOT have getPConnect. So, no need to extend from PConnProps
 interface ActionButtonsProps {
@@ -33,11 +33,11 @@ export default function ActionButtons(props: ActionButtonsProps) {
   return (
     <>
       <Divider className={classes.divider} />
-      <Grid container spacing={4} justifyContent='space-between'>
-        <Grid item>
-          <Grid container spacing={1}>
+      <Grid2 container spacing={4} justifyContent='space-between'>
+        <Grid2>
+          <Grid2 container spacing={1}>
             {arSecondaryButtons.map(sButton => (
-              <Grid item key={sButton.name}>
+              <Grid2 key={sButton.name}>
                 <Button
                   variant='contained'
                   color='secondary'
@@ -47,14 +47,14 @@ export default function ActionButtons(props: ActionButtonsProps) {
                 >
                   {localizedVal(sButton.name, localeCategory)}
                 </Button>
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Grid container spacing={1}>
+          </Grid2>
+        </Grid2>
+        <Grid2>
+          <Grid2 container spacing={1}>
             {arMainButtons.map(mButton => (
-              <Grid item key={mButton.name}>
+              <Grid2 key={mButton.name}>
                 <Button
                   variant='contained'
                   color='primary'
@@ -64,11 +64,11 @@ export default function ActionButtons(props: ActionButtonsProps) {
                 >
                   {localizedVal(mButton.name, localeCategory)}
                 </Button>
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
-        </Grid>
-      </Grid>
+          </Grid2>
+        </Grid2>
+      </Grid2>
     </>
   );
 }
