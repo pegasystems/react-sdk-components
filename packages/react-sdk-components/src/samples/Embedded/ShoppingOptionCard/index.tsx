@@ -1,10 +1,10 @@
 import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   swatchHeader: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: '#333000'
+    backgroundColor: '#333000',
   },
   swatchPackage: {
     display: 'flex',
@@ -13,18 +13,18 @@ const useStyles = makeStyles(theme => ({
     width: '260px',
     height: '70px',
     backgroundColor: '#333000',
-    padding: '5px'
+    padding: '5px',
   },
   swatchPlay: {
     letterSpacing: 'normal',
     color: 'white',
-    fontSize: '25px'
+    fontSize: '25px',
   },
   swatchLevel: {
     letterSpacing: 'normal',
     color: 'white',
     fontSize: '28px',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   swatchChannels: {
     display: 'flex',
@@ -33,18 +33,18 @@ const useStyles = makeStyles(theme => ({
     letterSpacing: 'normal',
     alignItems: 'center',
     backgroundColor: theme.palette.primary.main,
-    width: '100px'
+    width: '100px',
   },
   swatchCount: {
     letterSpacing: 'normal',
     color: 'white',
     fontSize: '40px',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   swatchLabel: {
     letterSpacing: 'normal',
     color: 'white',
-    fontSize: '17px'
+    fontSize: '17px',
   },
   swatchBody: {
     letterSpacing: 'normal',
@@ -53,50 +53,50 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingBottom: '20px'
+    paddingBottom: '20px',
   },
   swatchBanner: {
     letterSpacing: 'normal',
     fontWeight: 'bold',
     fontSize: '15px',
-    padding: '5px'
+    padding: '5px',
   },
   swatchPrice: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   swatchFromGroup: {
-    height: '90px'
+    height: '90px',
   },
   swatchFrom: {
     color: theme.palette.primary.main,
-    textAlign: 'right'
+    textAlign: 'right',
   },
   swatchCurrency: {
     letterSpacing: 'normal',
     color: theme.palette.primary.main,
     fontSize: '30px',
     fontWeight: 'bold',
-    fontFamily: 'Tahoma'
+    fontFamily: 'Tahoma',
   },
   swatchDollars: {
     letterSpacing: 'normal',
     color: theme.palette.primary.main,
     fontSize: '90px',
     fontWeight: 'bold',
-    fontFamily: 'Tahoma'
+    fontFamily: 'Tahoma',
   },
   swatchCents: {
     letterSpacing: 'normal',
     color: theme.palette.primary.main,
     fontSize: '20px',
     fontWeight: 'bold',
-    fontFamily: 'Tahoma'
+    fontFamily: 'Tahoma',
   },
   swatchMonthly: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   swatchShopButton: {
     color: 'white',
@@ -106,8 +106,8 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '25px',
     border: '0px',
     margin: '20px',
-    padding: '10px 30px'
-  }
+    padding: '10px 30px',
+  },
 }));
 
 export default function ShoppingOptionCard(props) {

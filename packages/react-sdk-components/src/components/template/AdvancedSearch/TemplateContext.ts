@@ -6,6 +6,6 @@ const TemplateContext = createContext({
   outerColumnCount: undefined,
   templateOverrideMode: undefined,
   inheritParentLayout: undefined,
-  lastContainerItem: undefined
+  lastContainerItem: undefined,
 });
 export default TemplateContext;

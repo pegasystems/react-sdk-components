@@ -30,7 +30,7 @@ export default function URLComponent(props: URLComponentProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder
+    placeholder,
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
 
@@ -58,7 +58,7 @@ export default function URLComponent(props: URLComponentProps) {
 
   const testProps: any = { 'data-test-id': testId };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setInputValue(event?.target?.value);
   };
 
@@ -82,7 +82,7 @@ export default function URLComponent(props: URLComponentProps) {
       label={label}
       value={inputValue}
       slotProps={{
-        input: { inputProps: { ...testProps } }
+        input: { inputProps: { ...testProps } },
       }}
     />
   );

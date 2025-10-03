@@ -14,7 +14,7 @@ export default function useInit(props) {
     ref,
     showDynamicFields,
     isDataObject,
-    cosmosTableRef
+    cosmosTableRef,
   } = props;
   let { editing, selectionMode } = props;
 
@@ -26,7 +26,7 @@ export default function useInit(props) {
 
     (async function init() {
       // promise to fetch metadata
-      // @ts-ignore - 3rd parameter "associationFilter" should be optional for getDataViewMetadata method
+      // @ts-expect-error - 3rd parameter "associationFilter" should be optional for getDataViewMetadata method
       const metaDataPromise: Promise<any> = PCore.getAnalyticsUtils().getDataViewMetadata(referenceList, showDynamicFields);
 
       const promisesArray = [metaDataPromise];
@@ -36,14 +36,14 @@ export default function useInit(props) {
         PCore.getAnalyticsUtils().getFieldsForDataSource(referenceList, false, getPConnect().getContextName()) as Promise<any>
       ).catch(() => {
         return Promise.resolve({
-          data: { data: [] }
+          data: { data: [] },
         });
       });
       promisesArray.push(reportColumnsPromise);
 
-      const fetchEditDetails = async metadata => {
+      const fetchEditDetails = async (metadata) => {
         const {
-          data: { isQueryable }
+          data: { isQueryable },
         } = metadata;
         if (!isDataObject) {
           if (!isQueryable) {
@@ -62,7 +62,7 @@ export default function useInit(props) {
         return Promise.resolve();
       };
 
-      const editPromise = metaDataPromise.then(metadata => fetchEditDetails(metadata));
+      const editPromise = metaDataPromise.then((metadata) => fetchEditDetails(metadata));
       promisesArray.push(editPromise);
       getContext({
         tableSource: referenceList,
@@ -72,8 +72,8 @@ export default function useInit(props) {
         getPConnect,
         compositeKeys,
         isSearchable,
-        isCacheable: true
-      }).then(async context => {
+        isCacheable: true,
+      }).then(async (context) => {
         if (isCompStillMounted) {
           return readContextResponse(context, {
             ...props,
@@ -81,7 +81,7 @@ export default function useInit(props) {
             selectionCountThreshold,
             ref,
             selectionMode,
-            cosmosTableRef
+            cosmosTableRef,
           });
         }
       });

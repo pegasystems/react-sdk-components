@@ -34,14 +34,14 @@ export default function Time(props: TimeProps) {
 
   const testProps: any = { 'data-test-id': testId };
 
-  const handleChange = date => {
+  const handleChange = (date) => {
     const theValue = date && date.isValid() ? date.format('HH:mm:ss') : null;
     handleEvent(actions, 'changeNblur', propName, theValue);
   };
 
   let timeValue: any = null;
   if (value && Object.keys(value).length) {
-    const timeArray = value.split(':').map(itm => Number(itm));
+    const timeArray = value.split(':').map((itm) => Number(itm));
     timeValue = dayjs().hour(timeArray[0]).minute(timeArray[1]);
   }
 
@@ -71,8 +71,8 @@ export default function Time(props: TimeProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProps }
-        }
+          InputProps: { ...testProps },
+        },
       }}
     />
   );

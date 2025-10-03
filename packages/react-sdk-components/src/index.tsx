@@ -11,6 +11,6 @@ if (outletElement) {
   root.render(
     <BrowserRouter>
       <TopLevelApp />
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 }

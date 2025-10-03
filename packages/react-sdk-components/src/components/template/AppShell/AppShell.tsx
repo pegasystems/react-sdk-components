@@ -28,23 +28,23 @@ interface AppShellProps extends PConnProps {
   pageMessages: string[];
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   content: {
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
     marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   wsscontent: {
     flexGrow: 1,
     height: '100vh',
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 }));
 
 export default function AppShell(props: PropsWithChildren<AppShellProps>) {
@@ -64,7 +64,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     portalTemplate,
     portalName,
     portalLogo,
-    navDisplayOptions
+    navDisplayOptions,
   } = props;
 
   const [open, setOpen] = useState(true);
@@ -117,18 +117,18 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   }, []);
 
   useEffect(() => {
-    // @ts-ignore
+    // @ts-expect-error
     const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
     if (caseTypesAvailableToCreateDP) {
       const portalID = pConn.getValue('.pyOwner');
       PCore.getDataPageUtils()
         .getPageDataAsync(caseTypesAvailableToCreateDP, pConn.getContextName(), {
-          PortalName: portalID
+          PortalName: portalID,
         })
         .then((response: { pyCaseTypesAvailableToCreate?: any }) => {
           if (response?.pyCaseTypesAvailableToCreate) {
             pConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
-              skipDirtyValidation: true
+              skipDirtyValidation: true,
             });
           }
         });
@@ -153,13 +153,12 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     else {
       PCore.getAssetLoader()
         .getSvcImage(portalLogo)
-        .then(blob => window.URL.createObjectURL(blob))
-        .then(data => {
+        .then((blob) => window.URL.createObjectURL(blob))
+        .then((data) => {
           setIconURL(data);
           setFullIconURL(data);
         })
         .catch(() => {
-          // eslint-disable-next-line no-console
           console.error(`${localizedVal('Unable to load the image for the portal logo/icon with the insName', 'AppShell')}:${portalLogo}`);
         });
     }
@@ -169,8 +168,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     if (imageKey && portalTemplate === 'wss') {
       PCore.getAssetLoader()
         .getSvcImage(imageKey)
-        .then(blob => window.URL.createObjectURL(blob))
-        .then(imagePath => setImageBlobUrl(imagePath));
+        .then((blob) => window.URL.createObjectURL(blob))
+        .then((imagePath) => setImageBlobUrl(imagePath));
     }
   }, []);
 
@@ -178,7 +177,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     return {
       avatar: portalTemplate !== 'wss' ? <Avatar /> : { name: userName, imageSrc: imageBlobUrl },
       name: userName,
-      currentUserInitials
+      currentUserInitials,
     };
   };
 
@@ -192,14 +191,14 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
 
   const links = !pages
     ? []
-    : pages.map(page => {
+    : pages.map((page) => {
         const name = localizedVal(page.pyLabel, '', localeReference);
         return {
           text: name,
           name,
           icon: page.pxPageViewIcon.replace('pi pi-', ''),
           active: page.pyRuleName === activeTab,
-          onClick: () => (!page.pyURLContent || page.pyURLContent === '' ? showPage(page.pyRuleName, page.pyClassName) : openURL(page.pyURLContent))
+          onClick: () => (!page.pyURLContent || page.pyURLContent === '' ? showPage(page.pyRuleName, page.pyClassName) : openURL(page.pyURLContent)),
         };
       });
 
@@ -222,7 +221,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           appInfo={{
             imageSrc: iconURL,
             appName: localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()),
-            onClick: links[0] && /* links[0].onClick ? */ links[0].onClick /* : undefined */
+            onClick: links[0] && /* links[0].onClick ? */ links[0].onClick /* : undefined */,
           }}
           navLinks={links.filter((link, index) => {
             return index !== 0;
@@ -239,7 +238,6 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   }
 
   return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <NavContext.Provider value={{ open, setOpen }}>
       <div id='AppShell' className={classes.root}>
         <NavBar

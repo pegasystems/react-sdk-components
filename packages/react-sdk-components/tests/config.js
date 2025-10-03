@@ -6,27 +6,27 @@ const config = {
     mediaCo: {
       rep: {
         username: 'rep@mediaco',
-        password: 'pega'
+        password: 'pega',
       },
       manager: {
         username: 'manager@mediaco',
-        password: 'pega'
+        password: 'pega',
       },
       tech: {
         username: 'tech@mediaco',
-        password: 'pega'
-      }
+        password: 'pega',
+      },
     },
     digv2: {
       user: {
         username: 'user.digv2',
-        password: 'pega'
+        password: 'pega',
       },
       localizedUser: {
         username: 'localization@DigV2',
-        password: 'pega'
-      }
-    }
+        password: 'pega',
+      },
+    },
   },
   testsetting: {
     // Enable network throttling(Default is false)
@@ -47,8 +47,8 @@ const config = {
     width: 1920,
     height: 1080,
     headless: true,
-    devtools: false
-  }
+    devtools: false,
+  },
 };
 
 // eslint-disable-next-line no-undef

@@ -1,5 +1,5 @@
-export const getDeferFriendlyTabs = allTabs => {
-  return allTabs.map(tab => {
+export const getDeferFriendlyTabs = (allTabs) => {
+  return allTabs.map((tab) => {
     const theTabCompConfig = tab.getPConnect().getConfigProps();
     return { type: 'DeferLoad', config: theTabCompConfig };
   });
@@ -10,7 +10,7 @@ export const getVisibleTabs = (allTabs, uuid) => {
   return allTabs.props
     .getPConnect()
     .getChildren()
-    ?.filter(child => {
+    ?.filter((child) => {
       // US-402838: Filter out tab entries if the config object does not contain the visibility attribute or it evaluates to the boolean true,
       const config = child.getPConnect().getConfigProps();
 
@@ -20,7 +20,7 @@ export const getVisibleTabs = (allTabs, uuid) => {
         child.getPConnect().registerAdditionalProps({
           deferLoadId,
           isChildDeferLoad: true,
-          lastUpdateCaseTime: '@P caseInfo.lastUpdateTime'
+          lastUpdateCaseTime: '@P caseInfo.lastUpdateTime',
         });
       }
       index += 1;
@@ -34,7 +34,7 @@ export const getTransientTabs = (availableTabs, currentTabId, tabItems) => {
       const config = child.getPConnect().getConfigProps();
       const tabLabel =
         config.label ||
-        config.inheritedProps?.find(obj => obj.prop === 'label')?.value ||
+        config.inheritedProps?.find((obj) => obj.prop === 'label')?.value ||
         PCore.getLocaleUtils().getLocaleValue('No label specified in config', 'Generic');
       const tabContent = () => {
         if (i.toString() === currentTabId) {
@@ -45,7 +45,7 @@ export const getTransientTabs = (availableTabs, currentTabId, tabItems) => {
       return {
         name: tabLabel,
         id: i.toString(),
-        content: tabContent()
+        content: tabContent(),
       };
     }) || []
   );
@@ -69,13 +69,13 @@ export const tabClick = (id, availableTabs, currentTabId, setCurrentTabId, tabIt
 };
 
 export const searchtabsClick = (id, mainTabs, currentTabId, setCurrentTabId) => {
-  const currentTab = mainTabs.find(item => item.id === currentTabId && item.visibility());
+  const currentTab = mainTabs.find((item) => item.id === currentTabId && item.visibility());
   const currentPConn = currentTab?.getPConnect();
   const { deferLoadId } = currentPConn?.getConfigProps() ?? {};
   PCore.getDeferLoadManager().deactivate(deferLoadId, currentPConn.getContextName());
 
   setCurrentTabId(id);
-  const nextActiveTab = mainTabs.find(item => item.id === id && item.visibility());
+  const nextActiveTab = mainTabs.find((item) => item.id === id && item.visibility());
   if (mainTabs && nextActiveTab?.content === null) {
     nextActiveTab.content = nextActiveTab.getPConnect().getComponent();
   }
@@ -86,10 +86,10 @@ export const searchtabsClick = (id, mainTabs, currentTabId, setCurrentTabId) => 
   PCore.getDeferLoadManager().refreshComponent(activeId, nextPConn.getContextName());
 };
 
-export const getTabLabel = tabPConnect => {
+export const getTabLabel = (tabPConnect) => {
   const config = tabPConnect.getConfigProps();
 
-  const label = config.inheritedProps?.find(obj => obj.prop === 'label')?.value;
+  const label = config.inheritedProps?.find((obj) => obj.prop === 'label')?.value;
 
   if (label) {
     return label;

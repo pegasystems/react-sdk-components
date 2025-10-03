@@ -118,7 +118,7 @@ const sdkComponentLocationMap = {
   WideNarrowForm: 'template/WideNarrow/WideNarrowForm',
   WideNarrowPage: 'template/WideNarrow/WideNarrowPage',
   WssNavBar: 'template',
-  WssQuickCreate: 'designSystemExtension'
+  WssQuickCreate: 'designSystemExtension',
 };
 
 // Now package them up so they can be 'require'd from build-overrides.js
@@ -128,5 +128,5 @@ module.exports = {
   SDK_TYPES_DIR: sdkTypesDir,
   SDK_HOOKS_DIR: sdkHooksDir,
   SDK_TOP_LEVEL_CONTENT: sdkTopLevelContent,
-  SDK_COMP_LOCATION_MAP: sdkComponentLocationMap
+  SDK_COMP_LOCATION_MAP: sdkComponentLocationMap,
 };

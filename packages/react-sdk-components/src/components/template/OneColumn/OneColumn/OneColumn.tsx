@@ -11,8 +11,8 @@ const useStyles = makeStyles((/* theme */) => ({
   colStyles: {
     display: 'grid',
     gap: '1rem',
-    alignContent: 'baseline'
-  }
+    alignContent: 'baseline',
+  },
 }));
 
 export default function OneColumn(props: PropsWithChildren<OneColumnProps>) {
@@ -23,7 +23,7 @@ export default function OneColumn(props: PropsWithChildren<OneColumnProps>) {
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={{ xs: 12 }} className={classes.colStyles}>
-        {(children as ReactElement[]).map(child => {
+        {(children as ReactElement[]).map((child) => {
           return child;
         })}
       </Grid2>

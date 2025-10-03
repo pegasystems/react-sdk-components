@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-boolean-value */
-
 import { type PropsWithChildren, type ReactElement, useContext, useEffect, useState } from 'react';
 import { Avatar, Card, CardHeader, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -22,7 +20,7 @@ interface CaseViewProps extends PConnProps {
   lastUpdateCaseTime: any;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -31,22 +29,22 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   caseViewHeader: {
     backgroundColor: theme.palette.info.light,
     color: theme.palette.getContrastText(theme.palette.info.light),
-    borderRadius: 'inherit'
+    borderRadius: 'inherit',
   },
   caseViewIconBox: {
     backgroundColor: theme.palette.info.dark,
     width: theme.spacing(8),
     height: theme.spacing(8),
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
   },
   caseViewIconImage: {
-    filter: 'invert(100%)'
-  }
+    filter: 'invert(100%)',
+  },
 }));
 
 export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
@@ -63,7 +61,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     children = [],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showIconInHeader = true,
-    caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
+    caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' },
   } = props;
   const { lastUpdateCaseTime = getPConnect().getValue('caseInfo.lastUpdateTime') } = props;
 
@@ -75,7 +73,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
 
   const classes = useStyles();
 
-  const editAction = availableActions.find(action => action.ID === 'pyUpdateCaseDetails');
+  const editAction = availableActions.find((action) => action.ID === 'pyUpdateCaseDetails');
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'CaseView';
@@ -114,7 +112,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const theTabsRegionChildren = theTabsRegion.props.getPConnect().getChildren();
 
   // vertTabInfo is sent to VerticalTabs component
-  const vertTabInfo: Object[] = [];
+  const vertTabInfo: object[] = [];
 
   // deferLoadInfo is sent to DeferLoad component (currently selected entry)
   const deferLoadInfo: any[] = [];
@@ -127,7 +125,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
       let { label, inheritedProps } = theTabCompConfig;
       // For some tabs, "label" property is not avaialable in theTabCompConfig, so will get them from inheritedProps
       if (!label) {
-        inheritedProps.forEach(inheritedProp => {
+        inheritedProps.forEach((inheritedProp) => {
           if (inheritedProp.prop === 'label') {
             label = inheritedProp.value;
           }

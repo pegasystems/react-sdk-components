@@ -27,7 +27,7 @@ export default function Phone(props: PhoneProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder
+    placeholder,
   } = props;
 
   const pConn = getPConnect();
@@ -42,7 +42,7 @@ export default function Phone(props: PhoneProps) {
   let testProp = {};
 
   testProp = {
-    'data-test-id': testId
+    'data-test-id': testId,
   };
 
   if (displayMode === 'DISPLAY_ONLY') {
@@ -72,8 +72,8 @@ export default function Phone(props: PhoneProps) {
           slotProps={{
             input: {
               readOnly: true,
-              ...testProp
-            }
+              ...testProp,
+            },
           }}
           disableDropdown={disableDropdown}
         />
@@ -81,11 +81,11 @@ export default function Phone(props: PhoneProps) {
     );
   }
 
-  const handleChange = inputVal => {
+  const handleChange = (inputVal) => {
     setInputValue(inputVal);
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event) => {
     const phoneValue = event?.target?.value;
     let phoneNumber = phoneValue.split(' ').slice(1).join();
     phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';

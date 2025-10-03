@@ -23,7 +23,7 @@ export default function FieldGroupList(props: FieldGroupListProps) {
     <Grid2 container spacing={4} justifyContent='space-between'>
       <Grid2 style={{ width: '100%' }}>
         <Grid2 container spacing={1}>
-          {props.items.map(item => (
+          {props.items.map((item) => (
             <Grid2 style={{ width: '100%' }}>
               <b>{item.name}</b>
               {props.onDelete && (

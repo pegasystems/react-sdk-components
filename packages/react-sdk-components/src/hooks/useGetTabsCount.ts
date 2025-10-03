@@ -29,7 +29,7 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
   };
 
   const getTabsData = useCallback(
-    overideTabContent =>
+    (overideTabContent) =>
       availableTabs.map((tab, index) => {
         const config = tab.getPConnect().getConfigProps();
         const name = getTabLabel(tab.getPConnect());
@@ -50,10 +50,10 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
             }
             return isVisible;
           },
-          count
+          count,
         };
       }),
-    [availableTabs, countMetadata, data, currentTabId, uuid]
+    [availableTabs, countMetadata, data, currentTabId, uuid],
   );
 
   const tabCountSources = useMemo(
@@ -61,9 +61,9 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
       availableTabs.reduce(
         (prev, tab, index) => {
           const config = tab.getPConnect().getConfigProps();
-          const { value: showTabCount } = config.inheritedProps?.find(item => item.prop === 'showTabCount') || {};
-          const { value } = config.inheritedProps?.find(item => item.prop === 'count') || {};
-          const tabCountSource = config.inheritedProps?.find(item => item.prop === 'tabCount');
+          const { value: showTabCount } = config.inheritedProps?.find((item) => item.prop === 'showTabCount') || {};
+          const { value } = config.inheritedProps?.find((item) => item.prop === 'count') || {};
+          const tabCountSource = config.inheritedProps?.find((item) => item.prop === 'tabCount');
           const name = getTabLabel(tab.getPConnect());
           const tabId = `${viewName}-${config.name || name}-${index}`;
           if (showTabCount) {
@@ -77,9 +77,9 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
                     dataPageName: tabCountSource.value.source,
                     tabId,
                     tabCountProp: isPrefixedByDot ? tabCountSource.value.fields.count.substring(1) : tabCountSource.value.fields.count,
-                    dataViewParameters: tabCountSource.value?.parameters || {}
-                  }
-                ]
+                    dataViewParameters: tabCountSource.value?.parameters || {},
+                  },
+                ],
               };
             }
             if (Number.isInteger(value) && value % 1 === 0) {
@@ -90,9 +90,9 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
                   {
                     count: value,
                     context: tab.getPConnect().getContextName(),
-                    tabId
-                  }
-                ]
+                    tabId,
+                  },
+                ],
               };
             }
             if (value?.isDeferred) {
@@ -103,9 +103,9 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
                   {
                     propertyName: value.propertyName,
                     context: 'content',
-                    tabId
-                  }
-                ]
+                    tabId,
+                  },
+                ],
               };
             }
           }
@@ -113,10 +113,10 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
         },
         {
           dataPageSources: [],
-          calculatedFields: []
-        }
+          calculatedFields: [],
+        },
       ),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -124,57 +124,57 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
   }, [selectedTabId]);
 
   useEffect(() => {
-    // @ts-ignore
+    // @ts-expect-error
     setData(getTabsData());
   }, [countMetadata, currentTabId]);
 
   useEffect(() => {
     const { dataPageSources, calculatedFields } = tabCountSources;
-    const calculatedFieldsWithoutValue = calculatedFields.filter(item => item.propertyName);
+    const calculatedFieldsWithoutValue = calculatedFields.filter((item) => item.propertyName);
     if (dataPageSources.length) {
       setLoading(true);
-      Promise.all(dataPageSources.map(item => PCore.getDataPageUtils().getPageDataAsync(item.dataPageName, '', item.dataViewParameters)))
-        .then(res => {
+      Promise.all(dataPageSources.map((item) => PCore.getDataPageUtils().getPageDataAsync(item.dataPageName, '', item.dataViewParameters)))
+        .then((res) => {
           const temp = res.map((r, index) => ({
             ...dataPageSources[index],
-            count: r[dataPageSources[index].tabCountProp]
+            count: r[dataPageSources[index].tabCountProp],
           }));
           setCountMetadata(temp);
           setLoading(false);
         })
-        .catch(err => {
+        .catch((err) => {
           setError(err);
           setLoading(false);
         });
     } else if (calculatedFieldsWithoutValue.length) {
       PCore.getViewRuleApi()
-        // @ts-ignore
+        // @ts-expect-error
         .getCalculatedFields(
           pConn.getCaseInfo().getKey(),
           pConn.getCurrentView(),
           calculatedFieldsWithoutValue.map(({ propertyName, context }) => ({
             name: propertyName,
-            context
-          }))
+            context,
+          })),
         )
-        .then(res => {
+        .then((res) => {
           const values = res?.data?.caseInfo?.content || {};
-          const temp = calculatedFields.map(field => ({
+          const temp = calculatedFields.map((field) => ({
             ...field,
-            count: values[field.propertyName?.substring(1)] || field.count
+            count: values[field.propertyName?.substring(1)] || field.count,
           }));
           setCountMetadata(temp);
         })
-        .catch(err => {
+        .catch((err) => {
           setError(err);
           setLoading(false);
         });
     } else {
       setCountMetadata(
-        calculatedFields.map(field => ({
+        calculatedFields.map((field) => ({
           ...field,
-          count: field.count
-        }))
+          count: field.count,
+        })),
       );
     }
   }, []);
@@ -185,7 +185,7 @@ const useGetTabsCount = (deferLoadedTabs, uuid, selectedTabId, template) => {
     loading,
     error,
     updateCurrentTabId: setCurrentTabId,
-    refreshTabData: () => setData(getTabsData(true))
+    refreshTabData: () => setData(getTabsData(true)),
   };
 };
 

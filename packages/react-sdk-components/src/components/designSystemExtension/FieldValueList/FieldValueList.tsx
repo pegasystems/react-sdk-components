@@ -12,26 +12,26 @@ interface FieldValueListProps {
   isHtml?: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   fieldLabel: {
     fontWeight: 400,
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   fieldValue: {
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   noPaddingTop: {
-    paddingTop: '0 !important'
+    paddingTop: '0 !important',
   },
   noPaddingBottom: {
-    paddingBottom: '0 !important'
-  }
+    paddingBottom: '0 !important',
+  },
 }));
 
 function formatItemValue(value) {
@@ -65,7 +65,6 @@ export default function FieldValueList(props: FieldValueListProps) {
     return (
       <Grid2 size={{ xs: variant === 'stacked' || !name ? 12 : 8 }} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
         {isHtml ? (
-          // eslint-disable-next-line react/no-danger
           <div dangerouslySetInnerHTML={{ __html: formattedValue }} />
         ) : (
           <Typography variant={variant === 'stacked' ? 'h6' : 'body2'} component='span' className={classes.fieldValue}>

@@ -14,7 +14,7 @@ const getComponentStateKey = (getPConnect, propertyName: string) => {
   return `Search-${resolvedCaseID}-${pConnect.getPageReference()}-${propertyName}-${pConnect.getCurrentView()}`;
 };
 
-const getComponentStateOptions = getPConnect => {
+const getComponentStateOptions = (getPConnect) => {
   return { clearOnCancelForContext: getPConnect().getContextName() };
 };
 
@@ -32,7 +32,7 @@ interface SearchGroup {
 const setComponentCache = ({
   cacheKey,
   state,
-  options
+  options,
 }: {
   cacheKey: string;
   state: SearchCategory | SearchGroup;
@@ -46,7 +46,7 @@ const setComponentCache = ({
 const componentCachePersistUtils = {
   getComponentStateKey,
   getComponentStateOptions,
-  setComponentCache
+  setComponentCache,
 };
 
 export default componentCachePersistUtils;

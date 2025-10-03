@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { createElement, isValidElement } from 'react';
 import Grid2 from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -14,7 +13,7 @@ interface DetailsFieldsProps {
   fields: any[];
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -23,17 +22,17 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   fieldLabel: {
     display: 'block',
     fontWeight: 400,
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   fieldValue: {
     fontWeight: 400,
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 export default function DetailsFields(props: DetailsFieldsProps) {
@@ -54,7 +53,7 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     fieldComponents.push({
       type: theCompType,
       label,
-      value: <React.Fragment key={index}>{createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}</React.Fragment>
+      value: <React.Fragment key={index}>{createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}</React.Fragment>,
     });
   });
 
@@ -74,7 +73,6 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     const { type, value } = inField;
     let formattedVal = value;
 
-    // eslint-disable-next-line sonarjs/no-small-switch
     switch (type) {
       case 'date':
         formattedVal = format(value, type);

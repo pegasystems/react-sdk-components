@@ -1,3 +1,5 @@
+/* eslint-disable no-redeclare */
+
 // When this code is run from the generated npm module, the components are
 //  placed in the npm module's 'lib' directory. So, we expect to import from there.
 //  This file should import and expose ALL of the components that may be
@@ -231,7 +233,7 @@ const pegaSdkComponentMap = {
   WideNarrowForm,
   WideNarrowPage,
   WssNavBar,
-  WssQuickCreate
+  WssQuickCreate,
 };
 
 export default pegaSdkComponentMap;

@@ -12,12 +12,12 @@ interface ActionButtonsProps {
 
 const useStyles = makeStyles((/* theme */) => ({
   button: {
-    padding: '0px 5px'
+    padding: '0px 5px',
   },
   divider: {
     marginTop: '10px',
-    marginBottom: '10px'
-  }
+    marginBottom: '10px',
+  },
 }));
 
 export default function ActionButtons(props: ActionButtonsProps) {
@@ -36,7 +36,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
       <Grid2 container spacing={4} justifyContent='space-between'>
         <Grid2>
           <Grid2 container spacing={1}>
-            {arSecondaryButtons.map(sButton => (
+            {arSecondaryButtons.map((sButton) => (
               <Grid2 key={sButton.name}>
                 <Button
                   variant='contained'
@@ -53,7 +53,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
         </Grid2>
         <Grid2>
           <Grid2 container spacing={1}>
-            {arMainButtons.map(mButton => (
+            {arMainButtons.map((mButton) => (
               <Grid2 key={mButton.name}>
                 <Button
                   variant='contained'

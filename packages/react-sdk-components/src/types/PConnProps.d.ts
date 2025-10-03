@@ -5,7 +5,7 @@
 //  that returns a PConnect object. (new/better way of doing .propTypes).
 //  This PConnProps can be extended to include other props that we know are in every component
 export interface PConnProps {
-  // getPConnect should exist for every C11n component. (add @ts-ignore in special cases where it isn't)
+  // getPConnect should exist for every C11n component. (add @ts-expect-error in special cases where it isn't)
   getPConnect: () => typeof PConnect;
 
   // Allow any/all other key/value pairs in the BaseProps for now

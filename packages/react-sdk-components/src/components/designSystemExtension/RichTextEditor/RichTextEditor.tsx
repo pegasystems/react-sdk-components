@@ -5,13 +5,13 @@ import makeStyles from '@mui/styles/makeStyles';
 
 import { useAfterInitialEffect, useConsolidatedRef, useUID } from '../../../hooks';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   fieldLabel: {
     position: 'relative',
     transform: 'translate(0, 0px) scale(1)',
     marginBottom: '5px',
-    color: theme.palette.text.secondary
-  }
+    color: theme.palette.text.secondary,
+  },
 }));
 
 interface RichTextEditorProps {
@@ -42,7 +42,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
     editorRef?.current.mode.set(readOnly || disabled ? 'readonly' : 'design');
   }, [readOnly, disabled]);
 
-  const filePickerCallback = cb => {
+  const filePickerCallback = (cb) => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -74,7 +74,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
 
   if (readOnly) {
     const value = defaultValue || '--';
-    // eslint-disable-next-line react/no-danger
+
     richTextComponent = <div key={id} id={id} className='readonly-richtext-editor' dangerouslySetInnerHTML={{ __html: value }} />;
   } else {
     richTextComponent = (
@@ -99,7 +99,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
           branding: false,
           paste_data_images: true,
           file_picker_types: 'image',
-          file_picker_callback: filePickerCallback
+          file_picker_callback: filePickerCallback,
         }}
         onBlur={onBlur}
         onEditorChange={onChange}

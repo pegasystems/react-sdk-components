@@ -6,12 +6,12 @@ import type { PConnProps } from '../../../../../types/PConnProps';
 const useStyles = makeStyles((/* theme */) => ({
   button: {
     width: '50%',
-    margin: '4px'
+    margin: '4px',
   },
   div: {
     display: 'flex',
-    margin: '8px'
-  }
+    margin: '8px',
+  },
 }));
 
 interface ListViewActionButtonsProps extends PConnProps {
@@ -52,8 +52,7 @@ function ListViewActionButtons(props: ListViewActionButtonsProps) {
             .then(() => {
               closeActionsDialog();
             })
-            .catch(err => {
-              // eslint-disable-next-line no-console
+            .catch((err) => {
               console.log(err);
             })
             .finally(() => {

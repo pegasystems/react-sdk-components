@@ -16,7 +16,7 @@ const launchEmbedded = async ({ page }) => {
 const launchSelfServicePortal = async ({ page }) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
   await page.goto(`${config.baseUrl}/portal?portal=DigV2SelfService`, {
-    waitUntil: 'networkidle'
+    waitUntil: 'networkidle',
   });
 };
 
@@ -27,11 +27,11 @@ const login = async (username, password, page) => {
   await page.locator('#submit_row .loginButton').click();
 };
 
-const getAttributes = async element => {
-  return element.evaluate(async ele => ele.getAttributeNames());
+const getAttributes = async (element) => {
+  return element.evaluate(async (ele) => ele.getAttributeNames());
 };
 
-const getFormattedDate = date => {
+const getFormattedDate = (date) => {
   if (!date) {
     return date;
   }
@@ -54,7 +54,7 @@ const calculateCoverage = async (page, outputDir) => {
   expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
   // coverage report
   await attachCoverageReport(coverageData, test.info(), {
-    outputDir
+    outputDir,
   });
   await page.close();
 };
@@ -73,5 +73,5 @@ module.exports = {
   getAttributes,
   getFutureDate,
   calculateCoverage,
-  enterPhoneNumber
+  enterPhoneNumber,
 };

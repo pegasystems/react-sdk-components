@@ -11,12 +11,12 @@ function isEmpty(value: any): boolean {
 
 export function getCacheInfo(
   cache: { selectedCategory: string; activeGroupId: string; searchFields: unknown },
-  groups: { config: { id: string } }[]
+  groups: { config: { id: string } }[],
 ) {
   let initialActiveGroupId = groups.length ? groups[0].config.id : '';
 
   let useCache = false;
-  if (cache.activeGroupId && groups?.find(group => group.config.id === cache.activeGroupId)) {
+  if (cache.activeGroupId && groups?.find((group) => group.config.id === cache.activeGroupId)) {
     initialActiveGroupId = cache.activeGroupId;
     useCache = true;
   }
@@ -25,5 +25,5 @@ export function getCacheInfo(
 }
 
 export function isValidInput(input: { [s: string]: unknown }) {
-  return Object.values(input).some(value => !isEmpty(value));
+  return Object.values(input).some((value) => !isEmpty(value));
 }

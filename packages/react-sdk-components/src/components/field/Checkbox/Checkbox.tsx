@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import { useState, useEffect } from 'react';
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -34,14 +33,14 @@ interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
 const useStyles = makeStyles(() => ({
   checkbox: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   selectableCard: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 40ch), 1fr))',
     gridAutoRows: '1fr',
-    gap: '0.5rem'
-  }
+    gap: '0.5rem',
+  },
 }));
 
 export default function CheckboxComponent(props: CheckboxProps) {
@@ -79,7 +78,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
     imageSize,
     showImageDescription,
     renderMode,
-    image
+    image,
   } = props;
   const readOnlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY' || readOnly;
 
@@ -117,11 +116,11 @@ export default function CheckboxComponent(props: CheckboxProps) {
     return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} variant='stacked' />;
   }
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     handleEvent(actionsApi, 'changeNblur', propName, event.target.checked);
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event) => {
     thePConn.getValidationApi().validate(event.target.checked);
   };
 
@@ -141,7 +140,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
     className: 'standard',
     disabled,
     readOnly,
-    onClick: (actions as any).onClick
+    onClick: (actions as any).onClick,
   };
 
   if (variant === 'card') {
@@ -156,13 +155,13 @@ export default function CheckboxComponent(props: CheckboxProps) {
             dataSource={datasource}
             getPConnect={getPConnect}
             readOnly={renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY' || readOnly}
-            onChange={e => {
+            onChange={(e) => {
               e.stopPropagation();
               const recordKey = selectionKey?.split('.').pop();
-              const selectedItem = datasource?.source?.find(item => item[recordKey as any] === e.target.id) ?? {};
+              const selectedItem = datasource?.source?.find((item) => item[recordKey as any] === e.target.id) ?? {};
               handleCheckboxChange(e, {
                 id: selectedItem[recordKey as any],
-                primary: selectedItem[recordKey as any]
+                primary: selectedItem[recordKey as any],
               });
             }}
             onBlur={() => {
@@ -176,7 +175,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
               imageSize,
               showImageDescription,
               imageField: image?.split('.').pop(),
-              imageDescription: (thePConn?.getRawMetadata()?.config as any).imageDescription?.split('.').pop()
+              imageDescription: (thePConn?.getRawMetadata()?.config as any).imageDescription?.split('.').pop(),
             }}
             readOnlyList={selectedvalues}
             type='checkbox'
@@ -191,18 +190,18 @@ export default function CheckboxComponent(props: CheckboxProps) {
     if (event.target.checked) {
       insertInstruction(thePConn, selectionList, selectionKey, primaryField, {
         id: element.key,
-        primary: element.text ?? element.value
+        primary: element.text ?? element.value,
       });
     } else {
       deleteInstruction(thePConn, selectionList, selectionKey, {
         id: element.key,
-        primary: element.text ?? element.value
+        primary: element.text ?? element.value,
       });
     }
     thePConn.clearErrorMessages({
       property: selectionList,
       category: '',
-      context: ''
+      context: '',
     });
   };
 
@@ -217,8 +216,8 @@ export default function CheckboxComponent(props: CheckboxProps) {
           control={
             <Checkbox
               key={index}
-              checked={selectedvalues?.some?.(data => data[dataField] === element.key)}
-              onChange={event => handleChangeMultiMode(event, element)}
+              checked={selectedvalues?.some?.((data) => data[dataField] === element.key)}
+              onChange={(event) => handleChangeMultiMode(event, element)}
               onBlur={() => {
                 thePConn.getValidationApi().validate(selectedvalues, selectionList);
               }}
@@ -229,7 +228,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
           label={element.text ?? element.value}
           labelPlacement='end'
           data-test-id={testId}
-        />
+        />,
       );
     });
     theCheckbox = <div className={classes.checkbox}>{listOfCheckboxes}</div>;
