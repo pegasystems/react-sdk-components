@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid2, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import type { PConnProps } from '../../../types/PConnProps';
 
@@ -50,24 +50,22 @@ export default function InlineDashboard(props: PropsWithChildren<InlineDashboard
       </Typography>
 
       {filterPosition === 'block-start' && (
-        <Grid container spacing={2} direction='column-reverse' className={classes.containerStyles}>
-          <Grid item xs={12} className={classes.colStyles}>
+        <Grid2 container spacing={2} direction='column-reverse' className={classes.containerStyles}>
+          <Grid2 size={{ xs: 12 }} className={classes.colStyles}>
             {childrenToRender[0]}
-          </Grid>
-          <Grid id='filters' item xs={12} className={classes.filterContainerStyles}>
+          </Grid2>
+          <Grid2 id='filters' size={{ xs: 12 }} className={classes.filterContainerStyles}>
             {childrenToRender[1]}
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       )}
       {filterPosition !== 'block-start' && (
-        <Grid container spacing={2} direction={direction} className={classes.containerStyles}>
-          <Grid item xs={9}>
-            {childrenToRender[0]}
-          </Grid>
-          <Grid id='filters' item xs={3} className={classes.inlineStyles}>
+        <Grid2 container spacing={2} direction={direction} className={classes.containerStyles}>
+          <Grid2 size={{ xs: 9 }}>{childrenToRender[0]}</Grid2>
+          <Grid2 id='filters' size={{ xs: 3 }} className={classes.inlineStyles}>
             {childrenToRender[1]}
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       )}
     </>
   );

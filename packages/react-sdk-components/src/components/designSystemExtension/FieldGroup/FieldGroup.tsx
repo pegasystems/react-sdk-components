@@ -1,5 +1,5 @@
 import { type PropsWithChildren, useState } from 'react';
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import makeStyles from '@mui/styles/makeStyles';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -45,9 +45,9 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
   const [collapsed, setCollapsed] = useState(false);
 
   const descAndChildren = (
-    <Grid container>
+    <Grid2 container>
       <div className={classes.fullWidth}>{children}</div>
-    </Grid>
+    </Grid2>
   );
 
   const headerClickHandler = () => {
@@ -55,8 +55,8 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
   };
 
   return (
-    <Grid container spacing={4} justifyContent='space-between'>
-      <Grid item style={{ width: '100%' }}>
+    <Grid2 container spacing={4} justifyContent='space-between'>
+      <Grid2 style={{ width: '100%' }}>
         {name && (
           <div className={classes.fieldMargin}>
             {collapsible ? (
@@ -74,7 +74,7 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
           <div key='instructions' className={classes.instructionText} dangerouslySetInnerHTML={{ __html: instructions }} />
         )}
         {!collapsed && descAndChildren}
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 }

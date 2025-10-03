@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Tab, Tabs, Typography, RadioGroup, FormControlLabel, Radio, MenuItem, Box, TextField } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid2 from '@mui/material/Grid2';
 import { TabContext, TabPanel } from '@mui/lab';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
@@ -92,7 +92,7 @@ const SearchForm = props => {
   let searchCategoriesComp;
   if (tabItems.length > 3) {
     searchCategoriesComp = (
-      <Grid container spacing={2}>
+      <Grid2 container spacing={2}>
         <TextField value={currentTabId} select onChange={handleTabClick} fullWidth>
           {tabItems.map(tab => (
             <MenuItem key={tab.id} value={tab.id}>
@@ -100,7 +100,7 @@ const SearchForm = props => {
             </MenuItem>
           ))}
         </TextField>
-      </Grid>
+      </Grid2>
     );
   } else if (tabItems.length > 1) {
     searchCategoriesComp = (

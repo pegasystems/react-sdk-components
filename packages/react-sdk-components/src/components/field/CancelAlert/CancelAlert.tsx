@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Grid, IconButton, Snackbar } from '@mui/material';
+import { Button, Grid2, IconButton, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import type { PConnFieldProps } from '../../../types/PConnProps';
@@ -125,10 +125,10 @@ export default function CancelAlert(props: CancelAlertProps) {
             <p>{localizedVal(content, localeCategory)}</p>
           </div>
           <div className='action-controls'>
-            <Grid container spacing={4} justifyContent='space-between'>
-              <Grid item>{leftButton}</Grid>
-              <Grid item>{rightButton}</Grid>
-            </Grid>
+            <Grid2 container spacing={4} justifyContent='space-between'>
+              <Grid2>{leftButton}</Grid2>
+              <Grid2>{rightButton}</Grid2>
+            </Grid2>
           </div>
         </div>
       </div>

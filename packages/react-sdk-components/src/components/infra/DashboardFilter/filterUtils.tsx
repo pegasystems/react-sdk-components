@@ -1,7 +1,7 @@
 /* eslint-disable prefer-template */
 /** This file contains various utility methods to generate filter components, regionLayout data, filter expressions, etc.  */
 
-import { Grid, Link } from '@mui/material';
+import { Grid2, Link } from '@mui/material';
 
 import DashboardFilter from './DashboardFilter';
 
@@ -77,7 +77,7 @@ export const buildFilterComponents = (getPConnect, allFilters) => {
   const filterComponents = allFilters.children.map((filter, index) => createFilterComponent(getPConnect, filter, index));
   if (filterComponents && filterComponents.length > 0) {
     filterComponents.push(
-      <Grid style={{ display: 'flex', alignItems: 'center' }}>
+      <Grid2 style={{ display: 'flex', alignItems: 'center' }}>
         <Link
           style={{ cursor: 'pointer' }}
           onClick={() => {
@@ -87,7 +87,7 @@ export const buildFilterComponents = (getPConnect, allFilters) => {
         >
           Clear All
         </Link>
-      </Grid>
+      </Grid2>
     );
   }
   return filterComponents;

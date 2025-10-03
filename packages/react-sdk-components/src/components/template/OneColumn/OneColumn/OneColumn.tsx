@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import { Grid } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
 import makeStyles from '@mui/styles/makeStyles';
 import type { PConnProps } from '../../../../types/PConnProps';
 
@@ -21,12 +21,12 @@ export default function OneColumn(props: PropsWithChildren<OneColumnProps>) {
   const { children } = props;
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} className={classes.colStyles}>
+    <Grid2 container spacing={2}>
+      <Grid2 size={{ xs: 12 }} className={classes.colStyles}>
         {(children as ReactElement[]).map(child => {
           return child;
         })}
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 }
