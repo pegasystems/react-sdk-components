@@ -24,7 +24,7 @@ export default function SingleReferenceReadOnly(props: SingleReferenceReadOnlyPr
     referenceType = '',
     hideLabel = false,
     dataRelationshipContext = null,
-    config
+    config,
   } = props;
 
   const editableComponents = ['AutoComplete', 'SimpleTableSelect', 'Dropdown'];
@@ -35,10 +35,10 @@ export default function SingleReferenceReadOnly(props: SingleReferenceReadOnlyPr
     config.caseID = config.value;
     config.contextPage = `@P .${dataRelationshipContext}`;
     config.resourceParams = {
-      workID: displayAs === 'table' ? config.selectionKey : config.value
+      workID: displayAs === 'table' ? config.selectionKey : config.value,
     };
     config.resourcePayload = {
-      caseClassName: ruleClass
+      caseClassName: ruleClass,
     };
   }
 
@@ -51,12 +51,12 @@ export default function SingleReferenceReadOnly(props: SingleReferenceReadOnlyPr
         displayMode,
         referenceType,
         hideLabel,
-        dataRelationshipContext
-      }
+        dataRelationshipContext,
+      },
     },
     '',
     0,
-    {}
+    {},
   ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
 
   return <>{component}</>;

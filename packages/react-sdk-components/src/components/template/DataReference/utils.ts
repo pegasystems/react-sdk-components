@@ -39,7 +39,7 @@ const getCompositeKeys = (pConnect, property) => {
   const fieldMetadata = pConnect.getFieldMetadata(property) || {};
   const { datasource: { parameters: fieldParameters = {} } = {} } = fieldMetadata;
   const compositeKeys: any = [];
-  Object.values(fieldParameters).forEach(param => {
+  Object.values(fieldParameters).forEach((param) => {
     if (isSelfReferencedProperty(param, property)) {
       compositeKeys.push(param);
     }
@@ -55,11 +55,11 @@ export const getFirstChildConfig = ({
   dataReferenceConfigToChild,
   isCreateNewReferenceEnabled,
   disableStartingFieldsForReference,
-  pyID
+  pyID,
 }) => {
   const config = {
     ...firstChildMeta.config,
-    ...dataReferenceConfigToChild
+    ...dataReferenceConfigToChild,
   };
   const compositeKeys = getCompositeKeys(getPConnect(), dataReferenceConfigToChild?.dataRelationshipContext);
   return {
@@ -80,11 +80,11 @@ export const getFirstChildConfig = ({
             inputFields: disableStartingFieldsForReference
               ? {}
               : {
-                  [`.pyAddCaseContextPage.${pyID}`]: `@P .${pyID}`
-                }
-          }
-        }
+                  [`.pyAddCaseContextPage.${pyID}`]: `@P .${pyID}`,
+                },
+          },
+        },
       ],
-    compositeKeys
+    compositeKeys,
   };
 };

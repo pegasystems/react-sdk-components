@@ -28,16 +28,16 @@ export default function DetailsTwoColumn(props: DetailsTwoColumnProps) {
   const children = (getPConnect().getChildren() as any[]).map((configObject, index) =>
     createElement(createPConnectComponent(), {
       ...configObject,
-      // eslint-disable-next-line react/no-array-index-key
-      key: index.toString()
-    })
+
+      key: index.toString(),
+    }),
   );
 
   // Set up highlighted data to pass in return if is set to show, need raw metadata to pass to createComponent
   let highlightedDataArr = [];
   if (showHighlightedData) {
     const { highlightedData = [] } = (getPConnect().getRawMetadata() as any).config;
-    highlightedDataArr = highlightedData.map(field => {
+    highlightedDataArr = highlightedData.map((field) => {
       field.config.displayMode = 'STACKED_LARGE_VAL';
 
       // Mark as status display when using pyStatusWork

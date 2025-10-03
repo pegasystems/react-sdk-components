@@ -1,4 +1,4 @@
-export const getUserId = user => {
+export const getUserId = (user) => {
   let userId = '';
   if (typeof user === 'object' && user !== null && user.userId) {
     userId = user.userId;
@@ -8,6 +8,6 @@ export const getUserId = user => {
   return userId;
 };
 
-export const isUserNameAvailable = user => {
+export const isUserNameAvailable = (user) => {
   return typeof user === 'object' && user !== null && user.userName;
 };

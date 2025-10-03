@@ -14,7 +14,7 @@ const SEVERITY_MAP = {
   urgent: 'error',
   warning: 'warning',
   success: 'success',
-  info: 'info'
+  info: 'info',
 };
 
 export default function AlertBanner(props: AlertBannerProps) {
@@ -23,13 +23,13 @@ export default function AlertBanner(props: AlertBannerProps) {
 
   if (onDismiss) {
     additionalProps = {
-      onClose: onDismiss
+      onClose: onDismiss,
     };
   }
 
   return (
     <div id={id}>
-      {messages.map(message => (
+      {messages.map((message) => (
         <Alert key={message} variant='outlined' severity={SEVERITY_MAP[variant]} {...additionalProps}>
           {message}
         </Alert>

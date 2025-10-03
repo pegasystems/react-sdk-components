@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { useEffect, useState } from 'react';
 import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { getSdkConfig, loginIfNecessary } from '@pega/auth/lib/sdk-auth-manager';
@@ -33,24 +32,23 @@ export default function Embedded() {
       // this function will handle login process, and SdkConstellationReady event will be fired once PCore is ready
       loginIfNecessary({ appName: 'embedded', mainRedirect: false });
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Something went wrong while login', error);
     }
   };
 
-  const initializeRootContainerProps = renderObj => {
+  const initializeRootContainerProps = (renderObj) => {
     const { props } = renderObj;
 
     setRootProps(props);
   };
 
   const startMashup = () => {
-    PCore.onPCoreReady(async renderObj => {
+    PCore.onPCoreReady(async (renderObj) => {
       // Check that we're seeing the PCore version we expect
       compareSdkPCoreVersions();
 
       await getSdkComponentMap(localSdkComponentMap);
-      // eslint-disable-next-line no-console
+
       console.log(`SdkComponentMap initialized`);
 
       // Don't call initializeRootContainerProps until SdkComponentMap is fully initialized

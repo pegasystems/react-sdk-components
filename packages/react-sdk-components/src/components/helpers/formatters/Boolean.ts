@@ -16,6 +16,6 @@ export default {
     Boolean(value, {
       ...options,
       tick: options.trueLabel || 'True',
-      cross: options.falseLabel || 'False'
-    })
+      cross: options.falseLabel || 'False',
+    }),
 };

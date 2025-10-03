@@ -22,15 +22,15 @@ interface OperatorProps extends PConnProps {
   displayLabel?: any;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(1),
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   popover: {
     padding: theme.spacing(1),
-    margin: theme.spacing(1)
-  }
+    margin: theme.spacing(1),
+  },
 }));
 
 export default function Operator(props: OperatorProps) {
@@ -80,17 +80,17 @@ export default function Operator(props: OperatorProps) {
           {
             id: 'pyPosition',
             name: localizedVal('Position', localeCategory),
-            value: res.data.pyOperatorInfo.pyPosition ? res.data.pyOperatorInfo.pyPosition : fillerString
+            value: res.data.pyOperatorInfo.pyPosition ? res.data.pyOperatorInfo.pyPosition : fillerString,
           },
           {
             id: 'pyOrganization',
             name: localizedVal('Organization', localeCategory),
-            value: res.data.pyOperatorInfo.pyOrganization ? res.data.pyOperatorInfo.pyOrganization : fillerString
+            value: res.data.pyOperatorInfo.pyOrganization ? res.data.pyOperatorInfo.pyOrganization : fillerString,
           },
           {
             id: 'ReportToUserName',
             name: localizedVal('Reports to', localeCategory),
-            value: res.data.pyOperatorInfo.pyReportToUserName ? res.data.pyOperatorInfo.pyReportToUserName : fillerString
+            value: res.data.pyOperatorInfo.pyReportToUserName ? res.data.pyOperatorInfo.pyReportToUserName : fillerString,
           },
           {
             id: 'pyTelephone',
@@ -99,7 +99,7 @@ export default function Operator(props: OperatorProps) {
               <a href={`tel:${res.data.pyOperatorInfo.pyTelephone}`}>{res.data.pyOperatorInfo.pyTelephone}</a>
             ) : (
               fillerString
-            )
+            ),
           },
           {
             id: 'pyEmailAddress',
@@ -108,40 +108,39 @@ export default function Operator(props: OperatorProps) {
               <a href={`mailto:${res.data.pyOperatorInfo.pyEmailAddress}`}>{res.data.pyOperatorInfo.pyEmailAddress}</a>
             ) : (
               fillerString
-            )
-          }
+            ),
+          },
         ];
       } else {
-        // eslint-disable-next-line no-console
         console.log(
-          `Operator: PCore.getUserApi().getOperatorDetails(${caseOpId}); returned empty res.data.pyOperatorInfo.pyUserName - adding default`
+          `Operator: PCore.getUserApi().getOperatorDetails(${caseOpId}); returned empty res.data.pyOperatorInfo.pyUserName - adding default`,
         );
         fields = [
           {
             id: 'pyPosition',
             name: localizedVal('Position', localeCategory),
-            value: fillerString
+            value: fillerString,
           },
           {
             id: 'pyOrganization',
             name: localizedVal('Organization', localeCategory),
-            value: fillerString
+            value: fillerString,
           },
           {
             id: 'ReportToUserName',
             name: localizedVal('Reports to', localeCategory),
-            value: fillerString
+            value: fillerString,
           },
           {
             id: 'pyTelephone',
             name: localizedVal('Telephone', localeCategory),
-            value: fillerString
+            value: fillerString,
           },
           {
             id: 'pyEmailAddress',
             name: localizedVal('Email address', localeCategory),
-            value: fillerString
-          }
+            value: fillerString,
+          },
         ];
       }
       // Whatever the fields are, update the component's popoverFields
@@ -166,7 +165,7 @@ export default function Operator(props: OperatorProps) {
         <Grid2 size={{ xs: 12 }}>
           <Typography variant='h6'>{caseOpName}</Typography>
         </Grid2>
-        {popoverFields.map(field => {
+        {popoverFields.map((field) => {
           return (
             <React.Fragment key={field.id}>
               <Grid2 container size={{ xs: 12 }} spacing={1}>
@@ -197,8 +196,8 @@ export default function Operator(props: OperatorProps) {
           input: {
             readOnly: true,
             disableUnderline: true,
-            inputProps: { style: { cursor: 'pointer' } }
-          }
+            inputProps: { style: { cursor: 'pointer' } },
+          },
         }}
       />
       <br />
@@ -211,7 +210,7 @@ export default function Operator(props: OperatorProps) {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         slotProps={{
-          paper: { style: { maxWidth: '45ch' } }
+          paper: { style: { maxWidth: '45ch' } },
         }}
       >
         {getPopoverGrid()}

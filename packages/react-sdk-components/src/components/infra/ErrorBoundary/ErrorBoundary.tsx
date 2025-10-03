@@ -23,7 +23,6 @@ export default function ErrorBoundary(props: ErrorBoundaryProps) {
   const pConn = getPConnect();
 
   if (!isInternalError) {
-    // eslint-disable-next-line no-console
     console.error(`
   ${localizedVal('Unable to load the component', localeCategory)} ${pConn.getComponentName()}
   ${localizedVal('This might be due to the view metadata getting corrupted or the component file missing.', localeCategory)}
@@ -37,7 +36,6 @@ export default function ErrorBoundary(props: ErrorBoundaryProps) {
 
   if (pConn.getContainerName() === WORK_AREA || pConn.isInsideList() === true || pConn.getContainerName() === 'modal') {
     const { publish } = PCore.getPubSubUtils();
-    // @ts-ignore - second parameter “payload” for publish method should be optional
     publish(ERROR_WHILE_RENDERING);
     return null;
   }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import { forwardRef, type PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { TextField } from '@mui/material';
 import { debounce } from 'throttle-debounce';
@@ -50,28 +49,28 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
       },
       filterId,
       false,
-      getPConnect().getContextName()
+      getPConnect().getContextName(),
     );
     return function cleanup() {
       PCore.getPubSubUtils().unsubscribe(
         PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
         filterId,
-        getPConnect().getContextName()
+        getPConnect().getContextName(),
       );
     };
   });
 
-  const fireFilterChange = filterValue => {
+  const fireFilterChange = (filterValue) => {
     const filterData = {
       filterId,
-      filterExpression: getFilterExpression(filterValue, name, metadata)
+      filterExpression: getFilterExpression(filterValue, name, metadata),
     };
 
     PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE, filterData);
   };
 
   const fireFilterChangeDebounced = debounce(500, fireFilterChange);
-  const dateRangeChangeHandler = value => {
+  const dateRangeChangeHandler = (value) => {
     const { start, end } = value;
 
     let startDate = getFormattedDate(start);
@@ -85,20 +84,20 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
 
       const filterData = {
         filterId,
-        filterExpression: combineFilters([startFilter, endFilter], null)
+        filterExpression: combineFilters([startFilter, endFilter], null),
       };
       PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE, filterData);
     }
   };
 
   const renderAutoComplete = () => {
-    metadata.config.onRecordChange = e => {
+    metadata.config.onRecordChange = (e) => {
       fireFilterChange(e.id);
     };
     return getPConnect().createComponent(metadata, '', 0, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
   };
 
-  const onChange = dates => {
+  const onChange = (dates) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
@@ -109,7 +108,6 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
 
   const label = metadata.config.label.substring(3);
 
-  // eslint-disable-next-line react/no-unstable-nested-components
   const CustomDateInput = forwardRef<HTMLInputElement, TextProps>(({ value, onClick }, ref: any) => (
     <TextField label={label} variant='outlined' fullWidth value={value} size='small' onClick={onClick} ref={ref}>
       {value}
@@ -130,7 +128,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
       )}
       {type === 'AutoComplete' && (
         <span
-          onChange={event => {
+          onChange={(event) => {
             if (event && event.target && !(event.target as HTMLInputElement).value) {
               fireFilterChange('ALL');
             }
@@ -141,7 +139,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
       )}
       {children && (
         <span
-          onChange={event => {
+          onChange={(event) => {
             fireFilterChangeDebounced((event.target as HTMLInputElement).value);
           }}
         >

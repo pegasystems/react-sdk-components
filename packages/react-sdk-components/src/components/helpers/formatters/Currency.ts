@@ -12,7 +12,7 @@ function NumberFormatter(value, { locale = 'en-US', decPlaces = 2, style = '', c
 
 function CurrencyFormatter(
   value: string,
-  { symbol = true, position = 'before', locale = 'en-US', decPlaces = 2, style = 'currency', currency = 'USD' } = {}
+  { symbol = true, position = 'before', locale = 'en-US', decPlaces = 2, style = 'currency', currency = 'USD' } = {},
 ): string {
   const currentLocale: string | undefined = getLocale(locale);
   let formattedValue: string = value;
@@ -68,5 +68,5 @@ export default {
   Decimal: (value, options) => NumberFormatter(value, options),
   'Decimal-Auto': (value, options) => NumberFormatter(value, { ...options, decPlaces: Number.isInteger(value) ? 0 : 2 }),
   Integer: (value, options) => NumberFormatter(value, { ...options, decPlaces: 0 }),
-  Percentage: (value, options) => SymbolFormatter(value, { ...options, symbol: '%' })
+  Percentage: (value, options) => SymbolFormatter(value, { ...options, symbol: '%' }),
 };

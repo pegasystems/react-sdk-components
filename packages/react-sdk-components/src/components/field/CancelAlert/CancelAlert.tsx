@@ -30,28 +30,28 @@ export default function CancelAlert(props: CancelAlertProps) {
   const btnIds = {
     SAVE_AND_CLOSE: 'saveAndClose',
     CONTINUE_WORKING: 'continueWorking',
-    DELETE: 'delete'
+    DELETE: 'delete',
   };
 
   const [buttonsState, setButtonsState] = useState({
     [btnIds.SAVE_AND_CLOSE]: false,
-    [btnIds.DELETE]: false
+    [btnIds.DELETE]: false,
   });
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   function disableButton(id) {
-    setButtonsState(prevState => ({
+    setButtonsState((prevState) => ({
       ...prevState,
-      [id]: true
+      [id]: true,
     }));
   }
 
   function enableButton(id) {
-    setButtonsState(prevState => ({
+    setButtonsState((prevState) => ({
       ...prevState,
-      [id]: false
+      [id]: false,
     }));
   }
 

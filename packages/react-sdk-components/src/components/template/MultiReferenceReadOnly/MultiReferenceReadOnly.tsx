@@ -14,7 +14,7 @@ export default function MultiReferenceReadOnly(props: MultiReferenceReadOnlyProp
   let readonlyContextObject;
   if (!PCore.getAnnotationUtils().isProperty(referenceList)) {
     readonlyContextObject = {
-      referenceList: readonlyContextList
+      referenceList: readonlyContextList,
     };
   }
 
@@ -25,12 +25,12 @@ export default function MultiReferenceReadOnly(props: MultiReferenceReadOnlyProp
         ...config,
         ...readonlyContextObject,
         label,
-        hideLabel
-      }
+        hideLabel,
+      },
     },
     '',
     0,
-    {}
+    {},
   ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
 
   return <>{component}</>;

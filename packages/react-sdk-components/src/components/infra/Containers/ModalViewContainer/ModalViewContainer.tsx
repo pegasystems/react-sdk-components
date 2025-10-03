@@ -43,7 +43,7 @@ function getKeyAndLatestItem(routinginfo, pConn, options) {
   if (PCore.getContainerUtils().hasContainerItems(buildName(pConn, containerName))) {
     const { accessedOrder, items } = routinginfo;
     let key;
-    // eslint-disable-next-line no-plusplus
+
     for (let i = accessedOrder.length - 1; i >= 0; i--) {
       const tempkey = accessedOrder[i];
       if ((acTertiary && items[tempkey].acTertiary) || (!acTertiary && !items[tempkey].acTertiary)) {
@@ -64,8 +64,8 @@ function getConfigObject(item, pConnect, isReverseCoexistence = false) {
       options: {
         pageReference: pConnect?.getPageReference(),
         hasForm: true,
-        containerName: pConnect?.getContainerName() || PCore.getConstants().MODAL
-      }
+        containerName: pConnect?.getContainerName() || PCore.getConstants().MODAL,
+      },
     };
     return PCore.createPConnect(config);
   }
@@ -80,27 +80,27 @@ function getConfigObject(item, pConnect, isReverseCoexistence = false) {
         hasForm: true,
         ...(isBulkAction && { isBulkAction }),
         containerName: pConnect?.getContainerName() || PCore.getConstants().MODAL,
-        target
-      }
+        target,
+      },
     };
     return PCore.createPConnect(config);
   }
   return null;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dlgTitle: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(0)
+    marginBottom: theme.spacing(0),
   },
   dlgContent: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     marginTop: theme.spacing(0),
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 export default function ModalViewContainer(props: ModalViewContainerProps) {
@@ -118,7 +118,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
   const { acTertiary } = pConn.getConfigProps() as any;
   const {
     CONTAINER_TYPE: { MULTIPLE },
-    PUB_SUB_EVENTS: { EVENT_SHOW_CANCEL_ALERT }
+    PUB_SUB_EVENTS: { EVENT_SHOW_CANCEL_ALERT },
   } = PCore.getConstants();
   const { subscribe, unsubscribe } = PCore.getPubSubUtils();
   const [bShowModal, setShowModal] = useState(false);
@@ -153,7 +153,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         itemKey: contextName,
         hideDelete,
         isDataObject,
-        skipReleaseLockRequest
+        skipReleaseLockRequest,
       });
       setShowCancelAlert(true);
     }
@@ -162,7 +162,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
   function handleModalOpen(key) {
     modalCollection.current = {
       ...modalCollection.current,
-      [key]: {}
+      [key]: {},
     };
   }
 
@@ -178,7 +178,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     }
   }
 
-  const dismissCancelAlert = dismissAllModals => {
+  const dismissCancelAlert = (dismissAllModals) => {
     setShowCancelAlert(false);
 
     if (dismissAllModals) {
@@ -214,14 +214,14 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     subscribe(EVENT_SHOW_CANCEL_ALERT, showAlert, EVENT_SHOW_CANCEL_ALERT /* Unique string for subscription */);
     subscribe(
       ERROR_WHILE_RENDERING,
-      error => {
+      (error) => {
         // setError(true);
-        // eslint-disable-next-line no-console
+
         console.error(error);
       },
       `${ERROR_WHILE_RENDERING}-mc-${getPConnect().getContextName()}`,
       false,
-      getPConnect().getContextName()
+      getPConnect().getContextName(),
     );
 
     // Unsubscribe on component unmount
@@ -265,8 +265,8 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
           arChildrenAsReact.push(
             createElement(createPConnectComponent(), {
               ...configObject,
-              key: `${caseName}-${ID}`
-            })
+              key: `${caseName}-${ID}`,
+            }),
           );
         } else {
           // This is the 8.6 implementation. Leaving it in for reference for now.
@@ -277,7 +277,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
             const caseSummaryID = child.getPConnect().getCaseSummary().ID;
             return createElement(createPConnectComponent(), {
               ...child,
-              key: caseSummaryID
+              key: caseSummaryID,
             });
           });
         }
@@ -322,7 +322,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
                 isInModal
                 banners={getBanners({
                   target: itemKey,
-                  pageMessages
+                  pageMessages,
                 })}
               >
                 {arNewChildrenAsReact}

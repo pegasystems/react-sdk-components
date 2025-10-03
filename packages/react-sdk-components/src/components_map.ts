@@ -817,7 +817,7 @@ const ComponentMap: any[] = [
     //     )
     //   ]
     // }
-  }
+  },
 ];
 
 export const LazyMap: any[] = [{}];

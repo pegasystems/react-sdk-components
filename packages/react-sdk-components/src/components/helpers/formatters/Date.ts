@@ -48,24 +48,24 @@ export default {
     DateFormatter(value, {
       ...options,
       type: 'customFormat',
-      format: 'MMM DD, YYYY'
+      format: 'MMM DD, YYYY',
     }),
-  'DateTime-Since': value => DateFormatter(value, { type: 'fromNow' }),
+  'DateTime-Since': (value) => DateFormatter(value, { type: 'fromNow' }),
   'Time-Only': (value, options) =>
     TimeFormatter(value, {
       ...options,
       type: 'customFormat',
-      format: 'hh:mm:ss A'
+      format: 'hh:mm:ss A',
     }),
   convertToTimezone: (value, options) => {
     return value && options && options.timezone
       ? DateFormatter(value, {
           ...options,
           type: 'customFormat',
-          format: 'YYYY-MM-DDTHH:mm:ss'
+          format: 'YYYY-MM-DDTHH:mm:ss',
         })
       : value;
   },
   convertFromTimezone: (value, timezone) => (value && timezone ? dayjs.tz(value, timezone).utc().format() : value),
-  Date: (value, options) => DateFormatter(value, { type: 'customFormat', ...options })
+  Date: (value, options) => DateFormatter(value, { type: 'customFormat', ...options }),
 };

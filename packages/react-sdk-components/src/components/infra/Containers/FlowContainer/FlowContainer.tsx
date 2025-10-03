@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import { useState, useEffect, useContext } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import { Alert, Card, CardHeader, Avatar, Typography } from '@mui/material';
@@ -30,7 +28,7 @@ interface FlowContainerProps extends PConnProps {
 // is totally at your own risk.
 //
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(2),
     paddingLeft: theme.spacing(2),
@@ -39,16 +37,16 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   alert: {
     marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
   },
   avatar: {
     backgroundColor: theme.palette.primary.light,
-    color: theme.palette.getContrastText(theme.palette.primary.light)
-  }
+    color: theme.palette.getContrastText(theme.palette.primary.light),
+  },
 }));
 
 export const FlowContainer = (props: FlowContainerProps) => {
@@ -67,7 +65,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
     rootViewElement,
     getPConnectOfActiveContainerItem,
     assignmentNames,
-    activeContainerItemID: itemKey
+    activeContainerItemID: itemKey,
   } = props;
 
   const { displayOnlyFA } = useContext<any>(StoreContext);
@@ -137,7 +135,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
   }, []);
 
   useEffect(() => {
-    // @ts-ignore - Property 'getMetadata' is private and only accessible within class 'C11nEnv'
+    // @ts-expect-error - Property 'getMetadata' is private and only accessible within class 'C11nEnv'
     if (isInitialized && pConnectOfFlowContainer.getMetadata().children && !hasItems) {
       // ensuring not to add container items, if container already has items
       // because during multi doc mode, we will have container items already in store
@@ -156,8 +154,8 @@ export const FlowContainer = (props: FlowContainerProps) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       loadingInfo = thePConn.getLoadingStatus();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (ex) {
-      // eslint-disable-next-line no-console
       console.error(`${thePConn.getComponentName()}: loadingInfo catch block`);
     }
 
@@ -206,7 +204,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
 
   const displayPageMessages = () => {
     let hasBanner = false;
-    const messages = pageMessages ? pageMessages.map(msg => localizedVal(msg.message, 'Messages')) : pageMessages;
+    const messages = pageMessages ? pageMessages.map((msg) => localizedVal(msg.message, 'Messages')) : pageMessages;
     hasBanner = messages && messages.length > 0;
     return hasBanner && <AlertBanner id='flowContainerBanner' variant='urgent' messages={messages} />;
   };

@@ -20,7 +20,7 @@ export default function Group(props: GroupProps) {
   const content = useMemo(() => {
     return (
       <Grid2 container spacing={2}>
-        {children?.map(child => (
+        {children?.map((child) => (
           <Grid2 size={{ xs: 12 }} key={child.key}>
             {child}
           </Grid2>

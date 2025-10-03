@@ -38,7 +38,7 @@ const NO_HEADER_TEMPLATES = [
   'WideNarrowDetails',
   'Confirmation',
   'DynamicTabs',
-  'DetailsSubTabs'
+  'DetailsSubTabs',
 ];
 
 export default function View(props: PropsWithChildren<ViewProps>) {
@@ -175,7 +175,7 @@ View.additionalProps = (state, getPConnect) => {
       // eslint-disable-next-line no-case-declarations
       const unresFields = {
         primaryFields: allFields[0],
-        secondaryFields: allFields[1]
+        secondaryFields: allFields[1],
       };
       propObj = thePConn.resolveConfigProps(unresFields);
       break;

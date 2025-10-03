@@ -5,7 +5,7 @@ import { isContainerInitialized } from '../container-helpers';
 
 const processRootViewDetails = (rootView, containerItem, options) => {
   const {
-    config: { context: viewContext, name: viewName }
+    config: { context: viewContext, name: viewName },
   } = rootView;
   const { context: containerContext } = containerItem;
   const { parentGetPConnect } = options;
@@ -21,7 +21,7 @@ const processRootViewDetails = (rootView, containerItem, options) => {
     resolvedViewContext = PCore.getStoreValue(
       `.${viewContextProperty}`,
       viewContextProperty.startsWith('.') ? parentGetPConnect().getPageReference() : '',
-      containerContext
+      containerContext,
     );
   }
 
@@ -48,7 +48,7 @@ const processRootViewDetails = (rootView, containerItem, options) => {
 
   return {
     viewName: resolvedViewName,
-    viewContext: resolvedViewContext
+    viewContext: resolvedViewContext,
   };
 };
 
@@ -84,8 +84,8 @@ export const getPConnectOfActiveContainerItem = (containerInfo, options) => {
             containerName === CONTAINER_NAMES.WORKAREA ||
             containerName === CONTAINER_NAMES.MODAL ||
             viewName === CREATE_DETAILS_VIEW_NAME,
-          target
-        }
+          target,
+        },
       };
 
       return PCore.createPConnect(config).getPConnect;
@@ -102,7 +102,7 @@ export const getActiveContainerRootViewElement = (containerInfo, options) => {
   return null;
 };
 
-export const getActiveContainerItemID = containerInfo => {
+export const getActiveContainerItemID = (containerInfo) => {
   const { accessedOrder } = containerInfo;
   if (accessedOrder && accessedOrder.length > 0) {
     return accessedOrder[accessedOrder.length - 1];
@@ -118,7 +118,7 @@ export const useContainerInitializer = (getPConnect, mode) => {
     if (!isContainerInitialized(pConnect)) {
       containerManager.initializeContainers({
         type: mode,
-        name: containerName
+        name: containerName,
       });
     }
   });

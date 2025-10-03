@@ -38,7 +38,7 @@ export default function ViewContainer(props: ViewContainerProps) {
     dispatchObject: { semanticURL: '', context: '', acName: '' },
     visible: false,
     loadingInfo: null,
-    isLoadingInfoChange: false
+    isLoadingInfoChange: false,
   }); // was this.state in class-based ViewContainer avoiding use of just "state" as the name
 
   let root;
@@ -65,7 +65,7 @@ export default function ViewContainer(props: ViewContainerProps) {
     return {
       semanticURL: '',
       context: baseContext,
-      acName
+      acName,
     };
   }
 
@@ -93,7 +93,7 @@ export default function ViewContainer(props: ViewContainerProps) {
   useEffect(() => {
     // This is adapted from the class-based ViewContainer constructor
     containerMgr.initializeContainers({
-      type: mode === CONTAINER_TYPE.MULTIPLE ? CONTAINER_TYPE.MULTIPLE : CONTAINER_TYPE.SINGLE
+      type: mode === CONTAINER_TYPE.MULTIPLE ? CONTAINER_TYPE.MULTIPLE : CONTAINER_TYPE.SINGLE,
     });
 
     if (mode === CONTAINER_TYPE.MULTIPLE && limit) {
@@ -107,7 +107,7 @@ export default function ViewContainer(props: ViewContainerProps) {
       // PCore is defined in pxBootstrapShell - eventually will be exported in place of constellationCore
       visible: !PCore.checkIfSemanticURL(),
       loadingInfo,
-      isLoadingInfoChange: false
+      isLoadingInfoChange: false,
     });
 
     const { visible } = dispatchObjState;
@@ -133,7 +133,7 @@ export default function ViewContainer(props: ViewContainerProps) {
       // configureForBrowserBookmark not applicable in Embedded mode
       PCore.configureForBrowserBookmark({
         ...objectForAddContainer,
-        defaultViewLabel
+        defaultViewLabel,
       });
     }
   }, []);
@@ -164,7 +164,7 @@ export default function ViewContainer(props: ViewContainerProps) {
           pageReference: context || getPConnect().getPageReference(),
           containerName: getPConnect().getContainerName(),
           containerItemName: key,
-          hasForm: viewName === CREATE_DETAILS_VIEW_NAME
+          hasForm: viewName === CREATE_DETAILS_VIEW_NAME,
         };
         const configObject: any = PCore.createPConnect(config);
 

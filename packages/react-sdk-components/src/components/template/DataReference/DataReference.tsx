@@ -56,7 +56,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     isCreationOfNewRecordAllowedForReference,
     contextClass,
     inline,
-    selectionList
+    selectionList,
   } = props;
 
   const isMounted = useIsMount();
@@ -82,12 +82,12 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   const { allowImplicitRefresh } = isInfinity
     ? PCore.getFieldDefaultUtils().fieldDefaults.DataReference || {}
     : {
-        allowImplicitRefresh: true
+        allowImplicitRefresh: true,
       };
 
   let firstChildPConnect;
 
-  const localizedPlaceholderOption = placeholder => {
+  const localizedPlaceholderOption = (placeholder) => {
     const { GENERIC_BUNDLE_KEY } = PCore.getLocaleUtils?.() ?? {};
     const localizedDefaultPlaceholder = pConn.getLocalizedValue('select_placeholder_default', 'CosmosFields', GENERIC_BUNDLE_KEY);
     // If we have a placeholder, push that option in the list of items
@@ -115,22 +115,22 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
           PCore.getDataApiUtils().getData(
             refList,
             {
-              dataViewParameters: parameters
+              dataViewParameters: parameters,
             } as any,
-            ''
+            '',
           ) as Promise<any>
         )
-          .then(res => {
+          .then((res) => {
             if (res.data.data !== null) {
               const ddDataSource = firstChildMeta.config.datasource.filterDownloadedFields
                 ? res.data.data
                 : res.data.data
-                    .map(listItem => ({
+                    .map((listItem) => ({
                       key: listItem[key.split(' .', 2)[1]],
                       text: listItem[text.split(' .', 2)[1]],
-                      value: listItem[value.split(' .', 2)[1]]
+                      value: listItem[value.split(' .', 2)[1]],
                     }))
-                    .filter(item => item.key);
+                    .filter((item) => item.key);
               // Filtering out undefined entries that will break preview
               setDropDownDataSource(ddDataSource);
             } else {
@@ -138,11 +138,10 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
               setDropDownDataSource(ddDataSource);
             }
           })
-          .catch(err => {
-            // eslint-disable-next-line no-console
+          .catch((err) => {
             console.error(err?.stack);
             return Promise.resolve({
-              data: { data: [] }
+              data: { data: [] },
             });
           });
       }
@@ -173,7 +172,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     }
   }
 
-  const handleSelection = event => {
+  const handleSelection = (event) => {
     const caseKey = pConn.getCaseInfo().getKey();
     const refreshOptions: any = { autoDetectRefresh: true };
 
@@ -208,12 +207,12 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
           .catch(() => {});
       }
     } else if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
-      (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then(caseResponse => {
+      (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then((caseResponse) => {
         const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
         let curr = {};
         const commitData = curr;
 
-        pageTokens.forEach(el => {
+        pageTokens.forEach((el) => {
           if (el !== '') {
             curr[el] = {};
             curr = curr[el];
@@ -236,9 +235,9 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
             caseKey,
             { [caseKey]: commitData },
             caseResponse.headers.etag,
-            pConn.getContextName()
+            pConn.getContextName(),
           ) as Promise<any>
-        ).then(response => {
+        ).then((response) => {
           PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
           PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
         });
@@ -277,7 +276,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
         <MultiReferenceReadonly
           config={{
             ...firstChildMeta.config,
-            localeReference: rawViewMetadata.config.localeReference
+            localeReference: rawViewMetadata.config.localeReference,
           }}
           getPConnect={firstChildPConnect}
           displayAs={displayAs}
@@ -329,7 +328,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     let fieldMetaData: any = null;
     if (isDDSourceDeferred && !firstChildMeta.config.deferDatasource) {
       fieldMetaData = {
-        datasourceMetadata: refFieldMetadata
+        datasourceMetadata: refFieldMetadata,
       };
       if (rawViewMetadata.config?.parameters) {
         fieldMetaData.datasourceMetadata.datasource.parameters = parameters;
@@ -342,13 +341,12 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
         : firstChildMeta?.config?.datasource?.fields?.value;
       fieldMetaData.datasourceMetadata.datasource.name = rawViewMetadata.config?.referenceList;
     }
-    // @ts-ignore
+    // @ts-expect-error
     const { disableStartingFieldsForReference = false } = PCore.getEnvironmentInfo().environmentInfoObject?.features?.form || {};
-    // @ts-ignore
+    // @ts-expect-error
     let { isCreateNewReferenceEnabled = false } = PCore.getEnvironmentInfo().environmentInfoObject?.features?.form || {};
 
     if (isCreateNewReferenceEnabled) {
-      // @ts-ignore
       isCreateNewReferenceEnabled = isCreationOfNewRecordAllowedForReference && PCore.getAccessPrivilege().hasCreateAccess(contextClass);
     }
 
@@ -358,10 +356,9 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
         if (!disableStartingFieldsForReference) {
           startingFields.pyAddCaseContextPage = { pyID: pConn.getCaseInfo().getKey()?.split(' ')?.pop() };
         }
-        // @ts-ignore
         return pConn.getActionsApi().createWork(contextClass, {
           openCaseViewAfterCreate: false,
-          startingFields
+          startingFields,
         });
       }
       if (referenceType === 'Data' || firstChildMeta?.config?.referenceType === 'Data') {
@@ -371,7 +368,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
 
     const additionalInfo = refFieldMetadata?.additionalInformation
       ? {
-          content: refFieldMetadata.additionalInformation
+          content: refFieldMetadata.additionalInformation,
         }
       : undefined;
 
@@ -387,23 +384,23 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       displayAs,
       readOnly: false,
       ...(selectionMode === SELECTION_MODE.SINGLE && {
-        referenceType
+        referenceType,
       }),
       ...(selectionMode === SELECTION_MODE.SINGLE &&
         displayAs === 'advancedSearch' && {
           value: rawViewMetadata.config.value,
-          contextPage: rawViewMetadata.config.contextPage
+          contextPage: rawViewMetadata.config.contextPage,
         }),
       ...(selectionMode === SELECTION_MODE.MULTI &&
         displayAs === 'advancedSearch' && {
           selectionList,
-          readonlyContextList: rawViewMetadata.config.readonlyContextList
+          readonlyContextList: rawViewMetadata.config.readonlyContextList,
         }),
       dataRelationshipContext: rawViewMetadata.config.contextClass && rawViewMetadata.config.name ? rawViewMetadata.config.name : null,
       hideLabel,
       onRecordChange: handleSelection,
       createNewRecord: isCreateNewReferenceEnabled ? createNewRecord : undefined,
-      inline
+      inline,
     };
 
     const searchSelectCacheKey = componentCachePersistUtils.getComponentStateKey(getPConnect, rawViewMetadata.config.name);
@@ -413,7 +410,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
       isCreateNewReferenceEnabled,
       disableStartingFieldsForReference,
       pyID,
-      searchSelectCacheKey
+      searchSelectCacheKey,
     };
 
     if (displayAs === 'advancedSearch') {
@@ -437,9 +434,9 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
           dataReferenceConfigToChild,
           isCreateNewReferenceEnabled,
           disableStartingFieldsForReference,
-          pyID
-        })
-      }
+          pyID,
+        }),
+      },
     });
   }, [firstChildMeta.config?.datasource?.source, parameters, dropDownDataSource, propsToUse.required, propsToUse.disabled]);
 
@@ -447,7 +444,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   if (firstChildMeta?.type !== 'Region') {
     const viewsRegion = rawViewMetadata.children[1];
     if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
-      viewsRegion.children.map(child => {
+      viewsRegion.children.map((child) => {
         child.config.isEmbeddedInDataReference = true;
         return child;
       });
@@ -464,7 +461,6 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   ) : (
     <div>
       {childrenToRender.map((child, index) => (
-        // eslint-disable-next-line react/no-array-index-key
         <React.Fragment key={index}>{child}</React.Fragment>
       ))}
     </div>

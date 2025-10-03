@@ -22,7 +22,7 @@ const insertInstruction = (c11nEnv, selectionList, selectionKey, primaryField, i
   const content = {
     [actualProperty]: id,
     [displayProperty]: primary,
-    nonFormProperties: actualProperty !== displayProperty ? [displayProperty] : []
+    nonFormProperties: actualProperty !== displayProperty ? [displayProperty] : [],
   };
   c11nEnv.getListActions().insert(content, startIndex);
 };
@@ -31,7 +31,7 @@ const deleteInstruction = (c11nEnv, selectionList, selectionKey, item) => {
   const { id } = item;
   const actualProperty = selectionKey.startsWith('.') ? selectionKey.substring(1) : selectionKey;
   const rows = c11nEnv.getValue(`${c11nEnv.getPageReference()}${selectionList}`) || [];
-  const index = rows.findIndex(row => row[actualProperty] === id);
+  const index = rows.findIndex((row) => row[actualProperty] === id);
   c11nEnv.getListActions().deleteEntry(index);
 };
 

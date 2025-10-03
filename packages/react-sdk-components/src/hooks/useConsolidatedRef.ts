@@ -13,9 +13,9 @@ const useConsolidatedRef = <T>(...refs: (Ref<T> | undefined)[]): RefObject<T> =>
       configurable: true,
       enumerable: true,
       get: () => targetRef.current,
-      set: value => {
+      set: (value) => {
         targetRef.current = value;
-        refs.forEach(ref => {
+        refs.forEach((ref) => {
           if (!ref) return;
 
           if (typeof ref === 'function') {
@@ -24,8 +24,8 @@ const useConsolidatedRef = <T>(...refs: (Ref<T> | undefined)[]): RefObject<T> =>
             (ref as MutableRefObject<T | null>).current = targetRef.current;
           }
         });
-      }
-    })
+      },
+    }),
   );
 
   return refProxy;

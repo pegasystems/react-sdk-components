@@ -15,7 +15,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Typography
+  Typography,
 } from '@mui/material';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -42,7 +42,7 @@ import './NavBar.css';
 
 interface NavBarProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  // eslint-disable-next-line react/no-unused-prop-types
+
   appName?: string;
   pages?: any[];
   caseTypes: any[];
@@ -56,47 +56,47 @@ const iconMap = {
   'pi pi-tablet': <TabletAndroidOutlineIcon fontSize='large' />,
   'pi pi-ambulance': <AirportShuttleOutlinedIcon fontSize='large' />,
   'pi pi-ink-solid': <EditOutlinedIcon fontSize='large' />,
-  'pi pi-columns': <HomeOutlinedIcon fontSize='large' />
+  'pi pi-columns': <HomeOutlinedIcon fontSize='large' />,
 };
 
 const drawerWidth = 300;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     position: 'relative',
     whiteSpace: 'nowrap',
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
+      duration: theme.transitions.duration.enteringScreen,
     }),
-    height: '100vh'
+    height: '100vh',
   },
   drawerPaperClose: {
     overflowX: 'hidden',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
     [theme.breakpoints.up('md')]: {
-      width: theme.spacing(9)
+      width: theme.spacing(9),
     },
-    height: '100vh'
+    height: '100vh',
   },
   nested: {
-    paddingLeft: theme.spacing(4)
+    paddingLeft: theme.spacing(4),
   },
   appListItem: {
     backgroundColor: theme.palette.primary.light,
-    color: theme.palette.getContrastText(theme.palette.primary.light)
+    color: theme.palette.getContrastText(theme.palette.primary.light),
   },
   appListLogo: {
     marginRight: theme.spacing(2),
-    width: '3.6rem'
+    width: '3.6rem',
   },
   appListIcon: {
-    color: theme.palette.getContrastText(theme.palette.primary.light)
+    color: theme.palette.getContrastText(theme.palette.primary.light),
   },
   appListDiv: {
     backgroundColor: theme.palette.primary.light,
@@ -105,11 +105,11 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: theme.spacing(2),
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   applicationLabel: {
-    whiteSpace: 'initial'
-  }
+    whiteSpace: 'initial',
+  },
 }));
 
 export default function NavBar(props: NavBarProps) {
@@ -145,7 +145,6 @@ export default function NavBar(props: NavBarProps) {
       .getActionsApi()
       .showPage(pyRuleName, pyClassName)
       .then(() => {
-        // eslint-disable-next-line no-console
         console.log(`${localizedVal('showPage completed', localeCategory)}`);
       });
   }
@@ -154,14 +153,13 @@ export default function NavBar(props: NavBarProps) {
     setOpen(false);
     const actionInfo = {
       containerName: 'primary',
-      flowType: sFlowType || 'pyStartCase'
+      flowType: sFlowType || 'pyStartCase',
     };
 
     pConn
       .getActionsApi()
       .createWork(sCaseType, actionInfo)
       .then(() => {
-        // eslint-disable-next-line no-console
         console.log(`${localizedVal('createWork completed', localeCategory)}`);
       });
   }
@@ -193,7 +191,7 @@ export default function NavBar(props: NavBarProps) {
     <Drawer
       variant='permanent'
       classes={{
-        paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose)
+        paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
       }}
       open={open && isDesktop}
     >
@@ -233,7 +231,7 @@ export default function NavBar(props: NavBarProps) {
       </List>
       <Collapse in={bShowCaseTypes && open} timeout='auto' unmountOnExit className='scrollable'>
         <List component='div' disablePadding>
-          {caseTypes.map(caseType => (
+          {caseTypes.map((caseType) => (
             <ListItemButton
               className={classes.nested}
               onClick={() => navPanelCreateCaseType(caseType.pyClassName, caseType.pyFlowType)}
@@ -248,7 +246,7 @@ export default function NavBar(props: NavBarProps) {
         </List>
       </Collapse>
       <List>
-        {navPages.map(page => (
+        {navPages.map((page) => (
           <ListItemButton onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
             <ListItemIcon>{iconMap[page.pxPageViewIcon]}</ListItemIcon>
             <ListItemText primary={localeUtils.getLocaleValue(page.pyLabel, '', localeReference)} />
@@ -280,11 +278,11 @@ export default function NavBar(props: NavBarProps) {
             onClick={navPanelOperatorButtonClick}
             anchorOrigin={{
               vertical: 'top',
-              horizontal: 'right'
+              horizontal: 'right',
             }}
             transformOrigin={{
               vertical: 'top',
-              horizontal: 'left'
+              horizontal: 'left',
             }}
           >
             <MenuItem onClick={logout}>

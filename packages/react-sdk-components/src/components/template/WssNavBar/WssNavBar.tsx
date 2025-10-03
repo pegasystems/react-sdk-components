@@ -17,33 +17,33 @@ interface WssNavBarProps extends PConnProps {
   navLinks: any[];
   operator: { currentUserInitials: string };
   navDisplayOptions: { alignment: string; position: string };
-  // eslint-disable-next-line react/no-unused-prop-types
+
   portalName: string;
   imageSrc: string;
-  // eslint-disable-next-line react/no-unused-prop-types
+
   fullImageSrc: string;
   appName: any;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   content: {
     flexGrow: 1,
     height: '100vh',
     marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   appListLogo: {
-    width: '3.6rem'
+    width: '3.6rem',
   },
   appName: {
     color: 'white',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(4),
-    fontSize: '1.5rem'
-  }
+    fontSize: '1.5rem',
+  },
 }));
 
 export default function WssNavBar(props: WssNavBarProps) {
@@ -74,7 +74,7 @@ export default function WssNavBar(props: WssNavBarProps) {
 
   const navLinksContent = (
     <Box id='nav-links' sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} style={{ justifyContent: alignment }}>
-      {navLinks.map(link => (
+      {navLinks.map((link) => (
         <Button className='link-style' key={link.text} onClick={link.onClick}>
           {link.text}
         </Button>
@@ -107,17 +107,17 @@ export default function WssNavBar(props: WssNavBarProps) {
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'left'
+                  horizontal: 'left',
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'left'
+                  horizontal: 'left',
                 }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
               >
-                {navLinks.map(link => (
+                {navLinks.map((link) => (
                   <MenuItem key={link.text} onClick={link.onClick}>
                     <Typography>{link.text}</Typography>
                   </MenuItem>
@@ -136,12 +136,12 @@ export default function WssNavBar(props: WssNavBarProps) {
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                   vertical: 'top',
-                  horizontal: 'right'
+                  horizontal: 'right',
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right'
+                  horizontal: 'right',
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}

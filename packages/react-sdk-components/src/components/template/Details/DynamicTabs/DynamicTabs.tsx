@@ -8,8 +8,8 @@ import type { PConnProps } from '../../../../types/PConnProps';
 
 const useStyles = makeStyles(() => ({
   tab: {
-    minWidth: '72px'
-  }
+    minWidth: '72px',
+  },
 }));
 
 interface DynamicTabsProps extends PConnProps {
@@ -38,7 +38,7 @@ function DynamicTabs(props: DynamicTabsProps) {
       Children.toArray(
         referenceListData.map((item, index) => {
           return <React.Fragment key={item[tablabelProp]}>{buildView(pConnect, index, '')}</React.Fragment>;
-        })
+        }),
       )
     );
   }, [referenceListData]);
@@ -52,7 +52,7 @@ function DynamicTabs(props: DynamicTabsProps) {
       const currentTabLabel = item[tablabelProp] || PCore.getLocaleUtils().getLocaleValue('No label specified in config', 'Generic');
       return {
         name: currentTabLabel,
-        id: i
+        id: i,
       };
     }) || [];
 

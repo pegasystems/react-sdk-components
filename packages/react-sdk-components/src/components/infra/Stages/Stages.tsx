@@ -10,7 +10,7 @@ interface StagesProps extends PConnProps {
   stages: any[];
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -19,21 +19,21 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   completedStage: {
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   currentStage: {
     color: theme.palette.info.dark,
-    fontWeight: 600
+    fontWeight: 600,
   },
   futureStage: {
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   separatorIcon: {
-    color: theme.palette.text.disabled
-  }
+    color: theme.palette.text.disabled,
+  },
 }));
 
 /**
@@ -47,7 +47,7 @@ function getFilteredStages(stages) {
     return [];
   }
 
-  return stages.filter(stage => stage.type !== 'Alternate' || (stage.type === 'Alternate' && stage.visited_status === 'active'));
+  return stages.filter((stage) => stage.type !== 'Alternate' || (stage.type === 'Alternate' && stage.visited_status === 'active'));
 }
 
 /* TODO - this component should be refactored and not exposed as top level DX Component -
@@ -68,7 +68,7 @@ export default function Stages(props: StagesProps) {
       id: theID,
       complete: stage.visited_status === 'completed',
       current: theID === currentStageID,
-      last: index === arr.length - 1
+      last: index === arr.length - 1,
     };
   });
 

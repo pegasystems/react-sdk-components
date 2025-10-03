@@ -1,8 +1,3 @@
-/* eslint-disable no-plusplus */
-
-/* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable @typescript-eslint/no-shadow */
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { Theme } from '@mui/material/styles';
 import createStyles from '@mui/styles/createStyles';
@@ -94,7 +89,7 @@ export default function ListView(props: ListViewProps) {
     viewName,
     readonlyContextList: selectedValues,
     value,
-    displayAs
+    displayAs,
   } = props;
   let { showRecords } = props;
   const ref = useRef({}).current;
@@ -109,7 +104,7 @@ export default function ListView(props: ListViewProps) {
     setListContext,
     ref,
     showDynamicFields,
-    cosmosTableRef
+    cosmosTableRef,
   });
 
   useClearSelectionsAndUpdateTable({ getPConnect, uniqueId, viewName });
@@ -156,33 +151,33 @@ export default function ListView(props: ListViewProps) {
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
-        width: '100%'
+        width: '100%',
       },
       paper: {
         width: '100%',
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        display: 'grid'
+        display: 'grid',
       },
       search: {
-        padding: '5px 5px'
+        padding: '5px 5px',
       },
       table: {
-        minWidth: 750
+        minWidth: 750,
       },
       tableInForm: {
         minWidth: 750,
         maxHeight: 550,
-        overflow: 'auto'
+        overflow: 'auto',
       },
       moreIcon: {
-        verticalAlign: 'bottom'
+        verticalAlign: 'bottom',
       },
       filteredIcon: {
-        verticalAlign: 'bottom'
+        verticalAlign: 'bottom',
       },
       cell: {
-        whiteSpace: 'nowrap'
+        whiteSpace: 'nowrap',
       },
       visuallyHidden: {
         border: 0,
@@ -193,13 +188,13 @@ export default function ListView(props: ListViewProps) {
         padding: 0,
         position: 'absolute',
         top: 20,
-        width: 1
+        width: 1,
       },
       title: {
         marginTop: theme.spacing(1),
-        marginLeft: theme.spacing(1)
-      }
-    })
+        marginLeft: theme.spacing(1),
+      },
+    }),
   );
 
   const classes = useStyles();
@@ -222,7 +217,7 @@ export default function ListView(props: ListViewProps) {
           }
         }
       },
-      [getPConnect, viewName]
+      [getPConnect, viewName],
     );
 
     useEffect(() => {
@@ -273,7 +268,7 @@ export default function ListView(props: ListViewProps) {
       if (order !== 0) return order;
       return a[1] - b[1];
     });
-    return stabilizedThis.map(el => el[0]);
+    return stabilizedThis.map((el) => el[0]);
   }
 
   const [page, setPage] = useState(0);
@@ -295,7 +290,7 @@ export default function ListView(props: ListViewProps) {
       if (theField.indexOf('.') === 0) {
         theField = theField.substring(1);
       }
-      const colIndex = fields.findIndex(ele => ele.name === theField);
+      const colIndex = fields.findIndex((ele) => ele.name === theField);
       // const displayAsLink = field.config.displayAsLink;
       const { additionalDetails = {} } = field.config;
       let shouldDisplayAsSemanticLink = additionalDetails.type === 'DISPLAY_LINK';
@@ -327,7 +322,6 @@ export default function ListView(props: ListViewProps) {
     if (selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) {
       const record = arTableData?.length > 0 ? arTableData[0] : '';
       if (typeof record === 'object' && !('pyGUID' in record) && !('pyID' in record)) {
-        // eslint-disable-next-line no-console
         console.error('pyGUID or pyID values are mandatory to select the required row from the list');
       }
     }
@@ -356,8 +350,8 @@ export default function ListView(props: ListViewProps) {
     let dashboardFilterPayload: any = {
       query: {
         filter: {},
-        select: []
-      }
+        select: [],
+      },
     };
     if (displayAs === 'advancedSearch') {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -373,9 +367,9 @@ export default function ListView(props: ListViewProps) {
       field = getFieldFromFilter(filterExpression, isDateRange);
       selectParam = [];
       // Constructing the select parameters list (will be sent in dashboardFilterPayload)
-      columnList.current.forEach(col => {
+      columnList.current.forEach((col) => {
         selectParam.push({
-          field: col
+          field: col,
         });
       });
 
@@ -395,7 +389,6 @@ export default function ListView(props: ListViewProps) {
       const filter = filters.current[filterExp];
       // If the filter is null then we can skip this iteration
       if (filter === null) {
-        // eslint-disable-next-line no-continue
         continue;
       }
 
@@ -404,7 +397,6 @@ export default function ListView(props: ListViewProps) {
       field = getFieldFromFilter(filter, isDateRange);
 
       if (!(columnList.current.length && columnList.current.includes(field))) {
-        // eslint-disable-next-line no-continue
         continue;
       }
       // If we reach here that implies we've at least one valid filter, hence setting the flag
@@ -417,7 +409,7 @@ export default function ListView(props: ListViewProps) {
         dashboardFilterPayload.query.filter.filterConditions = {
           ...dashboardFilterPayload.query.filter.filterConditions,
           [`T${index++}`]: { ...filter[relationalOp][0].condition },
-          [`T${index++}`]: { ...filter[relationalOp][1].condition }
+          [`T${index++}`]: { ...filter[relationalOp][1].condition },
         };
         if (dashboardFilterPayload.query.filter.logic) {
           dashboardFilterPayload.query.filter.logic = `${dashboardFilterPayload.query.filter.logic} ${relationalOp} (T${
@@ -431,7 +423,7 @@ export default function ListView(props: ListViewProps) {
       } else {
         dashboardFilterPayload.query.filter.filterConditions = {
           ...dashboardFilterPayload.query.filter.filterConditions,
-          [`T${index++}`]: { ...filter.condition, ...(filter.condition.comparator === 'CONTAINS' ? { ignoreCase: true } : {}) }
+          [`T${index++}`]: { ...filter.condition, ...(filter.condition.comparator === 'CONTAINS' ? { ignoreCase: true } : {}) },
         };
 
         if (dashboardFilterPayload.query.filter.logic) {
@@ -469,7 +461,7 @@ export default function ListView(props: ListViewProps) {
       if (filterPayload.current) {
         query = {
           select: fields,
-          filter: filterPayload.current?.query?.filter
+          filter: filterPayload.current?.query?.filter,
         };
       } else {
         query = { select: fields };
@@ -491,31 +483,31 @@ export default function ListView(props: ListViewProps) {
     if (colId) {
       const field = getField(fieldDefs, colId);
       listFields.push({
-        field: field.name
+        field: field.name,
       });
     } else {
       // NOTE: If we ever decide to not set up all the `fieldDefs` on select, ensure that the fields
       //  corresponding to `state.groups` are set up. Needed in Client-mode grouping/pagination.
-      fieldDefs.forEach(field => {
-        if (!listFields.find(f => f.field === field.name)) {
+      fieldDefs.forEach((field) => {
+        if (!listFields.find((f) => f.field === field.name)) {
           listFields.push({
-            field: field.name
+            field: field.name,
           });
         }
       });
-      patchQueryFields.forEach(k => {
-        if (!listFields.find(f => f.field === k)) {
+      patchQueryFields.forEach((k) => {
+        if (!listFields.find((f) => f.field === k)) {
           listFields.push({
-            field: k
+            field: k,
           });
         }
       });
     }
 
-    compositeKeys.forEach(k => {
-      if (!listFields.find(f => f.field === k)) {
+    compositeKeys.forEach((k) => {
+      if (!listFields.find((f) => f.field === k)) {
         listFields.push({
-          field: k
+          field: k,
         });
       }
     });
@@ -530,13 +522,13 @@ export default function ListView(props: ListViewProps) {
       !elementFound &&
       Array.isArray(select) &&
       !(compositeKeys !== null && compositeKeys?.length) &&
-      !select.find(sel => sel.field === itemKey)
+      !select.find((sel) => sel.field === itemKey)
     ) {
       return [
         ...select,
         {
-          field: itemKey
-        }
+          field: itemKey,
+        },
       ];
     }
 
@@ -548,9 +540,9 @@ export default function ListView(props: ListViewProps) {
     return fieldsMap.get(columnId);
   };
 
-  const getFieldsMap = fieldDefs => {
+  const getFieldsMap = (fieldDefs) => {
     const fieldsMap = new Map();
-    fieldDefs.forEach(element => {
+    fieldDefs.forEach((element) => {
       fieldsMap.set(element.id, element);
     });
     return fieldsMap;
@@ -572,15 +564,15 @@ export default function ListView(props: ListViewProps) {
 
     const selectParams: any = [];
 
-    myColumns.forEach(column => {
+    myColumns.forEach((column) => {
       selectParams.push({
-        field: column.id
+        field: column.id,
       });
     });
 
     const colList: any = [];
 
-    selectParams.forEach(col => {
+    selectParams.forEach((col) => {
       colList.push(col.field);
     });
 
@@ -616,7 +608,7 @@ export default function ListView(props: ListViewProps) {
     return Object.entries(data.payload).reduce((acc, [field, value]) => {
       if (value) {
         let comparator = 'EQ';
-        const filterRecord = listContext.meta.fieldDefs.filter(item => item.id === field);
+        const filterRecord = listContext.meta.fieldDefs.filter((item) => item.id === field);
         if (filterRecord?.[0]?.meta.type === 'TextInput') {
           comparator = 'CONTAINS';
         }
@@ -624,15 +616,15 @@ export default function ListView(props: ListViewProps) {
           filterExpression: {
             condition: {
               lhs: {
-                field
+                field,
               },
               comparator,
               rhs: {
-                value
-              }
-            }
+                value,
+              },
+            },
           },
-          filterId: field
+          filterId: field,
         };
       }
       return acc;
@@ -646,12 +638,12 @@ export default function ListView(props: ListViewProps) {
       setTimeout(() => {
         PCore.getPubSubUtils().subscribe(
           PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
-          data => {
+          (data) => {
             processFilterChange(data);
           },
           `dashboard-component-${'id'}`,
           false,
-          getPConnect().getContextName()
+          getPConnect().getContextName(),
         );
         PCore.getPubSubUtils().subscribe(
           PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
@@ -661,16 +653,16 @@ export default function ListView(props: ListViewProps) {
           },
           `dashboard-component-${'id'}`,
           false,
-          getPConnect().getContextName()
+          getPConnect().getContextName(),
         );
         PCore.getPubSubUtils().subscribe(
           PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS,
-          data => {
+          (data) => {
             showRecords = data.showRecords;
             const filterData = prepareFilters(data);
             processFilterChange(filterData);
           },
-          identifier
+          identifier,
         );
       }, 0);
 
@@ -678,12 +670,12 @@ export default function ListView(props: ListViewProps) {
         PCore.getPubSubUtils().unsubscribe(
           PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
           `dashboard-component-${'id'}`,
-          getPConnect().getContextName()
+          getPConnect().getContextName(),
         );
         PCore.getPubSubUtils().unsubscribe(
           PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
           `dashboard-component-${'id'}`,
-          getPConnect().getContextName()
+          getPConnect().getContextName(),
         );
         PCore.getPubSubUtils().unsubscribe(PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS, identifier);
       };
@@ -691,12 +683,12 @@ export default function ListView(props: ListViewProps) {
   }, [listContext]);
 
   function searchFilter(value: string, rows: any[]) {
-    const cols = arColumns.map(ele => {
+    const cols = arColumns.map((ele) => {
       return ele.id;
     });
 
     function filterArray(el: any): boolean {
-      return Object.keys(el).some(key => {
+      return Object.keys(el).some((key) => {
         // only search columns that are displayed (pzInsKey and pxRefObjectClass are added and may or may not be displayed)
         if (cols.includes(key)) {
           const myVal = el[key];
@@ -723,7 +715,7 @@ export default function ListView(props: ListViewProps) {
 
   function showToast(message: string) {
     const theMessage = `Assignment: ${message}`;
-    // eslint-disable-next-line no-console
+
     console.error(theMessage);
     setSnackbarMessage(message);
     setShowSnackbar(true);
@@ -853,7 +845,6 @@ export default function ListView(props: ListViewProps) {
   function _showFilteredIcon(columnId) {
     for (const filterObj of filterByColumns) {
       if (filterObj.ref === columnId) {
-        // eslint-disable-next-line sonarjs/prefer-single-boolean-return
         if (filterObj.containsFilterValue !== '') {
           return true;
         }
@@ -971,7 +962,7 @@ export default function ListView(props: ListViewProps) {
       if (column.isAssignmentLink) {
         thePConn.getActionsApi().openAssignment(pzInsKey, pxObjClass, {
           containerName: 'primary',
-          channelName: ''
+          channelName: '',
         });
       } else {
         thePConn.getActionsApi().openWorkByHandle(pzInsKey, pxObjClass);
@@ -1015,9 +1006,9 @@ export default function ListView(props: ListViewProps) {
     const value = event.target.value;
     const reqObj = {};
     if (compositeKeys?.length > 1) {
-      const index = response.findIndex(element => element[rowID] === value);
+      const index = response.findIndex((element) => element[rowID] === value);
       const selectedRow = response[index];
-      compositeKeys.forEach(element => {
+      compositeKeys.forEach((element) => {
         reqObj[element] = selectedRow[element];
       });
     } else {
@@ -1027,14 +1018,14 @@ export default function ListView(props: ListViewProps) {
     setSelectedValue(value);
   };
 
-  const onCheckboxClick = event => {
+  const onCheckboxClick = (event) => {
     const value = event?.target?.value;
     const checked = event?.target?.checked;
     const reqObj: any = {};
     if (compositeKeys?.length > 1) {
-      const index = response.findIndex(element => element[rowID] === value);
+      const index = response.findIndex((element) => element[rowID] === value);
       const selectedRow = response[index];
-      compositeKeys.forEach(element => {
+      compositeKeys.forEach((element) => {
         reqObj[element] = selectedRow[element];
       });
       reqObj.$selected = checked;
@@ -1101,7 +1092,7 @@ export default function ListView(props: ListViewProps) {
                 <Table stickyHeader aria-label='sticky table'>
                   <TableHead>
                     <TableRow>
-                      {arColumns.map(column => {
+                      {arColumns.map((column) => {
                         return (
                           <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
                             <TableSortLabel
@@ -1117,7 +1108,7 @@ export default function ListView(props: ListViewProps) {
                             </TableSortLabel>
                             <MoreIcon
                               className={classes.moreIcon}
-                              onClick={event => {
+                              onClick={(event) => {
                                 _menuClick(event, column.id, column.type, column.label);
                               }}
                             />
@@ -1130,10 +1121,10 @@ export default function ListView(props: ListViewProps) {
                     {arRows &&
                       stableSort(arRows, getComparator(order, orderBy))
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map(row => {
+                        .map((row) => {
                           return (
                             <TableRow key={row.pxRefObjectInsName || row.pyID}>
-                              {arColumns.map(column => {
+                              {arColumns.map((column) => {
                                 const value = row[column.id];
                                 return (
                                   <TableCell key={column.id} align={column.align} className={classes.cell}>
@@ -1165,7 +1156,7 @@ export default function ListView(props: ListViewProps) {
                   <TableHead>
                     <TableRow>
                       {(selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) && <TableCell />}
-                      {arColumns.map(column => {
+                      {arColumns.map((column) => {
                         return (
                           <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
                             <TableSortLabel
@@ -1188,7 +1179,7 @@ export default function ListView(props: ListViewProps) {
                       arRows.length > 0 &&
                       stableSort(arRows, getComparator(order, orderBy))
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map(row => {
+                        .map((row) => {
                           return (
                             <TableRow key={row[rowID]}>
                               {selectionMode === SELECTION_MODE.SINGLE && (
@@ -1206,12 +1197,12 @@ export default function ListView(props: ListViewProps) {
                                 <TableCell>
                                   <Checkbox
                                     onChange={onCheckboxClick}
-                                    checked={selectedValues.some(selectedValue => selectedValue[rowID] === row[rowID])}
+                                    checked={selectedValues.some((selectedValue) => selectedValue[rowID] === row[rowID])}
                                     value={row[rowID]}
                                   />
                                 </TableCell>
                               )}
-                              {arColumns.map(column => {
+                              {arColumns.map((column) => {
                                 const value = row[column.id];
                                 return (
                                   <TableCell className={classes.cell} key={column.id} align={column.align}>

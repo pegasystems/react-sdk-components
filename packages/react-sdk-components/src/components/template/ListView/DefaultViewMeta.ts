@@ -17,7 +17,7 @@ const getDefaultConfig = (fieldMeta, classID, show) => {
     displayAsLink,
     category,
     associationClassID,
-    associationID
+    associationID,
   } = fieldMeta;
   return {
     value: (associationClassID ? ASSOCIATION_ANNOTATION : PROPERTY_ANNOTATION).concat(fieldID),
@@ -30,7 +30,7 @@ const getDefaultConfig = (fieldMeta, classID, show) => {
     category,
     show,
     ...(associationClassID ? { associationLabel: LOCALIZATON_ANNOTATION.concat(category) } : {}),
-    associationID
+    associationID,
   };
 };
 
@@ -48,52 +48,52 @@ export default function getDefaultViewMeta(fieldMeta, classID, showField) {
           trueLabel: '@L Yes',
           falseLabel: '@L No',
           caption: LOCALIZATON_ANNOTATION.concat(name || label),
-          label: undefined
-        }
+          label: undefined,
+        },
       };
       break;
     case 'Decimal:pxCurrency':
       viewMeta = {
         type: 'Currency',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Date Time:pxDateTime':
     case 'Date & time:pxDateTime':
       viewMeta = {
         type: 'DateTime',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Date:pxDateTime':
     case 'Date only:pxDateTime':
       viewMeta = {
         type: 'Date',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Decimal:pxNumber':
       viewMeta = {
         type: 'Decimal',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Text:pxEmail':
       viewMeta = {
         type: 'Email',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Integer:pxInteger':
       viewMeta = {
         type: 'Integer',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Decimal:pxPercentage':
       viewMeta = {
         type: 'Percentage',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Text:pxPhone':
@@ -104,35 +104,35 @@ export default function getDefaultViewMeta(fieldMeta, classID, showField) {
           datasource: {
             source: '@DATASOURCE D_pyCountryCallingCodeList.pxResults',
             fields: {
-              value: '@P .pyCallingCode'
-            }
-          }
-        }
+              value: '@P .pyCallingCode',
+            },
+          },
+        },
       };
       break;
     case 'TimeOfDay:pxDateTime':
       viewMeta = {
         type: 'Time',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Text:pxURL':
     case 'Text:pxUrl':
       viewMeta = {
         type: 'URL',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Text:pxTextArea':
       viewMeta = {
         type: 'TextArea',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Text:pxRichTextEditor':
       viewMeta = {
         type: 'RichText',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     case 'Text:pxAutoComplete':
@@ -145,8 +145,8 @@ export default function getDefaultViewMeta(fieldMeta, classID, showField) {
             placeholder: 'Select...',
             displayAs: 'Search box',
             associationID,
-            associationLabel: undefined
-          }
+            associationLabel: undefined,
+          },
         };
       } else {
         const { tableType = '' } = datasource || {};
@@ -157,8 +157,8 @@ export default function getDefaultViewMeta(fieldMeta, classID, showField) {
             placeholder: 'Select...',
             listType: 'associated',
             datasource: ASSOCIATED_ANNOTATION.concat(fieldID),
-            deferDatasource: tableType === 'DataPage'
-          }
+            deferDatasource: tableType === 'DataPage',
+          },
         };
       }
       break;
@@ -172,8 +172,8 @@ export default function getDefaultViewMeta(fieldMeta, classID, showField) {
             placeholder: 'Select...',
             displayAs: 'Drop-down list',
             associationID,
-            associationLabel: undefined
-          }
+            associationLabel: undefined,
+          },
         };
       } else {
         const { tableType = '' } = datasource || {};
@@ -184,8 +184,8 @@ export default function getDefaultViewMeta(fieldMeta, classID, showField) {
             placeholder: 'Select...',
             listType: 'associated',
             datasource: ASSOCIATED_ANNOTATION.concat(fieldID),
-            deferDatasource: tableType === 'DataPage'
-          }
+            deferDatasource: tableType === 'DataPage',
+          },
         };
       }
       break;
@@ -199,21 +199,21 @@ export default function getDefaultViewMeta(fieldMeta, classID, showField) {
             placeholder: 'Select...',
             listType: 'associated',
             datasource: ASSOCIATED_ANNOTATION.concat(fieldID),
-            deferDatasource: tableType === 'DataPage'
-          }
+            deferDatasource: tableType === 'DataPage',
+          },
         };
       }
       break;
     case 'Text:pxTextInput':
       viewMeta = {
         type: 'TextInput',
-        config: defaultConfig
+        config: defaultConfig,
       };
       break;
     default:
       viewMeta = {
         type,
-        config: defaultConfig
+        config: defaultConfig,
       };
   }
   return viewMeta;

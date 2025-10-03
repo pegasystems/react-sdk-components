@@ -13,7 +13,7 @@ interface ObjectReferenceProps extends Omit<PConnFieldProps, 'value'> {
   allowAndPersistChangesInReviewMode: any;
   targetObjectType: any;
   mode: string;
-  parameters: Object;
+  parameters: object;
   hideLabel: boolean;
   inline: boolean;
   showPromotedFilters: boolean;
@@ -31,7 +31,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     hideLabel = false,
     inline = false,
     showPromotedFilters = false,
-    additionalFields
+    additionalFields,
   } = props;
 
   const SingleReferenceReadonly = getComponentFromMap('SingleReferenceReadOnly');
@@ -50,7 +50,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
   const canBeChangedInReviewMode = editableInReview && ['Autocomplete', 'Dropdown'].includes(rawViewMetadata.config.componentType);
 
   // Editable first child on change handler
-  const onRecordChange = event => {
+  const onRecordChange = (event) => {
     const caseKey = pConn.getCaseInfo().getKey();
     const refreshOptions = { autoDetectRefresh: true, propertyName: '' };
     refreshOptions.propertyName = rawViewMetadata.config?.value;
@@ -74,12 +74,12 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
       PCore.getCaseUtils()
         .getCaseEditLock(caseKey, '')
-        .then(caseResponse => {
+        .then((caseResponse) => {
           const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
           let curr = {};
           const commitData = curr;
 
-          pageTokens.forEach(el => {
+          pageTokens.forEach((el) => {
             if (el !== '') {
               curr[el] = {};
               curr = curr[el];
@@ -99,7 +99,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
 
           PCore.getCaseUtils()
             .updateCaseEditFieldsData(caseKey, { [caseKey]: commitData }, caseResponse.headers.etag, pConn.getContextName())
-            .then(response => {
+            .then((response) => {
               PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
               PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
             });
@@ -115,7 +115,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     if (type === 'SemanticLink' && !canBeChangedInReviewMode) {
       const config = {
         ...rawViewMetadata.config,
-        primaryField: rawViewMetadata.config.displayField
+        primaryField: rawViewMetadata.config.displayField,
       };
       config.caseClass = rawViewMetadata.config.targetObjectClass;
       config.text = config.primaryField;
@@ -124,10 +124,10 @@ export default function ObjectReference(props: ObjectReferenceProps) {
         rawViewMetadata.config?.displayField ? getDataRelationshipContextFromKey(rawViewMetadata.config.displayField) : null
       }`;
       config.resourceParams = {
-        workID: config.value
+        workID: config.value,
       };
       config.resourcePayload = {
-        caseClassName: config.caseClass
+        caseClassName: config.caseClass,
       };
 
       return getPConnect().createComponent({
@@ -139,8 +139,8 @@ export default function ObjectReference(props: ObjectReferenceProps) {
           hideLabel,
           dataRelationshipContext: rawViewMetadata.config?.displayField
             ? getDataRelationshipContextFromKey(rawViewMetadata.config.displayField)
-            : null
-        }
+            : null,
+        },
       });
     }
     if (isDisplayModeEnabled && !canBeChangedInReviewMode) {
@@ -148,7 +148,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
         <SingleReferenceReadonly
           config={{
             ...rawViewMetadata.config,
-            primaryField: rawViewMetadata.config.displayField
+            primaryField: rawViewMetadata.config.displayField,
           }}
           getPConnect={getPConnect}
           label={propsToUse.label}
@@ -187,9 +187,9 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     fieldMetaData = {
       datasourceMetadata: {
         datasource: {
-          parameters: {}
-        }
-      }
+          parameters: {},
+        },
+      },
     };
     if (rawViewMetadata.config?.parameters) {
       fieldMetaData.datasourceMetadata.datasource.parameters = parameters;
@@ -221,8 +221,8 @@ export default function ObjectReference(props: ObjectReferenceProps) {
         dataRelationshipContext: rawViewMetadata.config?.displayField ? getDataRelationshipContextFromKey(rawViewMetadata.config.displayField) : null,
         hideLabel,
         onRecordChange,
-        inline
-      }
+        inline,
+      },
     });
   }, [rawViewMetadata.config?.datasource?.source, parameters, propsToUse.required, propsToUse.disabled, getPConnect().getPageReference()]);
 

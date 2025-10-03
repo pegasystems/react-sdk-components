@@ -30,7 +30,6 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
   let arPrimaryFields: any[] = [];
   let arSecondaryFields: any[] = [];
 
-  /* eslint-disable @typescript-eslint/no-shadow */
   function prepareComponentInCaseSummary(pConnectMeta, getPConnect) {
     const { config, children } = pConnectMeta;
     const pConnect = getPConnect();
@@ -42,8 +41,8 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
       type,
       children: children ? [...children] : [],
       config: {
-        ...config
-      }
+        ...config,
+      },
     });
 
     caseSummaryComponentObject.value = createdComponent;
@@ -51,7 +50,7 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
   }
 
   function prepareCaseSummaryData(summaryFieldChildren) {
-    const convertChildrenToSummaryData = kid => {
+    const convertChildrenToSummaryData = (kid) => {
       return kid?.map((childItem, index) => {
         const childMeta = childItem.getPConnect().meta;
         const caseSummaryComponentObject = prepareComponentInCaseSummary(childMeta, childItem.getPConnect);
@@ -67,7 +66,7 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
     const childPConnData = childPConn.resolveConfigProps(childPConn.getRawMetadata());
     if (childPConnData.name.toLowerCase() === 'primary fields') {
       arPrimaryFields = childPConnData.children;
-      arPrimaryFields.forEach(field => {
+      arPrimaryFields.forEach((field) => {
         if (field.config?.value && typeof field.config?.value === 'string') {
           field.config.value = localizedVal(field.config.value, localeCategory);
         }

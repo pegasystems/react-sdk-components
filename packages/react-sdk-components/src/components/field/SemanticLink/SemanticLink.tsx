@@ -6,7 +6,7 @@ import type { PConnFieldProps } from '../../../types/PConnProps';
 import semanticUtils from './utils';
 
 // eslint-disable-next-line
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   fieldMargin: {
     paddingRight: theme.spacing(1),
@@ -25,16 +25,16 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   fieldLabel: {
     fontWeight: 400,
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   fieldValue: {
     fontWeight: 400,
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 interface SemanticLinkProps extends PConnFieldProps {
@@ -57,6 +57,7 @@ export default function SemanticLink(props: SemanticLinkProps) {
     resourceParams = {},
     getPConnect,
     previewKey,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onClick,
     testId = '',
     referenceType,
@@ -71,14 +72,14 @@ export default function SemanticLink(props: SemanticLinkProps) {
   const {
     RESOURCE_TYPES: { DATA },
     WORKCLASS,
-    CASE_INFO: { CASE_INFO_CLASSID }
+    CASE_INFO: { CASE_INFO_CLASSID },
   } = PCore.getConstants();
 
   let linkURL = '';
   let payload = {};
   let dataViewName;
   let linkComponentProps = {
-    href: linkURL
+    href: linkURL,
   };
   if (text) {
     (linkComponentProps as any).href = linkURL;
@@ -105,21 +106,21 @@ export default function SemanticLink(props: SemanticLinkProps) {
           const paramValue = parameters[param];
           return {
             ...acc,
-            [param]: PCore.getAnnotationUtils().isProperty(paramValue) ? content[PCore.getAnnotationUtils().getPropertyName(paramValue)] : paramValue
+            [param]: PCore.getAnnotationUtils().isProperty(paramValue) ? content[PCore.getAnnotationUtils().getPropertyName(paramValue)] : paramValue,
           };
         }, {});
       }
       getPConnect()
         .getActionsApi()
         .showData('pyDetails', lookUpDataPage, {
-          ...payload
+          ...payload,
         });
     }
     if ((referenceType && referenceType.toUpperCase() === DATA) || shouldTreatAsDataReference) {
       getPConnect()
         .getActionsApi()
         .showData('pyDetails', dataViewName, {
-          ...payload
+          ...payload,
         });
     }
   }
@@ -142,12 +143,11 @@ export default function SemanticLink(props: SemanticLinkProps) {
   if ((referenceType && referenceType.toUpperCase() === DATA) || shouldTreatAsDataReference) {
     try {
       isData = true;
-      // @ts-ignore
+      // @ts-expect-error
       const dataRefContext = semanticUtils.getDataReferenceInfo(pConnect, dataRelationshipContext, contextPage);
       dataViewName = dataRefContext.dataContext;
       payload = dataRefContext.dataContextParameters as any;
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.log('Error in getting the data reference info', error);
     }
   } else if (resourcePayload && resourcePayload.resourceType === 'DATA') {
@@ -161,7 +161,7 @@ export default function SemanticLink(props: SemanticLinkProps) {
         const paramValue = parameters[param];
         return {
           ...acc,
-          [param]: PCore.getAnnotationUtils().isProperty(paramValue) ? content[PCore.getAnnotationUtils().getPropertyName(paramValue)] : paramValue
+          [param]: PCore.getAnnotationUtils().isProperty(paramValue) ? content[PCore.getAnnotationUtils().getPropertyName(paramValue)] : paramValue,
         };
       }, {});
     } else {
@@ -169,7 +169,7 @@ export default function SemanticLink(props: SemanticLinkProps) {
       payload = keysInfo.reduce((acc, curr) => {
         return {
           ...acc,
-          [curr.keyName]: content[curr.isAlternateKeyStorage ? curr.linkedField : curr.keyName]
+          [curr.keyName]: content[curr.isAlternateKeyStorage ? curr.linkedField : curr.keyName],
         };
       }, {});
     }
@@ -180,8 +180,8 @@ export default function SemanticLink(props: SemanticLinkProps) {
       ACTION_SHOWDATA,
       { pageName: 'pyDetails', dataViewName },
       {
-        ...payload
-      }
+        ...payload,
+      },
     );
   } else {
     // BUG-678282 fix to handle scenario when workID was not populated.
@@ -196,7 +196,7 @@ export default function SemanticLink(props: SemanticLinkProps) {
   if (text) {
     linkComponentProps = {
       ...linkComponentProps,
-      href: linkURL
+      href: linkURL,
     };
   }
 

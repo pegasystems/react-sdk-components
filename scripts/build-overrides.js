@@ -437,7 +437,7 @@ const processImportLine = function (inMatch, filePath) {
   // 8. This should handle any relative path within the same components sub-directory
   if (
     inMatch.includes(splitWith) &&
-    overrideConstants.SDK_COMP_SUBDIRS.some(dir => {
+    overrideConstants.SDK_COMP_SUBDIRS.some((dir) => {
       console.log(`  checking dir: ${dir}`);
       return filePath.includes(dir);
     })
@@ -475,8 +475,8 @@ const processOverrideFile = function (filePath) {
   const options = {
     files: filePath,
     from: /^import .+/gm,
-    to: match => processImportLine(match, filePath),
-    countMatches: true
+    to: (match) => processImportLine(match, filePath),
+    countMatches: true,
   };
 
   const theResults = replaceInFile.sync(options);
@@ -496,7 +496,7 @@ const processSdkOverrides = async () => {
   iPathReplacements = 0;
   iMayNeedPathReplacement = 0;
   const allFilesInDir = getAllFilesInDir(overridesLibDir, []);
-  allFilesInDir.forEach(file => {
+  allFilesInDir.forEach((file) => {
     processOverrideFile(file);
   });
   console.log(`Processed ${allFilesInDir.length} files in ${overridesPkgDir}`);

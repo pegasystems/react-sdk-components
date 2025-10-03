@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
 
@@ -31,7 +30,7 @@ export default function ScalarList(props: ScalarListProps) {
 
   const { label, getPConnect, componentType, value: scalarValues, displayMode, hideLabel, ...restProps } = props;
 
-  const items = scalarValues?.map(scalarValue => {
+  const items = scalarValues?.map((scalarValue) => {
     return getPConnect().createComponent(
       {
         type: componentType,
@@ -40,13 +39,13 @@ export default function ScalarList(props: ScalarListProps) {
           displayMode: 'DISPLAY_ONLY',
           label,
           ...restProps,
-          readOnly: 'true'
-        }
+          readOnly: 'true',
+        },
       },
       '',
-      // @ts-ignore
+      // @ts-expect-error
       '',
-      {}
+      {},
     ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional;
   });
 

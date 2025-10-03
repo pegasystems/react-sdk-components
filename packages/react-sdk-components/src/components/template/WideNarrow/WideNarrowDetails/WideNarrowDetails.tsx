@@ -36,8 +36,8 @@ export default function WideNarrowDetails(props: WideNarrowDetailsProps) {
 
     return createElement(createPConnectComponent(), {
       ...theConfigObject,
-      // eslint-disable-next-line react/no-array-index-key
-      key: index.toString()
+
+      key: index.toString(),
     });
   });
 
@@ -45,7 +45,7 @@ export default function WideNarrowDetails(props: WideNarrowDetailsProps) {
   let highlightedDataArr = [];
   if (showHighlightedData) {
     const { highlightedData = [] } = (getPConnect().getRawMetadata() as any).config;
-    highlightedDataArr = highlightedData.map(field => {
+    highlightedDataArr = highlightedData.map((field) => {
       field.config.displayMode = 'STACKED_LARGE_VAL';
 
       // Mark as status display when using pyStatusWork

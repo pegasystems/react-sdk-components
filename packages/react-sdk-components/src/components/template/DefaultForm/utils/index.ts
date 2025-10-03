@@ -3,14 +3,14 @@ export const mapStateToProps: any = (_, ownProps) => {
 
   return {
     visibility: getPConnect().getComputedVisibility(),
-    getPConnect
+    getPConnect,
   };
 };
 
-export const getKeyForMappedField = field => {
+export const getKeyForMappedField = (field) => {
   if (Array.isArray(field)) {
     return field
-      .map(item => {
+      .map((item) => {
         return getKeyForMappedField(item);
       })
       .join('__');

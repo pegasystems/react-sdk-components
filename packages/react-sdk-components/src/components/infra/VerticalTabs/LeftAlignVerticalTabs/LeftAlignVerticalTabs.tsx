@@ -19,12 +19,12 @@ const LeftAlignVerticalTabs: any = withStyles((/* theme */) => ({
   root: {
     width: '100%',
     maxWidth: '100%',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   wrapper: {
     display: 'block',
-    textAlign: 'left'
-  }
+    textAlign: 'left',
+  },
 }))((props: LeftAlignVerticalTabsProps) => (
   <div>
     <Tab {...props} />

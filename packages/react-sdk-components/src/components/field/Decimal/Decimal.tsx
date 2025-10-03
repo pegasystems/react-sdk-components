@@ -41,7 +41,7 @@ export default function Decimal(props: DecimalProps) {
     showGroupSeparators,
     testId,
     placeholder,
-    formatter
+    formatter,
   } = props;
 
   const [values, setValues] = useState(value.toString());
@@ -89,7 +89,7 @@ export default function Decimal(props: DecimalProps) {
     handleEvent(actions, 'changeNblur', propName, values);
   }
 
-  const handleChange = val => {
+  const handleChange = (val) => {
     setValues(val.value);
   };
 
@@ -106,7 +106,7 @@ export default function Decimal(props: DecimalProps) {
       error={status === 'error'}
       label={label}
       value={values}
-      onValueChange={val => {
+      onValueChange={(val) => {
         handleChange(val);
       }}
       onBlur={!readOnly ? decimalOnBlur : undefined}

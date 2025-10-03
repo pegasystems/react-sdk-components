@@ -22,7 +22,7 @@ const config = {
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 50000
+    timeout: 50000,
   },
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
@@ -43,8 +43,8 @@ const config = {
     trace: 'on-first-retry',
     ignoreHTTPSErrors: true,
     launchOptions: {
-      slowMo: 200
-    }
+      slowMo: 200,
+    },
   },
   testIgnore: ['e2e/DigV2/ComplexFields/ManyToMany.spec.js', 'e2e/DigV2/Localization/Localization.spec.js'],
   /* Configure projects for major browsers */
@@ -52,23 +52,23 @@ const config = {
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome']
-      }
+        ...devices['Desktop Chrome'],
+      },
     },
 
     {
       name: 'firefox',
       use: {
-        ...devices['Desktop Firefox']
-      }
+        ...devices['Desktop Firefox'],
+      },
     },
 
     {
       name: 'webkit',
       use: {
-        ...devices['Desktop Safari']
-      }
-    }
+        ...devices['Desktop Safari'],
+      },
+    },
 
     /* Test against mobile viewports. */
     // {
@@ -100,7 +100,7 @@ const config = {
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  outputDir: 'test-reports/'
+  outputDir: 'test-reports/',
 
   /* Run your local dev server before starting the tests */
   // webServer: {

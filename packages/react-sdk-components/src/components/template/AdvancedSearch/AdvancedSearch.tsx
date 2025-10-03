@@ -8,7 +8,7 @@ export default function AdvancedSearch(props) {
   const { getPConnect, targetObjectClass, localeReference } = props;
   const SearchGroups = getComponentFromMap('SearchGroups');
   const { dataReferenceConfigToChild, isCreateNewReferenceEnabled, disableStartingFieldsForReference, pyID, searchSelectCacheKey } = useContext(
-    DataReferenceAdvancedSearchContext
+    DataReferenceAdvancedSearchContext,
   ) as any;
 
   const { selectionMode, value: singleSelectFieldValue, readonlyContextList: multiSelectField } = dataReferenceConfigToChild;
@@ -29,8 +29,8 @@ export default function AdvancedSearch(props) {
 
   const searchFieldsSet = new Set();
   const searchFields: any = [];
-  rawViewMetadata.config.searchGroups.forEach(group => {
-    group.children.forEach(child => {
+  rawViewMetadata.config.searchGroups.forEach((group) => {
+    group.children.forEach((child) => {
       if (!searchFieldsSet.has(child.config.value) && !child.config.validator) {
         searchFields.push(child);
         searchFieldsSet.add(child.config.value);
@@ -42,7 +42,6 @@ export default function AdvancedSearch(props) {
   const [firstChildMeta] = rawViewMetadata.children;
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
-  // @ts-ignore
   const cache = PCore.getNavigationUtils().getComponentCache(searchSelectCacheKey) ?? {};
 
   const editableFieldComp = firstChildPConnect().createComponent({
@@ -56,14 +55,14 @@ export default function AdvancedSearch(props) {
         dataReferenceConfigToChild,
         isCreateNewReferenceEnabled,
         disableStartingFieldsForReference,
-        pyID
+        pyID,
       }),
       searchFields,
       showRecords,
       label: localizedVal('Search results', 'DataReference'),
       searchSelectCacheKey,
-      cache
-    }
+      cache,
+    },
   });
 
   const { selectionList, dataRelationshipContext } = editableFieldComp.props.getPConnect().getConfigProps();
@@ -75,7 +74,7 @@ export default function AdvancedSearch(props) {
     localeReference,
     setShowRecords,
     searchSelectCacheKey,
-    cache
+    cache,
   };
 
   return (

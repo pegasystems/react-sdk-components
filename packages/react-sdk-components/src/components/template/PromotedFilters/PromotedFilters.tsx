@@ -34,7 +34,7 @@ const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
   'TextArea',
   'Currency',
   'URL',
-  'RichText'
+  'RichText',
 ];
 
 function Filters({ filters, transientItemID, localeReference }) {
@@ -53,17 +53,16 @@ function Filters({ filters, transientItemID, localeReference }) {
       meta: filterClone,
       options: {
         hasForm: true,
-        contextName: transientItemID
-      }
+        contextName: transientItemID,
+      },
     });
 
-    // eslint-disable-next-line react/no-array-index-key
     return <React.Fragment key={index}>{createElement(createPConnectComponent(), c11nEnv)}</React.Fragment>;
   });
 }
 
 function isValidInput(input) {
-  return Object.values(input).findIndex(v => v) >= 0;
+  return Object.values(input).findIndex((v) => v) >= 0;
 }
 
 export default function PromotedFilters(props: PromotedFilterProps) {
@@ -76,18 +75,18 @@ export default function PromotedFilters(props: PromotedFilterProps) {
   const [payload, setPayload] = useState({});
   const filtersProperties = {};
 
-  filters.forEach(filter => {
+  filters.forEach((filter) => {
     filtersProperties[PCore.getAnnotationUtils().getPropertyName(filter.config.value)] = '';
   });
 
   const transientItemID = useMemo(() => {
     const filtersWithClassID = {
       ...filtersProperties,
-      classID: pageClass
+      classID: pageClass,
     };
     return getPConnect().getContainerManager().addTransientItem({
       id: viewName,
-      data: filtersWithClassID
+      data: filtersWithClassID,
     });
   }, []);
 
@@ -96,12 +95,12 @@ export default function PromotedFilters(props: PromotedFilterProps) {
       if (value) {
         acc[field] = {
           lhs: {
-            field
+            field,
           },
           comparator: 'EQ',
           rhs: {
-            value
-          }
+            value,
+          },
         };
       }
       return acc;
@@ -109,12 +108,12 @@ export default function PromotedFilters(props: PromotedFilterProps) {
   }
 
   const getFilterData = useCallback(
-    e => {
+    (e) => {
       e.preventDefault(); // to prevent un-intended forms submission.
 
       const changes = PCore.getFormUtils().getChanges(transientItemID);
       const formValues = {};
-      Object.keys(changes).forEach(key => {
+      Object.keys(changes).forEach((key) => {
         if (!['context_data', 'pageInstructions'].includes(key)) {
           formValues[key] = changes[key];
         }
@@ -123,7 +122,7 @@ export default function PromotedFilters(props: PromotedFilterProps) {
       if (PCore.getFormUtils().isFormValid(transientItemID) && isValidInput(formValues)) {
         setInitTable(true);
         const Query: any = {
-          dataViewParameters: parameters
+          dataViewParameters: parameters,
         };
 
         if (!isEmptyObject(promotedFilters)) {
@@ -132,7 +131,7 @@ export default function PromotedFilters(props: PromotedFilterProps) {
         setPayload(Query);
       }
     },
-    [transientItemID]
+    [transientItemID],
   );
 
   const clearFilterData = useCallback(() => {
@@ -162,7 +161,7 @@ export default function PromotedFilters(props: PromotedFilterProps) {
           payload={payload}
           isSearchable
           tableDisplay={{
-            show: initTable
+            show: initTable,
           }}
         />
       )}

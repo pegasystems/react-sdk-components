@@ -24,15 +24,15 @@ const StyledTableCell = withStyles((theme: Theme) =>
       borderStyle: 'solid',
       borderColor: 'silver',
       backgroundColor: theme.palette.text.disabled,
-      color: theme.palette.getContrastText(theme.palette.text.disabled)
+      color: theme.palette.getContrastText(theme.palette.text.disabled),
     },
     body: {
       borderWidth: '1px',
       borderStyle: 'solid',
-      borderColor: 'silver'
+      borderColor: 'silver',
       // fontSize: 14,
-    }
-  })
+    },
+  }),
 )(TableCell);
 
 export default function CaseHistory(props: CaseHistoryProps) {
@@ -44,18 +44,18 @@ export default function CaseHistory(props: CaseHistoryProps) {
     {
       label: thePConn.getLocalizedValue('Date', '', ''),
       type: 'DateTime',
-      fieldName: 'pxTimeCreated'
+      fieldName: 'pxTimeCreated',
     }, // 2nd and 3rd args empty string until typedef marked correctly
     {
       label: thePConn.getLocalizedValue('Description', '', ''),
       type: 'TextInput',
-      fieldName: 'pyMessageKey'
+      fieldName: 'pyMessageKey',
     }, // 2nd and 3rd args empty string until typedef marked correctly
     {
       label: thePConn.getLocalizedValue('Performed by', '', ''),
       type: 'TextInput',
-      fieldName: 'pyPerformer'
-    } // 2nd and 3rd args empty string until typedef marked correctly
+      fieldName: 'pyPerformer',
+    }, // 2nd and 3rd args empty string until typedef marked correctly
   ];
 
   const rowData: any = useRef([]);
@@ -66,8 +66,8 @@ export default function CaseHistory(props: CaseHistoryProps) {
   const dataViewName = 'D_pyWorkHistory';
   const context = thePConn.getContextName();
 
-  function computeRowData(rows: Object[]): void {
-    const theRowData: Object[] = [];
+  function computeRowData(rows: object[]): void {
+    const theRowData: object[] = [];
 
     rows.forEach((row: any, rowIndex: number) => {
       // Now, for each property in the index of row properties (displayedColumns), add an object
@@ -98,7 +98,7 @@ export default function CaseHistory(props: CaseHistoryProps) {
     const historyData = PCore.getDataApiUtils().getData(
       dataViewName,
       { dataViewParameters: [{ CaseInstanceKey: caseID }] } as any,
-      context
+      context,
     ) as Promise<any>;
 
     historyData.then((historyJSON: any) => {
@@ -142,7 +142,7 @@ export default function CaseHistory(props: CaseHistoryProps) {
     // Note: using rowData.current since we're using useRef as a mutatable
     //  value that's only updated when it changes.
     if (rowData.current.length > 0) {
-      rowData.current.forEach((dataRow: Object[], index) => {
+      rowData.current.forEach((dataRow: object[], index) => {
         // using dataRow[0]-dataRow[1] as the array key since it's a unique value
         const theKey = `CaseHistory-${index}`;
         theDataRows.push(
@@ -150,7 +150,7 @@ export default function CaseHistory(props: CaseHistoryProps) {
             <StyledTableCell>{dataRow[0] ? dataRow[0] : ('---' as any)}</StyledTableCell>
             <StyledTableCell>{dataRow[1] ? dataRow[1] : ('---' as any)}</StyledTableCell>
             <StyledTableCell>{dataRow[2] ? dataRow[2] : ('---' as any)}</StyledTableCell>
-          </TableRow>
+          </TableRow>,
         );
       });
     }

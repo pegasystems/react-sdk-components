@@ -32,7 +32,7 @@ function getDataReferenceInfo(pConnect, dataRelationshipContext) {
     dataContext = name;
     for (const [key, value] of Object.entries(parameters)) {
       const property =
-        // @ts-ignore - Property 'getLeafPropertyName' is private and only accessible within class 'AnnotationUtils'
+        // @ts-expect-error - Property 'getLeafPropertyName' is private and only accessible within class 'AnnotationUtils'
         dataRelationshipContext !== null ? annotationUtils.getPropertyName(value as string) : annotationUtils.getLeafPropertyName(value);
       payload[key] = pConnect.getValue(`.${property}`);
     }

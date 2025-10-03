@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useRef } from 'react';
 
 import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
@@ -45,7 +44,7 @@ export default function SimpleTable(props: SimpleTableProps) {
     type,
     ruleClass,
     authorContext,
-    name
+    name,
   } = props;
 
   let { contextClass } = props;
@@ -72,7 +71,7 @@ export default function SimpleTable(props: SimpleTableProps) {
   if (fieldMetadata && fieldMetadata.type === 'Page List' && fieldMetadata.dataRetrievalType === 'refer') {
     const {
       children: [{ children: rawFields }],
-      parameters: rawParams
+      parameters: rawParams,
     } = (getPConnect().getRawMetadata() as any).config;
     if (isDisplayModeEnabled && hideLabel) {
       propsToUse.label = '';
@@ -86,24 +85,24 @@ export default function SimpleTable(props: SimpleTableProps) {
       name,
       propsToUse.label,
       isDataObject,
-      parameters // resolved params
+      parameters, // resolved params
     );
 
     const metaForPConnect = JSON.parse(JSON.stringify(metaForListView));
-    // @ts-ignore - PCore.getMetadataUtils().getPropertyMetadata - An argument for 'currentClassID' was not provided.
+    // @ts-expect-error - PCore.getMetadataUtils().getPropertyMetadata - An argument for 'currentClassID' was not provided.
     metaForPConnect.config.parameters = rawParams ?? PCore.getMetadataUtils().getPropertyMetadata(name)?.datasource?.parameters;
 
     const { referenceListStr: referenceList } = getContext(getPConnect());
     let requiredContextForQueryInDisplayMode = {};
     if (isDisplayModeEnabled) {
       requiredContextForQueryInDisplayMode = {
-        referenceList
+        referenceList,
       };
     }
     const options = {
       context: getPConnect().getContextName(),
       pageReference: getPConnect().getPageReference(),
-      ...requiredContextForQueryInDisplayMode
+      ...requiredContextForQueryInDisplayMode,
     };
 
     const refToPConnect = useRef(PCore.createPConnect({ meta: metaForPConnect, options }).getPConnect).current; // getPConnect should be created only once.
@@ -113,7 +112,7 @@ export default function SimpleTable(props: SimpleTableProps) {
       getPConnect: refToPConnect,
       displayMode,
       fieldName: authorContext,
-      bInForm: true
+      bInForm: true,
     };
     return <ListView {...listViewProps} />;
   }

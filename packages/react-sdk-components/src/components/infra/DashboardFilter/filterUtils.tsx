@@ -1,4 +1,3 @@
-/* eslint-disable prefer-template */
 /** This file contains various utility methods to generate filter components, regionLayout data, filter expressions, etc.  */
 
 import { Grid2, Link } from '@mui/material';
@@ -9,13 +8,13 @@ export const createFilter = (value, fieldId, comparator = 'EQ') => {
   return {
     condition: {
       lhs: {
-        field: fieldId
+        field: fieldId,
       },
       comparator,
       rhs: {
-        value
-      }
-    }
+        value,
+      },
+    },
   };
 };
 
@@ -87,13 +86,13 @@ export const buildFilterComponents = (getPConnect, allFilters) => {
         >
           Clear All
         </Link>
-      </Grid2>
+      </Grid2>,
     );
   }
   return filterComponents;
 };
 
-export const convertDateToGMT = value => {
+export const convertDateToGMT = (value) => {
   const { valueAsISOString: date } = value;
   return date ? date.substring(0, date.indexOf('T')) : date;
 };
@@ -108,14 +107,14 @@ export const getFilterExpression = (filterValue, name, metadata) => {
   }
 
   if (metadata.config.filterType && metadata.config.filterType === 'RelativeDates') {
-    const fieldSource = metadata.config.datasource.filter(source => source.key === filterValue)[0];
+    const fieldSource = metadata.config.datasource.filter((source) => source.key === filterValue)[0];
     const relativeDateExpression = JSON.parse(fieldSource.json);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const fields = [
       {
         name: relativeDateExpression.condition.lhs.field,
-        type: 'DATE_TIME'
-      }
+        type: 'DATE_TIME',
+      },
     ];
     return '';
   }
@@ -131,7 +130,7 @@ export function getLayoutDataFromRegion(regionData) {
   const defaultLayoutConfig = {
     width: 'full',
     fillAvailable: true,
-    minWidth: [300, 'px']
+    minWidth: [300, 'px'],
   };
 
   return regionData.props
@@ -145,13 +144,13 @@ export function getLayoutDataFromRegion(regionData) {
         content: itemPConnect?.getComponent(),
         layoutConfig: {
           ...defaultLayoutConfig,
-          ...itemPConnect?.getConfigProps().layoutConfig
-        }
+          ...itemPConnect?.getConfigProps().layoutConfig,
+        },
       };
     });
 }
 
-export const getFormattedDate = date => {
+export const getFormattedDate = (date) => {
   if (!date) {
     return date;
   }

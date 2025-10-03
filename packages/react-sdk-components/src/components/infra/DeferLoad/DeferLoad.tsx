@@ -21,7 +21,7 @@ interface DeferLoadProps extends PConnProps {
 // is totally at your own risk.
 //
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -30,8 +30,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
-  }
+    marginBottom: theme.spacing(1),
+  },
 }));
 
 export default function DeferLoad(props: DeferLoadProps) {
@@ -63,7 +63,7 @@ export default function DeferLoad(props: DeferLoadProps) {
   }
 
   const { resourceType = CASE } = containerItemData || {
-    resourceType: loadViewCaseID ? CASE : PAGE
+    resourceType: loadViewCaseID ? CASE : PAGE,
   };
   const isContainerPreview = /preview_[0-9]*/g.test(pConnect.getContextName());
 
@@ -72,10 +72,10 @@ export default function DeferLoad(props: DeferLoadProps) {
     pageClass: loadViewCaseID ? '' : (pConnect.getDataObject('') as any).pyPortal.classID, // 2nd arg empty string until typedef allows optional
     container: isContainerPreview ? 'preview' : undefined,
     containerName: isContainerPreview ? 'preview' : undefined,
-    updateData: isContainerPreview
+    updateData: isContainerPreview,
   });
 
-  const onResponse = data => {
+  const onResponse = (data) => {
     setLoading(false);
     if (deferLoadId) {
       PCore.getDeferLoadManager().start(
@@ -83,7 +83,7 @@ export default function DeferLoad(props: DeferLoadProps) {
         getPConnect().getCaseInfo().getKey(),
         getPConnect().getPageReference().replace('caseInfo.content', ''),
         getPConnect().getContextName(),
-        deferLoadId
+        deferLoadId,
       );
     }
 
@@ -92,8 +92,8 @@ export default function DeferLoad(props: DeferLoadProps) {
         meta: data,
         options: {
           context: pConnect.getContextName(),
-          pageReference: pConnect.getPageReference()
-        }
+          pageReference: pConnect.getPageReference(),
+        },
       };
       const configObject = PCore.createPConnect(config);
       configObject.getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
@@ -115,14 +115,13 @@ export default function DeferLoad(props: DeferLoadProps) {
           .getActionsApi()
           .showData(name, dataContext, dataContextParameters, {
             skipSemanticUrl: true,
-            // @ts-ignore
-            isDeferLoaded: true
+            // @ts-expect-error
+            isDeferLoaded: true,
           })
-          .then(data => {
+          .then((data) => {
             onResponse(data);
           });
       } else {
-        // eslint-disable-next-line no-console
         console.error('Cannot load the defer loaded view without container information');
       }
     } else if (resourceType === PAGE) {
@@ -130,7 +129,7 @@ export default function DeferLoad(props: DeferLoadProps) {
       getPConnect()
         .getActionsApi()
         .loadView(encodeURI(loadViewCaseID), name, getViewOptions())
-        .then(data => {
+        .then((data) => {
           onResponse(data);
         });
     } else {
@@ -140,8 +139,7 @@ export default function DeferLoad(props: DeferLoadProps) {
         .then((data: any) => {
           onResponse(data.root);
         })
-        .catch(error => {
-          // eslint-disable-next-line no-console
+        .catch((error) => {
           console.log(`deferload: ${error}`);
         });
     }
