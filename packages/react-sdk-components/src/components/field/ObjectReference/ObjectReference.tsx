@@ -4,7 +4,7 @@ import Grid2 from '@mui/material/Grid2';
 
 import { SELECTION_MODE, generateColumns, getDataRelationshipContextFromKey } from './utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from 'packages/react-sdk-components/src/types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface ObjectReferenceProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on ObjectReference here
@@ -100,7 +100,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
           PCore.getCaseUtils()
             .updateCaseEditFieldsData(caseKey, { [caseKey]: commitData }, caseResponse.headers.etag, pConn.getContextName())
             .then((response) => {
-              PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
+              PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), (response.data as any).data.caseInfo.lastUpdateTime);
               PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
             });
         });
