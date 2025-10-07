@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { connect, shallowEqual } from 'react-redux';
@@ -96,6 +97,15 @@ const connectRedux = (component, c11nEnv) => {
               ((isClassIDCompare(key, prev, next) && !shallowEqual(next[key], prev[key])) ||
                 (next.routingInfo && !PCore.isDeepEqual(next.routingInfo, prev.routingInfo)))
             ) {
+              return false;
+            }
+          }
+        }
+        // For CaseSummary, we need to compare changes in
+        //  primaryFields and secondary Fields
+        if (next.template === 'CaseSummary') {
+          for (const key of Object.keys(prev)) {
+            if (!PCore.isDeepEqual(next[key], prev[key])) {
               return false;
             }
           }

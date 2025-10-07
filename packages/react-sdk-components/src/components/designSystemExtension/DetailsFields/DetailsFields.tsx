@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { createElement, isValidElement } from 'react';
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -62,11 +62,11 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     const dispValue = field.label;
 
     return (
-      <Grid item xs={6} key={keyVal}>
+      <Grid2 size={{ xs: 6 }} key={keyVal}>
         <Typography variant='body2' component='span' className={`${classes.fieldLabel}`}>
           {dispValue}
         </Typography>
-      </Grid>
+      </Grid2>
     );
   }
 
@@ -97,21 +97,21 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     const formattedValue = formatItemValue(field);
 
     return (
-      <Grid item xs={6} key={keyVal}>
+      <Grid2 size={{ xs: 6 }} key={keyVal}>
         <Typography variant='body2' component='span' className={classes.fieldValue}>
           {formattedValue}
         </Typography>
-      </Grid>
+      </Grid2>
     );
   }
 
   function getGridItem(field: any, keyVal: string) {
     return (
-      <Grid item xs={12} key={keyVal}>
+      <Grid2 size={{ xs: 12 }} key={keyVal}>
         <Typography variant='body2' component='span' className={classes.fieldValue}>
           {field?.value}
         </Typography>
-      </Grid>
+      </Grid2>
     );
   }
 
@@ -122,16 +122,16 @@ export default function DetailsFields(props: DetailsFieldsProps) {
       }
       if (isValidElement(field?.value)) {
         return (
-          <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
+          <Grid2 container spacing={1} style={{ padding: '4px 0px' }} key={index}>
             {getGridItem(field, `${index}-item`)}
-          </Grid>
+          </Grid2>
         );
       }
       return (
-        <Grid container spacing={1} style={{ padding: '4px 0px' }} key={index}>
+        <Grid2 container spacing={1} style={{ padding: '4px 0px' }} key={index}>
           {getGridItemLabel(field, `${index}-label`)}
           {getGridItemValue(field, `${index}-value`)}
-        </Grid>
+        </Grid2>
       );
     });
     return gridItems;

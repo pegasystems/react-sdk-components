@@ -89,6 +89,51 @@ export const getApiContext = (processedData, pConnect, reorderCB) => {
   };
 };
 
+const PRIMARY_FIELDS = 'pyPrimaryFields';
+const SUPPORTED_FIELD_TYPES = [
+  'Address',
+  'TextArea',
+  'TextInput',
+  'Phone',
+  'Email',
+  'Time',
+  'URL',
+  'Percentage',
+  'Integer',
+  'Decimal',
+  'Date',
+  'DateTime',
+  'Currency',
+  'Checkbox',
+  'Dropdown',
+  'AutoComplete',
+  'UserReference',
+  'RichText'
+];
+
+export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex) => {
+  let primaryFields: any = [];
+  let configFields: any = [];
+
+  if (primaryFieldsViewIndex > -1) {
+    let primaryFieldVMD: any = PCore.getMetadataUtils().resolveView(PRIMARY_FIELDS);
+    if (Array.isArray(primaryFieldVMD)) {
+      primaryFieldVMD = primaryFieldVMD.find(primaryFieldView => primaryFieldView.classID === contextClass);
+      primaryFields = primaryFieldVMD?.children?.[0]?.children || [];
+    } else if (primaryFieldVMD?.classID === contextClass) {
+      primaryFields = primaryFieldVMD?.children?.[0]?.children || [];
+    }
+
+    if (primaryFields.length) {
+      primaryFields = primaryFields.filter(primaryField => SUPPORTED_FIELD_TYPES.includes(primaryField.type));
+    }
+  }
+
+  configFields = [...rawFields.slice(0, primaryFieldsViewIndex), ...primaryFields, ...rawFields.slice(primaryFieldsViewIndex + 1)];
+  // filter duplicate fields after combining raw fields and primary fields
+  return configFields.filter((field, index) => configFields.findIndex(_field => field.config?.value === _field.config?.value) === index);
+};
+
 export const buildMetaForListView = (fieldMetadata, fields, type, ruleClass, name, propertyLabel, isDataObject, parameters) => {
   return {
     name,
@@ -126,11 +171,80 @@ export const buildMetaForListView = (fieldMetadata, fields, type, ruleClass, nam
   };
 };
 
-export const buildFieldsForTable = (configFields, fields, showDeleteButton) => {
+export function isFLProperty(label) {
+  return label?.startsWith('@FL');
+}
+
+/**
+ * [getFieldLabel]
+ * Description - A utility that returns resolved field label for "@FL" annotation i.e from data model.
+ * @param {Object} fieldConfig
+ * @returns {string} resolved label string
+ *
+ * example:
+ * fieldConfig = {label: "@FL .pyID", classID: "TestCase-Work"};
+ * return "Case ID"
+ */
+export function getFieldLabel(fieldConfig) {
+  const { label, classID, caption } = fieldConfig;
+  let fieldLabel = (label ?? caption)?.substring(4);
+  const labelSplit = fieldLabel?.split('.');
+  const propertyName = labelSplit?.pop();
+  const fieldMetaData: any = PCore.getMetadataUtils().getPropertyMetadata(propertyName, classID) ?? {};
+  fieldLabel = fieldMetaData.label ?? fieldMetaData.caption ?? propertyName;
+  return fieldLabel;
+}
+
+export const updateFieldLabels = (fields, configFields, primaryFieldsViewIndex, pConnect, options) => {
+  const labelsOfFields: any = [];
+  const { columnsRawConfig = [] } = options;
+  fields.forEach((field, idx) => {
+    const rawColumnConfig = columnsRawConfig[idx]?.config;
+    if (field.config.value === PRIMARY_FIELDS) {
+      labelsOfFields.push('');
+    } else if (isFLProperty(rawColumnConfig?.label ?? rawColumnConfig?.caption)) {
+      labelsOfFields.push(getFieldLabel(rawColumnConfig) || field.config.label || field.config.caption);
+    } else {
+      labelsOfFields.push(field.config.label || field.config.caption);
+    }
+  });
+
+  if (primaryFieldsViewIndex > -1) {
+    const totalPrimaryFieldsColumns = configFields.length - fields.length + 1;
+    if (totalPrimaryFieldsColumns) {
+      const primaryFieldLabels: any = [];
+      for (let i = primaryFieldsViewIndex; i < primaryFieldsViewIndex + totalPrimaryFieldsColumns; i += 1) {
+        let label = configFields[i].config?.label;
+        if (isFLProperty(label)) {
+          label = getFieldLabel(configFields[i].config);
+        } else if (label.startsWith('@')) {
+          label = label.substring(3);
+        }
+        if (pConnect) {
+          label = pConnect.getLocalizedValue(label);
+        }
+        primaryFieldLabels.push(label);
+      }
+      labelsOfFields.splice(primaryFieldsViewIndex, 1, ...primaryFieldLabels);
+    } else {
+      labelsOfFields.splice(primaryFieldsViewIndex, 1);
+    }
+  }
+  return labelsOfFields;
+};
+
+export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, options) => {
+  const { primaryFieldsViewIndex, fields } = options;
+
+  // get resolved field labels for primary fields raw config included in configFields
+  const fieldsLabels = updateFieldLabels(fields, configFields, primaryFieldsViewIndex, pConnect, {
+    columnsRawConfig: pConnect.getRawConfigProps()?.children.find(item => item?.name === 'Columns')?.children
+  });
+
   const fieldDefs = configFields.map((field, index) => {
     return {
       type: 'text',
-      label: fields[index].config.label || fields[index].config.caption,
+      label: fieldsLabels[index],
       fillAvailableSpace: !!field.config.fillAvailableSpace,
       id: `${index}`,
       name: field.config.value.substr(4),

@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -51,11 +51,11 @@ export default function FieldValueList(props: FieldValueListProps) {
 
   function getGridItemLabel() {
     return (
-      <Grid item xs={variant === 'stacked' ? 12 : 4} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
+      <Grid2 size={{ xs: variant === 'stacked' ? 12 : 4 }} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
         <Typography variant='body2' component='span' className={`${classes.fieldLabel}`}>
           {name}
         </Typography>
-      </Grid>
+      </Grid2>
     );
   }
 
@@ -63,7 +63,7 @@ export default function FieldValueList(props: FieldValueListProps) {
     const formattedValue = formatItemValue(value);
 
     return (
-      <Grid item xs={variant === 'stacked' || !name ? 12 : 8} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
+      <Grid2 size={{ xs: variant === 'stacked' || !name ? 12 : 8 }} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
         {isHtml ? (
           // eslint-disable-next-line react/no-danger
           <div dangerouslySetInnerHTML={{ __html: formattedValue }} />
@@ -72,14 +72,14 @@ export default function FieldValueList(props: FieldValueListProps) {
             {formattedValue}
           </Typography>
         )}
-      </Grid>
+      </Grid2>
     );
   }
 
   return (
-    <Grid container spacing={4} justifyContent='space-between'>
+    <Grid2 container spacing={4} justifyContent='space-between'>
       {name ? getGridItemLabel() : null}
       {getGridItemValue()}
-    </Grid>
+    </Grid2>
   );
 }

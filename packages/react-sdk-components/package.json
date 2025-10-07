@@ -20,6 +20,7 @@
     "@mui/material": "^6.5.0",
     "@mui/styles": "^6.5.0",
     "@mui/x-date-pickers": "^7.29.4",
+    "@react-google-maps/api": "^2.20.7",
     "@tinymce/tinymce-react": "^6.3.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",

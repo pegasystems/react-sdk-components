@@ -21,18 +21,33 @@ interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   primaryField: string;
   readonlyContextList: any;
   referenceList: string;
+  variant?: string;
+  hideFieldLabels: boolean;
+  additionalProps: any;
+  imagePosition: string;
+  imageSize: string;
+  showImageDescription: string;
+  renderMode: string;
+  image: string;
 }
 
 const useStyles = makeStyles(() => ({
   checkbox: {
     display: 'flex',
     flexDirection: 'column'
+  },
+  selectableCard: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 40ch), 1fr))',
+    gridAutoRows: '1fr',
+    gap: '0.5rem'
   }
 }));
 
 export default function CheckboxComponent(props: CheckboxProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const FieldValueList = getComponentFromMap('FieldValueList');
+  const SelectableCard = getComponentFromMap('SelectableCard');
 
   const {
     getPConnect,
@@ -56,8 +71,20 @@ export default function CheckboxComponent(props: CheckboxProps) {
     selectionList,
     primaryField,
     referenceList,
-    readonlyContextList: selectedvalues
+    readonlyContextList: selectedvalues,
+    variant,
+    hideFieldLabels,
+    additionalProps,
+    imagePosition,
+    imageSize,
+    showImageDescription,
+    renderMode,
+    image
   } = props;
+  const readOnlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY' || readOnly;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [theSelectedButton, setSelectedButton] = useState(value);
   const classes = useStyles();
   const helperTextToDisplay = validatemessage || helperText;
   const thePConn = getPConnect();
@@ -71,11 +98,16 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }, [value]);
 
   useEffect(() => {
-    if (referenceList?.length > 0) {
+    if (referenceList?.length > 0 && !readOnlyMode) {
       thePConn.setReferenceList(selectionList);
       updateNewInstuctions(thePConn, selectionList);
     }
   }, [thePConn]);
+
+  useEffect(() => {
+    // This update theSelectedButton which will update the UI to show the selected button correctly
+    setSelectedButton(value);
+  }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} />;
@@ -92,6 +124,68 @@ export default function CheckboxComponent(props: CheckboxProps) {
   const handleBlur = event => {
     thePConn.getValidationApi().validate(event.target.checked);
   };
+
+  const handleCheckboxChange = (event, item) => {
+    if (event.target.checked) {
+      insertInstruction(thePConn, selectionList, selectionKey, primaryField, item);
+    } else {
+      deleteInstruction(thePConn, selectionList, selectionKey, item);
+    }
+    thePConn.clearErrorMessages({ property: selectionList });
+  };
+
+  const actions = thePConn.getActionsApi();
+
+  const commonProps = {
+    ...additionalProps,
+    className: 'standard',
+    disabled,
+    readOnly,
+    onClick: (actions as any).onClick
+  };
+
+  if (variant === 'card') {
+    return (
+      <div>
+        <h4 style={{ marginTop: 0, marginBottom: 0 }}>{label}</h4>
+        <div className={classes.selectableCard}>
+          <SelectableCard
+            {...commonProps}
+            testId={testId}
+            displayMode={displayMode}
+            dataSource={datasource}
+            getPConnect={getPConnect}
+            readOnly={renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY' || readOnly}
+            onChange={e => {
+              e.stopPropagation();
+              const recordKey = selectionKey?.split('.').pop();
+              const selectedItem = datasource?.source?.find(item => item[recordKey as any] === e.target.id) ?? {};
+              handleCheckboxChange(e, {
+                id: selectedItem[recordKey as any],
+                primary: selectedItem[recordKey as any]
+              });
+            }}
+            onBlur={() => {
+              thePConn.getValidationApi().validate(selectedvalues, selectionList);
+            }}
+            hideFieldLabels={hideFieldLabels}
+            recordKey={selectionKey?.split('.').pop()}
+            cardLabel={primaryField.split('.').pop()}
+            image={{
+              imagePosition,
+              imageSize,
+              showImageDescription,
+              imageField: image?.split('.').pop(),
+              imageDescription: (thePConn?.getRawMetadata()?.config as any).imageDescription?.split('.').pop()
+            }}
+            readOnlyList={selectedvalues}
+            type='checkbox'
+            showNoValue={(renderMode === 'ReadOnly' || readOnly || displayMode === 'DISPLAY_ONLY') && selectedvalues.length === 0}
+          />
+        </div>
+      </div>
+    );
+  }
 
   const handleChangeMultiMode = (event, element) => {
     if (event.target.checked) {

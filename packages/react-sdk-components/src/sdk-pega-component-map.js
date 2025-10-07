@@ -54,6 +54,7 @@ import LeftAlignVerticalTabs from './components/infra/VerticalTabs/LeftAlignVert
 import ListPage from './components/template/ListPage/ListPage';
 import ListView from './components/template/ListView';
 import ListViewActionButtons from './components/infra/Containers/ModalViewContainer/ListViewActionButtons';
+import Location from './components/field/Location';
 import ModalViewContainer from './components/infra/Containers/ModalViewContainer/ModalViewContainer';
 import MultiReferenceReadOnly from './components/template/MultiReferenceReadOnly';
 import Multiselect from './components/field/Multiselect/Multiselect';
@@ -63,6 +64,7 @@ import NarrowWideDetails from './components/template/NarrowWide/NarrowWideDetail
 import NarrowWideForm from './components/template/NarrowWide/NarrowWideForm';
 import NarrowWidePage from './components/template/NarrowWide/NarrowWidePage';
 import NavBar from './components/infra/NavBar';
+import ObjectReference from './components/field/ObjectReference';
 import OneColumn from './components/template/OneColumn/OneColumn';
 import OneColumnPage from './components/template/OneColumn/OneColumnPage';
 import OneColumnTab from './components/template/OneColumn/OneColumnTab';
@@ -82,6 +84,7 @@ import ScalarList from './components/field/ScalarList';
 import SearchForm from './components/template/DataReference/SearchForm';
 import SearchGroups from './components/template/AdvancedSearch/SearchGroups';
 import SemanticLink from './components/field/SemanticLink';
+import SelectableCard from './components/field/SelectableCard';
 import SimpleTable from './components/template/SimpleTable/SimpleTable';
 import SimpleTableManual from './components/template/SimpleTable/SimpleTableManual';
 import SimpleTableSelect from './components/template/SimpleTable/SimpleTableSelect';
@@ -171,6 +174,7 @@ const pegaSdkComponentMap = {
   ListPage,
   ListView,
   ListViewActionButtons,
+  Location,
   ModalViewContainer,
   MultiReferenceReadOnly,
   Multiselect,
@@ -180,6 +184,7 @@ const pegaSdkComponentMap = {
   NarrowWideForm,
   NarrowWidePage,
   NavBar,
+  ObjectReference,
   OneColumn,
   OneColumnPage,
   OneColumnTab,
@@ -198,6 +203,7 @@ const pegaSdkComponentMap = {
   ScalarList,
   SearchForm,
   SearchGroups,
+  SelectableCard,
   SemanticLink,
   SimpleTable,
   SimpleTableManual,

@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import './Banner.css';
 
 // AlertBanner is one of the few components that does NOT have getPConnect.
@@ -37,14 +37,14 @@ export default function Banner(props: BannerProps) {
           </div>
         </div>
       </div>
-      <Grid container item xs={12} className='banner-layout' spacing={1}>
-        <Grid item xs={variantMap[variant][0]} style={{ padding: '1em' }}>
+      <Grid2 container size={12} className='banner-layout' spacing={1}>
+        <Grid2 size={{ xs: variantMap[variant][0] }} style={{ padding: '1em' }}>
           {a}
-        </Grid>
-        <Grid item xs={variantMap[variant][1]} style={{ padding: '1em' }}>
+        </Grid2>
+        <Grid2 size={{ xs: variantMap[variant][1] }} style={{ padding: '1em' }}>
           {b}
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </div>
   );
 }

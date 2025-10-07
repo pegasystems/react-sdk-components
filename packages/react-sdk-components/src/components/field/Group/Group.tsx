@@ -1,5 +1,5 @@
 import { type ReactElement, useMemo } from 'react';
-import { Grid } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
 import FieldGroup from '../../designSystemExtension/FieldGroup';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
@@ -19,13 +19,13 @@ export default function Group(props: GroupProps) {
 
   const content = useMemo(() => {
     return (
-      <Grid container spacing={2}>
+      <Grid2 container spacing={2}>
         {children?.map(child => (
-          <Grid item xs={12} key={child.key}>
+          <Grid2 size={{ xs: 12 }} key={child.key}>
             {child}
-          </Grid>
+          </Grid2>
         ))}
-      </Grid>
+      </Grid2>
     );
   }, [children, type, isReadOnly]);
 

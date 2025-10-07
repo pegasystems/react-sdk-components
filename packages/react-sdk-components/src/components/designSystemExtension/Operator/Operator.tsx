@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Popover from '@mui/material/Popover';
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -162,25 +162,25 @@ export default function Operator(props: OperatorProps) {
 
     // There are fields, so build the grid.
     return (
-      <Grid container className={classes.popover} spacing={1}>
-        <Grid item xs={12}>
+      <Grid2 container className={classes.popover} spacing={1}>
+        <Grid2 size={{ xs: 12 }}>
           <Typography variant='h6'>{caseOpName}</Typography>
-        </Grid>
+        </Grid2>
         {popoverFields.map(field => {
           return (
             <React.Fragment key={field.id}>
-              <Grid container item xs={12} spacing={1}>
-                <Grid item xs={6}>
+              <Grid2 container size={{ xs: 12 }} spacing={1}>
+                <Grid2 size={{ xs: 6 }}>
                   <Typography variant='caption'>{field.name}</Typography>
-                </Grid>
-                <Grid item xs={6}>
+                </Grid2>
+                <Grid2 size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>{field.value}</Typography>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </React.Fragment>
           );
         })}
-      </Grid>
+      </Grid2>
     );
   }
 

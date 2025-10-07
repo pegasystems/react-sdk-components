@@ -5,7 +5,7 @@ import { Avatar, Card, CardHeader, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 
 import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
@@ -208,8 +208,8 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     if (!displayOnlyFA) {
       // show full portal
       return (
-        <Grid container>
-          <Grid item xs={3}>
+        <Grid2 container>
+          <Grid2 size={{ xs: 3 }}>
             <div hidden={true} id='current-caseID'>
               {currentCaseID}
             </div>
@@ -238,29 +238,25 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
               <Divider />
               {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
             </Card>
-          </Grid>
+          </Grid2>
 
-          <Grid item xs={6}>
+          <Grid2 size={{ xs: 6 }}>
             {theStagesRegion}
             {theTodoRegion}
             {deferLoadInfo.length > 0 && (
               <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab lastUpdateCaseTime={lastUpdateCaseTime} />
             )}
-          </Grid>
+          </Grid2>
 
-          <Grid item xs={3}>
-            {theUtilitiesRegion}
-          </Grid>
-        </Grid>
+          <Grid2 size={{ xs: 3 }}>{theUtilitiesRegion}</Grid2>
+        </Grid2>
       );
     }
     // displayOnlyFA - only show the "todo" region
     return (
-      <Grid container>
-        <Grid item xs={12}>
-          {theTodoRegion}
-        </Grid>
-      </Grid>
+      <Grid2 container>
+        <Grid2 size={{ xs: 12 }}>{theTodoRegion}</Grid2>
+      </Grid2>
     );
   }
 

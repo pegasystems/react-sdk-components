@@ -58,7 +58,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
   const AlertBanner = getComponentFromMap('AlertBanner');
 
   const pCoreConstants = PCore.getConstants();
-  const PCoreVersion = PCore.getPCoreVersion();
   const { TODO } = pCoreConstants;
   const todo_headerText = 'To do';
 
@@ -78,6 +77,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
   const getPConnect = getPConnectOfActiveContainerItem || getPConnectOfFlowContainer;
   const thePConn = getPConnect();
   const containerName = assignmentNames && assignmentNames.length > 0 ? assignmentNames[0] : '';
+  const bShowBanner = showBanner(getPConnect);
   // const [init, setInit] = useState(true);
   // const [fcState, setFCState] = useState({ hasError: false });
 
@@ -104,7 +104,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
   function getBuildName(): string {
     const ourPConn = getPConnect();
 
-    // let { getPConnect, name } = this.pConn$.pConn;
     const context = ourPConn.getContextName();
     let viewContainerName = ourPConn.getContainerName();
 
@@ -113,7 +112,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
   }
 
   function getTodoVisibility() {
-    const caseViewMode = getPConnect().getValue('context_data.caseViewMode', ''); // 2nd arg empty string until typedefs properly allow optional
+    const caseViewMode = getPConnect().getValue('context_data.caseViewMode');
     if (caseViewMode && caseViewMode === 'review') {
       return true;
     }
@@ -122,16 +121,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
 
   function initComponent() {
     const ourPConn = getPConnect();
-
-    // debugging/investigation help
-    // console.log(`${ourPConn.getComponentName()}: children update for main draw`);
-
-    // const oData = ourPConn.getDataObject();
-
-    // const activeActionLabel = "";
-    // const child0_getPConnect = arNewChildren[0].getPConnect();
-
-    // this.templateName$ = this.configProps$["template"];
 
     // debugger;
     setShowTodo(getTodoVisibility());
@@ -156,63 +145,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
     }
   }, [isInitialized, hasItems]);
 
-  function isCaseWideLocalAction() {
-    const ourPConn = getPConnect();
-
-    const actionID = ourPConn.getValue(pCoreConstants.CASE_INFO.ACTIVE_ACTION_ID, ''); // 2nd arg empty string until typedefs properly allow optional
-    const caseActions = ourPConn.getValue(pCoreConstants.CASE_INFO.AVAILABLEACTIONS, ''); // 2nd arg empty string until typedefs properly allow optional
-    let bCaseWideAction = false;
-    if (caseActions && actionID) {
-      const actionObj = caseActions.find(caseAction => caseAction.ID === actionID);
-      if (actionObj) {
-        bCaseWideAction = actionObj.type === 'Case';
-      }
-    }
-    return bCaseWideAction;
-  }
-
-  function hasChildCaseAssignments() {
-    const ourPConn = getPConnect();
-
-    const childCases = ourPConn.getValue(pCoreConstants.CASE_INFO.CHILD_ASSIGNMENTS, ''); // 2nd arg empty string until typedefs properly allow optional
-    // const allAssignments = [];
-    return !!(childCases && childCases.length > 0);
-  }
-
-  function hasAssignments() {
-    const ourPConn = getPConnect();
-
-    let bHasAssignments = false;
-    const assignmentsList: any[] = ourPConn.getValue(pCoreConstants.CASE_INFO.D_CASE_ASSIGNMENTS_RESULTS, ''); // 2nd arg empty string until typedefs properly allow optional
-    const isEmbedded = window.location.href.includes('embedded');
-    let bAssignmentsForThisOperator = false;
-    // 8.7 includes assignments in Assignments List that may be assigned to
-    //  a different operator. So, see if there are any assignments for
-    //  the current operator
-    if (PCoreVersion?.includes('8.7') || isEmbedded) {
-      const thisOperator = PCore.getEnvironmentInfo().getOperatorIdentifier();
-      for (const assignment of assignmentsList) {
-        if (assignment.assigneeInfo.ID === thisOperator) {
-          bAssignmentsForThisOperator = true;
-        }
-      }
-    } else {
-      bAssignmentsForThisOperator = true;
-    }
-    // Bail out if there isn't an assignmentsList
-    if (!assignmentsList) {
-      return bHasAssignments;
-    }
-
-    const bHasChildCaseAssignments = hasChildCaseAssignments();
-
-    if (bAssignmentsForThisOperator || bHasChildCaseAssignments || isCaseWideLocalAction()) {
-      bHasAssignments = true;
-    }
-
-    return bHasAssignments;
-  }
-
   // From SDK-WC updateSelf - so do this in useEffect that's run only when the props change...
   useEffect(() => {
     setBuildName(getBuildName());
@@ -222,29 +154,21 @@ export const FlowContainer = (props: FlowContainerProps) => {
 
     let loadingInfo: any;
     try {
-      loadingInfo = thePConn.getLoadingStatus(''); // 1st arg empty string until typedefs properly allow optional
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      loadingInfo = thePConn.getLoadingStatus();
     } catch (ex) {
       // eslint-disable-next-line no-console
       console.error(`${thePConn.getComponentName()}: loadingInfo catch block`);
     }
 
-    // let configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
-
-    if (!loadingInfo) {
-      // turn off spinner
-      // this.psService.sendMessage(false);
-    }
-
-    const caseViewMode = thePConn.getValue('context_data.caseViewMode', ''); // 2nd arg empty string until typedefs properly allow optional
+    const caseViewMode = thePConn.getValue('context_data.caseViewMode');
     const { CASE_INFO: CASE_CONSTS } = pCoreConstants;
     if (caseViewMode && caseViewMode === 'review') {
       setTimeout(() => {
         // updated for 8.7 - 30-Mar-2022
         const todoAssignments = getToDoAssignments(thePConn);
-        if (todoAssignments && todoAssignments.length > 0) {
-          setCaseInfoID(thePConn.getValue(CASE_CONSTS.CASE_INFO_ID, '')); // 2nd arg empty string until typedefs properly allow optional
-          setTodoDatasource({ source: todoAssignments });
-        }
+        setCaseInfoID(thePConn.getValue(CASE_CONSTS.CASE_INFO_ID));
+        setTodoDatasource({ source: todoAssignments });
         setShowTodo(true);
         setShowTodoList(false);
       }, 100);
@@ -255,11 +179,12 @@ export const FlowContainer = (props: FlowContainerProps) => {
     }
 
     // if have caseMessage show message and end
-    const theCaseMessages = localizedVal(thePConn.getValue('caseMessages', ''), localeCategory); // 2nd arg empty string until typedefs properly allow optional
+    const theCaseMessages = localizedVal(thePConn.getValue('caseMessages'), localeCategory);
 
-    // caseMessages's behavior has changed in 24.2, and hence it doesn't let Optional Action work.
-    // Changing the below condition for now. Was: (theCaseMessages || !hasAssignments())
-    if (!hasAssignments()) {
+    const rootInfo = PCore.getContainerUtils().getContainerItemData(getPConnect().getTarget(), itemKey);
+    const bConfirmView = rootInfo && bShowBanner;
+
+    if (bConfirmView) {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
       setCaseMessages(theCaseMessages || localizedVal('Thank you! The next step in this case has been routed appropriately.', localeCategory));
@@ -278,8 +203,6 @@ export const FlowContainer = (props: FlowContainerProps) => {
   const caseId = thePConn.getCaseSummary().content.pyID;
   const urgency = getPConnect().getCaseSummary().assignments ? getPConnect().getCaseSummary().assignments?.[0].urgency : '';
   const operatorInitials = Utils.getInitials(PCore.getEnvironmentInfo().getOperatorName() || '');
-
-  const bShowBanner = showBanner(getPConnect);
 
   const displayPageMessages = () => {
     let hasBanner = false;

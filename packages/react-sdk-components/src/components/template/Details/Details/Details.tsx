@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
@@ -53,21 +53,21 @@ export default function Details(props: DetailsProps) {
   return (
     <FieldGroup name={propsToUse.showLabel ? propsToUse.label : ''}>
       {showHighlightedData && highlightedDataArr.length > 0 && (
-        <Grid container spacing={1} style={{ padding: '0 0 1em' }}>
+        <Grid2 container spacing={1} style={{ padding: '0 0 1em' }}>
           {highlightedDataArr.map((child, i) => (
-            <Grid item xs={12} key={`hf-${i + 1}`}>
+            <Grid2 size={{ xs: 12 }} key={`hf-${i + 1}`}>
               {child}
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
-      <Grid container spacing={1}>
+      <Grid2 container spacing={1}>
         {children.map((child, i) => (
-          <Grid item xs={12} key={`r-${i + 1}`}>
+          <Grid2 size={{ xs: 12 }} key={`r-${i + 1}`}>
             {child}
-          </Grid>
+          </Grid2>
         ))}
-      </Grid>
+      </Grid2>
     </FieldGroup>
   );
 }

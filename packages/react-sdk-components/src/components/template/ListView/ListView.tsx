@@ -21,7 +21,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import SubjectIcon from '@mui/icons-material/Subject';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Dialog from '@mui/material/Dialog';
@@ -102,8 +102,6 @@ export default function ListView(props: ListViewProps) {
   // List component context
   const [listContext, setListContext] = useState<any>({});
   const { meta } = listContext;
-  const xRayApis = PCore.getDebugger().getXRayRuntime();
-  const xRayUid = xRayApis.startXRay();
   const { current: uniqueId } = useRef(crypto.randomUUID());
 
   useInit({
@@ -111,7 +109,6 @@ export default function ListView(props: ListViewProps) {
     setListContext,
     ref,
     showDynamicFields,
-    xRayUid,
     cosmosTableRef
   });
 
@@ -1081,11 +1078,11 @@ export default function ListView(props: ListViewProps) {
             {_listTitle()}
           </Typography>
           {globalSearch && (
-            <Grid container spacing={1} alignItems='flex-end' className={classes.search}>
-              <Grid item>
+            <Grid2 container spacing={1} alignItems='flex-end' className={classes.search}>
+              <Grid2>
                 <SearchIcon />
-              </Grid>
-              <Grid item>
+              </Grid2>
+              <Grid2>
                 <TextField
                   label={PCore.getLocaleUtils().getLocaleValue('Search', 'Search')}
                   fullWidth
@@ -1095,8 +1092,8 @@ export default function ListView(props: ListViewProps) {
                   id='search'
                   onChange={_onSearch}
                 />
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           )}
           <>
             {!bInForm ? (

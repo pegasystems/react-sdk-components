@@ -1,5 +1,5 @@
 import React, { createElement, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Grid, Select, MenuItem, Box } from '@mui/material';
+import { Button, Grid2, Select, MenuItem, Box } from '@mui/material';
 
 import createPConnectComponent from '../../../../bridge/react_pconnect';
 import TemplateContext from '../TemplateContext';
@@ -173,7 +173,7 @@ export default function SearchGroups(props) {
   useCacheWhenListViewReady(cache, viewName, useCache, getFilterData, searchSelectCacheKey);
 
   const searchDropdown = groups.length > 1 && (
-    <Grid container spacing={2}>
+    <Grid2 container spacing={2}>
       <Select value={activeGroupId} onChange={e => setActiveGroupId(e.target.value)} ref={searchByRef} fullWidth>
         {groups.map(group => (
           <MenuItem key={group.config.id} value={group.config.id}>
@@ -181,7 +181,7 @@ export default function SearchGroups(props) {
           </MenuItem>
         ))}
       </Select>
-    </Grid>
+    </Grid2>
   );
 
   const actionButtons = (
