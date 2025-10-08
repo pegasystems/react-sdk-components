@@ -30,7 +30,6 @@ interface AppShellProps extends PConnProps {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // display: 'flex',
     backgroundColor: theme.backgroundColor
   },
   content: {
@@ -242,7 +241,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   return (
     // eslint-disable-next-line react/jsx-no-constructed-context-values
     <NavContext.Provider value={{ open, setOpen }}>
-      <div id='AppShell' className={classes.root}>
+      <div id='AppShell' className={classes.root} style={{ display: 'flex' }}>
         <NavBar
           getPConnect={getPConnect}
           pConn={getPConnect()}
