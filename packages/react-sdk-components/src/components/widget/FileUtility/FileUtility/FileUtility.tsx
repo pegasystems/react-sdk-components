@@ -495,7 +495,10 @@ export default function FileUtility(props: FileUtilityProps) {
         </div>
       )}
       <div className='psdk-header'>
+        {/* <IconButton> */}
         <img className='psdk-file-utility-card-svg-icon' src={headerSvgIcon$} />
+        {/* <AttachmentIcon /> */}
+        {/* </IconButton> */}
         <div className='header-text'>{header}</div>
         <div className='psdk-utility-count' id='attachments-count'>
           {list.count}

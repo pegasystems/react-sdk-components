@@ -14,7 +14,7 @@ export default function WssQuickCreate(props: WssQuickCreateProps) {
 
   return (
     <div>
-      <h1 id='quick-links-heading' className='quick-link-heading'>
+      <h1 id='quick-links-heading' className='quick-links-heading'>
         {heading}
       </h1>
       <ul id='quick-links' className='quick-link-ul-list'>

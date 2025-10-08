@@ -41,7 +41,7 @@
   text-align: center;
   display: flex;
   background: var(--app-primary-color);
-  color: white;
+  color: var(--app-text-color);
   font-weight: bold;
   font-size: 1.25rem;
 }
@@ -54,18 +54,6 @@
 
 .psdk-todo-assignment-data {
   display: inline-flex;
-}
-
-.psdk-todo-assignment-status {
-  background-color: var(--app-neutral-light-color);
-  border-radius: 0.125rem;
-  color: darkslategray;
-  font-size: 0.75rem;
-  font-weight: bold;
-  line-height: calc(0.5rem * 2.5);
-  height: calc(0.5rem * 2.5);
-  padding: 0 0.5rem;
-  text-transform: uppercase;
 }
 
 .psdk-todo-assignment-task {
