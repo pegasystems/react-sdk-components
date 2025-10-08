@@ -144,6 +144,7 @@
   color: var(--secondary-button-text-color) !important;
   font-size: 0.875rem !important;
   cursor: pointer !important;
+}
 
 /* Support for google map autocomplete */
 .pac-container {
