@@ -59,11 +59,6 @@
   margin-right: 0 !important;
 }
 
-/* Support for google map autocomplete */
-.pac-container {
-  z-index: 2147483647;
-}
-
 .tox .tox-toolbar {
   background-color: var(--app-background-color) !important;
 }
@@ -149,4 +144,9 @@
   color: var(--secondary-button-text-color) !important;
   font-size: 0.875rem !important;
   cursor: pointer !important;
+}
+
+/* Support for google map autocomplete */
+.pac-container {
+  z-index: 2147483647;
 }
