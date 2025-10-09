@@ -21,7 +21,7 @@ interface DeferLoadProps extends PConnProps {
 // is totally at your own risk.
 //
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -75,7 +75,7 @@ export default function DeferLoad(props: DeferLoadProps) {
     updateData: isContainerPreview
   });
 
-  const onResponse = data => {
+  const onResponse = (data) => {
     setLoading(false);
     if (deferLoadId) {
       PCore.getDeferLoadManager().start(
@@ -115,14 +115,13 @@ export default function DeferLoad(props: DeferLoadProps) {
           .getActionsApi()
           .showData(name, dataContext, dataContextParameters, {
             skipSemanticUrl: true,
-            // @ts-ignore
+            // @ts-expect-error
             isDeferLoaded: true
           })
-          .then(data => {
+          .then((data) => {
             onResponse(data);
           });
       } else {
-        // eslint-disable-next-line no-console
         console.error('Cannot load the defer loaded view without container information');
       }
     } else if (resourceType === PAGE) {
@@ -130,7 +129,7 @@ export default function DeferLoad(props: DeferLoadProps) {
       getPConnect()
         .getActionsApi()
         .loadView(encodeURI(loadViewCaseID), name, getViewOptions())
-        .then(data => {
+        .then((data) => {
           onResponse(data);
         });
     } else {
@@ -140,8 +139,7 @@ export default function DeferLoad(props: DeferLoadProps) {
         .then((data: any) => {
           onResponse(data.root);
         })
-        .catch(error => {
-          // eslint-disable-next-line no-console
+        .catch((error) => {
           console.log(`deferload: ${error}`);
         });
     }

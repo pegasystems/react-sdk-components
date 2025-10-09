@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { connect, shallowEqual } from 'react-redux';
@@ -38,7 +37,6 @@ export const setVisibilityForList = (c11nEnv, visibility) => {
 };
 
 function withVisibility(WrappedComponent) {
-  // eslint-disable-next-line react/prefer-stateless-function
   return class extends Component {
     render() {
       const { visibility } = this.props;
@@ -58,7 +56,6 @@ const connectRedux = (component, c11nEnv) => {
       const obj = {};
       // Need to use ownProps pconnect since c11nEnv is stale and prior to re-render
       if (!ownProps.getPConnect) {
-        // eslint-disable-next-line no-console
         console.error('connectRedux ownProps are not defined');
       } else {
         c11nEnv = ownProps.getPConnect();
@@ -117,7 +114,7 @@ const connectRedux = (component, c11nEnv) => {
   )(component);
 };
 
-const getComponent = c11nEnv => {
+const getComponent = (c11nEnv) => {
   // PCore is defined in pxBootstrapShell - eventually will be exported in place of constellationCore
   const ComponentsRegistry = PCore.getComponentsRegistry();
   const type = c11nEnv.getComponentName();
@@ -134,7 +131,6 @@ const getComponent = c11nEnv => {
       // This is the node_modules version of react_pconnect!
       const theLocalComponent = SdkComponentMap.getLocalComponentMap()[componentType];
       if (theLocalComponent !== undefined) {
-        // eslint-disable-next-line no-console
         console.log(`react_pconnect getComponent found ${componentType}: Local`);
         component = theLocalComponent;
       } else {
@@ -143,7 +139,6 @@ const getComponent = c11nEnv => {
           // console.log(`react_pconnect getComponent found ${componentType}: Pega-provided`);
           component = thePegaProvidedComponent;
         } else {
-          // eslint-disable-next-line no-console
           console.error(`react_pconnect: getComponent doesn't have an entry for type ${type}`);
           component = ErrorBoundary;
         }
@@ -151,11 +146,10 @@ const getComponent = c11nEnv => {
     } else {
       // We no longer handle the "old" switch statement that was here in the original packaging.
       //  All components seen here need to be in the SdkComponentMap
-      // eslint-disable-next-line no-console
+
       console.error(`SdkComponentMap not defined! Unable to process component: ${componentType}`);
     }
   } else {
-    // eslint-disable-next-line no-console
     console.log(`getComponent doesn't have an entry for component ${component}`);
     component = ErrorBoundary;
   }
@@ -189,7 +183,7 @@ class PConnect extends Component {
     this.changeHandler = this.changeHandler.bind(this);
 
     this.c11nEnv = getPConnect();
-    // eslint-disable-next-line react/no-unused-class-component-methods
+
     this.Control = getComponent(this.c11nEnv);
     this.actionsAPI = this.c11nEnv.getActionsApi();
 
@@ -210,7 +204,6 @@ class PConnect extends Component {
   }
 
   componentDidCatch(error, info) {
-    // eslint-disable-next-line no-console
     console.error(`Error while Rendering the component ${this.componentName} : `, error, info.componentStack);
   }
 
@@ -246,12 +239,10 @@ class PConnect extends Component {
   createChildren() {
     const { getPConnect } = this.props;
     if (getPConnect().hasChildren() && getPConnect().getChildren()) {
-      return (
-        getPConnect()
-          .getChildren()
-          // eslint-disable-next-line react/no-array-index-key
-          .map((childProps, index) => <PConnect key={`${this.getKey(childProps)}_${index}`} {...childProps} />)
-      );
+      return getPConnect()
+        .getChildren()
+
+        .map((childProps, index) => <PConnect key={`${this.getKey(childProps)}_${index}`} {...childProps} />);
     }
     return null;
   }
@@ -303,7 +294,7 @@ class PConnect extends Component {
     return <this.Control {...finalProps}>{this.createChildren()}</this.Control>;
   }
 }
-// eslint-disable-next-line react/static-property-placement
+
 PConnect.propTypes = {
   // __internal: PropTypes.object.isRequired,
   // meta: PropTypes.object.isRequired,
@@ -316,7 +307,6 @@ PConnect.propTypes = {
   validatemessage: PropTypes.string
 };
 
-// eslint-disable-next-line react/static-property-placement
 PConnect.defaultProps = {
   additionalProps: {},
   validatemessage: ''
@@ -335,19 +325,19 @@ document.addEventListener('SdkConstellationReady', () => {
 
   PCore.getAssetLoader().register('component-loader', async (componentNames = []) => {
     const promises = [];
-    componentNames.forEach(comp => {
+    componentNames.forEach((comp) => {
       if (/^[A-Z]/.test(comp) && !LazyComponentMap[comp]) {
         if (!ComponentMap[comp]) {
           const srcUrl = `${PCore.getAssetLoader().getConstellationServiceUrl()}/v860/${PCore.getAssetLoader().getAppAlias()}/component/${comp}.js`;
           promises.push(PCore.getAssetLoader().getLoader()(srcUrl, 'script'));
         } else {
           if (ComponentMap[comp].modules && ComponentMap[comp].modules.length) {
-            ComponentMap[comp].modules.forEach(module => {
+            ComponentMap[comp].modules.forEach((module) => {
               LazyComponentMap[comp] = module;
             });
           }
           if (ComponentMap[comp].scripts && ComponentMap[comp].scripts.length) {
-            ComponentMap[comp].scripts.forEach(script => {
+            ComponentMap[comp].scripts.forEach((script) => {
               promises.push(PCore.getAssetLoader().getLoader()(script, 'script'));
             });
           }

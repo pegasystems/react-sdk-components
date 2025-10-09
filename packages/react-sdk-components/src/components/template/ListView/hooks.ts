@@ -26,7 +26,7 @@ export default function useInit(props) {
 
     (async function init() {
       // promise to fetch metadata
-      // @ts-ignore - 3rd parameter "associationFilter" should be optional for getDataViewMetadata method
+      // @ts-expect-error - 3rd parameter "associationFilter" should be optional for getDataViewMetadata method
       const metaDataPromise: Promise<any> = PCore.getAnalyticsUtils().getDataViewMetadata(referenceList, showDynamicFields);
 
       const promisesArray = [metaDataPromise];
@@ -41,7 +41,7 @@ export default function useInit(props) {
       });
       promisesArray.push(reportColumnsPromise);
 
-      const fetchEditDetails = async metadata => {
+      const fetchEditDetails = async (metadata) => {
         const {
           data: { isQueryable }
         } = metadata;
@@ -62,7 +62,7 @@ export default function useInit(props) {
         return Promise.resolve();
       };
 
-      const editPromise = metaDataPromise.then(metadata => fetchEditDetails(metadata));
+      const editPromise = metaDataPromise.then((metadata) => fetchEditDetails(metadata));
       promisesArray.push(editPromise);
       getContext({
         tableSource: referenceList,
@@ -73,7 +73,7 @@ export default function useInit(props) {
         compositeKeys,
         isSearchable,
         isCacheable: true
-      }).then(async context => {
+      }).then(async (context) => {
         if (isCompStillMounted) {
           return readContextResponse(context, {
             ...props,

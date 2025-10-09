@@ -64,7 +64,7 @@ export default function Date(props: DateProps) {
 
   const testProps: any = { 'data-test-id': testId };
 
-  const handleChange = date => {
+  const handleChange = (date) => {
     if (date && date.isValid()) {
       setDateValue(date);
       handleEvent(actions, 'changeNblur', propName, getFormattedDate(date));

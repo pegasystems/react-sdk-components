@@ -90,7 +90,7 @@ export default function Location(props: LocationProps) {
     }
     if (coordinates) {
       const [lat, lng] = coordinates.split(',').map(parseFloat);
-      // eslint-disable-next-line no-restricted-globals
+
       if (!isNaN(lat) && !isNaN(lng)) {
         setMapCenter({ lat, lng });
         setMarkerPosition({ lat, lng });
@@ -151,7 +151,7 @@ export default function Location(props: LocationProps) {
   const handleGetCurrentLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        position => {
+        (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           const coordinateString = `${lat}, ${lng}`;
@@ -179,8 +179,7 @@ export default function Location(props: LocationProps) {
             });
           }
         },
-        error => {
-          // eslint-disable-next-line no-console
+        (error) => {
           console.error('Error getting current location: ', error);
         }
       );

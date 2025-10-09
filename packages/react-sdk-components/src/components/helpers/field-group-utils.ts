@@ -8,7 +8,7 @@ import createPConnectComponent from '../../bridge/react_pconnect';
  * @returns {string} - returns the name of referenceList
  */
 
-export const getReferenceList = pConn => {
+export const getReferenceList = (pConn) => {
   let resolvePage = pConn.getComponentConfig().referenceList.replace('@P ', '');
   if (resolvePage.includes('D_')) {
     resolvePage = pConn.resolveDatasourceReference(resolvePage);

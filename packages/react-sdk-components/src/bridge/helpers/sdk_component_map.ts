@@ -8,13 +8,13 @@ import pegaSdkComponentMap from '../../sdk-pega-component-map';
 // Create a singleton for this class (with async loading of components map file) and export it
 // Note: Initializing SdkComponentMap to null seems to cause lots of compile issues with references
 //  within other components and the value potentially being null (so try to leave it undefined)
-// eslint-disable-next-line import/no-mutable-exports
+
 export let SdkComponentMap;
 let SdkComponentMapCreateInProgress = false;
 
 interface ISdkComponentMap {
-  localComponentMap: Object;
-  pegaProvidedComponentMap: Object;
+  localComponentMap: object;
+  pegaProvidedComponentMap: object;
 }
 
 class ComponentMap {
@@ -53,8 +53,7 @@ class ComponentMap {
 
       Promise.all([theLocalCompPromise, thePegaCompPromise])
         .then(() => this.sdkComponentMap)
-        .catch(error => {
-          // eslint-disable-next-line no-console
+        .catch((error) => {
           console.error(`Error in readSdkComponentMap: ${error}`);
         });
     } else {
@@ -91,7 +90,7 @@ class ComponentMap {
     return this.sdkComponentMap.pegaProvidedComponentMap;
   };
 
-  setPegaProvidedComponentMap = inPegaProvidedComponentMap => {
+  setPegaProvidedComponentMap = (inPegaProvidedComponentMap) => {
     this.sdkComponentMap.pegaProvidedComponentMap = inPegaProvidedComponentMap;
     return this.sdkComponentMap.pegaProvidedComponentMap;
   };
@@ -101,7 +100,6 @@ export function getComponentFromMap(inComponentName: string): any {
   let theComponentImplementation = null;
   const theLocalComponent = SdkComponentMap.getLocalComponentMap()[inComponentName];
   if (theLocalComponent !== undefined) {
-    // eslint-disable-next-line no-console
     console.log(`Requested component found ${inComponentName}: Local`);
     theComponentImplementation = theLocalComponent;
   } else {
@@ -110,7 +108,6 @@ export function getComponentFromMap(inComponentName: string): any {
       // console.log(`Requested component found ${inComponentName}: Pega-provided`);
       theComponentImplementation = thePegaProvidedComponent;
     } else {
-      // eslint-disable-next-line no-console
       console.error(`Requested component has neither Local nor Pega-provided implementation: ${inComponentName}`);
       theComponentImplementation = getComponentFromMap('ErrorBoundary');
     }
@@ -129,16 +126,16 @@ async function createSdkComponentMap(inLocalComponentMap = {}) {
 
 // Initialize exported SdkComponentMap structure
 export async function getSdkComponentMap(inLocalComponentMap = {}) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     let idNextCheck;
     if (!SdkComponentMap && !SdkComponentMapCreateInProgress) {
       SdkComponentMapCreateInProgress = true;
-      createSdkComponentMap(inLocalComponentMap).then(theComponentMap => {
+      createSdkComponentMap(inLocalComponentMap).then((theComponentMap) => {
         // debugger;
         // Key initialization of SdkComponentMap
         SdkComponentMap = theComponentMap;
         SdkComponentMapCreateInProgress = false;
-        // eslint-disable-next-line no-console
+
         console.log(`getSdkComponentMap: created SdkComponentMap singleton`);
         // Create and dispatch the SdkConfigAccessReady event
         //  Not used anyplace yet but putting it in place in case we need it.
@@ -157,7 +154,6 @@ export async function getSdkComponentMap(inLocalComponentMap = {}) {
         idNextCheck = setInterval(fnCheckForConfig, 500);
       };
       if (SdkComponentMap) {
-        // eslint-disable-next-line no-promise-executor-return
         return resolve(SdkComponentMap.sdkComponentMap);
       }
       idNextCheck = setInterval(fnCheckForConfig, 500);

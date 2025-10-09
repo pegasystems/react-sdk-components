@@ -81,7 +81,7 @@ export default function Currency(props: CurrrencyProps) {
     handleEvent(actions, 'changeNblur', propName, values);
   }
 
-  const handleChange = val => {
+  const handleChange = (val) => {
     setValues(val.value);
   };
 
@@ -94,7 +94,7 @@ export default function Currency(props: CurrrencyProps) {
       placeholder={placeholder ?? ''}
       required={required}
       disabled={disabled}
-      onValueChange={val => {
+      onValueChange={(val) => {
         handleChange(val);
       }}
       onBlur={!readOnly ? currOnBlur : undefined}

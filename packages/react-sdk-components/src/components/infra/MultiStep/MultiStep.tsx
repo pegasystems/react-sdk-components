@@ -102,7 +102,7 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                           marginLeft: '-7px'
                         }}
                       >
-                        {mainStep.steps.forEach(subStep => {
+                        {mainStep.steps.forEach((subStep) => {
                           <li className='psdk-sub-step-list'>
                             <div style={{ display: 'inline-flex' }}>
                               {subStep.visited_status === 'current' && <img className='psdk-current-svg-icon' src='{svgCurrent}' />}
@@ -155,12 +155,12 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
               );
             })}
           </div>
-          {arNavigationSteps.map(mainStep => {
+          {arNavigationSteps.map((mainStep) => {
             return (
               <React.Fragment key={mainStep.actionID}>
                 {mainStep.steps && (
                   <ul style={{ paddingInlineStart: '0rem', marginLeft: '35px' }}>
-                    {mainStep.steps.map(subStep => (
+                    {mainStep.steps.map((subStep) => (
                       <li className='psdk-sub-step-list'>
                         <div style={{ display: 'inline-flex' }}>
                           {subStep.visited_status === 'current' && <img className='psdk-current-svg-icon' src='{svgCurrent}' />}

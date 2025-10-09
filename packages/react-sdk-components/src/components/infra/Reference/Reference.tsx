@@ -12,8 +12,7 @@ export default function Reference(props: ReferenceProps) {
   const { visibility = true, context = '', getPConnect, readOnly = false, displayMode = '' } = props;
 
   const pConnect = getPConnect();
-  // @ts-ignore - Property 'getComponentConfig' is private and only accessible within class 'C11nEnv'.
-  const referenceConfig = { ...pConnect.getComponentConfig() } || {};
+  const referenceConfig = { ...pConnect.getComponentConfig() };
 
   delete referenceConfig?.name;
   delete referenceConfig?.type;
@@ -34,7 +33,7 @@ export default function Reference(props: ReferenceProps) {
     }
   };
 
-  // @ts-ignore - Argument of type 'null' is not assignable to parameter of type 'string'.
+  // @ts-expect-error - Argument of type 'null' is not assignable to parameter of type 'string'.
   const viewComponent: any = pConnect.createComponent(viewObject, null, null, {
     pageReference: context && context.startsWith('@CLASS') ? '' : context
   });

@@ -81,15 +81,14 @@ const UserReference = (props: UserReferenceProps) => {
 
       PCore.getRestClient()
         .invokeRestApi('getListData', { queryPayload })
-        .then(res => {
-          const ddDataSource = res.data.data.map(listItem => ({
+        .then((res) => {
+          const ddDataSource = res.data.data.map((listItem) => ({
             key: listItem.pyUserIdentifier,
             value: listItem.pyUserName
           }));
           setDropDownDataSource(ddDataSource);
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
+        .catch((err) => {
           console.error(err);
         });
     }

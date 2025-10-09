@@ -29,8 +29,8 @@ export default function AdvancedSearch(props) {
 
   const searchFieldsSet = new Set();
   const searchFields: any = [];
-  rawViewMetadata.config.searchGroups.forEach(group => {
-    group.children.forEach(child => {
+  rawViewMetadata.config.searchGroups.forEach((group) => {
+    group.children.forEach((child) => {
       if (!searchFieldsSet.has(child.config.value) && !child.config.validator) {
         searchFields.push(child);
         searchFieldsSet.add(child.config.value);
@@ -42,7 +42,6 @@ export default function AdvancedSearch(props) {
   const [firstChildMeta] = rawViewMetadata.children;
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
-  // @ts-ignore
   const cache = PCore.getNavigationUtils().getComponentCache(searchSelectCacheKey) ?? {};
 
   const editableFieldComp = firstChildPConnect().createComponent({

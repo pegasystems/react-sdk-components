@@ -102,7 +102,7 @@ export const getActiveContainerRootViewElement = (containerInfo, options) => {
   return null;
 };
 
-export const getActiveContainerItemID = containerInfo => {
+export const getActiveContainerItemID = (containerInfo) => {
   const { accessedOrder } = containerInfo;
   if (accessedOrder && accessedOrder.length > 0) {
     return accessedOrder[accessedOrder.length - 1];

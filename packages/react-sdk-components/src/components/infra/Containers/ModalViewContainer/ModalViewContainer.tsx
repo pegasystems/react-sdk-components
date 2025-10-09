@@ -43,7 +43,7 @@ function getKeyAndLatestItem(routinginfo, pConn, options) {
   if (PCore.getContainerUtils().hasContainerItems(buildName(pConn, containerName))) {
     const { accessedOrder, items } = routinginfo;
     let key;
-    // eslint-disable-next-line no-plusplus
+
     for (let i = accessedOrder.length - 1; i >= 0; i--) {
       const tempkey = accessedOrder[i];
       if ((acTertiary && items[tempkey].acTertiary) || (!acTertiary && !items[tempkey].acTertiary)) {
@@ -88,7 +88,7 @@ function getConfigObject(item, pConnect, isReverseCoexistence = false) {
   return null;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dlgTitle: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
@@ -178,7 +178,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     }
   }
 
-  const dismissCancelAlert = dismissAllModals => {
+  const dismissCancelAlert = (dismissAllModals) => {
     setShowCancelAlert(false);
 
     if (dismissAllModals) {
@@ -214,9 +214,9 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     subscribe(EVENT_SHOW_CANCEL_ALERT, showAlert, EVENT_SHOW_CANCEL_ALERT /* Unique string for subscription */);
     subscribe(
       ERROR_WHILE_RENDERING,
-      error => {
+      (error) => {
         // setError(true);
-        // eslint-disable-next-line no-console
+
         console.error(error);
       },
       `${ERROR_WHILE_RENDERING}-mc-${getPConnect().getContextName()}`,

@@ -4,7 +4,7 @@ import Grid2 from '@mui/material/Grid2';
 
 import { SELECTION_MODE, generateColumns, getDataRelationshipContextFromKey } from './utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
-import type { PConnFieldProps } from 'packages/react-sdk-components/src/types/PConnProps';
+import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface ObjectReferenceProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on ObjectReference here
@@ -13,7 +13,7 @@ interface ObjectReferenceProps extends Omit<PConnFieldProps, 'value'> {
   allowAndPersistChangesInReviewMode: any;
   targetObjectType: any;
   mode: string;
-  parameters: Object;
+  parameters: object;
   hideLabel: boolean;
   inline: boolean;
   showPromotedFilters: boolean;
@@ -50,7 +50,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
   const canBeChangedInReviewMode = editableInReview && ['Autocomplete', 'Dropdown'].includes(rawViewMetadata.config.componentType);
 
   // Editable first child on change handler
-  const onRecordChange = event => {
+  const onRecordChange = (event) => {
     const caseKey = pConn.getCaseInfo().getKey();
     const refreshOptions = { autoDetectRefresh: true, propertyName: '' };
     refreshOptions.propertyName = rawViewMetadata.config?.value;
@@ -74,12 +74,12 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
       PCore.getCaseUtils()
         .getCaseEditLock(caseKey, '')
-        .then(caseResponse => {
+        .then((caseResponse) => {
           const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
           let curr = {};
           const commitData = curr;
 
-          pageTokens.forEach(el => {
+          pageTokens.forEach((el) => {
             if (el !== '') {
               curr[el] = {};
               curr = curr[el];
@@ -99,8 +99,8 @@ export default function ObjectReference(props: ObjectReferenceProps) {
 
           PCore.getCaseUtils()
             .updateCaseEditFieldsData(caseKey, { [caseKey]: commitData }, caseResponse.headers.etag, pConn.getContextName())
-            .then(response => {
-              PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
+            .then((response) => {
+              PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), (response.data as any).data.caseInfo.lastUpdateTime);
               PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
             });
         });

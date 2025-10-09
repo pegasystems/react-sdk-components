@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import { type PropsWithChildren, useState } from 'react';
 import { Button, Card } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -15,7 +14,7 @@ interface ConfirmationProps extends PConnProps {
   showTasks: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),

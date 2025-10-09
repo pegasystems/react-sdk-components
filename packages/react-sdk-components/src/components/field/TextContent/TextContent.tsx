@@ -38,7 +38,6 @@ export default function TextContent(props: TextContentProps) {
       break;
 
     default:
-      // eslint-disable-next-line no-console
       console.error(`TextContent got an expected displayAs prop: ${displayAs}`);
       break;
   }

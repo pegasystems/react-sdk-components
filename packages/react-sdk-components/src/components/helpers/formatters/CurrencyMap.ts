@@ -1,5 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
-
 type CurrencyMapType = {
   name: string;
   symbolFormat: string;

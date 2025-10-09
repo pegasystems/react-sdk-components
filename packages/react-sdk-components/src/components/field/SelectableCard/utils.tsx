@@ -3,11 +3,11 @@ import { Link } from '@mui/material';
 import { Utils } from '../../helpers/utils';
 
 export const getResolvedConstantValue = (pConnect, key) => {
-  // @ts-ignore
+  // @ts-expect-error
   return pConnect.getValue(PCore.getResolvedConstantValue(key)) || pConnect.getValue(key);
 };
 
-export const resolveReferencedPConnect = pConnect => {
+export const resolveReferencedPConnect = (pConnect) => {
   if (!pConnect || !pConnect.meta) return undefined;
   const type = pConnect?._type ?? undefined;
   const referencedPConnect = type === 'reference' && pConnect.getReferencedViewPConnect().getPConnect();
@@ -46,7 +46,7 @@ export function prepareComponentInCaseSummary(pConnectMeta: any, getPConnect: Fu
   caseSummaryComponentObject.name = pConnect.resolveConfigProps({ label: config.label }).label;
 
   if (config.inheritedProps) {
-    const labelInInheritedProp = config.inheritedProps.find(inheritedProp => inheritedProp.prop === 'label');
+    const labelInInheritedProp = config.inheritedProps.find((inheritedProp) => inheritedProp.prop === 'label');
     if (labelInInheritedProp) {
       labelInInheritedProp.value = pConnect.resolveConfigProps({ label: labelInInheritedProp.value }).label;
     }

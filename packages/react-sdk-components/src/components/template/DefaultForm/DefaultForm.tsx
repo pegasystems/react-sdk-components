@@ -15,7 +15,7 @@ interface DefaultFormProps extends PConnProps {
   instructions: string;
 }
 
-const Child = connectToState(mapStateToProps)(props => {
+const Child = connectToState(mapStateToProps)((props) => {
   const { key, visibility, ...rest } = props;
 
   return createElement(createPConnectComponent(), { ...rest, key, visibility });
@@ -49,14 +49,14 @@ export default function DefaultForm(props: PropsWithChildren<DefaultFormProps>) 
   // to take the children and create components for them, put in an array and pass as the
   // defaultForm kids
   const arChildren = getPConnect().getChildren()[0].getPConnect().getChildren();
-  const dfChildren = arChildren?.map(kid => <Child key={getKeyForMappedField(kid)} {...kid} />);
+  const dfChildren = arChildren?.map((kid) => <Child key={getKeyForMappedField(kid)} {...kid} />);
 
   return (
     <>
       {instructions && (
         <div className='psdk-default-form-instruction-text'>
           {/* server performs sanitization method for instructions html content */}
-          {/* eslint-disable react/no-danger */}
+          {}
           <div key='instructions' id='instruction-text' dangerouslySetInnerHTML={{ __html: instructions }} />
         </div>
       )}

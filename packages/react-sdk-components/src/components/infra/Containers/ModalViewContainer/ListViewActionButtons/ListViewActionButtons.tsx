@@ -52,8 +52,7 @@ function ListViewActionButtons(props: ListViewActionButtonsProps) {
             .then(() => {
               closeActionsDialog();
             })
-            .catch(err => {
-              // eslint-disable-next-line no-console
+            .catch((err) => {
               console.log(err);
             })
             .finally(() => {

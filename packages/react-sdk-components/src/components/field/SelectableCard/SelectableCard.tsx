@@ -37,7 +37,7 @@ export default function SelectableCard(props) {
 
   return (
     <>
-      {(cardDataSource || []).map(item => {
+      {(cardDataSource || []).map((item) => {
         const resolvedFields = resolveReferenceFields(item, hideFieldLabels, recordKey, pConn);
 
         const commonProps = {
@@ -61,7 +61,6 @@ export default function SelectableCard(props) {
             <CardContent>
               <Typography variant='body1'>{item[cardLabel]}</Typography>
               {commonProps.fields.map((field, index) => (
-                // eslint-disable-next-line react/no-array-index-key
                 <Typography key={index} variant='body2'>
                   {field.value}
                 </Typography>
@@ -131,7 +130,7 @@ export default function SelectableCard(props) {
                         <Checkbox
                           id={item[recordKey]}
                           getPConnect={getPConnect}
-                          checked={readOnlyList.some(data => data[recordKey] === item[recordKey])}
+                          checked={readOnlyList.some((data) => data[recordKey] === item[recordKey])}
                           onChange={onChange}
                           onBlur={onBlur}
                           onClick={onClick}
@@ -146,7 +145,6 @@ export default function SelectableCard(props) {
 
                   {commonProps.fields.map((field, index) => (
                     <div
-                      // eslint-disable-next-line react/no-array-index-key
                       key={index}
                       style={{
                         fontSize: '0.875rem',

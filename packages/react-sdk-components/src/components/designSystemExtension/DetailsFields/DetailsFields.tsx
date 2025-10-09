@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { createElement, isValidElement } from 'react';
 import Grid2 from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -14,7 +13,7 @@ interface DetailsFieldsProps {
   fields: any[];
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -74,7 +73,6 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     const { type, value } = inField;
     let formattedVal = value;
 
-    // eslint-disable-next-line sonarjs/no-small-switch
     switch (type) {
       case 'date':
         formattedVal = format(value, type);

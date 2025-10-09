@@ -26,7 +26,7 @@
           fnLog = window.opener.console.log;
         }
       } catch (e0) {}
-      const doLog = arg => {
+      const doLog = (arg) => {
         if (bDebug) {
           fnLog(arg);
         }
@@ -69,7 +69,7 @@
           }
 
           if (!bSuccess) {
-            window.addEventListener('message', event => {
+            window.addEventListener('message', (event) => {
               doLog('authDone.js: received PegaAuth message');
               if (event.data && event.data.type && event.data.type === 'PegaAuth') {
                 doLog('authDone.js: posting message back');

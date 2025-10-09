@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { useEffect, useMemo, useState } from 'react';
 import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -129,7 +128,7 @@ export default function MainScreen(props: MainScreenProps) {
 
     // If mashupCaseType is null or undefined, get the first case type from the environment info
     if (!mashupCaseType) {
-      // @ts-ignore - Object is possibly 'null'
+      // @ts-expect-error - Object is possibly 'null'
       const caseTypes: any = PCore.getEnvironmentInfo().environmentInfoObject.pyCaseTypeList;
       mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
     }
@@ -149,7 +148,6 @@ export default function MainScreen(props: MainScreenProps) {
     PCore.getMashupApi()
       .createCase(mashupCaseType, PCore.getConstants().APP.APP, options)
       .then(() => {
-        // eslint-disable-next-line no-console
         console.log('createCase rendering is complete');
       });
   };

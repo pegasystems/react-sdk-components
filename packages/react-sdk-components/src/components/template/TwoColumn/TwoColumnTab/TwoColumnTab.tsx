@@ -23,7 +23,6 @@ export default function TwoColumnTab(props: PropsWithChildren<TwoColumnTabProps>
   const childrenToRender = children as ReactElement[];
 
   if (childrenToRender.length !== 2) {
-    // eslint-disable-next-line no-console
     console.error(`TwoColumn template sees more than 2 columns: ${childrenToRender.length}`);
   }
 
@@ -36,7 +35,7 @@ export default function TwoColumnTab(props: PropsWithChildren<TwoColumnTabProps>
   const colAArray = templateCol
     .replaceAll(/[a-z]+/g, '')
     .split(/\s/)
-    .map(itm => Number(itm));
+    .map((itm) => Number(itm));
   const totalCols = colAArray.reduce((v, itm) => itm + v, 0);
   const ratio = 12 / totalCols;
   aSize = (ratio * colAArray[0]) as GridSize;

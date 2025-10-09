@@ -81,11 +81,11 @@ export default function Phone(props: PhoneProps) {
     );
   }
 
-  const handleChange = inputVal => {
+  const handleChange = (inputVal) => {
     setInputValue(inputVal);
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event) => {
     const phoneValue = event?.target?.value;
     let phoneNumber = phoneValue.split(' ').slice(1).join();
     phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';

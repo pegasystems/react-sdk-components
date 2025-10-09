@@ -34,7 +34,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
 
     if (field.config.value === null || field.config.value === '') {
       // Special handling for missing value
-      // eslint-disable-next-line sonarjs/no-small-switch
+
       switch (fieldTypeLower) {
         case 'caseoperator':
           return <Operator {...field.config} />;

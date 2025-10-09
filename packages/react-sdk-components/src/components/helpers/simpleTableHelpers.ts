@@ -41,7 +41,7 @@ function getFieldWidth(field, label) {
   return width;
 }
 
-export const getContext = thePConn => {
+export const getContext = (thePConn) => {
   const contextName = thePConn.getContextName();
   const pageReference = thePConn.getPageReference();
   const { referenceList } = thePConn.getStateProps()?.config || thePConn.getStateProps();
@@ -61,7 +61,7 @@ export const getContext = thePConn => {
   };
 };
 
-export const populateRowKey = rawData => {
+export const populateRowKey = (rawData) => {
   return rawData.map((row: any, index: number) => {
     return { ...row, index };
   });
@@ -70,7 +70,7 @@ export const populateRowKey = rawData => {
 export const getApiContext = (processedData, pConnect, reorderCB) => {
   return {
     fetchData: () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve({
           data: processedData,
           filteredRecordCount: processedData.length,
@@ -118,20 +118,20 @@ export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex)
   if (primaryFieldsViewIndex > -1) {
     let primaryFieldVMD: any = PCore.getMetadataUtils().resolveView(PRIMARY_FIELDS);
     if (Array.isArray(primaryFieldVMD)) {
-      primaryFieldVMD = primaryFieldVMD.find(primaryFieldView => primaryFieldView.classID === contextClass);
+      primaryFieldVMD = primaryFieldVMD.find((primaryFieldView) => primaryFieldView.classID === contextClass);
       primaryFields = primaryFieldVMD?.children?.[0]?.children || [];
     } else if (primaryFieldVMD?.classID === contextClass) {
       primaryFields = primaryFieldVMD?.children?.[0]?.children || [];
     }
 
     if (primaryFields.length) {
-      primaryFields = primaryFields.filter(primaryField => SUPPORTED_FIELD_TYPES.includes(primaryField.type));
+      primaryFields = primaryFields.filter((primaryField) => SUPPORTED_FIELD_TYPES.includes(primaryField.type));
     }
   }
 
   configFields = [...rawFields.slice(0, primaryFieldsViewIndex), ...primaryFields, ...rawFields.slice(primaryFieldsViewIndex + 1)];
   // filter duplicate fields after combining raw fields and primary fields
-  return configFields.filter((field, index) => configFields.findIndex(_field => field.config?.value === _field.config?.value) === index);
+  return configFields.filter((field, index) => configFields.findIndex((_field) => field.config?.value === _field.config?.value) === index);
 };
 
 export const buildMetaForListView = (fieldMetadata, fields, type, ruleClass, name, propertyLabel, isDataObject, parameters) => {
@@ -238,7 +238,7 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, op
 
   // get resolved field labels for primary fields raw config included in configFields
   const fieldsLabels = updateFieldLabels(fields, configFields, primaryFieldsViewIndex, pConnect, {
-    columnsRawConfig: pConnect.getRawConfigProps()?.children.find(item => item?.name === 'Columns')?.children
+    columnsRawConfig: pConnect.getRawConfigProps()?.children.find((item) => item?.name === 'Columns')?.children
   });
 
   const fieldDefs = configFields.map((field, index) => {
@@ -333,7 +333,7 @@ export function createPConnect(contextName, referenceList, pageReference): any {
   return getPConnect();
 }
 
-export const filterData = filterByColumns => {
+export const filterData = (filterByColumns) => {
   return function filteringData(item) {
     let bKeep = true;
     for (const filterObj of filterByColumns) {
@@ -349,7 +349,6 @@ export const filterData = filterByColumns => {
             filterValue =
               filterObj.containsFilterValue !== null && filterObj.containsFilterValue !== '' ? Utils.getSeconds(filterObj.containsFilterValue) : null;
 
-            // eslint-disable-next-line sonarjs/no-nested-switch
             switch (filterObj.containsFilter) {
               case 'notequal':
                 // becasue filterValue is in minutes, need to have a range of less than 60 secons
@@ -416,7 +415,6 @@ export const filterData = filterByColumns => {
             value = item[filterObj.ref].toLowerCase();
             filterValue = filterObj.containsFilterValue.toLowerCase();
 
-            // eslint-disable-next-line sonarjs/no-nested-switch
             switch (filterObj.containsFilter) {
               case 'contains':
                 if (value.indexOf(filterValue) < 0) {

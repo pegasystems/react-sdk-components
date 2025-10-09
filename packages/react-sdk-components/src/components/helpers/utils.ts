@@ -48,14 +48,13 @@ export class Utils {
           // eslint-disable-next-line no-case-declarations
           const dataPage = configProps.datasource;
           if (typeof dataPage === 'string' && dataObject[dataPage]) {
-            // eslint-disable-next-line no-alert
             alert('need to handle data page');
           } else {
             let listSourceItems = configProps.listOutput;
             if (typeof dataPage === 'object' && !Array.isArray(listSourceItems)) {
               listSourceItems = dataPage.source ? dataPage.source : [];
             }
-            (listSourceItems || []).forEach(item => {
+            (listSourceItems || []).forEach((item) => {
               item.value = item.text ? item.text : item.value;
             });
             arReturn = listSourceItems || [];
@@ -301,8 +300,8 @@ export class Utils {
       icon = 'document-pdf';
     } else {
       const [, subtype] = fileType.split('/');
-      const foundMatch = sources => {
-        return sources.some(key => subtype.includes(key));
+      const foundMatch = (sources) => {
+        return sources.some((key) => subtype.includes(key));
       };
 
       if (foundMatch(['excel', 'spreadsheet'])) {

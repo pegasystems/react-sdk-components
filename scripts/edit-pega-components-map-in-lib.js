@@ -26,7 +26,7 @@ const editPegaComponentsMapInLib = function () {
 
   try {
     const results = replaceInFile.sync(options);
-    results.map(theResults => {
+    results.map((theResults) => {
       const { hasChanged, file, numMatches, numReplacements } = theResults;
       // console.log(`replacement results: ${JSON.stringify(results[0])}`);
       if (hasChanged) {

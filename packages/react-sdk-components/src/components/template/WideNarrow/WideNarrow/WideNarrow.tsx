@@ -6,11 +6,11 @@ interface WideNarrowProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   a: any;
   b: any;
-  // eslint-disable-next-line react/no-unused-prop-types
+
   title?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
+
   cols?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
+
   icon?: string;
 }
 

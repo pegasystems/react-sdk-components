@@ -28,7 +28,7 @@ interface AppShellProps extends PConnProps {
   pageMessages: string[];
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex'
   },
@@ -117,7 +117,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   }, []);
 
   useEffect(() => {
-    // @ts-ignore
+    // @ts-expect-error
     const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
     if (caseTypesAvailableToCreateDP) {
       const portalID = pConn.getValue('.pyOwner');
@@ -153,13 +153,12 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     else {
       PCore.getAssetLoader()
         .getSvcImage(portalLogo)
-        .then(blob => window.URL.createObjectURL(blob))
-        .then(data => {
+        .then((blob) => window.URL.createObjectURL(blob))
+        .then((data) => {
           setIconURL(data);
           setFullIconURL(data);
         })
         .catch(() => {
-          // eslint-disable-next-line no-console
           console.error(`${localizedVal('Unable to load the image for the portal logo/icon with the insName', 'AppShell')}:${portalLogo}`);
         });
     }
@@ -169,8 +168,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     if (imageKey && portalTemplate === 'wss') {
       PCore.getAssetLoader()
         .getSvcImage(imageKey)
-        .then(blob => window.URL.createObjectURL(blob))
-        .then(imagePath => setImageBlobUrl(imagePath));
+        .then((blob) => window.URL.createObjectURL(blob))
+        .then((imagePath) => setImageBlobUrl(imagePath));
     }
   }, []);
 
@@ -192,7 +191,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
 
   const links = !pages
     ? []
-    : pages.map(page => {
+    : pages.map((page) => {
         const name = localizedVal(page.pyLabel, '', localeReference);
         return {
           text: name,
@@ -239,7 +238,6 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   }
 
   return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <NavContext.Provider value={{ open, setOpen }}>
       <div id='AppShell' className={classes.root}>
         <NavBar

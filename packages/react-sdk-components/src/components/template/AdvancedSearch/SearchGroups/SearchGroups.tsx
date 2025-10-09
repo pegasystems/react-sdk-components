@@ -10,7 +10,7 @@ import { useCacheWhenListViewReady } from './hooks';
 
 export const initializeSearchFields = (searchFields, getPConnect, referenceListClassID, searchFieldRestoreValues = {}) => {
   const filtersProperties = {};
-  searchFields.forEach(field => {
+  searchFields.forEach((field) => {
     let val = '';
     const { value, defaultValue = '' } = field.config;
     const propPath = PCore.getAnnotationUtils().getPropertyName(value);
@@ -33,7 +33,7 @@ export const initializeSearchFields = (searchFields, getPConnect, referenceListC
     if (valueSplit.length) {
       let path = '';
       let currentClassID = referenceListClassID;
-      valueSplit.forEach(item => {
+      valueSplit.forEach((item) => {
         path = path.length ? `${path}.${item}` : item;
         currentClassID = (PCore.getMetadataUtils().getPropertyMetadata(item, currentClassID) as any).pageClass;
         if (currentClassID) {
@@ -45,13 +45,13 @@ export const initializeSearchFields = (searchFields, getPConnect, referenceListC
   return filtersProperties;
 };
 
-const flattenObj = obj => {
+const flattenObj = (obj) => {
   const result = {};
-  Object.keys(obj).forEach(key => {
+  Object.keys(obj).forEach((key) => {
     if (!['context_data', 'pageInstructions'].includes(key)) {
       if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
         const temp = flattenObj(obj[key]);
-        Object.keys(temp).forEach(nestedKey => {
+        Object.keys(temp).forEach((nestedKey) => {
           result[`${key}.${nestedKey}`] = temp[nestedKey];
         });
       } else {
@@ -78,16 +78,16 @@ export default function SearchGroups(props) {
   const viewName = getPConnect().getCurrentView();
 
   const rawGroupsConfig = getPConnect().getRawConfigProps().searchGroups;
-  const activeGroupIndex = groups.findIndex(group => group.config.id === activeGroupId);
+  const activeGroupIndex = groups.findIndex((group) => group.config.id === activeGroupId);
   const { children: searchFieldsChildren = [] } = activeGroupIndex !== -1 ? rawGroupsConfig[activeGroupIndex] : {};
-  const searchFields = searchFieldsChildren.map(field => ({
+  const searchFields = searchFieldsChildren.map((field) => ({
     ...field,
     config: { ...field.config, isSearchField: true }
   }));
 
   const searchByRef = useRef(null);
   const searchFieldsRef = useRef(null);
-  const isValidatorField = searchFields.some(field => field.config.validator);
+  const isValidatorField = searchFields.some((field) => field.config.validator);
   const { classID: referenceListClassID } = PCore.getMetadataUtils().getDataPageMetadata(referenceList) as any;
 
   const initialSearchFields = useMemo(
@@ -174,8 +174,8 @@ export default function SearchGroups(props) {
 
   const searchDropdown = groups.length > 1 && (
     <Grid2 container spacing={2}>
-      <Select value={activeGroupId} onChange={e => setActiveGroupId(e.target.value)} ref={searchByRef} fullWidth>
-        {groups.map(group => (
+      <Select value={activeGroupId} onChange={(e) => setActiveGroupId(e.target.value)} ref={searchByRef} fullWidth>
+        {groups.map((group) => (
           <MenuItem key={group.config.id} value={group.config.id}>
             {group.config.label}
           </MenuItem>
@@ -237,7 +237,6 @@ export default function SearchGroups(props) {
   return (
     <Box display='flex' flexDirection='column' gap={2}>
       {childrenToRender.map((child, index) => (
-        // eslint-disable-next-line react/no-array-index-key
         <React.Fragment key={index}>{child}</React.Fragment>
       ))}
     </Box>

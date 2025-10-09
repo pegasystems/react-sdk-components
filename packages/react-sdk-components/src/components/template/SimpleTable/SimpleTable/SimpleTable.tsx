@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useRef } from 'react';
 
 import { buildMetaForListView, getContext } from '../../../helpers/simpleTableHelpers';
@@ -90,7 +89,7 @@ export default function SimpleTable(props: SimpleTableProps) {
     );
 
     const metaForPConnect = JSON.parse(JSON.stringify(metaForListView));
-    // @ts-ignore - PCore.getMetadataUtils().getPropertyMetadata - An argument for 'currentClassID' was not provided.
+    // @ts-expect-error - PCore.getMetadataUtils().getPropertyMetadata - An argument for 'currentClassID' was not provided.
     metaForPConnect.config.parameters = rawParams ?? PCore.getMetadataUtils().getPropertyMetadata(name)?.datasource?.parameters;
 
     const { referenceListStr: referenceList } = getContext(getPConnect());

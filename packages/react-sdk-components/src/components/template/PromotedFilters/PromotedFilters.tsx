@@ -57,13 +57,12 @@ function Filters({ filters, transientItemID, localeReference }) {
       }
     });
 
-    // eslint-disable-next-line react/no-array-index-key
     return <React.Fragment key={index}>{createElement(createPConnectComponent(), c11nEnv)}</React.Fragment>;
   });
 }
 
 function isValidInput(input) {
-  return Object.values(input).findIndex(v => v) >= 0;
+  return Object.values(input).findIndex((v) => v) >= 0;
 }
 
 export default function PromotedFilters(props: PromotedFilterProps) {
@@ -76,7 +75,7 @@ export default function PromotedFilters(props: PromotedFilterProps) {
   const [payload, setPayload] = useState({});
   const filtersProperties = {};
 
-  filters.forEach(filter => {
+  filters.forEach((filter) => {
     filtersProperties[PCore.getAnnotationUtils().getPropertyName(filter.config.value)] = '';
   });
 
@@ -109,12 +108,12 @@ export default function PromotedFilters(props: PromotedFilterProps) {
   }
 
   const getFilterData = useCallback(
-    e => {
+    (e) => {
       e.preventDefault(); // to prevent un-intended forms submission.
 
       const changes = PCore.getFormUtils().getChanges(transientItemID);
       const formValues = {};
-      Object.keys(changes).forEach(key => {
+      Object.keys(changes).forEach((key) => {
         if (!['context_data', 'pageInstructions'].includes(key)) {
           formValues[key] = changes[key];
         }

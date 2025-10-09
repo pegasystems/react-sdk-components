@@ -58,7 +58,7 @@ export default function URLComponent(props: URLComponentProps) {
 
   const testProps: any = { 'data-test-id': testId };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setInputValue(event?.target?.value);
   };
 

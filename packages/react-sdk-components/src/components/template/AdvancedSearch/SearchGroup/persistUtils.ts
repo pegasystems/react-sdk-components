@@ -14,7 +14,7 @@ const getComponentStateKey = (getPConnect, propertyName: string) => {
   return `Search-${resolvedCaseID}-${pConnect.getPageReference()}-${propertyName}-${pConnect.getCurrentView()}`;
 };
 
-const getComponentStateOptions = getPConnect => {
+const getComponentStateOptions = (getPConnect) => {
   return { clearOnCancelForContext: getPConnect().getContextName() };
 };
 

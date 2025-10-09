@@ -42,7 +42,7 @@ import './NavBar.css';
 
 interface NavBarProps extends PConnProps {
   // If any, enter additional props that only exist on this component
-  // eslint-disable-next-line react/no-unused-prop-types
+
   appName?: string;
   pages?: any[];
   caseTypes: any[];
@@ -61,7 +61,7 @@ const iconMap = {
 
 const drawerWidth = 300;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     position: 'relative',
     whiteSpace: 'nowrap',
@@ -145,7 +145,6 @@ export default function NavBar(props: NavBarProps) {
       .getActionsApi()
       .showPage(pyRuleName, pyClassName)
       .then(() => {
-        // eslint-disable-next-line no-console
         console.log(`${localizedVal('showPage completed', localeCategory)}`);
       });
   }
@@ -161,7 +160,6 @@ export default function NavBar(props: NavBarProps) {
       .getActionsApi()
       .createWork(sCaseType, actionInfo)
       .then(() => {
-        // eslint-disable-next-line no-console
         console.log(`${localizedVal('createWork completed', localeCategory)}`);
       });
   }
@@ -233,7 +231,7 @@ export default function NavBar(props: NavBarProps) {
       </List>
       <Collapse in={bShowCaseTypes && open} timeout='auto' unmountOnExit className='scrollable'>
         <List component='div' disablePadding>
-          {caseTypes.map(caseType => (
+          {caseTypes.map((caseType) => (
             <ListItemButton
               className={classes.nested}
               onClick={() => navPanelCreateCaseType(caseType.pyClassName, caseType.pyFlowType)}
@@ -248,7 +246,7 @@ export default function NavBar(props: NavBarProps) {
         </List>
       </Collapse>
       <List>
-        {navPages.map(page => (
+        {navPages.map((page) => (
           <ListItemButton onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
             <ListItemIcon>{iconMap[page.pxPageViewIcon]}</ListItemIcon>
             <ListItemText primary={localeUtils.getLocaleValue(page.pyLabel, '', localeReference)} />

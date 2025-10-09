@@ -66,8 +66,8 @@ export default function CaseHistory(props: CaseHistoryProps) {
   const dataViewName = 'D_pyWorkHistory';
   const context = thePConn.getContextName();
 
-  function computeRowData(rows: Object[]): void {
-    const theRowData: Object[] = [];
+  function computeRowData(rows: object[]): void {
+    const theRowData: object[] = [];
 
     rows.forEach((row: any, rowIndex: number) => {
       // Now, for each property in the index of row properties (displayedColumns), add an object
@@ -142,7 +142,7 @@ export default function CaseHistory(props: CaseHistoryProps) {
     // Note: using rowData.current since we're using useRef as a mutatable
     //  value that's only updated when it changes.
     if (rowData.current.length > 0) {
-      rowData.current.forEach((dataRow: Object[], index) => {
+      rowData.current.forEach((dataRow: object[], index) => {
         // using dataRow[0]-dataRow[1] as the array key since it's a unique value
         const theKey = `CaseHistory-${index}`;
         theDataRows.push(

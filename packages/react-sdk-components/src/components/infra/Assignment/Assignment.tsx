@@ -13,7 +13,7 @@ interface AssignmentProps extends PConnProps {
   itemKey: string;
   isInModal: boolean;
   banners: any[];
-  // eslint-disable-next-line react/no-unused-prop-types
+
   actionButtons: any[];
 }
 
@@ -51,7 +51,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
 
   function findCurrentIndicies(arStepperSteps: any[], arIndicies: number[], depth: number): number[] {
     let count = 0;
-    arStepperSteps.forEach(step => {
+    arStepperSteps.forEach((step) => {
       if (step.visited_status === 'current') {
         arIndicies[depth] = count;
 
@@ -74,7 +74,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   }
 
   function getStepsInfo(steps, formedSteps: any = []) {
-    steps.forEach(step => {
+    steps.forEach((step) => {
       if (step.name) {
         step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
       }
@@ -133,7 +133,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
 
   function showToast(message: string) {
     const theMessage = `Assignment: ${message}`;
-    // eslint-disable-next-line no-console
+
     console.error(theMessage);
     setSnackbarMessage(message);
     setShowSnackbar(true);
@@ -196,7 +196,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
             const cancelPromise = cancelCreateStageAssignment(itemKey);
 
             cancelPromise
-              .then(data => {
+              .then((data) => {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
@@ -206,7 +206,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
             const cancelPromise = cancelAssignment(itemKey, false);
 
             cancelPromise
-              .then(data => {
+              .then((data) => {
                 publish(PUB_SUB_EVENTS.EVENT_CANCEL, data);
               })
               .catch(() => {
@@ -268,7 +268,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     if (!refreshConditions) {
       return [];
     }
-    return refreshConditions.filter(item => item.event && item.event === 'Changes').map(item => [item.field, item.field?.substring(1)]) || [];
+    return refreshConditions.filter((item) => item.event && item.event === 'Changes').map((item) => [item.field, item.field?.substring(1)]) || [];
   }
 
   // expected format of refreshConditions : [{field: ".Name", event: "Changes"}]
@@ -287,7 +287,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     preserveClientChanges: false
   };
   if (refreshProps.length > 0) {
-    refreshProps.forEach(prop => {
+    refreshProps.forEach((prop) => {
       PCore.getRefreshManager().registerForRefresh(
         'PROP_CHANGE',
         thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, '', pageReference, {

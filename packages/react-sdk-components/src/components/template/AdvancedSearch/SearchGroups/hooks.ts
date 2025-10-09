@@ -9,7 +9,7 @@ const listViewConstants = {
  * This hook registers a callback for the whenever list view component is ready
  * then makes a call to get the data using the search fields pre-filled with cache data.
  */
-// eslint-disable-next-line import/prefer-default-export
+
 export function useCacheWhenListViewReady(
   cache: { searchFields: unknown },
   viewName: string,

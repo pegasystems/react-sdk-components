@@ -163,7 +163,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const menuIconOverride$ = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
 
   const resolvedFields = children?.[0]?.children || presets?.[0].children?.[0].children;
-  const primaryFieldsViewIndex = resolvedFields.findIndex(field => field.config.value === 'pyPrimaryFields');
+  const primaryFieldsViewIndex = resolvedFields.findIndex((field) => field.config.value === 'pyPrimaryFields');
   // NOTE: props has each child.config with datasource and value undefined
   //  but getRawMetadata() has each child.config with datasource and value showing their unresolved values (ex: "@P thePropName")
   //  We need to use the prop name as the "glue" to tie the table dataSource, displayColumns and data together.
@@ -195,10 +195,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   });
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     buildElementsForTable();
     if (readOnlyMode || allowEditingInModal) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       generateRowsData();
     }
   }, [referenceList]);
@@ -220,20 +218,20 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         .getListActions()
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
-          fieldDefs.filter(item => item.name).map(item => item.name)
+          fieldDefs.filter((item) => item.name).map((item) => item.name)
         );
     } else {
-      // @ts-ignore - An argument for 'fields' was not provided
+      // @ts-expect-error - An argument for 'fields' was not provided
       getPConnect().getListActions().initDefaultPageInstructions(getPConnect().getReferenceList());
     }
   }, []);
 
-  const displayedColumns = fieldDefs.map(field => {
+  const displayedColumns = fieldDefs.map((field) => {
     return field.name ? field.name : field.cellRenderer;
   });
 
   const getFormattedValue = (val, key) => {
-    const rawField = fieldsWithPropNames.find(item => item.propName === key);
+    const rawField = fieldsWithPropNames.find((item) => item.propName === key);
     let options = {};
     if (rawField && ['Boolean', 'Checkbox'].includes(rawField.type)) {
       const { trueLabel, falseLabel } = rawField.config;
@@ -250,7 +248,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   // return the value that should be shown as the contents for the given row data
   //  of the given row field
-  function getRowValue(inRowData: Object, inColKey: string): any {
+  function getRowValue(inRowData: object, inColKey: string): any {
     // See what data (if any) we have to display
     const refKeys: string[] = inColKey?.split('.');
     let valBuilder = inRowData;
@@ -260,10 +258,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     return getFormattedValue(valBuilder, inColKey);
   }
 
-  const formatRowsData = data => {
+  const formatRowsData = (data) => {
     if (!data) return {};
 
-    return data.map(item => {
+    return data.map((item) => {
       return displayedColumns.reduce((dataForRow, colKey) => {
         dataForRow[colKey] = getRowValue(item, colKey);
         return dataForRow;
@@ -275,13 +273,12 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (!referenceList.length && dataPageName) {
       getDataPage(dataPageName, parameters, context)
-        .then(listData => {
+        .then((listData) => {
           const data = formatRowsData(listData);
           myRows = data;
           setRowData(data);
         })
-        .catch(e => {
-          // eslint-disable-next-line no-console
+        .catch((e) => {
           console.log(e);
         });
     } else {
@@ -290,7 +287,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       //  we're using as the table's dataSource
       const data: any = [];
       for (const row of referenceList) {
-        const dataForRow: Object = {};
+        const dataForRow: object = {};
         for (const col of displayedColumns) {
           const colKey: string = col;
           const theVal = getRowValue(row, colKey);
@@ -322,7 +319,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (allowEditingInModal && defaultView) {
       pConn
         .getActionsApi()
-        // @ts-ignore
+        // @ts-expect-error
         .openEmbeddedDataModal(defaultView, pConn, referenceListStr, referenceList.length, PCore.getConstants().RESOURCE_STATUS.CREATE);
     } else {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
@@ -338,7 +335,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (typeof selectedRowIndex.current === 'number') {
       pConn
         .getActionsApi()
-        // @ts-ignore
+        // @ts-expect-error
         .openEmbeddedDataModal(
           bUseSeparateViewForEdit ? editView : defaultView,
           pConn,
@@ -362,7 +359,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     const eleData: any = [];
     referenceList.forEach((element, index) => {
       const data: any = [];
-      rawFields.forEach(item => {
+      rawFields.forEach((item) => {
         // removing label field from config to hide title in the table cell
         if (!item.config.hide) {
           item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'DISPLAY_ONLY' : undefined } };
@@ -425,7 +422,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
     const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
     stabilizedThis.sort((a, b) => {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const order = comparator(a[0], b[0]);
       if (order !== 0) return order;
       return a[1] - b[1];
@@ -580,7 +576,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   function _showFilteredIcon(columnId) {
     for (const filterObj of filterByColumns) {
       if (filterObj.ref === columnId) {
-        // eslint-disable-next-line sonarjs/prefer-single-boolean-return
         if (filterObj.containsFilterValue !== '') {
           return true;
         }
@@ -636,7 +631,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                         <MoreIcon
                           style={{ cursor: 'pointer', zIndex: 1000 }}
                           id='menu-icon'
-                          onClick={event => {
+                          onClick={(event) => {
                             _menuClick(event, field.name, field.meta.type, field.label);
                           }}
                         />
@@ -687,7 +682,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 .slice(0)
                 .map((row, index) => {
                   return (
-                    // eslint-disable-next-line react/no-array-index-key
                     <TableRow key={index}>
                       {row.map((item, childIndex) => {
                         const theColKey = displayedColumns[childIndex];
@@ -703,7 +697,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                             <MoreIcon
                               id='table-edit-menu-icon'
                               className={classes.moreIcon}
-                              onClick={event => {
+                              onClick={(event) => {
                                 editMenuClick(event, index);
                               }}
                             />

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Card, CardContent, CardHeader, Avatar, Typography, Badge, List, ListItem, ListItemText } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
@@ -25,7 +24,7 @@ const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, c
         pageSize: numberOfRecords
       },
       {
-        select: Object.keys(fields).map(key => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) }))
+        select: Object.keys(fields).map((key) => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) }))
       },
       {
         invalidateCache: true,
@@ -34,10 +33,10 @@ const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, c
         }
       }
     )
-    .then(response => {
+    .then((response) => {
       return {
         ...response,
-        data: (Array.isArray(response?.data) ? response.data : []).map(row =>
+        data: (Array.isArray(response?.data) ? response.data : []).map((row) =>
           Object.keys(fields).reduce((obj, key) => {
             obj[key] = row[PCore.getAnnotationUtils().getPropertyName(fields[key])];
             return obj;
@@ -51,10 +50,10 @@ interface ToDoProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   datasource?: any;
   myWorkList?: any;
-  // eslint-disable-next-line react/no-unused-prop-types
+
   caseInfoID?: string;
   headerText?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
+
   itemKey?: string;
   showTodoList?: boolean;
   type?: string;
@@ -63,7 +62,7 @@ interface ToDoProps extends PConnProps {
   isConfirm?: boolean;
 }
 
-const isChildCase = assignment => {
+const isChildCase = (assignment) => {
   return assignment.isChild;
 };
 
@@ -81,7 +80,7 @@ function getID(assignment: any) {
   return arKeys[2];
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -123,7 +122,7 @@ export default function ToDo(props: ToDoProps) {
   const [bShowMore, setBShowMore] = useState(true);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage]: any = useState('');
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+
   const [assignments, setAssignments] = useState<any[]>(initAssignments());
 
   const thePConn = getPConnect();
@@ -150,7 +149,7 @@ export default function ToDo(props: ToDoProps) {
   }
 
   const deferLoadWorklistItems = useCallback(
-    responseData => {
+    (responseData) => {
       setCount(responseData.totalCount);
       setAssignments(responseData.data);
     },
@@ -159,27 +158,27 @@ export default function ToDo(props: ToDoProps) {
 
   useEffect(() => {
     if (Object.keys(myWorkList).length && myWorkList.datapage) {
-      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context).then(responseData => {
+      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context).then((responseData) => {
         deferLoadWorklistItems(responseData);
       });
     }
   }, []);
 
-  const getAssignmentId = assignment => {
+  const getAssignmentId = (assignment) => {
     return type === CONSTS.TODO ? assignment.ID : assignment.id;
   };
 
-  const getPriority = assignment => {
+  const getPriority = (assignment) => {
     return type === CONSTS.TODO ? assignment.urgency : assignment.priority;
   };
 
-  const getAssignmentName = assignment => {
+  const getAssignmentName = (assignment) => {
     return type === CONSTS.TODO ? assignment.name : assignment.stepName;
   };
 
   function showToast(message: string) {
     const theMessage = `Assignment: ${message}`;
-    // eslint-disable-next-line no-console
+
     console.error(theMessage);
     setSnackbarMessage(message);
     setShowSnackbar(true);
@@ -195,7 +194,7 @@ export default function ToDo(props: ToDoProps) {
   function _showMore() {
     setBShowMore(false);
     if (type === CONSTS.WORKLIST && count && count > assignments.length && !assignmentsSource) {
-      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, count, false, context).then(response => {
+      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, count, false, context).then((response) => {
         setAssignments(response.data);
       });
     } else {
@@ -205,7 +204,7 @@ export default function ToDo(props: ToDoProps) {
 
   function _showLess() {
     setBShowMore(true);
-    setAssignments(assignments => assignments.slice(0, 3));
+    setAssignments((assignments) => assignments.slice(0, 3));
   }
 
   function clickGo(assignment) {
@@ -238,7 +237,6 @@ export default function ToDo(props: ToDoProps) {
       .openAssignment(id, classname, options)
       .then(() => {
         if (bLogging) {
-          // eslint-disable-next-line no-console
           console.log(`openAssignment completed`);
         }
       })
@@ -257,7 +255,7 @@ export default function ToDo(props: ToDoProps) {
     return displayID;
   };
 
-  const getListItemComponent = assignment => {
+  const getListItemComponent = (assignment) => {
     if (isDesktop) {
       return (
         <>
@@ -277,7 +275,6 @@ export default function ToDo(props: ToDoProps) {
     );
   };
 
-  // eslint-disable-next-line no-nested-ternary
   const getCount = () => (assignmentsSource ? assignmentsSource.length : type === CONSTS.WORKLIST ? count : 0);
 
   const toDoContent = (
@@ -292,7 +289,7 @@ export default function ToDo(props: ToDoProps) {
         />
       )}
       <List>
-        {assignments.map(assignment => (
+        {assignments.map((assignment) => (
           <div className='psdk-todo-avatar-header' key={getAssignmentId(assignment)}>
             <Avatar className={classes.avatar} style={{ marginRight: '16px' }}>
               {currentUserInitials}
@@ -333,7 +330,7 @@ export default function ToDo(props: ToDoProps) {
           )}
           <CardContent>
             <List>
-              {assignments.map(assignment => (
+              {assignments.map((assignment) => (
                 <ListItem
                   key={getAssignmentId(assignment)}
                   dense

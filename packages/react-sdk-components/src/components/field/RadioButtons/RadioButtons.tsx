@@ -59,7 +59,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
   configProperty = configProperty.startsWith('@P') ? configProperty.substring(3) : configProperty;
   configProperty = configProperty.startsWith('.') ? configProperty.substring(1) : configProperty;
 
-  const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter(field => field?.classID === className)[0] : fieldMetadata;
+  const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter((field) => field?.classID === className)[0] : fieldMetadata;
   let displayName = metaData?.datasource?.propertyForDisplayText;
   displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
   const localeContext = metaData?.datasource?.tableType === 'DataPage' ? 'datapage' : 'associated';
@@ -80,7 +80,6 @@ export default function RadioButtons(props: RadioButtonsProps) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
-        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
       />
     );
@@ -90,18 +89,17 @@ export default function RadioButtons(props: RadioButtonsProps) {
     return (
       <FieldValueList
         name={hideLabel ? '' : label}
-        // @ts-ignore - Property 'getLocaleRuleNameFromKeys' is private and only accessible within class 'C11nEnv'
         value={thePConn.getLocalizedValue(value, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
         variant='stacked'
       />
     );
   }
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     handleEvent(actionsApi, 'changeNblur', propName, event.target.value);
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event) => {
     thePConn.getValidationApi().validate(event.target.value, ''); // 2nd arg empty string until typedef marked correctly as optional
   };
 
@@ -139,7 +137,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
     <FormControl variant='standard' error={status === 'error'} required={required}>
       <FormLabel component='legend'>{label}</FormLabel>
       <RadioGroup value={theSelectedButton} onChange={handleChange} onBlur={!readOnly ? handleBlur : undefined} row={inline}>
-        {theOptions.map(theOption => {
+        {theOptions.map((theOption) => {
           return (
             <FormControlLabel
               value={theOption.key}

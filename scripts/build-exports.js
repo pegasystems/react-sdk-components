@@ -28,13 +28,13 @@ const analyzeExports = (/** @type {string} */ code) => {
     const groups = [...code.matchAll(/export\s+\{([^}]+?)\}/gs)];
 
     // Split into array of exports.
-    const exs = groups.flatMap(([, group]) => group.split(',').map(s => s.trim()));
+    const exs = groups.flatMap(([, group]) => group.split(',').map((s) => s.trim()));
 
     // Check for default exports.
-    def = exs.some(exp => exp === 'default' || exp.endsWith('as default'));
+    def = exs.some((exp) => exp === 'default' || exp.endsWith('as default'));
 
     // Check for named exports.
-    named = exs.some(exp => exp !== 'default' && !exp.endsWith('as default'));
+    named = exs.some((exp) => exp !== 'default' && !exp.endsWith('as default'));
   }
 
   return { default: def, named };
@@ -83,9 +83,9 @@ const exportsForDir = async (pkg, indexPath, dir) => {
     withFileTypes: true
   });
 
-  const hasInit = !!files.find(f => f.name === 'init.ts' && !f.isDirectory());
+  const hasInit = !!files.find((f) => f.name === 'init.ts' && !f.isDirectory());
 
-  const dirs = files.filter(f => f.isDirectory()).sort(({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB, 'en-US'));
+  const dirs = files.filter((f) => f.isDirectory()).sort(({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB, 'en-US'));
 
   return (hasInit ? ["import './init';\n"] : []).concat(
     (
@@ -110,12 +110,12 @@ const createIndex = async (/** @type {string} */ pkg, /** @type {string} */ dir)
 };
 
 const readDirsForCode = async () => {
-  readdir(packagesDir, { withFileTypes: true }).then(async dirs => {
-    dirs.map(dir => {
+  readdir(packagesDir, { withFileTypes: true }).then(async (dirs) => {
+    dirs.map((dir) => {
       console.log(`readdir: dir.name: ${dir.name}`);
     });
     const arr = await Promise.all(
-      dirs.flatMap(dir => {
+      dirs.flatMap((dir) => {
         /* JEA mod - was cosmos- below - don't process react-sdk-overrides  */
         dir.isDirectory() && !dir.name.includes('react-sdk-overrides') && /^react-sdk-(?!demos)/.test(dir.name) ? [createIndex(dir.name, 'src')] : [];
       })

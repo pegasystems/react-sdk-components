@@ -6,7 +6,7 @@ import type { PConnFieldProps } from '../../../types/PConnProps';
 import semanticUtils from './utils';
 
 // eslint-disable-next-line
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -57,6 +57,7 @@ export default function SemanticLink(props: SemanticLinkProps) {
     resourceParams = {},
     getPConnect,
     previewKey,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onClick,
     testId = '',
     referenceType,
@@ -142,12 +143,11 @@ export default function SemanticLink(props: SemanticLinkProps) {
   if ((referenceType && referenceType.toUpperCase() === DATA) || shouldTreatAsDataReference) {
     try {
       isData = true;
-      // @ts-ignore
+      // @ts-expect-error
       const dataRefContext = semanticUtils.getDataReferenceInfo(pConnect, dataRelationshipContext, contextPage);
       dataViewName = dataRefContext.dataContext;
       payload = dataRefContext.dataContextParameters as any;
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.log('Error in getting the data reference info', error);
     }
   } else if (resourcePayload && resourcePayload.resourceType === 'DATA') {

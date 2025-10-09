@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useLayoutEffect, useMemo } from 'react';
 
 import { getReferenceList, buildView } from '../../helpers/field-group-utils';
@@ -42,7 +41,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
 
   useLayoutEffect(() => {
     if (!isReadonlyMode) {
-      // @ts-ignore - Expected 3 arguments, but got 1
+      // @ts-expect-error - Expected 3 arguments, but got 1
       pConn.getListActions().initDefaultPageInstructions(resolvedList);
     }
   }, [referenceList?.length]);
@@ -66,7 +65,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     const addFieldGroupItem = () => {
       addRecord();
     };
-    const deleteFieldGroupItem = index => {
+    const deleteFieldGroupItem = (index) => {
       if (PCore.getPCoreVersion()?.includes('8.7')) {
         pConn.getListActions().deleteEntry(index, pageReference);
       } else {

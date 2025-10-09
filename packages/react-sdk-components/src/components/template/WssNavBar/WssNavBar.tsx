@@ -17,15 +17,15 @@ interface WssNavBarProps extends PConnProps {
   navLinks: any[];
   operator: { currentUserInitials: string };
   navDisplayOptions: { alignment: string; position: string };
-  // eslint-disable-next-line react/no-unused-prop-types
+
   portalName: string;
   imageSrc: string;
-  // eslint-disable-next-line react/no-unused-prop-types
+
   fullImageSrc: string;
   appName: any;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex'
   },
@@ -74,7 +74,7 @@ export default function WssNavBar(props: WssNavBarProps) {
 
   const navLinksContent = (
     <Box id='nav-links' sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} style={{ justifyContent: alignment }}>
-      {navLinks.map(link => (
+      {navLinks.map((link) => (
         <Button className='link-style' key={link.text} onClick={link.onClick}>
           {link.text}
         </Button>
@@ -117,7 +117,7 @@ export default function WssNavBar(props: WssNavBarProps) {
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
               >
-                {navLinks.map(link => (
+                {navLinks.map((link) => (
                   <MenuItem key={link.text} onClick={link.onClick}>
                     <Typography>{link.text}</Typography>
                   </MenuItem>
