@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@pega/pcore-pconnect-typedefs": "~3.2.2",
-    "tinymce": "^6.8.6"
+    "tinymce": "^8.1.2"
   },
   "peerDependencies": {
     "@pega/auth": "~0.2",
