@@ -29,7 +29,7 @@ export default function TextInput(props: TextInputProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder,
+    placeholder
   } = props;
 
   const pConn = getPConnect();
@@ -85,7 +85,7 @@ export default function TextInput(props: TextInputProps) {
       label={label}
       value={inputValue}
       slotProps={{
-        input: { ...readOnlyProp, inputProps: { maxLength, ...testProps } },
+        input: { ...readOnlyProp, inputProps: { maxLength, ...testProps } }
       }}
     />
   );

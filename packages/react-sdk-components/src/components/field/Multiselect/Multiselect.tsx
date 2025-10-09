@@ -24,7 +24,7 @@ export default function Multiselect(props) {
     maxResultsDisplay,
     groupColumnsConfig = [{}],
     selectionList,
-    value,
+    value
   } = props;
   let { datasource = [], columns = [{}] } = props;
 
@@ -35,13 +35,13 @@ export default function Multiselect(props) {
         value: primaryField,
         display: 'true',
         useForSearch: true,
-        primary: 'true',
+        primary: 'true'
       },
       {
         value: selectionKey,
         setProperty: selectionKey,
-        key: 'true',
-      },
+        key: 'true'
+      }
     ];
     let secondaryColumns: any = [];
     if (secondaryFields) {
@@ -49,7 +49,7 @@ export default function Multiselect(props) {
         value: secondaryField,
         display: 'true',
         secondary: 'true',
-        useForSearch: 'true',
+        useForSearch: 'true'
       }));
     } else {
       secondaryColumns = [
@@ -57,8 +57,8 @@ export default function Multiselect(props) {
           value: selectionKey,
           display: 'true',
           secondary: 'true',
-          useForSearch: 'true',
-        },
+          useForSearch: 'true'
+        }
       ];
     }
     if (referenceType === 'Case') {
@@ -79,7 +79,7 @@ export default function Multiselect(props) {
       listType,
       maxResultsDisplay: maxResultsDisplay || '100',
       columns: preProcessColumns(columns),
-      groupColumnsConfig: preProcessColumns(groupColumnsConfig),
+      groupColumnsConfig: preProcessColumns(groupColumnsConfig)
     };
   }, [
     datasource,
@@ -91,17 +91,17 @@ export default function Multiselect(props) {
     listType,
     maxResultsDisplay,
     columns,
-    groupColumnsConfig,
+    groupColumnsConfig
   ]);
   const groupsDisplayFieldMeta = useMemo(
     () => (listType !== 'associated' ? getDisplayFieldsMetaData(dataConfig.groupColumnsConfig) : null),
-    [dataConfig.groupColumnsConfig],
+    [dataConfig.groupColumnsConfig]
   );
 
   const itemsTreeBaseData = getGroupDataForItemsTree(groupDataSource, groupsDisplayFieldMeta, showSecondaryInSearchOnly) || [];
 
   const [itemsTree, setItemsTree] = useState(
-    isGroupData ? getGroupDataForItemsTree(groupDataSource, groupsDisplayFieldMeta, showSecondaryInSearchOnly) : [],
+    isGroupData ? getGroupDataForItemsTree(groupDataSource, groupsDisplayFieldMeta, showSecondaryInSearchOnly) : []
   );
 
   const displayFieldMeta = listType !== 'associated' ? getDisplayFieldsMetaData(dataConfig.columns) : null;
@@ -121,7 +121,7 @@ export default function Multiselect(props) {
         selectedRows.map((item) => {
           return {
             id: item[selectionKey.startsWith('.') ? selectionKey.substring(1) : selectionKey],
-            primary: item[primaryField.startsWith('.') ? primaryField.substring(1) : primaryField],
+            primary: item[primaryField.startsWith('.') ? primaryField.substring(1) : primaryField]
           };
         });
       setSelectedItems(selectedRows);
@@ -138,7 +138,7 @@ export default function Multiselect(props) {
       initalItemsTree,
       isGroupData,
       showSecondaryInSearchOnly,
-      selectedRows || [],
+      selectedRows || []
     );
     setItemsTree(res);
   };
@@ -176,7 +176,7 @@ export default function Multiselect(props) {
     // Clear error messages if any
     const propName = pConn.getStateProps().selectionList;
     pConn.clearErrorMessages({
-      property: propName,
+      property: propName
     });
     const { selected } = item;
     if (selected) {

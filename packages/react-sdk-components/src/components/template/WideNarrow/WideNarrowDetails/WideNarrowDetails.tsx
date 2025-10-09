@@ -37,7 +37,7 @@ export default function WideNarrowDetails(props: WideNarrowDetailsProps) {
     return createElement(createPConnectComponent(), {
       ...theConfigObject,
 
-      key: index.toString(),
+      key: index.toString()
     });
   });
 

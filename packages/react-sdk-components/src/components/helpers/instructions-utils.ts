@@ -22,7 +22,7 @@ const insertInstruction = (c11nEnv, selectionList, selectionKey, primaryField, i
   const content = {
     [actualProperty]: id,
     [displayProperty]: primary,
-    nonFormProperties: actualProperty !== displayProperty ? [displayProperty] : [],
+    nonFormProperties: actualProperty !== displayProperty ? [displayProperty] : []
   };
   c11nEnv.getListActions().insert(content, startIndex);
 };

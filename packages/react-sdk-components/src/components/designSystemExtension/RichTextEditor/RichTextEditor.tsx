@@ -10,8 +10,8 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     transform: 'translate(0, 0px) scale(1)',
     marginBottom: '5px',
-    color: theme.palette.text.secondary,
-  },
+    color: theme.palette.text.secondary
+  }
 }));
 
 interface RichTextEditorProps {
@@ -99,7 +99,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
           branding: false,
           paste_data_images: true,
           file_picker_types: 'image',
-          file_picker_callback: filePickerCallback,
+          file_picker_callback: filePickerCallback
         }}
         onBlur={onBlur}
         onEditorChange={onChange}

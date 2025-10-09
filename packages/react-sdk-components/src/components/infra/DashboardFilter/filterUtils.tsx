@@ -8,13 +8,13 @@ export const createFilter = (value, fieldId, comparator = 'EQ') => {
   return {
     condition: {
       lhs: {
-        field: fieldId,
+        field: fieldId
       },
       comparator,
       rhs: {
-        value,
-      },
-    },
+        value
+      }
+    }
   };
 };
 
@@ -86,7 +86,7 @@ export const buildFilterComponents = (getPConnect, allFilters) => {
         >
           Clear All
         </Link>
-      </Grid2>,
+      </Grid2>
     );
   }
   return filterComponents;
@@ -113,8 +113,8 @@ export const getFilterExpression = (filterValue, name, metadata) => {
     const fields = [
       {
         name: relativeDateExpression.condition.lhs.field,
-        type: 'DATE_TIME',
-      },
+        type: 'DATE_TIME'
+      }
     ];
     return '';
   }
@@ -130,7 +130,7 @@ export function getLayoutDataFromRegion(regionData) {
   const defaultLayoutConfig = {
     width: 'full',
     fillAvailable: true,
-    minWidth: [300, 'px'],
+    minWidth: [300, 'px']
   };
 
   return regionData.props
@@ -144,8 +144,8 @@ export function getLayoutDataFromRegion(regionData) {
         content: itemPConnect?.getComponent(),
         layoutConfig: {
           ...defaultLayoutConfig,
-          ...itemPConnect?.getConfigProps().layoutConfig,
-        },
+          ...itemPConnect?.getConfigProps().layoutConfig
+        }
       };
     });
 }

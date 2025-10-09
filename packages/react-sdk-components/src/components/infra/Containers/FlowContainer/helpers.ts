@@ -26,7 +26,7 @@ export const addContainerItem = (pConnect) => {
     flowName,
     caseViewMode: 'perform',
     resourceType: 'ASSIGNMENT',
-    data: pConnect.getDataObject(contextName),
+    data: pConnect.getDataObject(contextName)
   });
 };
 
@@ -74,7 +74,7 @@ export const getChildCaseAssignments = (pConnect) => {
       if (assignments) {
         const childCaseAssignments = assignments.map((assignment) => ({
           ...assignment,
-          caseName: Name,
+          caseName: Name
         }));
         allAssignments = allAssignments.concat(childCaseAssignments);
       }

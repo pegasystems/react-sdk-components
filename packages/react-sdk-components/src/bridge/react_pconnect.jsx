@@ -75,7 +75,7 @@ const connectRedux = (component, c11nEnv) => {
 
       return {
         ...obj,
-        ...addProps,
+        ...addProps
       };
     },
     null,
@@ -109,8 +109,8 @@ const connectRedux = (component, c11nEnv) => {
         }
         /* TODO For some rawConfig we are not getting routingInfo under allStateProps */
         return !routingInfoCompare(next, prev);
-      },
-    },
+      }
+    }
   )(component);
 };
 
@@ -176,7 +176,7 @@ class PConnect extends Component {
     super(props);
     const { getPConnect } = this.props;
     this.state = {
-      hasError: false,
+      hasError: false
     };
 
     this.eventHandler = this.eventHandler.bind(this);
@@ -194,7 +194,7 @@ class PConnect extends Component {
     // Update state so the next render will show the fallback UI.
     return {
       hasError: true,
-      error,
+      error
     };
   }
 
@@ -277,7 +277,7 @@ class PConnect extends Component {
       getPConnect,
       ...actions,
       additionalProps,
-      ...otherProps,
+      ...otherProps
     };
 
     // If the new component is a reference node then mark with a unique key
@@ -302,14 +302,14 @@ PConnect.propTypes = {
   getPConnect: PropTypes.func.isRequired,
   additionalProps: PropTypes.shape({
     noLabel: PropTypes.bool,
-    readOnly: PropTypes.bool,
+    readOnly: PropTypes.bool
   }),
-  validatemessage: PropTypes.string,
+  validatemessage: PropTypes.string
 };
 
 PConnect.defaultProps = {
   additionalProps: {},
-  validatemessage: '',
+  validatemessage: ''
 };
 
 // Move these into SdkConstellationReady so PCore is available
@@ -319,7 +319,7 @@ document.addEventListener('SdkConstellationReady', () => {
       ...c11nEnv,
       ...c11nEnv.getPConnect().getConfigProps(),
       ...c11nEnv.getPConnect().getActions(),
-      ...{ additionalProps },
+      ...{ additionalProps }
     });
   });
 

@@ -37,16 +37,16 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   alert: {
     marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(1)
   },
   avatar: {
     backgroundColor: theme.palette.primary.light,
-    color: theme.palette.getContrastText(theme.palette.primary.light),
-  },
+    color: theme.palette.getContrastText(theme.palette.primary.light)
+  }
 }));
 
 export const FlowContainer = (props: FlowContainerProps) => {
@@ -65,7 +65,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
     rootViewElement,
     getPConnectOfActiveContainerItem,
     assignmentNames,
-    activeContainerItemID: itemKey,
+    activeContainerItemID: itemKey
   } = props;
 
   const { displayOnlyFA } = useContext<any>(StoreContext);

@@ -4,7 +4,7 @@ export const dateFormatInfoDefault = {
   dateFormatString: 'MM/DD/YYYY',
   dateFormatStringLong: 'MMM DD, YYYY',
   dateFormatStringLC: 'mm/dd/yyyy',
-  dateFormatMask: '__/__/____',
+  dateFormatMask: '__/__/____'
 };
 
 export const getDateFormatInfo = (): typeof dateFormatInfoDefault => {
@@ -39,7 +39,7 @@ export const getDateFormatInfo = (): typeof dateFormatInfoDefault => {
       longFormat: 'MMM',
       placeholder: localizedPlaceholderExists ? localizedVal('month_placeholder', localeCategory) : 'mm',
       mask: '__',
-      separator: theTestDateLocaleString[locMM + 2],
+      separator: theTestDateLocaleString[locMM + 2]
     },
     {
       loc: locDD,
@@ -47,7 +47,7 @@ export const getDateFormatInfo = (): typeof dateFormatInfoDefault => {
       longFormat: 'DD',
       placeholder: localizedPlaceholderExists ? localizedVal('day_placeholder', localeCategory) : 'dd',
       mask: '__',
-      separator: theTestDateLocaleString[locDD + 2],
+      separator: theTestDateLocaleString[locDD + 2]
     },
     {
       loc: locYYYY,
@@ -55,8 +55,8 @@ export const getDateFormatInfo = (): typeof dateFormatInfoDefault => {
       longFormat: 'YYYY',
       placeholder: localizedPlaceholderExists ? localizedVal('year_placeholder', localeCategory) : 'yyyy',
       mask: '____',
-      separator: theTestDateLocaleString[locYYYY + 4],
-    },
+      separator: theTestDateLocaleString[locYYYY + 4]
+    }
   ];
 
   // Sort the associative array by order of appearance (loc) of each piece

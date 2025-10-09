@@ -41,8 +41,8 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
       type,
       children: children ? [...children] : [],
       config: {
-        ...config,
-      },
+        ...config
+      }
     });
 
     caseSummaryComponentObject.value = createdComponent;

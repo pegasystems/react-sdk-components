@@ -30,7 +30,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     heading = '',
     displayMode,
     fieldHeader,
-    allowTableEdit: allowAddEdit,
+    allowTableEdit: allowAddEdit
   } = props;
   const pConn = getPConnect();
   const resolvedList = getReferenceList(pConn);
@@ -80,7 +80,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
       return referenceList.map((item, index) => ({
         id: index,
         name: fieldHeader === 'propertyRef' ? getDynamicHeaderProp(item, index) : `${HEADING} ${index + 1}`,
-        children: buildView(pConn, index, lookForChildInConfig),
+        children: buildView(pConn, index, lookForChildInConfig)
       }));
     }, [referenceList?.length]);
 

@@ -25,7 +25,7 @@ class ComponentMap {
     // sdkComponentMap is top-level object
     this.sdkComponentMap = {
       localComponentMap: {},
-      pegaProvidedComponentMap: {},
+      pegaProvidedComponentMap: {}
     };
 
     // isCoComponentMapLoaded will be updated to true after the async load is complete

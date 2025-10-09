@@ -7,183 +7,183 @@ type CurrencyMapType = {
 const EURO: CurrencyMapType = {
   name: 'Euro (EUR)',
   symbolFormat: '\u20AC{#}',
-  currencyCode: 'EUR {#}',
+  currencyCode: 'EUR {#}'
 };
 
 const USD: CurrencyMapType = {
   name: 'U.S. Dollar (USD)',
   symbolFormat: '${#}',
-  currencyCode: 'USD {#}',
+  currencyCode: 'USD {#}'
 };
 
 const XAF: CurrencyMapType = {
   name: 'CFA Franc (BEAC) (XAF)',
   symbolFormat: 'XAF {#}',
-  currencyCode: 'XAF {#}',
+  currencyCode: 'XAF {#}'
 };
 
 const XCD: CurrencyMapType = {
   name: 'East Caribbean Dollar (XCD)',
   symbolFormat: '${#}',
-  currencyCode: 'XCD {#}',
+  currencyCode: 'XCD {#}'
 };
 
 const XPF: CurrencyMapType = {
   name: 'Pacific Franc (XPF)',
   symbolFormat: '₣{#}',
-  currencyCode: 'XPF {#}',
+  currencyCode: 'XPF {#}'
 };
 
 export default {
   AF: {
     name: 'Afghanistan Afghani (AFA)',
     symbolFormat: '{#} ؋',
-    currencyCode: 'AFA {#}',
+    currencyCode: 'AFA {#}'
   },
   AL: {
     name: 'Albanian Lek (ALL)',
     symbolFormat: '{#} L',
-    currencyCode: 'ALL {#}',
+    currencyCode: 'ALL {#}'
   },
   DZ: {
     name: 'Algerian Dinar (DZD)',
     symbolFormat: '{#} DA',
-    currencyCode: 'DZD {#}',
+    currencyCode: 'DZD {#}'
   },
   AO: {
     name: 'Angolan New Kwanza (AOA)',
     symbolFormat: '{#} Kz',
-    currencyCode: 'AOA {#}',
+    currencyCode: 'AOA {#}'
   },
   AR: {
     name: 'Argentine Peso (ARS)',
     symbolFormat: '${#}',
-    currencyCode: 'ARS {#}',
+    currencyCode: 'ARS {#}'
   },
   AM: {
     name: 'Armenian Dram (AMD)',
     symbolFormat: '{#}֏',
-    currencyCode: 'AMD {#}',
+    currencyCode: 'AMD {#}'
   },
   AW: {
     name: 'Aruba Florin (AWG)',
     symbolFormat: 'Afl {#}',
-    currencyCode: 'AWG {#}',
+    currencyCode: 'AWG {#}'
   },
   AU: {
     name: 'Australian Dollar (AUD)',
     symbolFormat: 'AU${#}',
-    currencyCode: 'AUD {#}',
+    currencyCode: 'AUD {#}'
   },
   AZ: {
     name: 'Azerbaijani Manat (AZM)',
     symbolFormat: '₼{#}',
-    currencyCode: 'AZM {#}',
+    currencyCode: 'AZM {#}'
   },
   BS: {
     name: 'Bahamian Dollar (BSD)',
     symbolFormat: 'B${#}',
-    currencyCode: 'BSD {#}',
+    currencyCode: 'BSD {#}'
   },
   BH: {
     name: 'Bahraini Dinar (BHD)',
     symbolFormat: '{#} BD',
-    currencyCode: 'BHD {#}',
+    currencyCode: 'BHD {#}'
   },
   BD: {
     name: 'Bangladesh Taka (BDT)',
     symbolFormat: '৳{#}',
-    currencyCode: 'BDT {#}',
+    currencyCode: 'BDT {#}'
   },
   BB: {
     name: 'Barbados Dollar (BBD)',
     symbolFormat: 'Bds${#}',
-    currencyCode: 'BBD {#}',
+    currencyCode: 'BBD {#}'
   },
   BY: {
     name: 'Belarus Ruble (BYR)',
     symbolFormat: 'Br {#}',
-    currencyCode: 'BYR {#}',
+    currencyCode: 'BYR {#}'
   },
   BZ: {
     name: 'Belize Dollar (BZD)',
     symbolFormat: 'BZ${#}',
-    currencyCode: 'BZD {#}',
+    currencyCode: 'BZD {#}'
   },
   BM: {
     name: 'Bermuda Dollar (BMD)',
     symbolFormat: '${#}',
-    currencyCode: 'BMD {#}',
+    currencyCode: 'BMD {#}'
   },
   BT: {
     name: 'Bhutan Ngultrum (BTN)',
     symbolFormat: 'Nu.{#}',
-    currencyCode: 'BTN {#}',
+    currencyCode: 'BTN {#}'
   },
   BO: {
     name: 'Bolivian Boliviano (BOB)',
     symbolFormat: 'Bs. {#}',
-    currencyCode: 'BOB {#}',
+    currencyCode: 'BOB {#}'
   },
   BA: {
     name: 'Bosnian Marka (BAM)',
     symbolFormat: '{#} KM',
-    currencyCode: 'BAM {#}',
+    currencyCode: 'BAM {#}'
   },
   BW: {
     name: 'Botswana Pula (BWP)',
     symbolFormat: 'P {#}',
-    currencyCode: 'BWP {#}',
+    currencyCode: 'BWP {#}'
   },
   BR: {
     name: 'Brazilian Real (BRL)',
     symbolFormat: 'R${#}',
-    currencyCode: 'BRL {#}',
+    currencyCode: 'BRL {#}'
   },
   GB: {
     name: 'British Pound (GBP)',
     symbolFormat: '\xA3{#}',
-    currencyCode: 'GBP {#}',
+    currencyCode: 'GBP {#}'
   },
   BN: {
     name: 'Brunei Dollar (BND)',
     symbolFormat: 'B${#}',
-    currencyCode: 'BND {#}',
+    currencyCode: 'BND {#}'
   },
   BG: {
     name: 'Bulgarian Lev (BGN)',
     symbolFormat: 'BGN {#}',
-    currencyCode: 'BGN {#}',
+    currencyCode: 'BGN {#}'
   },
   BI: {
     name: 'Burundi Franc (BIF)',
     symbolFormat: '{#} FBu',
-    currencyCode: 'BIF {#}',
+    currencyCode: 'BIF {#}'
   },
   KH: {
     name: 'Cambodia Riel (KHR)',
     symbolFormat: 'KHR {#}',
-    currencyCode: 'KHR {#}',
+    currencyCode: 'KHR {#}'
   },
   CA: {
     name: 'Canadian Dollar (CAD)',
     symbolFormat: 'C${#}',
-    currencyCode: 'CAD {#}',
+    currencyCode: 'CAD {#}'
   },
   CV: {
     name: 'Cape Verde Escudo (CVE)',
     symbolFormat: '{#} CVE',
-    currencyCode: 'CVE {#}',
+    currencyCode: 'CVE {#}'
   },
   KYD: {
     name: 'Cayman Islands Dollar (KYD)',
     symbolFormat: 'CI${#}',
-    currencyCode: ' {#}',
+    currencyCode: ' {#}'
   },
   XO: {
     name: 'CFA Franc (BCEAO) (XOF)',
     symbolFormat: 'XOF {#}',
-    currencyCode: 'XOF {#}',
+    currencyCode: 'XOF {#}'
   },
   XA: XAF,
   BJ: XAF,
@@ -203,62 +203,62 @@ export default {
   CL: {
     name: 'Chilean Peso (CLP)',
     symbolFormat: 'CLP${#}',
-    currencyCode: 'CLP {#}',
+    currencyCode: 'CLP {#}'
   },
   CN: {
     name: 'Chinese Yuan (CNY)',
     symbolFormat: '¥{#}',
-    currencyCode: 'CNY {#}',
+    currencyCode: 'CNY {#}'
   },
   CO: {
     name: 'Colombian Peso (COP)',
     symbolFormat: 'COL${#}',
-    currencyCode: 'COP {#}',
+    currencyCode: 'COP {#}'
   },
   KM: {
     name: 'Comoros Franc (KMF)',
     symbolFormat: 'CF {#}',
-    currencyCode: 'KMF {#}',
+    currencyCode: 'KMF {#}'
   },
   CD: {
     name: 'Congolese Franc (CDF)',
     symbolFormat: 'FC {#}',
-    currencyCode: 'CDF {#}',
+    currencyCode: 'CDF {#}'
   },
   CR: {
     name: 'Costa Rica Colon (CRC)',
     symbolFormat: '₡{#}',
-    currencyCode: 'CRC {#}',
+    currencyCode: 'CRC {#}'
   },
   HR: {
     name: 'Croatian Kuna (HRK)',
     symbolFormat: '{#} kn',
-    currencyCode: 'HRK {#}',
+    currencyCode: 'HRK {#}'
   },
   CU: {
     name: 'Cuban Peso (CUP)',
     symbolFormat: '${#}',
-    currencyCode: 'CUP {#}',
+    currencyCode: 'CUP {#}'
   },
   CZ: {
     name: 'Czech Koruna (CZK)',
     symbolFormat: '{#} Kč',
-    currencyCode: 'CZK {#}',
+    currencyCode: 'CZK {#}'
   },
   DK: {
     name: 'Danish Krone (DKK)',
     symbolFormat: '{#} Kr.',
-    currencyCode: 'DKK {#}',
+    currencyCode: 'DKK {#}'
   },
   DJ: {
     name: 'Dijibouti Franc (DJF)',
     symbolFormat: '{#} Fdj',
-    currencyCode: 'DJF {#}',
+    currencyCode: 'DJF {#}'
   },
   DO: {
     name: 'Dominican Peso (DOP)',
     symbolFormat: 'RD${#}',
-    currencyCode: 'DOP {#}',
+    currencyCode: 'DOP {#}'
   },
   AI: XCD,
   AG: XCD,
@@ -271,328 +271,328 @@ export default {
   EG: {
     name: 'Egyptian Pound (EGP)',
     symbolFormat: 'E\xA3 {#}',
-    currencyCode: 'EGP {#}',
+    currencyCode: 'EGP {#}'
   },
   SV: {
     name: 'El Salvador Colon (SVC)',
     symbolFormat: '₡{#}',
-    currencyCode: 'SVC {#}',
+    currencyCode: 'SVC {#}'
   },
   ER: {
     name: 'Eritrea Nakfa (ERN)',
     symbolFormat: '{#} Nkf',
-    currencyCode: 'ERN {#}',
+    currencyCode: 'ERN {#}'
   },
   ET: {
     name: 'Ethiopian Birr (ETB)',
     symbolFormat: '{#} Br',
-    currencyCode: 'ETB {#}',
+    currencyCode: 'ETB {#}'
   },
 
   FK: {
     name: 'Falkland Islands Pound (FKP)',
     symbolFormat: 'FK\xA3 {#}',
-    currencyCode: 'FKP {#}',
+    currencyCode: 'FKP {#}'
   },
   FJ: {
     name: 'Fiji Dollar (FJD)',
     symbolFormat: 'FJ${#}',
-    currencyCode: 'FJD {#}',
+    currencyCode: 'FJD {#}'
   },
   GM: {
     name: 'Gambian Dalasi (GMD)',
     symbolFormat: 'GMD {#}',
-    currencyCode: 'GMD {#}',
+    currencyCode: 'GMD {#}'
   },
   GE: {
     name: 'Georgian Lari (GEL)',
     symbolFormat: '₾{#}',
-    currencyCode: 'GEL {#}',
+    currencyCode: 'GEL {#}'
   },
   GH: {
     name: 'Ghanian Cedi (GHC)',
     symbolFormat: 'GH₵ {#}',
-    currencyCode: 'GHC {#}',
+    currencyCode: 'GHC {#}'
   },
   GI: {
     name: 'Gibraltar Pound (GIP)',
     symbolFormat: '\xA3{#}',
-    currencyCode: 'GIP {#}',
+    currencyCode: 'GIP {#}'
   },
   XAU: {
     name: 'Gold Ounces (XAU)',
     symbolFormat: 'XAU {#}',
-    currencyCode: 'XAU {#}',
+    currencyCode: 'XAU {#}'
   },
   GT: {
     name: 'Guatemala Quetzal (GTQ)',
     symbolFormat: '{#} Q',
-    currencyCode: 'GTQ {#}',
+    currencyCode: 'GTQ {#}'
   },
   GG: {
     name: 'Guernsey Pound (GGP)',
     symbolFormat: '\xA3{#}',
-    currencyCode: 'GGP {#}',
+    currencyCode: 'GGP {#}'
   },
   GN: {
     name: 'Guinea Franc (GNF)',
     symbolFormat: 'GNF {#}',
-    currencyCode: 'GNF {#}',
+    currencyCode: 'GNF {#}'
   },
   GY: {
     name: 'Guyana Dollar (GYD)',
     symbolFormat: 'GY${#}',
-    currencyCode: 'GYD {#}',
+    currencyCode: 'GYD {#}'
   },
   HN: {
     name: 'Honduras Lempira (HNL)',
     symbolFormat: 'HNL {#}',
-    currencyCode: 'HNL {#}',
+    currencyCode: 'HNL {#}'
   },
   HK: {
     name: 'Hong Kong Dollar (HKD)',
     symbolFormat: 'HK${#}',
-    currencyCode: 'HKD {#}',
+    currencyCode: 'HKD {#}'
   },
   HU: {
     name: 'Hungarian Forint (HUF)',
     symbolFormat: '{#} Ft',
-    currencyCode: 'HUF {#}',
+    currencyCode: 'HUF {#}'
   },
   IS: {
     name: 'Iceland Krona (ISK)',
     symbolFormat: '{#} kr',
-    currencyCode: 'ISK {#}',
+    currencyCode: 'ISK {#}'
   },
   IN: {
     name: 'Indian Rupee (INR)',
     symbolFormat: '₹{#}',
-    currencyCode: 'INR {#}',
+    currencyCode: 'INR {#}'
   },
   ID: {
     name: 'Indonesian Rupiah (IDR)',
     symbolFormat: 'Rp {#}',
-    currencyCode: 'IDR {#}',
+    currencyCode: 'IDR {#}'
   },
   IR: {
     name: 'Iran Rial (IRR)',
     symbolFormat: 'IRR {#}',
-    currencyCode: 'IRR {#}',
+    currencyCode: 'IRR {#}'
   },
   IQ: {
     name: 'Iraqi Dinar (IQD)',
     symbolFormat: 'IQD {#}',
-    currencyCode: 'IQD {#}',
+    currencyCode: 'IQD {#}'
   },
   IM: {
     name: 'Isle of Man Pound (IMP)',
     symbolFormat: '\xA3{#}',
-    currencyCode: 'IMP {#}',
+    currencyCode: 'IMP {#}'
   },
   IL: {
     name: 'Israeli Shekel (ILS)',
     symbolFormat: '₪{#}',
-    currencyCode: 'ILS {#}',
+    currencyCode: 'ILS {#}'
   },
   JM: {
     name: 'Jamaican Dollar (JMD)',
     symbolFormat: 'JA${#}',
-    currencyCode: 'JMD {#}',
+    currencyCode: 'JMD {#}'
   },
   JP: {
     name: 'Japanese Yen (JPY)',
     symbolFormat: '\xA5{#}',
-    currencyCode: 'JPY {#}',
+    currencyCode: 'JPY {#}'
   },
   JEP: {
     name: 'Jersey Pound (JEP)',
     symbolFormat: '\xA3{#}',
-    currencyCode: 'JEP {#}',
+    currencyCode: 'JEP {#}'
   },
   JO: {
     name: 'Jordanian Dinar (JOD)',
     symbolFormat: 'JOD {#}',
-    currencyCode: 'JOD {#}',
+    currencyCode: 'JOD {#}'
   },
   KZ: {
     name: 'Kazakhstan Tenge (KZT)',
     symbolFormat: '₸{#}',
-    currencyCode: 'KZT {#}',
+    currencyCode: 'KZT {#}'
   },
   KE: {
     name: 'Kenyan Shilling (KES)',
     symbolFormat: 'KSh {#}',
-    currencyCode: 'KES {#}',
+    currencyCode: 'KES {#}'
   },
   KR: {
     name: 'Korean Won (KRW)',
     symbolFormat: '₩{#}',
-    currencyCode: 'KRW {#}',
+    currencyCode: 'KRW {#}'
   },
   KW: {
     name: 'Kuwaiti Dinar (KWD)',
     symbolFormat: '{#} KD',
-    currencyCode: 'KWD {#}',
+    currencyCode: 'KWD {#}'
   },
   KG: {
     name: 'Kyrgyzstan Som (KGS)',
     symbolFormat: 'KGS {#}',
-    currencyCode: 'KGS {#}',
+    currencyCode: 'KGS {#}'
   },
   LA: {
     name: 'Lao Kip (LAK)',
     symbolFormat: '₭{#}',
-    currencyCode: 'LAK {#}',
+    currencyCode: 'LAK {#}'
   },
   LB: {
     name: 'Lebanese Pound (LBP)',
     symbolFormat: 'LBP {#}',
-    currencyCode: 'LBP {#}',
+    currencyCode: 'LBP {#}'
   },
   LS: {
     name: 'Lesotho Rand (ZAR)',
     symbolFormat: 'R{#}',
-    currencyCode: 'ZAR {#}',
+    currencyCode: 'ZAR {#}'
   },
   LR: {
     name: 'Liberian Dollar (LRD)',
     symbolFormat: 'L${#}',
-    currencyCode: 'LRD {#}',
+    currencyCode: 'LRD {#}'
   },
   LY: {
     name: 'Libyan Dinar (LYD)',
     symbolFormat: '{#} LD',
-    currencyCode: 'LYD {#}',
+    currencyCode: 'LYD {#}'
   },
   MO: {
     name: 'Macau Pataca (MOP)',
     symbolFormat: 'MOP${#}',
-    currencyCode: 'MOP {#}',
+    currencyCode: 'MOP {#}'
   },
   MK: {
     name: 'Macedonian Denar (MKD)',
     symbolFormat: 'MKD {#}',
-    currencyCode: 'MKD {#}',
+    currencyCode: 'MKD {#}'
   },
   MG: {
     name: 'Malagasy Franc (MGF)',
     symbolFormat: 'MGF {#}',
-    currencyCode: 'MGF {#}',
+    currencyCode: 'MGF {#}'
   },
   MW: {
     name: 'Malawi Kwacha (MWK)',
     symbolFormat: 'MK {#}',
-    currencyCode: 'MWK {#}',
+    currencyCode: 'MWK {#}'
   },
   MY: {
     name: 'Malaysian Ringgit (MYR)',
     symbolFormat: 'RM {#}',
-    currencyCode: 'MYR {#}',
+    currencyCode: 'MYR {#}'
   },
   MV: {
     name: 'Maldives Rufiyaa (MVR)',
     symbolFormat: 'MVR {#}',
-    currencyCode: 'MVR {#}',
+    currencyCode: 'MVR {#}'
   },
   MR: {
     name: 'Mauritania Ougulya (MRO)',
     symbolFormat: 'MRO {#}',
-    currencyCode: 'MRO {#}',
+    currencyCode: 'MRO {#}'
   },
   MU: {
     name: 'Mauritius Rupee (MUR)',
     symbolFormat: 'Rs {#}',
-    currencyCode: 'MUR {#}',
+    currencyCode: 'MUR {#}'
   },
   MX: {
     name: 'Mexican Peso (MXN)',
     symbolFormat: '${#}',
-    currencyCode: 'MXN {#}',
+    currencyCode: 'MXN {#}'
   },
   MD: {
     name: 'Moldovan Leu (MDL)',
     symbolFormat: 'MDL {#}',
-    currencyCode: 'MDL {#}',
+    currencyCode: 'MDL {#}'
   },
   MN: {
     name: 'Mongolian Tugrik (MNT)',
     symbolFormat: 'MNT {#}',
-    currencyCode: 'MNT {#}',
+    currencyCode: 'MNT {#}'
   },
   MA: {
     name: 'Moroccan Dirham (MAD)',
     symbolFormat: 'MAD {#}',
-    currencyCode: 'MAD {#}',
+    currencyCode: 'MAD {#}'
   },
   MZ: {
     name: 'Mozambique Metical (MZM)',
     symbolFormat: 'MZM {#}',
-    currencyCode: 'MZM {#}',
+    currencyCode: 'MZM {#}'
   },
   MM: {
     name: 'Myanmar Kyat (MMK)',
     symbolFormat: 'K{#}',
-    currencyCode: 'MMK {#}',
+    currencyCode: 'MMK {#}'
   },
   NA: {
     name: 'Namibian Dollar (NAD)',
     symbolFormat: 'N${#}',
-    currencyCode: 'NAD {#}',
+    currencyCode: 'NAD {#}'
   },
   NP: {
     name: 'Nepalese Rupee (NPR)',
     symbolFormat: 'रू{#}',
-    currencyCode: 'NPR {#}',
+    currencyCode: 'NPR {#}'
   },
   AN: {
     name: 'Neth Antilles Guilder (ANG)',
     symbolFormat: 'ƒ{#}',
-    currencyCode: 'ANG {#}',
+    currencyCode: 'ANG {#}'
   },
   NZ: {
     name: 'New Zealand Dollar (NZD)',
     symbolFormat: 'NZ${#}',
-    currencyCode: 'NZD {#}',
+    currencyCode: 'NZD {#}'
   },
   CK: {
     name: 'New Zealand Dollar (NZD)',
     symbolFormat: 'NZ${#}',
-    currencyCode: 'NZD {#}',
+    currencyCode: 'NZD {#}'
   },
   NU: {
     name: 'New Zealand Dollar (NZD)',
     symbolFormat: 'NZ${#}',
-    currencyCode: 'NZD {#}',
+    currencyCode: 'NZD {#}'
   },
   PN: {
     name: 'New Zealand Dollar (NZD)',
     symbolFormat: 'NZ${#}',
-    currencyCode: 'NZD {#}',
+    currencyCode: 'NZD {#}'
   },
   NI: {
     name: 'Nicaragua Cordoba (NIO)',
     symbolFormat: 'C${#}',
-    currencyCode: 'NIO {#}',
+    currencyCode: 'NIO {#}'
   },
   NG: {
     name: 'Nigerian Naira (NGN)',
     symbolFormat: '₦{#}',
-    currencyCode: 'NGN {#}',
+    currencyCode: 'NGN {#}'
   },
   KP: {
     name: 'North Korean Won (KPW)',
     symbolFormat: '₩{#}',
-    currencyCode: 'KPW {#}',
+    currencyCode: 'KPW {#}'
   },
   NO: {
     name: 'Norwegian Krone (NOK)',
     symbolFormat: '{#} kr',
-    currencyCode: 'NOK {#}',
+    currencyCode: 'NOK {#}'
   },
   OM: {
     name: 'Omani Rial (OMR)',
     symbolFormat: 'OMR {#}',
-    currencyCode: 'OMR {#}',
+    currencyCode: 'OMR {#}'
   },
   PF: XPF,
   NC: XPF,
@@ -600,212 +600,212 @@ export default {
   PK: {
     name: 'Pakistani Rupee (PKR)',
     symbolFormat: 'Rs {#}',
-    currencyCode: 'PKR {#}',
+    currencyCode: 'PKR {#}'
   },
   XPD: {
     name: 'Palladium Ounces (XPD)',
     symbolFormat: 'XPD {#}',
-    currencyCode: 'XPD {#}',
+    currencyCode: 'XPD {#}'
   },
   PA: {
     name: 'Panama Balboa (PAB)',
     symbolFormat: 'B/. {#}',
-    currencyCode: 'PAB {#}',
+    currencyCode: 'PAB {#}'
   },
   PG: {
     name: 'Papua New Guinea Kina (PGK)',
     symbolFormat: 'K {#}',
-    currencyCode: 'PGK {#}',
+    currencyCode: 'PGK {#}'
   },
   PY: {
     name: 'Paraguayan Guarani (PYG)',
     symbolFormat: '₲{#}',
-    currencyCode: 'PYG {#}',
+    currencyCode: 'PYG {#}'
   },
   PE: {
     name: 'Peruvian Nuevo Sol (PEN)',
     symbolFormat: 'S/{#}',
-    currencyCode: 'PEN {#}',
+    currencyCode: 'PEN {#}'
   },
   PH: {
     name: 'Philippine Peso (PHP)',
     symbolFormat: '₱{#}',
-    currencyCode: 'PHP {#}',
+    currencyCode: 'PHP {#}'
   },
   XPT: {
     name: 'Platinum Ounces (XPT)',
     symbolFormat: 'XPT {#}',
-    currencyCode: 'XPT {#}',
+    currencyCode: 'XPT {#}'
   },
   PL: {
     name: 'Polish Zloty (PL)',
     symbolFormat: '{#}zł',
-    currencyCode: 'PLN {#}',
+    currencyCode: 'PLN {#}'
   },
   QA: {
     name: 'Qatar Rial (QAR)',
     symbolFormat: 'QAR {#}',
-    currencyCode: 'QAR {#}',
+    currencyCode: 'QAR {#}'
   },
   RO: {
     name: 'Romanian Leu (ROL)',
     symbolFormat: 'RON {#}',
-    currencyCode: 'ROL {#}',
+    currencyCode: 'ROL {#}'
   },
   RU: {
     name: 'Russian Rouble (RUB)',
     symbolFormat: '{#}₽',
-    currencyCode: 'RUB {#}',
+    currencyCode: 'RUB {#}'
   },
   RW: {
     name: 'Rwanda Franc (RWF)',
     symbolFormat: 'FRw {#}',
-    currencyCode: 'RWF {#}',
+    currencyCode: 'RWF {#}'
   },
   WS: {
     name: 'Samoa Tala (WST)',
     symbolFormat: 'WS${#}',
-    currencyCode: 'WST {#}',
+    currencyCode: 'WST {#}'
   },
   ST: {
     name: 'Sao Tome Dobra (STN)',
     symbolFormat: 'STN {#}',
-    currencyCode: 'STD {#}',
+    currencyCode: 'STD {#}'
   },
   SA: {
     name: 'Saudi Arabian Riyal (SAR)',
     symbolFormat: 'SAR {#}',
-    currencyCode: 'SAR {#}',
+    currencyCode: 'SAR {#}'
   },
   RS: {
     name: 'Serbian Dinar (RSD)',
     symbolFormat: 'RSD {#}',
-    currencyCode: 'RSD {#}',
+    currencyCode: 'RSD {#}'
   },
   SC: {
     name: 'Seychelles Rupee (SCR)',
     symbolFormat: 'SCR {#}',
-    currencyCode: 'SCR {#}',
+    currencyCode: 'SCR {#}'
   },
   SL: {
     name: 'Sierra Leone Leone (SLL)',
     symbolFormat: 'SLL {#}',
-    currencyCode: 'SLL {#}',
+    currencyCode: 'SLL {#}'
   },
   XAG: {
     name: 'Silver Ounces (XAG)',
     symbolFormat: 'XAG {#}',
-    currencyCode: 'XAG {#}',
+    currencyCode: 'XAG {#}'
   },
   SG: {
     name: 'Singapore Dollar (SGD)',
     symbolFormat: 'S${#}',
-    currencyCode: 'SGD {#}',
+    currencyCode: 'SGD {#}'
   },
   SB: {
     name: 'Solomon Islands Dollar (SBD)',
     symbolFormat: 'SI${#}',
-    currencyCode: 'SBD {#}',
+    currencyCode: 'SBD {#}'
   },
   SO: {
     name: 'Somali Shilling (SOS)',
     symbolFormat: 'SOS {#}',
-    currencyCode: 'SOS {#}',
+    currencyCode: 'SOS {#}'
   },
   TJ: {
     name: 'Somoni (TJS)',
     symbolFormat: '${#}',
-    currencyCode: 'USD {#}',
+    currencyCode: 'USD {#}'
   },
   ZA: {
     name: 'South African Rand (ZAR)',
     symbolFormat: 'R{#}',
-    currencyCode: 'ZAR {#}',
+    currencyCode: 'ZAR {#}'
   },
   LK: {
     name: 'Sri Lanka Rupee (LKR)',
     symbolFormat: 'Rs {#}',
-    currencyCode: 'LKR {#}',
+    currencyCode: 'LKR {#}'
   },
   SH: {
     name: 'St Helena Pound (SHP)',
     symbolFormat: '\xA3{#}',
-    currencyCode: 'SHP {#}',
+    currencyCode: 'SHP {#}'
   },
   AC: {
     name: 'St Helena Pound (SHP)',
     symbolFormat: '\xA3{#}',
-    currencyCode: 'SHP {#}',
+    currencyCode: 'SHP {#}'
   },
   SS: {
     name: 'Sudanese Pound (SSP)',
     symbolFormat: 'SSP {#}',
-    currencyCode: 'SSP {#}',
+    currencyCode: 'SSP {#}'
   },
   SR: {
     name: 'Surinam Dollar (SRD)',
     symbolFormat: 'Sr${#}',
-    currencyCode: 'SRD {#}',
+    currencyCode: 'SRD {#}'
   },
   SZ: {
     name: 'Swaziland Lilageni (SZL)',
     symbolFormat: 'E{#}',
-    currencyCode: 'SZL {#}',
+    currencyCode: 'SZL {#}'
   },
   SE: {
     name: 'Swedish Krona (SEK)',
     symbolFormat: '{#} kr',
-    currencyCode: 'SEK {#}',
+    currencyCode: 'SEK {#}'
   },
   CH: {
     name: 'Swiss Franc (CHF)',
     symbolFormat: '{#} Fr.',
-    currencyCode: 'CHF {#}',
+    currencyCode: 'CHF {#}'
   },
   SY: {
     name: 'Syrian Pound (SYP)',
     symbolFormat: 'SYP {#}',
-    currencyCode: 'SYP {#}',
+    currencyCode: 'SYP {#}'
   },
   TW: {
     name: 'Taiwan Dollar (TWD)',
     symbolFormat: 'NT${#}',
-    currencyCode: 'TWD {#}',
+    currencyCode: 'TWD {#}'
   },
   TZ: {
     name: 'Tanzanian Shilling (TZS)',
     symbolFormat: 'TZS {#}',
-    currencyCode: 'TZS {#}',
+    currencyCode: 'TZS {#}'
   },
   TH: {
     name: 'Thai Baht (THB)',
     symbolFormat: '฿{#}',
-    currencyCode: 'THB {#}',
+    currencyCode: 'THB {#}'
   },
   TO: {
     name: "Tonga Pa'anga (TOP)",
     symbolFormat: 'T${#}',
-    currencyCode: 'TOP {#}',
+    currencyCode: 'TOP {#}'
   },
   TT: {
     name: 'Trinidad&Tobago Dollar (TTD)',
     symbolFormat: 'TT${#}',
-    currencyCode: 'TTD {#}',
+    currencyCode: 'TTD {#}'
   },
   TN: {
     name: 'Tunisian Dinar (TND)',
     symbolFormat: 'TND {#}',
-    currencyCode: 'TND {#}',
+    currencyCode: 'TND {#}'
   },
   TR: {
     name: 'Turkish Lira (TRL)',
     symbolFormat: '₺{#}',
-    currencyCode: 'TRL {#}',
+    currencyCode: 'TRL {#}'
   },
   TM: {
     name: 'Turkmen Manat (TMM)',
     symbolFormat: 'TMM {#}',
-    currencyCode: 'TMM {#}',
+    currencyCode: 'TMM {#}'
   },
   US: USD,
   AS: USD,
@@ -823,67 +823,67 @@ export default {
   AE: {
     name: 'UAE Dirham (AED)',
     symbolFormat: 'AED {#}',
-    currencyCode: 'AED {#}',
+    currencyCode: 'AED {#}'
   },
   UG: {
     name: 'Ugandan Shilling (UGX)',
     symbolFormat: 'USh {#}',
-    currencyCode: 'UGX {#}',
+    currencyCode: 'UGX {#}'
   },
   UA: {
     name: 'Ukraine Hryvnia (UAH)',
     symbolFormat: '₴{#}',
-    currencyCode: 'UAH {#}',
+    currencyCode: 'UAH {#}'
   },
   UY: {
     name: 'Uruguayan New Peso (UYU)',
     symbolFormat: '${#}',
-    currencyCode: 'UYU {#}',
+    currencyCode: 'UYU {#}'
   },
   UZ: {
     name: 'Uzbekistani Sum (UZS)',
     symbolFormat: '{#} soʻm',
-    currencyCode: 'UZS {#}',
+    currencyCode: 'UZS {#}'
   },
   VU: {
     name: 'Vanuatu Vatu (VUV)',
     symbolFormat: '{#}VT',
-    currencyCode: 'VUV {#}',
+    currencyCode: 'VUV {#}'
   },
   VE: {
     name: 'Venezuelan Bolivar (VEB)',
     symbolFormat: '{#} Bs.',
-    currencyCode: 'VEB {#}',
+    currencyCode: 'VEB {#}'
   },
   VN: {
     name: 'Vietnam Dong (VND)',
     symbolFormat: '{#}₫',
-    currencyCode: 'VND {#}',
+    currencyCode: 'VND {#}'
   },
   YE: {
     name: 'Yemen Riyal (YER)',
     symbolFormat: 'YER {#}',
-    currencyCode: 'YER {#}',
+    currencyCode: 'YER {#}'
   },
   YU: {
     name: 'Yugoslav Dinar (YUM)',
     symbolFormat: 'YUM {#}',
-    currencyCode: 'YUM {#}',
+    currencyCode: 'YUM {#}'
   },
   ZR: {
     name: 'Zaire New Zaire (ZRN)',
     symbolFormat: 'ZRN {#}',
-    currencyCode: 'ZRN {#}',
+    currencyCode: 'ZRN {#}'
   },
   ZM: {
     name: 'Zambian Kwacha (ZMK)',
     symbolFormat: 'ZMK {#}',
-    currencyCode: 'ZMK {#}',
+    currencyCode: 'ZMK {#}'
   },
   ZW: {
     name: 'Zimbabwe Dollar (ZWD)',
     symbolFormat: 'Z${#}',
-    currencyCode: 'ZWD {#}',
+    currencyCode: 'ZWD {#}'
   },
   AD: EURO,
   AT: EURO,
@@ -909,5 +909,5 @@ export default {
   SK: EURO,
   SI: EURO,
   ES: EURO,
-  VA: EURO,
+  VA: EURO
 };

@@ -141,7 +141,7 @@ export default function FullPortal() {
       appName: 'portal',
       mainRedirect: true,
       redirectDoneCB: doRedirectDone,
-      locale,
+      locale
       // semanticUrls: true
     });
   }, []);

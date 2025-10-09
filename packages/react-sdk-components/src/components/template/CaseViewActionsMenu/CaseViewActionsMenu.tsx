@@ -58,7 +58,7 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     openLocalAction(data.ID, {
       ...data,
       containerName: 'modal',
-      type: 'express',
+      type: 'express'
     });
     // after doing the action, close the menu...
     handleClose();
@@ -68,7 +68,7 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     const actionsAPI = thePConn.getActionsApi();
     const openProcessAction = actionsAPI.openProcessAction.bind(actionsAPI);
     openProcessAction(process.ID, {
-      ...process,
+      ...process
     })
       .then(() => {})
       .catch(() => {
@@ -81,7 +81,7 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     arMenuItems.push(
       <MenuItem key={action.ID} onClick={() => _actionMenuActionsClick(action)}>
         {localizedVal(action.name, '', localeKey)}
-      </MenuItem>,
+      </MenuItem>
     );
   });
 
@@ -89,7 +89,7 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     arMenuItems.push(
       <MenuItem key={process.ID} onClick={() => _actionMenuProcessClick(process)}>
         {localizedVal(process.name, '', localeKey)}
-      </MenuItem>,
+      </MenuItem>
     );
   });
 

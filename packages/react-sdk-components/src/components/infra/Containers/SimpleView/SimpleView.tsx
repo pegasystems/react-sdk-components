@@ -10,7 +10,7 @@ const SimpleViewContainer = (props) => {
   const rootViewElement = useMemo(() => {
     return getActiveContainerRootViewElement(containerInfo, {
       isAssignmentView,
-      parentGetPConnect: getPConnect,
+      parentGetPConnect: getPConnect
     });
   }, [containerInfo, isAssignmentView, getPConnect]);
 
@@ -30,7 +30,7 @@ export const withSimpleViewContainerRenderer =
     const activeContainerItemID = getActiveContainerItemID(containerInfo);
     const getPConnectOfActiveItem = getPConnectOfActiveContainerItem(containerInfo, {
       isAssignmentView,
-      parentGetPConnect: getPConnect,
+      parentGetPConnect: getPConnect
     });
 
     useContainerInitializer(getPConnect, options.mode || mode);

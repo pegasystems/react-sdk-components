@@ -36,7 +36,7 @@ export default function Currency(props: CurrrencyProps) {
     hideLabel,
     currencyISOCode = 'USD',
     placeholder,
-    allowDecimals,
+    allowDecimals
   } = props;
 
   const pConn = getPConnect();

@@ -35,7 +35,7 @@ const getDisplayFieldsMetaData = (columns) => {
   const metaDataObj: any = {
     key: '',
     primary: '',
-    secondary: [],
+    secondary: []
   };
   const keyCol = columns?.filter((col) => col.key === 'true');
   metaDataObj.key = keyCol?.length > 0 ? keyCol[0].value : 'auto';
@@ -68,7 +68,7 @@ const createSingleTreeObejct = (entry, displayFieldMeta, showSecondaryData, sele
     id: entry[displayFieldMeta.key],
     primary: entry[displayFieldMeta.primary],
     secondary: showSecondaryData ? secondaryArr : [],
-    selected: isSelected,
+    selected: isSelected
   };
 };
 
@@ -77,7 +77,7 @@ const putItemsDataInItemsTree = (listObjData, displayFieldMeta, itemsTree, showS
   const showSecondaryData = !showSecondaryInSearchOnly;
   for (const obj of listObjData) {
     const items = obj[displayFieldMeta.itemsRecordsColumn].map((entry) =>
-      createSingleTreeObejct(entry, displayFieldMeta, showSecondaryData, selected),
+      createSingleTreeObejct(entry, displayFieldMeta, showSecondaryData, selected)
     );
 
     newTreeItems = newTreeItems.map((caseObject) => {
@@ -107,7 +107,7 @@ const doSearch = async (
   itemsTree,
   isGroupData,
   showSecondaryInSearchOnly,
-  selected,
+  selected
 ) => {
   let searchTextForUngroupedData = '';
   if (dataApiObj) {
@@ -174,7 +174,7 @@ const setValuesToPropertyList = (searchText, assocProp, items, columns, actions,
         source: col.value,
         target: col.setProperty,
         key: col.key,
-        primary: col.primary,
+        primary: col.primary
       };
     });
   const valueToSet: any = [];
@@ -191,7 +191,7 @@ const setValuesToPropertyList = (searchText, assocProp, items, columns, actions,
       if (updatePropertyInRedux) {
         // BUG-666851 setting options so that the store values are replaced and not merged
         const options = {
-          isArrayDeepMerge: false,
+          isArrayDeepMerge: false
         };
         if (prop.target === 'Associated property') {
           actions.updateFieldValue(assocProp, valueToSet, options);
@@ -214,7 +214,7 @@ const getGroupDataForItemsTree = (groupDataSource, groupsDisplayFieldMeta, showS
       id: group[groupsDisplayFieldMeta.key],
       primary: group[groupsDisplayFieldMeta.primary],
       secondary: showSecondaryInSearchOnly ? [] : secondaryArr,
-      items: [],
+      items: []
     };
   });
 };
@@ -228,5 +228,5 @@ export {
   getGroupDataForItemsTree,
   updateNewInstuctions,
   insertInstruction,
-  deleteInstruction,
+  deleteInstruction
 };

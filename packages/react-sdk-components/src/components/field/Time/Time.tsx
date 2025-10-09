@@ -71,8 +71,8 @@ export default function Time(props: TimeProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProps },
-        },
+          InputProps: { ...testProps }
+        }
       }}
     />
   );

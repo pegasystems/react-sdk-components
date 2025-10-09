@@ -16,9 +16,9 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     '& div > span': {
       backgroundColor: theme.palette.info.dark,
-      width: '3px',
-    },
-  },
+      width: '3px'
+    }
+  }
 }));
 
 // Implementation of custom event inspired by:
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const createCustomEvent = (eventName: string, additionalData: { [key: string]: string }): CustomEvent | null => {
   if (window) {
     return new CustomEvent(eventName, {
-      detail: { additionalData },
+      detail: { additionalData }
     });
   }
 

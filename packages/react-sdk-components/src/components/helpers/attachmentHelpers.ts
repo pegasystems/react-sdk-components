@@ -58,7 +58,7 @@ export const useFileDownload = (context) => {
           .catch(console.error);
       }
     },
-    [context],
+    [context]
   );
 };
 

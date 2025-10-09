@@ -60,7 +60,7 @@ export default function RichText(props: RichTextProps) {
         pConn.clearErrorMessages({
           property,
           category: '',
-          context: '',
+          context: ''
         });
       }
     };

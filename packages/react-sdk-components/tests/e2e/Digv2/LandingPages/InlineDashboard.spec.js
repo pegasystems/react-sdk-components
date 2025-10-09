@@ -57,7 +57,7 @@ test.describe('E2E test', () => {
     const dateFilter = filters.locator('div:has-text("Create date/time")');
     dateFilter.locator('input').click();
     const datePicker = filters.locator(
-      'div[class="react-datepicker-popper"] div[class="react-datepicker"] div[class="react-datepicker__month-container"]',
+      'div[class="react-datepicker-popper"] div[class="react-datepicker"] div[class="react-datepicker__month-container"]'
     );
     const day = new Date();
     const nextDay = new Date(day);

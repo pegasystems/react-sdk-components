@@ -27,7 +27,7 @@ export default function Integer(props: IntegerProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder,
+    placeholder
   } = props;
 
   const pConn = getPConnect();
@@ -93,7 +93,7 @@ export default function Integer(props: IntegerProps) {
       value={inputValue}
       type='text'
       slotProps={{
-        htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', ...testProps },
+        htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', ...testProps }
       }}
     />
   );

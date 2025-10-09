@@ -42,13 +42,13 @@ export default function QuickCreate(props: QuickCreateProps) {
               createCase(casetype.pyWorkTypeImplementationClassName);
             },
             ...(showCaseIcons && { icon: Utils.getImageSrc(casetype?.pxIcon, Utils.getSDKStaticConentUrl()) }),
-            label: casetype.pyWorkTypeName,
+            label: casetype.pyWorkTypeName
           });
         }
       });
     } else {
       const pConnectInAppContext = PCore.createPConnect({
-        options: { context: PCore.getConstants().APP.APP },
+        options: { context: PCore.getConstants().APP.APP }
       }).getPConnect();
       const pyPortalInAppContext = pConnectInAppContext.getValue('pyPortal') as any;
       pyPortalInAppContext?.pyCaseTypesAvailableToCreate?.forEach((casetype) => {
@@ -59,7 +59,7 @@ export default function QuickCreate(props: QuickCreateProps) {
               createCase(casetype.pyClassName);
             },
             ...(showCaseIcons && { icon: Utils.getImageSrc(casetype?.pxIcon, Utils.getSDKStaticConentUrl()) }),
-            label: casetype.pyLabel,
+            label: casetype.pyLabel
           });
         }
       });

@@ -55,11 +55,11 @@ export const getFirstChildConfig = ({
   dataReferenceConfigToChild,
   isCreateNewReferenceEnabled,
   disableStartingFieldsForReference,
-  pyID,
+  pyID
 }) => {
   const config = {
     ...firstChildMeta.config,
-    ...dataReferenceConfigToChild,
+    ...dataReferenceConfigToChild
   };
   const compositeKeys = getCompositeKeys(getPConnect(), dataReferenceConfigToChild?.dataRelationshipContext);
   return {
@@ -80,11 +80,11 @@ export const getFirstChildConfig = ({
             inputFields: disableStartingFieldsForReference
               ? {}
               : {
-                  [`.pyAddCaseContextPage.${pyID}`]: `@P .${pyID}`,
-                },
-          },
-        },
+                  [`.pyAddCaseContextPage.${pyID}`]: `@P .${pyID}`
+                }
+          }
+        }
       ],
-    compositeKeys,
+    compositeKeys
   };
 };

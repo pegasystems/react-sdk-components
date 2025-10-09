@@ -284,7 +284,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   const caseKey = thePConn.getCaseInfo().getKey();
   const refreshOptions = {
     autoDetectRefresh: true,
-    preserveClientChanges: false,
+    preserveClientChanges: false
   };
   if (refreshProps.length > 0) {
     refreshProps.forEach((prop) => {
@@ -292,11 +292,11 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
         'PROP_CHANGE',
         thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, '', pageReference, {
           ...refreshOptions,
-          refreshFor: prop[0],
+          refreshFor: prop[0]
         }),
         `${pageReference}.${prop[1]}`,
         `${context}/${pageReference}`,
-        context,
+        context
       );
     });
   }

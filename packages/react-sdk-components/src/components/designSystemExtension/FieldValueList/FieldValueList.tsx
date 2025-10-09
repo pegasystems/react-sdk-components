@@ -17,21 +17,21 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   fieldLabel: {
     fontWeight: 400,
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.secondary
   },
   fieldValue: {
-    color: theme.palette.text.primary,
+    color: theme.palette.text.primary
   },
   noPaddingTop: {
-    paddingTop: '0 !important',
+    paddingTop: '0 !important'
   },
   noPaddingBottom: {
-    paddingBottom: '0 !important',
-  },
+    paddingBottom: '0 !important'
+  }
 }));
 
 function formatItemValue(value) {

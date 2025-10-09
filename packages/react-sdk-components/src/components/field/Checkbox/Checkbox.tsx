@@ -33,14 +33,14 @@ interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
 const useStyles = makeStyles(() => ({
   checkbox: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   selectableCard: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 40ch), 1fr))',
     gridAutoRows: '1fr',
-    gap: '0.5rem',
-  },
+    gap: '0.5rem'
+  }
 }));
 
 export default function CheckboxComponent(props: CheckboxProps) {
@@ -78,7 +78,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
     imageSize,
     showImageDescription,
     renderMode,
-    image,
+    image
   } = props;
   const readOnlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY' || readOnly;
 
@@ -140,7 +140,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
     className: 'standard',
     disabled,
     readOnly,
-    onClick: (actions as any).onClick,
+    onClick: (actions as any).onClick
   };
 
   if (variant === 'card') {
@@ -161,7 +161,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
               const selectedItem = datasource?.source?.find((item) => item[recordKey as any] === e.target.id) ?? {};
               handleCheckboxChange(e, {
                 id: selectedItem[recordKey as any],
-                primary: selectedItem[recordKey as any],
+                primary: selectedItem[recordKey as any]
               });
             }}
             onBlur={() => {
@@ -175,7 +175,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
               imageSize,
               showImageDescription,
               imageField: image?.split('.').pop(),
-              imageDescription: (thePConn?.getRawMetadata()?.config as any).imageDescription?.split('.').pop(),
+              imageDescription: (thePConn?.getRawMetadata()?.config as any).imageDescription?.split('.').pop()
             }}
             readOnlyList={selectedvalues}
             type='checkbox'
@@ -190,18 +190,18 @@ export default function CheckboxComponent(props: CheckboxProps) {
     if (event.target.checked) {
       insertInstruction(thePConn, selectionList, selectionKey, primaryField, {
         id: element.key,
-        primary: element.text ?? element.value,
+        primary: element.text ?? element.value
       });
     } else {
       deleteInstruction(thePConn, selectionList, selectionKey, {
         id: element.key,
-        primary: element.text ?? element.value,
+        primary: element.text ?? element.value
       });
     }
     thePConn.clearErrorMessages({
       property: selectionList,
       category: '',
-      context: '',
+      context: ''
     });
   };
 
@@ -228,7 +228,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
           label={element.text ?? element.value}
           labelPlacement='end'
           data-test-id={testId}
-        />,
+        />
       );
     });
     theCheckbox = <div className={classes.checkbox}>{listOfCheckboxes}</div>;

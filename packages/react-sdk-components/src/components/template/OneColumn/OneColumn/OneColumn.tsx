@@ -11,8 +11,8 @@ const useStyles = makeStyles((/* theme */) => ({
   colStyles: {
     display: 'grid',
     gap: '1rem',
-    alignContent: 'baseline',
-  },
+    alignContent: 'baseline'
+  }
 }));
 
 export default function OneColumn(props: PropsWithChildren<OneColumnProps>) {

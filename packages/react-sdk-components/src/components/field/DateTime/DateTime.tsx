@@ -43,14 +43,14 @@ export default function DateTime(props: DateTimeProps) {
 
   if (displayMode === 'DISPLAY_ONLY') {
     const formattedDateTime = format(props.value, 'datetime', {
-      format: `${dateFormatInfo.dateFormatString} hh:mm a`,
+      format: `${dateFormatInfo.dateFormatString} hh:mm a`
     });
     return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
     const formattedDateTime = format(props.value, 'datetime', {
-      format: `${dateFormatInfo.dateFormatString} hh:mm a`,
+      format: `${dateFormatInfo.dateFormatString} hh:mm a`
     });
     return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant='stacked' />;
   }
@@ -93,8 +93,8 @@ export default function DateTime(props: DateTimeProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProps },
-        },
+          InputProps: { ...testProps }
+        }
       }}
     />
   );

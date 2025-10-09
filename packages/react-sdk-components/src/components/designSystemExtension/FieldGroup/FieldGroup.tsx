@@ -18,25 +18,25 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   fieldMargin: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   fullWidth: {
-    width: '100%',
+    width: '100%'
   },
   fieldGroupHeader: {
     display: 'flex',
     alignItems: 'center',
     gap: '5px',
-    cursor: (collapsible) => (collapsible ? 'pointer' : 'auto'),
+    cursor: (collapsible) => (collapsible ? 'pointer' : 'auto')
   },
   instructionText: {
-    padding: '5px 0',
-  },
+    padding: '5px 0'
+  }
 }));
 
 export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {

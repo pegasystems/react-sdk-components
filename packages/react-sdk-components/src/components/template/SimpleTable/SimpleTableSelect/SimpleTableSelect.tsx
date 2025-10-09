@@ -78,10 +78,10 @@ export default function SimpleTableSelect(props: SimpleTableSelectProps) {
     defaultFieldDef: {
       showMenu: false,
       noContextMenu: true,
-      grouping: false,
+      grouping: false
     },
     itemKey: '$key',
-    defaultRowHeight,
+    defaultRowHeight
   };
 
   const listViewProps = {
@@ -99,7 +99,7 @@ export default function SimpleTableSelect(props: SimpleTableSelectProps) {
     additionalTableConfig,
     compositeKeys,
     viewName,
-    parameters,
+    parameters
   };
 
   const filters = (getPConnect().getRawMetadata() as any).config.promotedFilters ?? [];

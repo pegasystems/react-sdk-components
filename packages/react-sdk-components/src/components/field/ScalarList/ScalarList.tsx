@@ -39,13 +39,13 @@ export default function ScalarList(props: ScalarListProps) {
           displayMode: 'DISPLAY_ONLY',
           label,
           ...restProps,
-          readOnly: 'true',
-        },
+          readOnly: 'true'
+        }
       },
       '',
       // @ts-expect-error
       '',
-      {},
+      {}
     ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional;
   });
 

@@ -82,7 +82,7 @@ export default function SearchGroups(props) {
   const { children: searchFieldsChildren = [] } = activeGroupIndex !== -1 ? rawGroupsConfig[activeGroupIndex] : {};
   const searchFields = searchFieldsChildren.map((field) => ({
     ...field,
-    config: { ...field.config, isSearchField: true },
+    config: { ...field.config, isSearchField: true }
   }));
 
   const searchByRef = useRef(null);
@@ -96,16 +96,16 @@ export default function SearchGroups(props) {
         searchFields,
         getPConnect,
         referenceListClassID,
-        useCache && cache.activeGroupId === activeGroupId ? cache.searchFields : {},
+        useCache && cache.activeGroupId === activeGroupId ? cache.searchFields : {}
       ),
-    [activeGroupId, getPConnect, cache.searchFields],
+    [activeGroupId, getPConnect, cache.searchFields]
   );
 
   useEffect(() => {
     if (transientItemID) {
       const filtersWithClassID = {
         ...initialSearchFields,
-        classID: referenceListClassID,
+        classID: referenceListClassID
       };
       // @ts-ignore
       PCore.getContainerUtils().replaceTransientData({ transientItemID, data: filtersWithClassID });
@@ -115,7 +115,7 @@ export default function SearchGroups(props) {
   useEffect(() => {
     const filtersWithClassID = {
       ...initialSearchFields,
-      classID: referenceListClassID,
+      classID: referenceListClassID
     };
 
     const transientId = getPConnect()
@@ -128,7 +128,7 @@ export default function SearchGroups(props) {
     // @ts-ignore
     let changes = PCore.getFormUtils().getSubmitData(transientItemID, {
       isTransientContext: true,
-      includeDisabledFields: true,
+      includeDisabledFields: true
     });
 
     if (Object.keys(cache.searchFields ?? {}).length > 0 && Object.keys(changes).length === 1) {
@@ -147,7 +147,7 @@ export default function SearchGroups(props) {
       PCore.getPubSubUtils().publish(PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS, {
         payload: formValues,
         showRecords: true,
-        viewName,
+        viewName
       });
     }
 
@@ -164,7 +164,7 @@ export default function SearchGroups(props) {
     const resetPayload = {
       transientItemID,
       data: initializeSearchFields(searchFields, getPConnect, referenceListClassID),
-      options: { reset: true },
+      options: { reset: true }
     };
     // @ts-ignore
     PCore.getContainerUtils().updateTransientData(resetPayload);
@@ -204,23 +204,23 @@ export default function SearchGroups(props) {
       contextName: transientItemID,
       readOnly: false,
       context: transientItemID,
-      localeReference,
+      localeReference
     },
     children: [
       {
         name: 'Fields',
         type: 'Region',
-        children: searchFields,
-      },
-    ],
+        children: searchFields
+      }
+    ]
   };
 
   const searchFieldsC11nEnv = PCore.createPConnect({
     meta: searchFieldsViewConfig,
     options: {
       hasForm: true,
-      contextName: transientItemID,
-    },
+      contextName: transientItemID
+    }
   });
 
   const templateContext = useContext(TemplateContext);

@@ -11,7 +11,7 @@ const getDefaultProps = (): any => {
     label: 'TextInput',
     displayMode: false,
     onChange,
-    onBlur,
+    onBlur
   };
 };
 
@@ -68,7 +68,7 @@ describe('Test Text Input component', () => {
     const props = getDefaultProps();
     const TextInputComponent = render(<TextInput {...props} />);
     fireEvent.change(TextInputComponent.getByTestId('textInputTestId'), {
-      target: { value: 'a' },
+      target: { value: 'a' }
     });
     fireEvent.blur(TextInputComponent.getByTestId('textInputTestId'));
     expect(onChange).toHaveBeenCalled();
@@ -80,7 +80,7 @@ describe('Test Text Input component', () => {
     props.readOnly = true;
     const TextInputComponent = render(<TextInput {...props} />);
     fireEvent.change(TextInputComponent.getByTestId('textInputTestId'), {
-      target: { value: 'a' },
+      target: { value: 'a' }
     });
     fireEvent.blur(TextInputComponent.getByTestId('textInputTestId'));
     expect(onBlur).toHaveBeenCalled();

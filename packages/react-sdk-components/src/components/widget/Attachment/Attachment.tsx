@@ -27,7 +27,7 @@ const getCurrentAttachmentsList = (key, context) => {
 const updateAttachmentState = (pConn, key, attachments) => {
   PCore.getStateUtils().updateState(pConn.getContextName(), key, attachments, {
     pageReference: 'context_data',
-    isArrayDeepMerge: false,
+    isArrayDeepMerge: false
   });
 };
 
@@ -77,7 +77,7 @@ export default function Attachment(props: AttachmentProps) {
   const resetAttachmentStoredState = () => {
     PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(valueRef, embeddedProperty), undefined, {
       pageReference: 'context_data',
-      isArrayDeepMerge: false,
+      isArrayDeepMerge: false
     });
   };
 
@@ -131,7 +131,7 @@ export default function Attachment(props: AttachmentProps) {
         return prevFilesWithError.filter((f) => f.ID !== file.ID);
       });
     },
-    [valueRef, pConn, hasUploadedFiles, filesWithError, hasUploadedFiles, actionSequencer],
+    [valueRef, pConn, hasUploadedFiles, filesWithError, hasUploadedFiles, actionSequencer]
   );
 
   const onUploadProgress = () => {};
@@ -158,12 +158,12 @@ export default function Attachment(props: AttachmentProps) {
                 messages: [
                   {
                     type: 'error',
-                    message: pConn.getLocalizedValue('Error with one or more files', '', ''),
-                  },
+                    message: pConn.getLocalizedValue('Error with one or more files', '', '')
+                  }
                 ],
                 property: fieldName,
                 pageReference: pConn.getPageReference(),
-                context,
+                context
               });
               delete f.props.progress;
             }
@@ -193,7 +193,7 @@ export default function Attachment(props: AttachmentProps) {
       type: PCore.getConstants().MESSAGES.MESSAGES_TYPE_ERROR,
       property: fieldName,
       pageReference: pConn.getPageReference(),
-      context,
+      context
     });
   };
 
@@ -209,7 +209,7 @@ export default function Attachment(props: AttachmentProps) {
           type: f.type,
           name: f.name,
           icon: getIconFromFileType(f.type),
-          onDelete: () => deleteFile(f),
+          onDelete: () => deleteFile(f)
         };
         if (!validateMaxSize(f, maxAttachmentSize)) {
           f.props.error = true;
@@ -220,7 +220,7 @@ export default function Attachment(props: AttachmentProps) {
           f.inProgress = false;
           f.props.meta = `${pConn.getLocalizedValue('File has invalid extension. Allowed extensions are:', '', '')} ${extensions.replaceAll(
             '.',
-            '',
+            ''
           )}`;
         }
         if (f.props.error) {
@@ -229,16 +229,16 @@ export default function Attachment(props: AttachmentProps) {
             messages: [
               {
                 type: 'error',
-                message: pConn.getLocalizedValue('Error with one or more files', '', ''),
-              },
+                message: pConn.getLocalizedValue('Error with one or more files', '', '')
+              }
             ],
             property: fieldName,
             pageReference: pConn.getPageReference(),
-            context,
+            context
           });
         }
         return f;
-      }),
+      })
     ];
     const tempFilesWithError = tempFilesToBeUploaded.filter((f) => f.props.error);
     if (tempFilesWithError.length > 0) {
@@ -265,8 +265,8 @@ export default function Attachment(props: AttachmentProps) {
           (isFetchCanceled) => {
             return errorHandler(isFetchCanceled, f);
           },
-          pConn.getContextName(),
-        ),
+          pConn.getContextName()
+        )
       );
     Promise.allSettled(filesToBeUploaded)
       .then((fileResponses: any) => {
@@ -285,7 +285,7 @@ export default function Attachment(props: AttachmentProps) {
                 f.category = categoryName;
                 f.responseProps = {
                   pzInsKey: 'temp',
-                  pyAttachName: f.props.name,
+                  pyAttachName: f.props.name
                 };
               }
             });
@@ -338,12 +338,12 @@ export default function Attachment(props: AttachmentProps) {
                 ...f,
                 props: {
                   ...f.props,
-                  onDelete: () => deleteFile(f),
-                },
+                  onDelete: () => deleteFile(f)
+                }
               }
             : { ...f };
         }),
-        ...tempUploadedFiles,
+        ...tempUploadedFiles
       ];
     });
     if (displayMode !== 'DISPLAY_ONLY') {

@@ -28,7 +28,7 @@ export default function Email(props: EmailProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder,
+    placeholder
   } = props;
 
   const pConn = getPConnect();
@@ -88,8 +88,8 @@ export default function Email(props: EmailProps) {
               <MailOutlineIcon />
             </InputAdornment>
           ),
-          inputProps: { ...testProps },
-        },
+          inputProps: { ...testProps }
+        }
       }}
     />
   );

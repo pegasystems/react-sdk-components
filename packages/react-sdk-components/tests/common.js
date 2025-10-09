@@ -16,7 +16,7 @@ const launchEmbedded = async ({ page }) => {
 const launchSelfServicePortal = async ({ page }) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
   await page.goto(`${config.baseUrl}/portal?portal=DigV2SelfService`, {
-    waitUntil: 'networkidle',
+    waitUntil: 'networkidle'
   });
 };
 
@@ -54,7 +54,7 @@ const calculateCoverage = async (page, outputDir) => {
   expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
   // coverage report
   await attachCoverageReport(coverageData, test.info(), {
-    outputDir,
+    outputDir
   });
   await page.close();
 };
@@ -73,5 +73,5 @@ module.exports = {
   getAttributes,
   getFutureDate,
   calculateCoverage,
-  enterPhoneNumber,
+  enterPhoneNumber
 };

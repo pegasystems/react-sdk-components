@@ -34,7 +34,7 @@ const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
   'TextArea',
   'Currency',
   'URL',
-  'RichText',
+  'RichText'
 ];
 
 function Filters({ filters, transientItemID, localeReference }) {
@@ -53,8 +53,8 @@ function Filters({ filters, transientItemID, localeReference }) {
       meta: filterClone,
       options: {
         hasForm: true,
-        contextName: transientItemID,
-      },
+        contextName: transientItemID
+      }
     });
 
     return <React.Fragment key={index}>{createElement(createPConnectComponent(), c11nEnv)}</React.Fragment>;
@@ -82,11 +82,11 @@ export default function PromotedFilters(props: PromotedFilterProps) {
   const transientItemID = useMemo(() => {
     const filtersWithClassID = {
       ...filtersProperties,
-      classID: pageClass,
+      classID: pageClass
     };
     return getPConnect().getContainerManager().addTransientItem({
       id: viewName,
-      data: filtersWithClassID,
+      data: filtersWithClassID
     });
   }, []);
 
@@ -95,12 +95,12 @@ export default function PromotedFilters(props: PromotedFilterProps) {
       if (value) {
         acc[field] = {
           lhs: {
-            field,
+            field
           },
           comparator: 'EQ',
           rhs: {
-            value,
-          },
+            value
+          }
         };
       }
       return acc;
@@ -122,7 +122,7 @@ export default function PromotedFilters(props: PromotedFilterProps) {
       if (PCore.getFormUtils().isFormValid(transientItemID) && isValidInput(formValues)) {
         setInitTable(true);
         const Query: any = {
-          dataViewParameters: parameters,
+          dataViewParameters: parameters
         };
 
         if (!isEmptyObject(promotedFilters)) {
@@ -131,7 +131,7 @@ export default function PromotedFilters(props: PromotedFilterProps) {
         setPayload(Query);
       }
     },
-    [transientItemID],
+    [transientItemID]
   );
 
   const clearFilterData = useCallback(() => {
@@ -161,7 +161,7 @@ export default function PromotedFilters(props: PromotedFilterProps) {
           payload={payload}
           isSearchable
           tableDisplay={{
-            show: initTable,
+            show: initTable
           }}
         />
       )}

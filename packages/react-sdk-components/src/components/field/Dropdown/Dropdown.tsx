@@ -78,7 +78,7 @@ export default function Dropdown(props: DropdownProps) {
     datasourceMetadata,
     hideLabel,
     onRecordChange,
-    fieldMetadata,
+    fieldMetadata
   } = props;
   let { placeholder = '' } = props;
   const context = getPConnect().getContextName();
@@ -112,14 +112,14 @@ export default function Dropdown(props: DropdownProps) {
       {
         key: 'true',
         setProperty: 'Associated property',
-        value: valueProp,
+        value: valueProp
       },
       {
         display: 'true',
         primary: 'true',
         useForSearch: true,
-        value: displayProp,
-      },
+        value: displayProp
+      }
     ];
   }
   columns = preProcessColumns(columns);
@@ -130,7 +130,7 @@ export default function Dropdown(props: DropdownProps) {
       const optionsList = [...list];
       optionsList.unshift({
         key: placeholder,
-        value: thePConn.getLocalizedValue(placeholder, '', ''),
+        value: thePConn.getLocalizedValue(placeholder, '', '')
       }); // 2nd and 3rd args empty string until typedef marked correctly
       setOptions(optionsList);
     }
@@ -145,7 +145,7 @@ export default function Dropdown(props: DropdownProps) {
           const val = element[displayColumn.primary]?.toString();
           const obj = {
             key: element[displayColumn.key] || element.pyGUID,
-            value: val,
+            value: val
           };
           optionsData.push(obj);
         });
@@ -197,7 +197,7 @@ export default function Dropdown(props: DropdownProps) {
   }
 
   const testProps: any = {
-    'data-test-id': testId,
+    'data-test-id': testId
   };
 
   const handleChange = (evt) => {
@@ -225,7 +225,7 @@ export default function Dropdown(props: DropdownProps) {
       value={value === '' && !readOnly ? placeholder : value}
       select
       slotProps={{
-        input: { ...readOnlyProp, ...testProps },
+        input: { ...readOnlyProp, ...testProps }
       }}
     >
       {options.map((option: any) => (

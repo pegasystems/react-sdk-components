@@ -27,7 +27,7 @@ export default function Phone(props: PhoneProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder,
+    placeholder
   } = props;
 
   const pConn = getPConnect();
@@ -42,7 +42,7 @@ export default function Phone(props: PhoneProps) {
   let testProp = {};
 
   testProp = {
-    'data-test-id': testId,
+    'data-test-id': testId
   };
 
   if (displayMode === 'DISPLAY_ONLY') {
@@ -72,8 +72,8 @@ export default function Phone(props: PhoneProps) {
           slotProps={{
             input: {
               readOnly: true,
-              ...testProp,
-            },
+              ...testProp
+            }
           }}
           disableDropdown={disableDropdown}
         />

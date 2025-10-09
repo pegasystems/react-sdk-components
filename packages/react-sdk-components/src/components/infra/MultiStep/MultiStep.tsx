@@ -99,7 +99,7 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                       <ul
                         style={{
                           paddingInlineStart: '0rem',
-                          marginLeft: '-7px',
+                          marginLeft: '-7px'
                         }}
                       >
                         {mainStep.steps.forEach((subStep) => {

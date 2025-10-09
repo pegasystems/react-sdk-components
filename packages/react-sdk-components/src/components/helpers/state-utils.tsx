@@ -25,7 +25,7 @@ const connectToState = (mapStateToProps = () => {}) => {
           'routingInfo' in next &&
           (!shallowEqual(next.routingInfo, prev.routingInfo) || !PCore.isDeepEqual(next.routingInfo, prev.routingInfo))
         );
-      },
+      }
     })(Component);
 
     return (ownProps = {}) => {

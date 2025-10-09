@@ -29,22 +29,22 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   caseViewHeader: {
     backgroundColor: theme.palette.info.light,
     color: theme.palette.getContrastText(theme.palette.info.light),
-    borderRadius: 'inherit',
+    borderRadius: 'inherit'
   },
   caseViewIconBox: {
     backgroundColor: theme.palette.info.dark,
     width: theme.spacing(8),
     height: theme.spacing(8),
-    padding: theme.spacing(1),
+    padding: theme.spacing(1)
   },
   caseViewIconImage: {
-    filter: 'invert(100%)',
-  },
+    filter: 'invert(100%)'
+  }
 }));
 
 export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
@@ -61,7 +61,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     children = [],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showIconInHeader = true,
-    caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' },
+    caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
   const { lastUpdateCaseTime = getPConnect().getValue('caseInfo.lastUpdateTime') } = props;
 

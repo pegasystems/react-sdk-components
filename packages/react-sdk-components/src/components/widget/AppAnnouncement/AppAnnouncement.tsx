@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     borderLeft: '6px solid',
-    borderLeftColor: theme.palette.primary.light,
-  },
+    borderLeftColor: theme.palette.primary.light
+  }
 }));
 
 export default function AppAnnouncement(props: AppAnnouncementProps) {

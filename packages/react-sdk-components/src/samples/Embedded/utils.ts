@@ -9,7 +9,7 @@ export const shoppingOptions = [
     banner: 'Value package',
     price: '99.00',
     internetSpeed: '100 Mbps',
-    calling: '',
+    calling: ''
   },
   {
     play: 'Triple Play',
@@ -19,7 +19,7 @@ export const shoppingOptions = [
     banner: 'Most popular',
     price: '120.00',
     internetSpeed: '300 Mbps',
-    calling: '',
+    calling: ''
   },
   {
     play: 'Triple Play',
@@ -29,8 +29,8 @@ export const shoppingOptions = [
     banner: 'All the channels you want',
     price: '150.00',
     internetSpeed: '1 Gbps',
-    calling: ' & International',
-  },
+    calling: ' & International'
+  }
 ];
 
 export function initializeAuthentication(sdkConfigAuth) {

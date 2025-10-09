@@ -57,14 +57,14 @@ export const generateColumns = (config, pConn, referenceType) => {
       value: displayField,
       display: 'true',
       useForSearch: true,
-      primary: 'true',
+      primary: 'true'
     });
   }
   if (value && compositeKeys.indexOf(value) !== -1) {
     columns.push({
       value,
       setProperty: 'Associated property',
-      key: 'true',
+      key: 'true'
     });
   } else {
     const actualValue = compositeKeys.length > 0 ? compositeKeys[0] : value;
@@ -73,7 +73,7 @@ export const generateColumns = (config, pConn, referenceType) => {
     columns.push({
       value: actualValue,
       setProperty: 'Associated property',
-      key: 'true',
+      key: 'true'
     });
   }
 
@@ -81,8 +81,8 @@ export const generateColumns = (config, pConn, referenceType) => {
     fields: {
       key: getLeafNameFromPropertyName(config.value),
       text: getLeafNameFromPropertyName(config.displayField),
-      value: getLeafNameFromPropertyName(config.value),
-    },
+      value: getLeafNameFromPropertyName(config.value)
+    }
   };
 
   if (referenceType === 'Case') {
@@ -90,7 +90,7 @@ export const generateColumns = (config, pConn, referenceType) => {
       secondary: 'true',
       display: 'true',
       value: Utils.getMappedKey('pyID'),
-      useForSearch: true,
+      useForSearch: true
     });
   }
 
@@ -101,7 +101,7 @@ export const generateColumns = (config, pConn, referenceType) => {
         display: 'false',
         secondary: 'true',
         useForSearch: false,
-        setProperty: `.${referenceProp}${key}`,
+        setProperty: `.${referenceProp}${key}`
       });
   });
 

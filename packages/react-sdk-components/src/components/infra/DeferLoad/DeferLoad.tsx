@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
+    marginBottom: theme.spacing(1)
+  }
 }));
 
 export default function DeferLoad(props: DeferLoadProps) {
@@ -63,7 +63,7 @@ export default function DeferLoad(props: DeferLoadProps) {
   }
 
   const { resourceType = CASE } = containerItemData || {
-    resourceType: loadViewCaseID ? CASE : PAGE,
+    resourceType: loadViewCaseID ? CASE : PAGE
   };
   const isContainerPreview = /preview_[0-9]*/g.test(pConnect.getContextName());
 
@@ -72,7 +72,7 @@ export default function DeferLoad(props: DeferLoadProps) {
     pageClass: loadViewCaseID ? '' : (pConnect.getDataObject('') as any).pyPortal.classID, // 2nd arg empty string until typedef allows optional
     container: isContainerPreview ? 'preview' : undefined,
     containerName: isContainerPreview ? 'preview' : undefined,
-    updateData: isContainerPreview,
+    updateData: isContainerPreview
   });
 
   const onResponse = (data) => {
@@ -83,7 +83,7 @@ export default function DeferLoad(props: DeferLoadProps) {
         getPConnect().getCaseInfo().getKey(),
         getPConnect().getPageReference().replace('caseInfo.content', ''),
         getPConnect().getContextName(),
-        deferLoadId,
+        deferLoadId
       );
     }
 
@@ -92,8 +92,8 @@ export default function DeferLoad(props: DeferLoadProps) {
         meta: data,
         options: {
           context: pConnect.getContextName(),
-          pageReference: pConnect.getPageReference(),
-        },
+          pageReference: pConnect.getPageReference()
+        }
       };
       const configObject = PCore.createPConnect(config);
       configObject.getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
@@ -116,7 +116,7 @@ export default function DeferLoad(props: DeferLoadProps) {
           .showData(name, dataContext, dataContextParameters, {
             skipSemanticUrl: true,
             // @ts-expect-error
-            isDeferLoaded: true,
+            isDeferLoaded: true
           })
           .then((data) => {
             onResponse(data);

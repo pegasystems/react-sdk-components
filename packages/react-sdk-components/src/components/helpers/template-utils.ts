@@ -18,7 +18,7 @@ export function filterForFieldValueList(fields: any[]) {
     .map(({ value, label }) => ({
       id: label.toLowerCase(),
       name: label,
-      value,
+      value
     }));
 }
 

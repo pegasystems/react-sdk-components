@@ -28,7 +28,7 @@ export default function TextArea(props: TextAreaProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder,
+    placeholder
   } = props;
   const helperTextToDisplay = validatemessage || helperText;
   const pConn = getPConnect();
@@ -87,7 +87,7 @@ export default function TextArea(props: TextAreaProps) {
       label={label}
       value={inputValue}
       slotProps={{
-        input: { ...readOnlyProp, inputProps: { maxLength, ...testProps } },
+        input: { ...readOnlyProp, inputProps: { maxLength, ...testProps } }
       }}
     />
   );

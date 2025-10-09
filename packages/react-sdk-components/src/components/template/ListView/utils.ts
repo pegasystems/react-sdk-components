@@ -7,7 +7,7 @@ const PAGELIST = '!PL!';
 export const formatConstants = {
   WorkStatus: 'WorkStatus',
   Integer: 'Integer',
-  WorkLink: 'WorkLink',
+  WorkLink: 'WorkLink'
 };
 
 class DataApi {
@@ -31,11 +31,11 @@ class DataApi {
   setPropertyMaps(originalToMappedPropertyObj = {}, mappedToOriginalPropertyObj = {}) {
     this.originalPropertyToMappedProperty = {
       ...this.originalPropertyToMappedProperty,
-      ...originalToMappedPropertyObj,
+      ...originalToMappedPropertyObj
     };
     this.mappedPropertyToOriginalProperty = {
       ...this.mappedPropertyToOriginalProperty,
-      ...mappedToOriginalPropertyObj,
+      ...mappedToOriginalPropertyObj
     };
   }
 
@@ -50,7 +50,7 @@ class DataApi {
 
 export async function getContext(componentConfig) {
   const {
-    promisesArray = [], // array of promises which can be invoked paralelly,
+    promisesArray = [] // array of promises which can be invoked paralelly,
   } = componentConfig;
   const promisesResponseArray = await Promise.all(promisesArray);
   const dataApi = new DataApi();
@@ -58,7 +58,7 @@ export async function getContext(componentConfig) {
     promisesResponseArray,
     setPropertyMaps: dataApi.setPropertyMaps,
     getMappedProperty: dataApi.getMappedProperty,
-    getOriginalProperty: dataApi.getOriginalProperty,
+    getOriginalProperty: dataApi.getOriginalProperty
   };
 }
 
@@ -186,7 +186,7 @@ export function preparePropertyMaps(fields, classID, context) {
 
       return acc;
     },
-    [{}, {}, false],
+    [{}, {}, false]
   );
   setPropertyMaps(maps[0], maps[1]);
   return maps[2];
@@ -235,7 +235,7 @@ export function mergeConfigEmbeddedFieldsMeta(configEmbeddedFieldsMeta, metaFiel
 
 const oldToNewFieldTypeMapping = {
   'Date Time': 'Date & time',
-  Date: 'Date only',
+  Date: 'Date only'
 };
 
 /**
@@ -253,12 +253,12 @@ function updateFieldType(metaFields) {
 function getPresetMetaAttribute(attribute) {
   const {
     type,
-    config: { label, value },
+    config: { label, value }
   } = attribute;
   return {
     type,
     name: value.startsWith('@') ? value.substring(4) : value,
-    label: label.startsWith('@') ? label.substring(3) : label,
+    label: label.startsWith('@') ? label.substring(3) : label
   };
 }
 
@@ -298,7 +298,7 @@ function getConfigFields(configFields, primaryFields, metaFields, classID) {
   if (primaryFieldsViewIndex > -1) {
     // list of uncommon fields - non overlap of primary fields grouped view and independent entity columns of primary type
     const uncommonFieldsList = primaryFields.filter(
-      (primaryField) => !presetConfigFields.some((presetConfigField) => presetConfigField.config.value.split('.')[1] === primaryField),
+      (primaryField) => !presetConfigFields.some((presetConfigField) => presetConfigField.config.value.split('.')[1] === primaryField)
     );
     const uncommonFieldsRawMeta: any[] = [];
     uncommonFieldsList.forEach((uncommonField) => {
@@ -377,7 +377,7 @@ export function getTableConfigFromPresetMeta(presetMeta, isMetaWithPresets, getP
         }),
       primaryFields,
       metaFields,
-      classID,
+      classID
     );
   }
   return {
@@ -391,7 +391,7 @@ export function getTableConfigFromPresetMeta(presetMeta, isMetaWithPresets, getP
     timelineIcon,
     filterExpression,
     fieldsMeta,
-    configFields,
+    configFields
   };
 }
 
@@ -404,7 +404,7 @@ export function getTableConfigFromPresetMeta(presetMeta, isMetaWithPresets, getP
  */
 function getReportColumns(response) {
   const {
-    data: { data: reportColumns },
+    data: { data: reportColumns }
   } = response;
   const reportColumnsSet = new Set();
   reportColumns?.forEach((item) => {
@@ -560,7 +560,7 @@ function getFieldLabel(fieldConfig) {
     fieldLabel,
     `${definedOnClassID ?? fieldMetaData.classID ?? classID}.${propertyName}`,
     PCore.getLocaleUtils().FIELD_LABELS_BUNDLE_KEY,
-    null,
+    null
   );
   return localeValue || fieldLabel;
 }
@@ -610,8 +610,8 @@ export function initializeColumns(fields: any[] = [], getMappedProperty: any = n
       customObject: {},
       fieldType: field.config.fieldType,
       meta: {
-        ...field,
-      },
+        ...field
+      }
     };
 
     populateRenderingOptions(name, config, field);
@@ -671,7 +671,7 @@ export function updatePageFieldsConfig(configFields, parentClassID) {
   return configFields.forEach((item) => {
     const {
       type,
-      config: { value },
+      config: { value }
     } = item;
     const propertyName = PCore.getAnnotationUtils().getPropertyName(value);
     if (isEmbeddedField(value) && !isPageListInPath(propertyName, parentClassID)) {
@@ -688,10 +688,10 @@ export const readContextResponse = async (context, params) => {
   const listOfComponents: any[] = [];
   ref.setShowRecords = setShowRecords;
   const {
-    data: { fields: metaFields, classID, isQueryable },
+    data: { fields: metaFields, classID, isQueryable }
   } = promisesResponseArray[0];
   let {
-    data: { primaryFields },
+    data: { primaryFields }
   } = promisesResponseArray[0];
   // When list is configured with Include all class fields configuration, provide support for Primary fields column
   if (showDynamicFields) {
@@ -732,7 +732,7 @@ export const readContextResponse = async (context, params) => {
       getPConnect,
       classID,
       primaryFields,
-      metaFields,
+      metaFields
     );
     const pushToComponentsList = (fieldType) => {
       listOfComponents.push(fieldType);
@@ -755,7 +755,7 @@ export const readContextResponse = async (context, params) => {
       configFieldSet,
       reportColumnsSet,
       classID,
-      showDynamicFields,
+      showDynamicFields
     );
 
     if (isQueryable) {
@@ -775,7 +775,7 @@ export const readContextResponse = async (context, params) => {
     meta,
     presets: presetArray,
     apiContext: {
-      ...apiContext,
-    },
+      ...apiContext
+    }
   });
 };

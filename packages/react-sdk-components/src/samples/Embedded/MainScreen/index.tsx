@@ -32,45 +32,45 @@ const useStyles = makeStyles(() => ({
   embedMainScreen: {
     display: 'flex',
     flexDirection: 'column',
-    width: '100%',
+    width: '100%'
   },
   embedBanner: {
     textAlign: 'center',
     width: '100%',
-    padding: '20px',
+    padding: '20px'
   },
   embedShoppingOptions: {
     display: 'flex',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-evenly'
   },
   pegaPartInfo: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   pegaPartPega: {
     width: '50%',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   pegaPartText: {
-    paddingLeft: '50px',
+    paddingLeft: '50px'
   },
   pegaPartAccompaniment: {
     width: '50%',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   pegaPartAccompanimentText: {
     fontSize: '30px',
     lineHeight: '40px',
     padding: '20px 20px',
-    color: 'darkslategray',
+    color: 'darkslategray'
   },
   pegaPartAccompanimentImage: {
     width: '100%',
-    borderRadius: '10px',
-  },
+    borderRadius: '10px'
+  }
 }));
 
 interface MainScreenProps {}
@@ -90,7 +90,7 @@ export default function MainScreen(props: MainScreenProps) {
     PCore.getPubSubUtils().subscribe(
       PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.END_OF_ASSIGNMENT_PROCESSING,
       () => assignmentFinished(),
-      'endOfAssignmentProcessing',
+      'endOfAssignmentProcessing'
     );
 
     return () => {
@@ -136,7 +136,7 @@ export default function MainScreen(props: MainScreenProps) {
     // Create options object with default values
     const options: any = {
       pageName: 'pyEmbedAssignment',
-      startingFields: {},
+      startingFields: {}
     };
 
     // If mashupCaseType is 'DIXL-MediaCo-Work-NewService', add Package field to startingFields

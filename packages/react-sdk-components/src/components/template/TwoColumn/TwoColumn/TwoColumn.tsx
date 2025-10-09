@@ -12,8 +12,8 @@ const useStyles = makeStyles(() => ({
   colStyles: {
     display: 'grid',
     gap: '1rem',
-    alignContent: 'baseline',
-  },
+    alignContent: 'baseline'
+  }
 }));
 
 export default function TwoColumn(props: PropsWithChildren<TwoColumnProps>) {

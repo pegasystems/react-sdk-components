@@ -49,13 +49,13 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
       },
       filterId,
       false,
-      getPConnect().getContextName(),
+      getPConnect().getContextName()
     );
     return function cleanup() {
       PCore.getPubSubUtils().unsubscribe(
         PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
         filterId,
-        getPConnect().getContextName(),
+        getPConnect().getContextName()
       );
     };
   });
@@ -63,7 +63,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
   const fireFilterChange = (filterValue) => {
     const filterData = {
       filterId,
-      filterExpression: getFilterExpression(filterValue, name, metadata),
+      filterExpression: getFilterExpression(filterValue, name, metadata)
     };
 
     PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE, filterData);
@@ -84,7 +84,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
 
       const filterData = {
         filterId,
-        filterExpression: combineFilters([startFilter, endFilter], null),
+        filterExpression: combineFilters([startFilter, endFilter], null)
       };
       PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE, filterData);
     }

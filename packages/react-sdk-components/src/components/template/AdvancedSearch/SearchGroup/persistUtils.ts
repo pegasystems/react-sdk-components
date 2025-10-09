@@ -32,7 +32,7 @@ interface SearchGroup {
 const setComponentCache = ({
   cacheKey,
   state,
-  options,
+  options
 }: {
   cacheKey: string;
   state: SearchCategory | SearchGroup;
@@ -46,7 +46,7 @@ const setComponentCache = ({
 const componentCachePersistUtils = {
   getComponentStateKey,
   getComponentStateOptions,
-  setComponentCache,
+  setComponentCache
 };
 
 export default componentCachePersistUtils;

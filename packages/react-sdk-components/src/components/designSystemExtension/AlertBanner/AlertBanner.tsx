@@ -14,7 +14,7 @@ const SEVERITY_MAP = {
   urgent: 'error',
   warning: 'warning',
   success: 'success',
-  info: 'info',
+  info: 'info'
 };
 
 export default function AlertBanner(props: AlertBannerProps) {
@@ -23,7 +23,7 @@ export default function AlertBanner(props: AlertBannerProps) {
 
   if (onDismiss) {
     additionalProps = {
-      onClose: onDismiss,
+      onClose: onDismiss
     };
   }
 

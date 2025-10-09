@@ -11,7 +11,7 @@ function isEmpty(value: any): boolean {
 
 export function getCacheInfo(
   cache: { selectedCategory: string; activeGroupId: string; searchFields: unknown },
-  groups: { config: { id: string } }[],
+  groups: { config: { id: string } }[]
 ) {
   let initialActiveGroupId = groups.length ? groups[0].config.id : '';
 

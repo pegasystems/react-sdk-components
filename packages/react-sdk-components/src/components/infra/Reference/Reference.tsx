@@ -29,19 +29,19 @@ export default function Reference(props: ReferenceProps) {
     ...viewMetadata,
     config: {
       ...viewMetadata.config,
-      ...referenceConfig,
-    },
+      ...referenceConfig
+    }
   };
 
   // @ts-expect-error - Argument of type 'null' is not assignable to parameter of type 'string'.
   const viewComponent: any = pConnect.createComponent(viewObject, null, null, {
-    pageReference: context && context.startsWith('@CLASS') ? '' : context,
+    pageReference: context && context.startsWith('@CLASS') ? '' : context
   });
 
   viewComponent.props.getPConnect().setInheritedConfig({
     ...referenceConfig,
     readOnly,
-    displayMode,
+    displayMode
   });
 
   if (visibility !== false) {

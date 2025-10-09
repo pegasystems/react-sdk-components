@@ -12,12 +12,12 @@ interface ActionButtonsProps {
 
 const useStyles = makeStyles((/* theme */) => ({
   button: {
-    padding: '0px 5px',
+    padding: '0px 5px'
   },
   divider: {
     marginTop: '10px',
-    marginBottom: '10px',
-  },
+    marginBottom: '10px'
+  }
 }));
 
 export default function ActionButtons(props: ActionButtonsProps) {

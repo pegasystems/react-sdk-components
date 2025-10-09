@@ -39,7 +39,7 @@ export default function Percentage(props: PercentageProps) {
     hideLabel,
     placeholder,
     showGroupSeparators,
-    decimalPrecision,
+    decimalPrecision
   } = props;
 
   const [values, setValues] = useState(value.toString());

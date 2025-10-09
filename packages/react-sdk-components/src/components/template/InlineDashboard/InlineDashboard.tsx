@@ -12,28 +12,28 @@ interface InlineDashboardProps extends PConnProps {
 const useStyles = makeStyles((/* theme */) => ({
   headerStyles: {
     fontWeight: 500,
-    fontSize: '1.25rem',
+    fontSize: '1.25rem'
   },
   containerStyles: {
     marginTop: '1rem',
-    marginBottom: '1rem',
+    marginBottom: '1rem'
   },
   colStyles: {
     display: 'grid',
     gap: '1rem',
-    alignContent: 'baseline',
+    alignContent: 'baseline'
   },
   filterContainerStyles: {
     display: 'grid',
     gap: '1rem',
-    gridTemplateColumns: 'repeat(7, 1fr);',
+    gridTemplateColumns: 'repeat(7, 1fr);'
   },
   inlineStyles: {
     display: 'grid',
     gap: '1rem',
     alignContent: 'baseline',
-    marginTop: '1rem',
-  },
+    marginTop: '1rem'
+  }
 }));
 
 export default function InlineDashboard(props: PropsWithChildren<InlineDashboardProps>) {

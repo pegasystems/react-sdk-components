@@ -3,27 +3,27 @@ import makeStyles from '@mui/styles/makeStyles';
 const useStyles = makeStyles((theme) => ({
   resolutionPart: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   resolutionPartAccompanimentLeft: {
     width: '50%',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   resolutionPartAccompanimentRight: {
     width: '50%',
     alignItems: 'center',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   resolutionPartAccompanimentText: {
     fontSize: '28px',
     lineHeight: '40px',
     padding: '20px 20px',
-    color: 'darkslategray',
+    color: 'darkslategray'
   },
   pegaPartAccompanimentImage: {
     width: '700px',
     margin: '20px',
-    borderRadius: '10px',
+    borderRadius: '10px'
   },
   resolutionButton: {
     color: 'white',
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '25px',
     border: '0px',
     margin: '20px',
-    padding: '10px 30px',
-  },
+    padding: '10px 30px'
+  }
 }));
 
 export default function ResolutionScreen() {

@@ -23,7 +23,7 @@ export default function SelectableCard(props) {
     additionalProps,
     testId,
     setIsRadioCardSelected,
-    showNoValue = false,
+    showNoValue = false
   } = props;
 
   const pConn = getPConnect();
@@ -44,14 +44,14 @@ export default function SelectableCard(props) {
           id: item[recordKey],
           key: item[recordKey],
           fields: resolvedFields,
-          label: item[cardLabel],
+          label: item[cardLabel]
         };
 
         const image = item[imageField]
           ? {
               src: item[imageField],
               alt: showImageDescription && imageDescriptionKey ? item[imageDescriptionKey] : '',
-              style: { width: imageSize, objectPosition: imagePosition },
+              style: { width: imageSize, objectPosition: imagePosition }
             }
           : undefined;
 
@@ -79,12 +79,12 @@ export default function SelectableCard(props) {
               <CardContent
                 style={{
                   ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { display: 'flex', height: '100%' }),
-                  ...(imagePosition === 'inline-end' && { flexDirection: 'row-reverse' }),
+                  ...(imagePosition === 'inline-end' && { flexDirection: 'row-reverse' })
                 }}
               >
                 <div
                   style={{
-                    ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { width: '40%' }),
+                    ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { width: '40%' })
                   }}
                 >
                   {image && (
@@ -98,14 +98,14 @@ export default function SelectableCard(props) {
                         maxHeight: '100%',
                         height: '100%',
                         objectFit: 'contain',
-                        maxWidth: '100%',
+                        maxWidth: '100%'
                       }}
                     />
                   )}
                 </div>
                 <div
                   style={{
-                    ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { width: '60%' }),
+                    ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { width: '60%' })
                   }}
                 >
                   {type === 'radio' ? (
@@ -149,7 +149,7 @@ export default function SelectableCard(props) {
                       style={{
                         fontSize: '0.875rem',
                         ...(field.type !== 'TextArea' && { display: 'grid', gridTemplateColumns: '1fr 1fr' }),
-                        margin: '5px',
+                        margin: '5px'
                       }}
                     >
                       <div style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{field.name}</div>

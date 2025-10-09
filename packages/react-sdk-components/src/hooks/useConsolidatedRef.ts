@@ -24,8 +24,8 @@ const useConsolidatedRef = <T>(...refs: (Ref<T> | undefined)[]): RefObject<T> =>
             (ref as MutableRefObject<T | null>).current = targetRef.current;
           }
         });
-      },
-    }),
+      }
+    })
   );
 
   return refProxy;

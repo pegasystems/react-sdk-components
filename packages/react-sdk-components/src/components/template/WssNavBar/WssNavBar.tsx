@@ -27,23 +27,23 @@ interface WssNavBarProps extends PConnProps {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    display: 'flex'
   },
   content: {
     flexGrow: 1,
     height: '100vh',
     marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2)
   },
   appListLogo: {
-    width: '3.6rem',
+    width: '3.6rem'
   },
   appName: {
     color: 'white',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(4),
-    fontSize: '1.5rem',
-  },
+    fontSize: '1.5rem'
+  }
 }));
 
 export default function WssNavBar(props: WssNavBarProps) {
@@ -107,12 +107,12 @@ export default function WssNavBar(props: WssNavBarProps) {
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'left',
+                  horizontal: 'left'
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'left',
+                  horizontal: 'left'
                 }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
@@ -136,12 +136,12 @@ export default function WssNavBar(props: WssNavBarProps) {
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'right'
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'right'
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}

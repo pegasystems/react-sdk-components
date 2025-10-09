@@ -41,7 +41,7 @@ export default function Decimal(props: DecimalProps) {
     showGroupSeparators,
     testId,
     placeholder,
-    formatter,
+    formatter
   } = props;
 
   const [values, setValues] = useState(value.toString());

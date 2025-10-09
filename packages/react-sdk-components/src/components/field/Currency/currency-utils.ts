@@ -42,7 +42,7 @@ export const getCurrencyCharacters = (inISOCode: string) => {
   const theCurrencyChars = {
     theCurrencySymbol: '$',
     theDecimalIndicator: '.',
-    theDigitGroupSeparator: ',',
+    theDigitGroupSeparator: ','
   };
 
   const theCurrencyOptions = getCurrencyOptions(inISOCode);

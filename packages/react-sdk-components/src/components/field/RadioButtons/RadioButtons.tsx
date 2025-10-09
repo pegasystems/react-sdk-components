@@ -44,7 +44,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
     datasource,
     imagePosition,
     imageSize,
-    showImageDescription,
+    showImageDescription
   } = props;
   const [theSelectedButton, setSelectedButton] = useState(value);
 
@@ -119,7 +119,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
               imageSize,
               showImageDescription,
               imageField: stateProps.image?.split('.').pop(),
-              imageDescription: stateProps.imageDescription?.split('.').pop(),
+              imageDescription: stateProps.imageDescription?.split('.').pop()
             }}
             onChange={handleChange}
             recordKey={stateProps.value?.split('.').pop()}
@@ -145,7 +145,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
               label={thePConn.getLocalizedValue(
                 theOption.value,
                 localePath,
-                thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName),
+                thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName)
               )}
               control={<Radio key={theOption.key} color='primary' disabled={readOnly} />}
             />

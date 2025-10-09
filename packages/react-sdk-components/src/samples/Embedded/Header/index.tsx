@@ -8,12 +8,12 @@ const useStyles = makeStyles((theme) => ({
     height: '64px',
     padding: '0px 20px',
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.contrastText
   },
   embedTopIcon: {
     width: '40px',
-    filter: 'invert(100%)',
-  },
+    filter: 'invert(100%)'
+  }
 }));
 
 export default function Header() {

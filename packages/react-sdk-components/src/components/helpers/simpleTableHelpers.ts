@@ -57,7 +57,7 @@ export const getContext = (thePConn) => {
   return {
     contextName,
     referenceListStr: referenceList,
-    pageReferenceForRows,
+    pageReferenceForRows
   };
 };
 
@@ -74,7 +74,7 @@ export const getApiContext = (processedData, pConnect, reorderCB) => {
         resolve({
           data: processedData,
           filteredRecordCount: processedData.length,
-          totalRecordCount: processedData.length,
+          totalRecordCount: processedData.length
         });
       });
     },
@@ -85,7 +85,7 @@ export const getApiContext = (processedData, pConnect, reorderCB) => {
       // indexes are keys for simple table so, it should work.
       reorderCB();
       return Promise.resolve(pConnect.getListActions().reorder(parseInt(sourceKey, 10), parseInt(destinationKey, 10)));
-    },
+    }
   };
 };
 
@@ -108,7 +108,7 @@ const SUPPORTED_FIELD_TYPES = [
   'Dropdown',
   'AutoComplete',
   'UserReference',
-  'RichText',
+  'RichText'
 ];
 
 export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex) => {
@@ -159,15 +159,15 @@ export const buildMetaForListView = (fieldMetadata, fields, type, ruleClass, nam
             {
               name: 'Columns',
               type: 'Region',
-              children: fields,
-            },
+              children: fields
+            }
           ],
           label: propertyLabel,
-          id: 'P_' /* TODO */,
-        },
+          id: 'P_' /* TODO */
+        }
       ],
-      ruleClass,
-    },
+      ruleClass
+    }
   };
 };
 
@@ -238,7 +238,7 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, op
 
   // get resolved field labels for primary fields raw config included in configFields
   const fieldsLabels = updateFieldLabels(fields, configFields, primaryFieldsViewIndex, pConnect, {
-    columnsRawConfig: pConnect.getRawConfigProps()?.children.find((item) => item?.name === 'Columns')?.children,
+    columnsRawConfig: pConnect.getRawConfigProps()?.children.find((item) => item?.name === 'Columns')?.children
   });
 
   const fieldDefs = configFields.map((field, index) => {
@@ -253,10 +253,10 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, op
       noContextMenu: true,
       showMenu: false,
       meta: {
-        ...field,
+        ...field
       },
       // BUG-615253: Workaround for autosize in table with lazy loading components
-      width: getFieldWidth(field, fields[index].config.label),
+      width: getFieldWidth(field, fields[index].config.label)
     };
   });
 
@@ -270,7 +270,7 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, op
       noContextMenu: true,
       showMenu: false,
       // BUG-615253: Workaround for autosize in table with lazy loading components
-      width: 46,
+      width: 46
     });
   }
 
@@ -283,7 +283,7 @@ export const createMetaForTable = (fields, renderMode) => {
       minHeight: 'auto',
       fitHeightToElement: 'fitHeightToElement',
       deltaAdjustment: 'deltaAdjustment',
-      autoSize: true,
+      autoSize: true
     },
     fieldDefs: fields,
     itemKey: 'index',
@@ -298,7 +298,7 @@ export const createMetaForTable = (fields, renderMode) => {
     footer: false,
     filterExpression: null,
     editing: false,
-    timezone: PCore.getEnvironmentInfo().getTimeZone(),
+    timezone: PCore.getEnvironmentInfo().getTimeZone()
   };
 };
 
@@ -323,7 +323,7 @@ export function createPConnect(contextName, referenceList, pageReference): any {
   const options = {
     context: contextName,
     pageReference,
-    referenceList,
+    referenceList
   };
 
   // create PConnect object

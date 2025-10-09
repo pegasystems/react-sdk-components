@@ -28,7 +28,7 @@ export default function FileUtility(props: FileUtilityProps) {
   const required = true;
   const listTemp = {
     data: [],
-    count: 0,
+    count: 0
   };
   const [list, setList] = useState(listTemp);
   const headerSvgIcon$ = Utils.getImageSrc('paper-clip', Utils.getSDKStaticConentUrl());
@@ -44,16 +44,16 @@ export default function FileUtility(props: FileUtilityProps) {
       {
         actionID: 'attach',
         jsAction: 'attachFiles',
-        name: thePConn.getLocalizedValue('Attach files', '', ''),
-      },
+        name: thePConn.getLocalizedValue('Attach files', '', '')
+      }
     ], // 2nd and 3rd args empty string until typedef marked correctly
     fileSecondaryButtons: [
       {
         actionID: 'cancel',
         jsAction: 'cancel',
-        name: thePConn.getLocalizedValue('Cancel', '', ''),
-      },
-    ], // 2nd and 3rd args empty string until typedef marked correctly
+        name: thePConn.getLocalizedValue('Cancel', '', '')
+      }
+    ] // 2nd and 3rd args empty string until typedef marked correctly
   };
   const [fileData, setFileData] = useState(fileTemp);
   const linkTemp = {
@@ -64,16 +64,16 @@ export default function FileUtility(props: FileUtilityProps) {
       {
         actionID: 'attach',
         jsAction: 'attachLinks',
-        name: thePConn.getLocalizedValue('Attach links', '', ''),
-      },
+        name: thePConn.getLocalizedValue('Attach links', '', '')
+      }
     ], // 2nd and 3rd args empty string until typedef marked correctly
     linkSecondaryButtons: [
       {
         actionID: 'cancel',
         jsAction: 'cancel',
-        name: thePConn.getLocalizedValue('Cancel', '', ''),
-      },
-    ], // 2nd and 3rd args empty string until typedef marked correctly
+        name: thePConn.getLocalizedValue('Cancel', '', '')
+      }
+    ] // 2nd and 3rd args empty string until typedef marked correctly
   };
   const [linkData, setLinkData] = useState(linkTemp);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -87,7 +87,7 @@ export default function FileUtility(props: FileUtilityProps) {
     attsFromResp = attsFromResp.map((respAtt) => {
       const updatedAtt = {
         ...respAtt,
-        meta: `${respAtt.category} . ${Utils.generateDateTime(respAtt.createTime, 'DateTime-Since')}, ${respAtt.createdBy}`,
+        meta: `${respAtt.category} . ${Utils.generateDateTime(respAtt.createTime, 'DateTime-Since')}, ${respAtt.createdBy}`
       };
       if (updatedAtt.type === 'FILE') {
         updatedAtt.nameWithExt = updatedAtt.fileName;
@@ -106,8 +106,8 @@ export default function FileUtility(props: FileUtilityProps) {
           id: `Cancel-${att.ID}`,
           text: thePConn.getLocalizedValue('Cancel', '', ''), // 2nd and 3rd args empty string until typedef marked correctly
           icon: 'times',
-          onClick: cancelFile,
-        },
+          onClick: cancelFile
+        }
       ];
     } else if (att.links) {
       const isFile = att.type === 'FILE';
@@ -119,8 +119,8 @@ export default function FileUtility(props: FileUtilityProps) {
             id: `download-${ID}`,
             text: isFile ? thePConn.getLocalizedValue('Download', '', '') : thePConn.getLocalizedValue('Open', '', ''), // 2nd and 3rd args empty string until typedef marked correctly
             icon: isFile ? 'download' : 'open',
-            onClick: downloadFile,
-          },
+            onClick: downloadFile
+          }
         ],
         [
           'delete',
@@ -128,9 +128,9 @@ export default function FileUtility(props: FileUtilityProps) {
             id: `Delete-${ID}`,
             text: thePConn.getLocalizedValue('Delete', '', ''), // 2nd and 3rd args empty string until typedef marked correctly
             icon: 'trash',
-            onClick: deleteFile,
-          },
-        ],
+            onClick: deleteFile
+          }
+        ]
       ]);
       actions = [];
       actionsMap.forEach((action, actionKey) => {
@@ -144,8 +144,8 @@ export default function FileUtility(props: FileUtilityProps) {
           id: `Remove-${att.ID}`,
           text: thePConn.getLocalizedValue('Remove', '', ''), // 2nd and 3rd args empty string until typedef marked correctly
           icon: 'trash',
-          onClick: removeFile,
-        },
+          onClick: removeFile
+        }
       ];
     }
 
@@ -153,18 +153,18 @@ export default function FileUtility(props: FileUtilityProps) {
       id: att.ID,
       visual: {
         icon: Utils.getIconForAttachment(att),
-        progress: att.progress === 100 ? undefined : att.progress,
+        progress: att.progress === 100 ? undefined : att.progress
       },
       primary: {
         type: att.type,
         name: att.name,
         icon: 'open',
-        click: downloadFile,
+        click: downloadFile
       },
       secondary: {
-        text: att.meta,
+        text: att.meta
       },
-      actions,
+      actions
     };
   }
 
@@ -224,7 +224,7 @@ export default function FileUtility(props: FileUtilityProps) {
             downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
             cancelFile: null,
             deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
-            removeFile: null,
+            removeFile: null
           });
         });
         const viewAllarItems: any = arFullListAttachments.map((att) => {
@@ -233,7 +233,7 @@ export default function FileUtility(props: FileUtilityProps) {
             downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
             cancelFile: null,
             deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
-            removeFile: null,
+            removeFile: null
           });
         });
         setProgress(false);
@@ -253,13 +253,13 @@ export default function FileUtility(props: FileUtilityProps) {
     PCore.getPubSubUtils().subscribe(
       (PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
       getAttachments,
-      'caseAttachmentsUpdateFromCaseview',
+      'caseAttachmentsUpdateFromCaseview'
     );
 
     return () => {
       PCore.getPubSubUtils().unsubscribe(
         (PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
-        'caseAttachmentsUpdateFromCaseview',
+        'caseAttachmentsUpdateFromCaseview'
       );
     };
   }, []);
@@ -295,7 +295,7 @@ export default function FileUtility(props: FileUtilityProps) {
         downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
         cancelFile: null,
         deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
-        removeFile: null,
+        removeFile: null
       });
     });
     setFileData((current) => {
@@ -347,7 +347,7 @@ export default function FileUtility(props: FileUtilityProps) {
     }
 
     Promise.allSettled(
-      fileData.attachedFiles.map((file) => attachmentUtils.uploadAttachment(file, onUploadProgress, errorHandler, thePConn.getContextName())),
+      fileData.attachedFiles.map((file) => attachmentUtils.uploadAttachment(file, onUploadProgress, errorHandler, thePConn.getContextName()))
     )
       .then((fileResponses: any) => {
         const uploadedFiles: any = [];
@@ -418,7 +418,7 @@ export default function FileUtility(props: FileUtilityProps) {
       downloadFile: null,
       cancelFile: null,
       deleteFile: null,
-      removeFile: null,
+      removeFile: null
     });
     oLink.type = 'URL';
     oLink.primary.type = oLink.type;
@@ -442,7 +442,7 @@ export default function FileUtility(props: FileUtilityProps) {
       return {
         ...current,
         linksList: localList,
-        attachedLinks: attachedListTemp,
+        attachedLinks: attachedListTemp
       };
     });
     // clear values
@@ -470,7 +470,7 @@ export default function FileUtility(props: FileUtilityProps) {
       type: 'URL',
       category: 'URL',
       url: item.url,
-      name: item.linkTitle,
+      name: item.linkTitle
     }));
 
     if (linksToAttach && linksToAttach.length > 0) {

@@ -56,15 +56,15 @@ export function prepareComponentInCaseSummary(pConnectMeta: any, getPConnect: Fu
     case 'CaseOperator': {
       if (config.label.includes('Create operator')) {
         caseSummaryComponentObject.name = pConnect.resolveConfigProps({
-          createLabel: config.createLabel,
+          createLabel: config.createLabel
         }).createLabel;
       } else if (config.label.includes('Update operator')) {
         caseSummaryComponentObject.name = pConnect.resolveConfigProps({
-          updateLabel: config.updateLabel,
+          updateLabel: config.updateLabel
         }).updateLabel;
       } else {
         caseSummaryComponentObject.name = pConnect.resolveConfigProps({
-          resolveLabel: config.resolveLabel,
+          resolveLabel: config.resolveLabel
         }).resolveLabel;
       }
 
@@ -72,14 +72,14 @@ export function prepareComponentInCaseSummary(pConnectMeta: any, getPConnect: Fu
     }
     case 'Checkbox': {
       caseSummaryComponentObject.name = pConnect.resolveConfigProps({
-        label: config.caption,
+        label: config.caption
       }).label;
 
       break;
     }
     case 'Pega_UI_PercentageWidget': {
       const rawValue = pConnect.resolveConfigProps({
-        value: config.value,
+        value: config.value
       }).value;
 
       caseSummaryComponentObject.simpleValue = rawValue || rawValue === 0 ? `${rawValue}%` : noValueComponent;
@@ -94,7 +94,7 @@ export function prepareComponentInCaseSummary(pConnectMeta: any, getPConnect: Fu
     case 'Location':
     case 'RichText': {
       const rawValue = pConnect.resolveConfigProps({
-        value: config.value,
+        value: config.value
       }).value;
 
       caseSummaryComponentObject.variant = 'stacked';
@@ -103,7 +103,7 @@ export function prepareComponentInCaseSummary(pConnectMeta: any, getPConnect: Fu
     }
     case 'TextArea': {
       const rawValue = pConnect.resolveConfigProps({
-        value: config.value,
+        value: config.value
       }).value;
 
       if (rawValue?.length > 22) {
@@ -116,7 +116,7 @@ export function prepareComponentInCaseSummary(pConnectMeta: any, getPConnect: Fu
     case 'URL': {
       if (config.displayAs === 'Image') {
         const rawValue = pConnect.resolveConfigProps({
-          value: config.value,
+          value: config.value
         }).value;
 
         caseSummaryComponentObject.variant = 'stacked';
@@ -154,8 +154,8 @@ export function prepareComponentInCaseSummary(pConnectMeta: any, getPConnect: Fu
       ...config,
       // Need a unique key for each summary component which helps in creating new component based on visibility
       // Also a consistent key helps in rerendering summary components instead of remounting
-      key: config,
-    },
+      key: config
+    }
   });
 
   createdComponent.props.getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
@@ -183,7 +183,7 @@ export function resolveReferenceFields(
   },
   hideFieldLabels: boolean,
   recordKey: string,
-  pConnect: typeof PConnect,
+  pConnect: typeof PConnect
 ) {
   const presets: {
     children?: {
@@ -204,10 +204,10 @@ export function resolveReferenceFields(
         ...preset,
         config: {
           ...preset.config,
-          displayMode: 'DISPLAY_ONLY',
-        },
+          displayMode: 'DISPLAY_ONLY'
+        }
       },
-      useCustomContext: item,
+      useCustomContext: item
     };
     const configObj = PCore.createPConnect(fieldMeta);
     const meta = configObj.getPConnect().getMetadata();
@@ -221,7 +221,7 @@ export function resolveReferenceFields(
           id: `${item[recordKey]} - ${index}`,
           name: fieldInfo.name,
           value: fieldInfo.value,
-          type: preset.type,
+          type: preset.type
         };
   });
 }

@@ -58,27 +58,27 @@ interface SimpleTableManualProps extends PConnProps {
 
 const useStyles = makeStyles((/* theme */) => ({
   label: {
-    margin: '8px',
+    margin: '8px'
   },
   tableLabel: {
     '&::after': {
       display: 'inline',
       content: '" *"',
       verticalAlign: 'top',
-      color: 'var(--app-error-color)',
-    },
+      color: 'var(--app-error-color)'
+    }
   },
   message: {
     margin: '8px',
     color: 'var(--app-error-color)',
-    fontSize: '14px',
+    fontSize: '14px'
   },
   header: {
-    background: '#f5f5f5',
+    background: '#f5f5f5'
   },
   tableCell: {
     borderRight: '1px solid lightgray',
-    padding: '8px',
+    padding: '8px'
   },
   visuallyHidden: {
     border: 0,
@@ -89,11 +89,11 @@ const useStyles = makeStyles((/* theme */) => ({
     padding: 0,
     position: 'absolute',
     top: 20,
-    width: 1,
+    width: 1
   },
   moreIcon: {
-    verticalAlign: 'bottom',
-  },
+    verticalAlign: 'bottom'
+  }
 }));
 
 let menuColumnId = '';
@@ -127,7 +127,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     useSeparateViewForEdit,
     viewForEditModal,
     required,
-    validatemessage,
+    validatemessage
   } = props;
   const pConn = getPConnect();
   const [rowData, setRowData] = useState([]);
@@ -209,7 +209,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   //  Constellation DX Components.
   const fieldDefs = buildFieldsForTable(rawFields, getPConnect(), showDeleteButton, {
     primaryFieldsViewIndex,
-    fields: resolvedFields,
+    fields: resolvedFields
   });
 
   useLayoutEffect(() => {
@@ -218,7 +218,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         .getListActions()
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
-          fieldDefs.filter((item) => item.name).map((item) => item.name),
+          fieldDefs.filter((item) => item.name).map((item) => item.name)
         );
     } else {
       // @ts-expect-error - An argument for 'fields' was not provided
@@ -237,7 +237,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       const { trueLabel, falseLabel } = rawField.config;
       options = {
         trueLabel,
-        falseLabel,
+        falseLabel
       };
     }
     return rawField ? format(val, rawField.type, options) : val;
@@ -326,7 +326,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     }
 
     getPConnect().clearErrorMessages({
-      property: (getPConnect().getStateProps() as any)?.referenceList?.substring(1),
+      property: (getPConnect().getStateProps() as any)?.referenceList?.substring(1)
     } as any);
   };
 
@@ -341,7 +341,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           pConn,
           referenceListStr,
           selectedRowIndex.current,
-          PCore.getConstants().RESOURCE_STATUS.UPDATE,
+          PCore.getConstants().RESOURCE_STATUS.UPDATE
         );
     }
   };
@@ -374,8 +374,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
               context,
               pageReference: pageReferenceValue,
               referenceList: referenceListData,
-              hasForm: true,
-            },
+              hasForm: true
+            }
           };
           const view = PCore.createPConnect(config);
           data.push(createElement(createPConnectComponent(), view));

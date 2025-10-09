@@ -20,7 +20,7 @@ export const getVisibleTabs = (allTabs, uuid) => {
         child.getPConnect().registerAdditionalProps({
           deferLoadId,
           isChildDeferLoad: true,
-          lastUpdateCaseTime: '@P caseInfo.lastUpdateTime',
+          lastUpdateCaseTime: '@P caseInfo.lastUpdateTime'
         });
       }
       index += 1;
@@ -45,7 +45,7 @@ export const getTransientTabs = (availableTabs, currentTabId, tabItems) => {
       return {
         name: tabLabel,
         id: i.toString(),
-        content: tabContent(),
+        content: tabContent()
       };
     }) || []
   );

@@ -3,7 +3,7 @@ export const mapStateToProps: any = (_, ownProps) => {
 
   return {
     visibility: getPConnect().getComputedVisibility(),
-    getPConnect,
+    getPConnect
   };
 };
 

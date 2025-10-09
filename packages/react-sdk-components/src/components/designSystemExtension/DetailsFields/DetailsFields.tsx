@@ -22,17 +22,17 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   fieldLabel: {
     display: 'block',
     fontWeight: 400,
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.secondary
   },
   fieldValue: {
     fontWeight: 400,
-    color: theme.palette.text.primary,
-  },
+    color: theme.palette.text.primary
+  }
 }));
 
 export default function DetailsFields(props: DetailsFieldsProps) {
@@ -53,7 +53,7 @@ export default function DetailsFields(props: DetailsFieldsProps) {
     fieldComponents.push({
       type: theCompType,
       label,
-      value: <React.Fragment key={index}>{createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}</React.Fragment>,
+      value: <React.Fragment key={index}>{createElement(createPConnectComponent(), thePConn.getReferencedViewPConnect())}</React.Fragment>
     });
   });
 

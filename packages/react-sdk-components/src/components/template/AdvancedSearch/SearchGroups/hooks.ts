@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 
 const listViewConstants = {
   EVENTS: {
-    LIST_VIEW_READY: 'LIST_VIEW_READY',
-  },
+    LIST_VIEW_READY: 'LIST_VIEW_READY'
+  }
 };
 /**
  * This hook registers a callback for the whenever list view component is ready
@@ -15,7 +15,7 @@ export function useCacheWhenListViewReady(
   viewName: string,
   useCache: boolean,
   getFilterData: (params: { isCalledFromCache: boolean }) => void,
-  searchSelectCacheKey: string,
+  searchSelectCacheKey: string
 ) {
   useEffect(() => {
     if (Object.keys(cache.searchFields ?? {}).length > 0) {
@@ -26,7 +26,7 @@ export function useCacheWhenListViewReady(
             getFilterData({ isCalledFromCache: true });
           }
         },
-        `${searchSelectCacheKey}-listview-ready`,
+        `${searchSelectCacheKey}-listview-ready`
       );
     }
 

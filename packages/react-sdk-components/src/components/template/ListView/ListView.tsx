@@ -89,7 +89,7 @@ export default function ListView(props: ListViewProps) {
     viewName,
     readonlyContextList: selectedValues,
     value,
-    displayAs,
+    displayAs
   } = props;
   let { showRecords } = props;
   const ref = useRef({}).current;
@@ -104,7 +104,7 @@ export default function ListView(props: ListViewProps) {
     setListContext,
     ref,
     showDynamicFields,
-    cosmosTableRef,
+    cosmosTableRef
   });
 
   useClearSelectionsAndUpdateTable({ getPConnect, uniqueId, viewName });
@@ -151,33 +151,33 @@ export default function ListView(props: ListViewProps) {
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
-        width: '100%',
+        width: '100%'
       },
       paper: {
         width: '100%',
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        display: 'grid',
+        display: 'grid'
       },
       search: {
-        padding: '5px 5px',
+        padding: '5px 5px'
       },
       table: {
-        minWidth: 750,
+        minWidth: 750
       },
       tableInForm: {
         minWidth: 750,
         maxHeight: 550,
-        overflow: 'auto',
+        overflow: 'auto'
       },
       moreIcon: {
-        verticalAlign: 'bottom',
+        verticalAlign: 'bottom'
       },
       filteredIcon: {
-        verticalAlign: 'bottom',
+        verticalAlign: 'bottom'
       },
       cell: {
-        whiteSpace: 'nowrap',
+        whiteSpace: 'nowrap'
       },
       visuallyHidden: {
         border: 0,
@@ -188,13 +188,13 @@ export default function ListView(props: ListViewProps) {
         padding: 0,
         position: 'absolute',
         top: 20,
-        width: 1,
+        width: 1
       },
       title: {
         marginTop: theme.spacing(1),
-        marginLeft: theme.spacing(1),
-      },
-    }),
+        marginLeft: theme.spacing(1)
+      }
+    })
   );
 
   const classes = useStyles();
@@ -217,7 +217,7 @@ export default function ListView(props: ListViewProps) {
           }
         }
       },
-      [getPConnect, viewName],
+      [getPConnect, viewName]
     );
 
     useEffect(() => {
@@ -350,8 +350,8 @@ export default function ListView(props: ListViewProps) {
     let dashboardFilterPayload: any = {
       query: {
         filter: {},
-        select: [],
-      },
+        select: []
+      }
     };
     if (displayAs === 'advancedSearch') {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -369,7 +369,7 @@ export default function ListView(props: ListViewProps) {
       // Constructing the select parameters list (will be sent in dashboardFilterPayload)
       columnList.current.forEach((col) => {
         selectParam.push({
-          field: col,
+          field: col
         });
       });
 
@@ -409,7 +409,7 @@ export default function ListView(props: ListViewProps) {
         dashboardFilterPayload.query.filter.filterConditions = {
           ...dashboardFilterPayload.query.filter.filterConditions,
           [`T${index++}`]: { ...filter[relationalOp][0].condition },
-          [`T${index++}`]: { ...filter[relationalOp][1].condition },
+          [`T${index++}`]: { ...filter[relationalOp][1].condition }
         };
         if (dashboardFilterPayload.query.filter.logic) {
           dashboardFilterPayload.query.filter.logic = `${dashboardFilterPayload.query.filter.logic} ${relationalOp} (T${
@@ -423,7 +423,7 @@ export default function ListView(props: ListViewProps) {
       } else {
         dashboardFilterPayload.query.filter.filterConditions = {
           ...dashboardFilterPayload.query.filter.filterConditions,
-          [`T${index++}`]: { ...filter.condition, ...(filter.condition.comparator === 'CONTAINS' ? { ignoreCase: true } : {}) },
+          [`T${index++}`]: { ...filter.condition, ...(filter.condition.comparator === 'CONTAINS' ? { ignoreCase: true } : {}) }
         };
 
         if (dashboardFilterPayload.query.filter.logic) {
@@ -461,7 +461,7 @@ export default function ListView(props: ListViewProps) {
       if (filterPayload.current) {
         query = {
           select: fields,
-          filter: filterPayload.current?.query?.filter,
+          filter: filterPayload.current?.query?.filter
         };
       } else {
         query = { select: fields };
@@ -483,7 +483,7 @@ export default function ListView(props: ListViewProps) {
     if (colId) {
       const field = getField(fieldDefs, colId);
       listFields.push({
-        field: field.name,
+        field: field.name
       });
     } else {
       // NOTE: If we ever decide to not set up all the `fieldDefs` on select, ensure that the fields
@@ -491,14 +491,14 @@ export default function ListView(props: ListViewProps) {
       fieldDefs.forEach((field) => {
         if (!listFields.find((f) => f.field === field.name)) {
           listFields.push({
-            field: field.name,
+            field: field.name
           });
         }
       });
       patchQueryFields.forEach((k) => {
         if (!listFields.find((f) => f.field === k)) {
           listFields.push({
-            field: k,
+            field: k
           });
         }
       });
@@ -507,7 +507,7 @@ export default function ListView(props: ListViewProps) {
     compositeKeys.forEach((k) => {
       if (!listFields.find((f) => f.field === k)) {
         listFields.push({
-          field: k,
+          field: k
         });
       }
     });
@@ -527,8 +527,8 @@ export default function ListView(props: ListViewProps) {
       return [
         ...select,
         {
-          field: itemKey,
-        },
+          field: itemKey
+        }
       ];
     }
 
@@ -566,7 +566,7 @@ export default function ListView(props: ListViewProps) {
 
     myColumns.forEach((column) => {
       selectParams.push({
-        field: column.id,
+        field: column.id
       });
     });
 
@@ -616,15 +616,15 @@ export default function ListView(props: ListViewProps) {
           filterExpression: {
             condition: {
               lhs: {
-                field,
+                field
               },
               comparator,
               rhs: {
-                value,
-              },
-            },
+                value
+              }
+            }
           },
-          filterId: field,
+          filterId: field
         };
       }
       return acc;
@@ -643,7 +643,7 @@ export default function ListView(props: ListViewProps) {
           },
           `dashboard-component-${'id'}`,
           false,
-          getPConnect().getContextName(),
+          getPConnect().getContextName()
         );
         PCore.getPubSubUtils().subscribe(
           PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
@@ -653,7 +653,7 @@ export default function ListView(props: ListViewProps) {
           },
           `dashboard-component-${'id'}`,
           false,
-          getPConnect().getContextName(),
+          getPConnect().getContextName()
         );
         PCore.getPubSubUtils().subscribe(
           PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS,
@@ -662,7 +662,7 @@ export default function ListView(props: ListViewProps) {
             const filterData = prepareFilters(data);
             processFilterChange(filterData);
           },
-          identifier,
+          identifier
         );
       }, 0);
 
@@ -670,12 +670,12 @@ export default function ListView(props: ListViewProps) {
         PCore.getPubSubUtils().unsubscribe(
           PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
           `dashboard-component-${'id'}`,
-          getPConnect().getContextName(),
+          getPConnect().getContextName()
         );
         PCore.getPubSubUtils().unsubscribe(
           PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CLEAR_ALL,
           `dashboard-component-${'id'}`,
-          getPConnect().getContextName(),
+          getPConnect().getContextName()
         );
         PCore.getPubSubUtils().unsubscribe(PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS, identifier);
       };
@@ -962,7 +962,7 @@ export default function ListView(props: ListViewProps) {
       if (column.isAssignmentLink) {
         thePConn.getActionsApi().openAssignment(pzInsKey, pxObjClass, {
           containerName: 'primary',
-          channelName: '',
+          channelName: ''
         });
       } else {
         thePConn.getActionsApi().openWorkByHandle(pzInsKey, pxObjClass);

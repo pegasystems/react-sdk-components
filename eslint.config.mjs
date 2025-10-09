@@ -41,7 +41,7 @@ export default defineConfig([
     '**/paths.js',
     'dist/*',
     'lib/*',
-    'packages/react-sdk-components/src/index.tsx',
+    'packages/react-sdk-components/src/index.tsx'
   ]),
   {
     languageOptions: {
@@ -50,7 +50,7 @@ export default defineConfig([
         window: true,
         console: true,
         document: true,
-        fetch: true,
+        fetch: true
       },
 
       ecmaVersion: 13,
@@ -59,25 +59,25 @@ export default defineConfig([
       parserOptions: {
         project: 'tsconfig.json',
         ecmaFeatures: {
-          jsx: true,
-        },
-      },
+          jsx: true
+        }
+      }
     },
 
     settings: {
       'import/resolver': {
         typescript: {},
         react: {
-          version: 'detect',
+          version: 'detect'
         },
         node: {
-          extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        },
+          extensions: ['.js', '.jsx', '.ts', '.tsx']
+        }
       },
 
       react: {
-        version: 'detect',
-      },
+        version: 'detect'
+      }
     },
 
     plugins: { sonarjs, import: importPlugin, react, 'react-hooks': reactHooks },
@@ -123,8 +123,8 @@ export default defineConfig([
       '@typescript-eslint/ban-ts-comment': 'off', // prefer warn but needs different parserOptions
       '@typescript-eslint/no-unsafe-function-type': 'off',
 
-      'import/no-relative-packages': 'off', // arnab
-    },
+      'import/no-relative-packages': 'off' // arnab
+    }
   },
   {
     files: ['**/*.@(ts|tsx)'],
@@ -132,8 +132,8 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/method-signature-style': ['error', 'property'],
       quotes: 'off',
-      '@typescript-eslint/quotes': 'off',
-    },
+      '@typescript-eslint/quotes': 'off'
+    }
   },
   {
     files: ['**/*.@(jsx|tsx|mdx)'],
@@ -141,8 +141,8 @@ export default defineConfig([
     rules: {
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'off',
-      'react-hooks/exhaustive-deps': 'off',
-    },
+      'react-hooks/exhaustive-deps': 'off'
+    }
   },
   {
     files: ['**/*.@(ts|tsx)'],
@@ -153,19 +153,19 @@ export default defineConfig([
       'react/jsx-fragments': 'off',
       'react/react-in-jsx-scope': 'off',
       'react-hooks/exhaustive-deps': 'off',
-      'sonarjs/cognitive-complexity': ['warn', 45],
-    },
+      'sonarjs/cognitive-complexity': ['warn', 45]
+    }
   },
   {
     files: ['**/*.@(js|jsx|ts|tsx|mdx)'],
-    rules: {},
+    rules: {}
   },
 
   {
     files: ['*/**/mocks/**.@(mocks|styles).@(tsx|ts)'],
 
     rules: {
-      'import/prefer-default-export': ['off'],
-    },
-  },
+      'import/prefer-default-export': ['off']
+    }
+  }
 ]);

@@ -18,12 +18,12 @@ interface LocationProps extends PConnFieldProps {
 const mapContainerStyle = {
   width: '100%',
   height: '300px',
-  marginTop: '0px',
+  marginTop: '0px'
 };
 
 const defaultCenter = {
   lat: 18.5204,
-  lng: 73.8567,
+  lng: 73.8567
 };
 
 const disabledMapOptions = {
@@ -36,7 +36,7 @@ const disabledMapOptions = {
   scaleControl: false,
   streetViewControl: false,
   rotateControl: false,
-  fullscreenControl: false,
+  fullscreenControl: false
 };
 
 export default function Location(props: LocationProps) {
@@ -60,7 +60,7 @@ export default function Location(props: LocationProps) {
     coordinates = '',
     onlyCoordinates = false,
     showMap,
-    showMapReadOnly,
+    showMapReadOnly
   } = props;
 
   const pConn = getPConnect();
@@ -77,7 +77,7 @@ export default function Location(props: LocationProps) {
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: pConn.getGoogleMapsAPIKey?.() || '',
-    libraries: ['places', 'geocoding'],
+    libraries: ['places', 'geocoding']
   });
 
   const hasError = status === 'error' && !!validatemessage && !disabled;
@@ -109,7 +109,7 @@ export default function Location(props: LocationProps) {
         setMarkerPosition(null);
       }
     },
-    [actions, propName, coordPropName],
+    [actions, propName, coordPropName]
   );
 
   const handlePlaceChanged = useCallback(() => {
@@ -181,7 +181,7 @@ export default function Location(props: LocationProps) {
         },
         (error) => {
           console.error('Error getting current location: ', error);
-        },
+        }
       );
     }
   }, [actions, propName, coordPropName, onlyCoordinates]);
@@ -244,8 +244,8 @@ export default function Location(props: LocationProps) {
                   </IconButton>
                 </InputAdornment>
               ),
-              inputProps: { ...testProps },
-            },
+              inputProps: { ...testProps }
+            }
           }}
         />
       )}

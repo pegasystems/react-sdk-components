@@ -30,21 +30,21 @@ interface AppShellProps extends PConnProps {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    display: 'flex'
   },
   content: {
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
     marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2)
   },
   wsscontent: {
     flexGrow: 1,
     height: '100vh',
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
+    marginRight: theme.spacing(1)
+  }
 }));
 
 export default function AppShell(props: PropsWithChildren<AppShellProps>) {
@@ -64,7 +64,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     portalTemplate,
     portalName,
     portalLogo,
-    navDisplayOptions,
+    navDisplayOptions
   } = props;
 
   const [open, setOpen] = useState(true);
@@ -123,12 +123,12 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
       const portalID = pConn.getValue('.pyOwner');
       PCore.getDataPageUtils()
         .getPageDataAsync(caseTypesAvailableToCreateDP, pConn.getContextName(), {
-          PortalName: portalID,
+          PortalName: portalID
         })
         .then((response: { pyCaseTypesAvailableToCreate?: any }) => {
           if (response?.pyCaseTypesAvailableToCreate) {
             pConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
-              skipDirtyValidation: true,
+              skipDirtyValidation: true
             });
           }
         });
@@ -177,7 +177,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     return {
       avatar: portalTemplate !== 'wss' ? <Avatar /> : { name: userName, imageSrc: imageBlobUrl },
       name: userName,
-      currentUserInitials,
+      currentUserInitials
     };
   };
 
@@ -198,7 +198,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           name,
           icon: page.pxPageViewIcon.replace('pi pi-', ''),
           active: page.pyRuleName === activeTab,
-          onClick: () => (!page.pyURLContent || page.pyURLContent === '' ? showPage(page.pyRuleName, page.pyClassName) : openURL(page.pyURLContent)),
+          onClick: () => (!page.pyURLContent || page.pyURLContent === '' ? showPage(page.pyRuleName, page.pyClassName) : openURL(page.pyURLContent))
         };
       });
 
@@ -221,7 +221,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           appInfo={{
             imageSrc: iconURL,
             appName: localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase()),
-            onClick: links[0] && /* links[0].onClick ? */ links[0].onClick /* : undefined */,
+            onClick: links[0] && /* links[0].onClick ? */ links[0].onClick /* : undefined */
           }}
           navLinks={links.filter((link, index) => {
             return index !== 0;

@@ -476,7 +476,7 @@ const processOverrideFile = function (filePath) {
     files: filePath,
     from: /^import .+/gm,
     to: (match) => processImportLine(match, filePath),
-    countMatches: true,
+    countMatches: true
   };
 
   const theResults = replaceInFile.sync(options);

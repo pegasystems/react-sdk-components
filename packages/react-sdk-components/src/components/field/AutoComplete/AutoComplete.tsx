@@ -71,7 +71,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
     status,
     helperText,
     hideLabel,
-    onRecordChange,
+    onRecordChange
   } = props;
 
   const context = getPConnect().getContextName();
@@ -114,14 +114,14 @@ export default function AutoComplete(props: AutoCompleteProps) {
       {
         key: 'true',
         setProperty: 'Associated property',
-        value: valueProp,
+        value: valueProp
       },
       {
         display: 'true',
         primary: 'true',
         useForSearch: true,
-        value: displayProp,
-      },
+        value: displayProp
+      }
     ];
   }
   columns = preProcessColumns(columns);
@@ -141,7 +141,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
           const val = element[displayColumn.primary]?.toString();
           const obj = {
             key: element[displayColumn.key] || element.pyGUID,
-            value: val,
+            value: val
           };
           optionsData.push(obj);
         });

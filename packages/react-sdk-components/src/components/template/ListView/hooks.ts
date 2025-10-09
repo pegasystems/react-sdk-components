@@ -14,7 +14,7 @@ export default function useInit(props) {
     ref,
     showDynamicFields,
     isDataObject,
-    cosmosTableRef,
+    cosmosTableRef
   } = props;
   let { editing, selectionMode } = props;
 
@@ -36,14 +36,14 @@ export default function useInit(props) {
         PCore.getAnalyticsUtils().getFieldsForDataSource(referenceList, false, getPConnect().getContextName()) as Promise<any>
       ).catch(() => {
         return Promise.resolve({
-          data: { data: [] },
+          data: { data: [] }
         });
       });
       promisesArray.push(reportColumnsPromise);
 
       const fetchEditDetails = async (metadata) => {
         const {
-          data: { isQueryable },
+          data: { isQueryable }
         } = metadata;
         if (!isDataObject) {
           if (!isQueryable) {
@@ -72,7 +72,7 @@ export default function useInit(props) {
         getPConnect,
         compositeKeys,
         isSearchable,
-        isCacheable: true,
+        isCacheable: true
       }).then(async (context) => {
         if (isCompStillMounted) {
           return readContextResponse(context, {
@@ -81,7 +81,7 @@ export default function useInit(props) {
             selectionCountThreshold,
             ref,
             selectionMode,
-            cosmosTableRef,
+            cosmosTableRef
           });
         }
       });

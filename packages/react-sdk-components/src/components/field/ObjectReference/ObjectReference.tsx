@@ -31,7 +31,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     hideLabel = false,
     inline = false,
     showPromotedFilters = false,
-    additionalFields,
+    additionalFields
   } = props;
 
   const SingleReferenceReadonly = getComponentFromMap('SingleReferenceReadOnly');
@@ -115,7 +115,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     if (type === 'SemanticLink' && !canBeChangedInReviewMode) {
       const config = {
         ...rawViewMetadata.config,
-        primaryField: rawViewMetadata.config.displayField,
+        primaryField: rawViewMetadata.config.displayField
       };
       config.caseClass = rawViewMetadata.config.targetObjectClass;
       config.text = config.primaryField;
@@ -124,10 +124,10 @@ export default function ObjectReference(props: ObjectReferenceProps) {
         rawViewMetadata.config?.displayField ? getDataRelationshipContextFromKey(rawViewMetadata.config.displayField) : null
       }`;
       config.resourceParams = {
-        workID: config.value,
+        workID: config.value
       };
       config.resourcePayload = {
-        caseClassName: config.caseClass,
+        caseClassName: config.caseClass
       };
 
       return getPConnect().createComponent({
@@ -139,8 +139,8 @@ export default function ObjectReference(props: ObjectReferenceProps) {
           hideLabel,
           dataRelationshipContext: rawViewMetadata.config?.displayField
             ? getDataRelationshipContextFromKey(rawViewMetadata.config.displayField)
-            : null,
-        },
+            : null
+        }
       });
     }
     if (isDisplayModeEnabled && !canBeChangedInReviewMode) {
@@ -148,7 +148,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
         <SingleReferenceReadonly
           config={{
             ...rawViewMetadata.config,
-            primaryField: rawViewMetadata.config.displayField,
+            primaryField: rawViewMetadata.config.displayField
           }}
           getPConnect={getPConnect}
           label={propsToUse.label}
@@ -187,9 +187,9 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     fieldMetaData = {
       datasourceMetadata: {
         datasource: {
-          parameters: {},
-        },
-      },
+          parameters: {}
+        }
+      }
     };
     if (rawViewMetadata.config?.parameters) {
       fieldMetaData.datasourceMetadata.datasource.parameters = parameters;
@@ -221,8 +221,8 @@ export default function ObjectReference(props: ObjectReferenceProps) {
         dataRelationshipContext: rawViewMetadata.config?.displayField ? getDataRelationshipContextFromKey(rawViewMetadata.config.displayField) : null,
         hideLabel,
         onRecordChange,
-        inline,
-      },
+        inline
+      }
     });
   }, [rawViewMetadata.config?.datasource?.source, parameters, propsToUse.required, propsToUse.disabled, getPConnect().getPageReference()]);
 

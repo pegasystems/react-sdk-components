@@ -53,7 +53,7 @@ const UserReference = (props: UserReferenceProps) => {
     disabled = false,
     onChange,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    variant = 'inline',
+    variant = 'inline'
   } = props;
   const [dropDownDataSource, setDropDownDataSource] = useState([]);
   const [userName, setUserName] = useState('');
@@ -76,7 +76,7 @@ const UserReference = (props: UserReferenceProps) => {
       }
     } else if (displayAs === DROPDOWN_LIST) {
       const queryPayload = {
-        dataViewName: OPERATORS_DP,
+        dataViewName: OPERATORS_DP
       };
 
       PCore.getRestClient()
@@ -84,7 +84,7 @@ const UserReference = (props: UserReferenceProps) => {
         .then((res) => {
           const ddDataSource = res.data.data.map((listItem) => ({
             key: listItem.pyUserIdentifier,
-            value: listItem.pyUserName,
+            value: listItem.pyUserName
           }));
           setDropDownDataSource(ddDataSource);
         })
@@ -125,7 +125,7 @@ const UserReference = (props: UserReferenceProps) => {
           value: 'pyUserName',
           display: 'true',
           useForSearch: true,
-          primary: 'true',
+          primary: 'true'
         },
         {
           value: 'pyUserIdentifier',
@@ -133,8 +133,8 @@ const UserReference = (props: UserReferenceProps) => {
           key: 'true',
           display: 'true',
           secondary: 'true',
-          useForSearch: 'true',
-        },
+          useForSearch: 'true'
+        }
       ];
 
       userReferenceComponent = (

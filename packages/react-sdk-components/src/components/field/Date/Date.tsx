@@ -45,14 +45,14 @@ export default function Date(props: DateProps) {
 
   if (displayMode === 'DISPLAY_ONLY') {
     const formattedDate = format(props.value, 'date', {
-      format: dateFormatInfo.dateFormatString,
+      format: dateFormatInfo.dateFormatString
     });
     return <FieldValueList name={hideLabel ? '' : label} value={formattedDate} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
     const formattedDate = format(props.value, 'date', {
-      format: dateFormatInfo.dateFormatString,
+      format: dateFormatInfo.dateFormatString
     });
     return <FieldValueList name={hideLabel ? '' : label} value={formattedDate} variant='stacked' />;
   }
@@ -85,8 +85,8 @@ export default function Date(props: DateProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProps },
-        },
+          InputProps: { ...testProps }
+        }
       }}
       onChange={handleChange}
     />

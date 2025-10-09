@@ -82,11 +82,11 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
         meta: {
           type: 'ModalViewContainer',
           config: {
-            name: 'modal',
-          },
+            name: 'modal'
+          }
         },
-        options,
-      }),
+        options
+      })
     );
   }, []);
 
@@ -98,11 +98,11 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
         meta: {
           type: 'PreviewViewContainer',
           config: {
-            name: 'preview',
-          },
+            name: 'preview'
+          }
         },
-        options,
-      }),
+        options
+      })
     );
   }, []);
 
@@ -120,9 +120,9 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
         const viewContConfig = {
           meta: {
             type: 'ViewContainer',
-            config: configProps,
+            config: configProps
           },
-          options,
+          options
         };
         const theViewCont: any = PCore.createPConnect(viewContConfig);
         // Add in displayOnlyFA if prop is on RootContainer
@@ -160,8 +160,8 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
     rootViewConfig = {
       meta: items[0].view,
       options: {
-        context: items[0].context,
-      },
+        context: items[0].context
+      }
     };
   }
   const prevRootConfig = usePrevious(rootViewConfig);
@@ -175,8 +175,8 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
     const currentRootConfig = {
       meta: itemView,
       options: {
-        context: items[0].context,
-      },
+        context: items[0].context
+      }
     };
 
     if (prevRootConfig === null || !PCore.isDeepEqual(currentRootConfig, prevRootConfig)) {

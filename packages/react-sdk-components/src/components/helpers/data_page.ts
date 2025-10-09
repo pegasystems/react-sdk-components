@@ -2,7 +2,7 @@ export const getDataPage = (dataPageName, parameters, context) => {
   let dataViewParams;
   if (parameters) {
     dataViewParams = {
-      dataViewParameters: parameters,
+      dataViewParameters: parameters
     };
   }
   return new Promise((resolve, reject) => {

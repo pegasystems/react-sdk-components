@@ -29,7 +29,7 @@ export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
     imageTheme = 'light',
     backgroundImage = '',
     backgroundColor = '',
-    tintImage = false,
+    tintImage = false
   } = props;
 
   const childArray = useMemo(() => {
@@ -47,7 +47,7 @@ export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
         title: heading,
         message,
         backgroundImage,
-        tintImage,
+        tintImage
       }}
     />
   );

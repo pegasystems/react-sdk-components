@@ -81,11 +81,11 @@ function getBanners(config) {
                 clearMessages({
                   category: PAGE,
                   type,
-                  context: target,
+                  context: target
                 } as any);
               }
         }
-      />,
+      />
     );
   });
 

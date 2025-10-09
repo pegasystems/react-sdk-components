@@ -21,17 +21,17 @@ const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, c
       {},
       {
         pageNumber: 1,
-        pageSize: numberOfRecords,
+        pageSize: numberOfRecords
       },
       {
-        select: Object.keys(fields).map((key) => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) })),
+        select: Object.keys(fields).map((key) => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) }))
       },
       {
         invalidateCache: true,
         additionalApiParams: {
-          includeTotalCount,
-        },
-      },
+          includeTotalCount
+        }
+      }
     )
     .then((response) => {
       return {
@@ -40,8 +40,8 @@ const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, c
           Object.keys(fields).reduce((obj, key) => {
             obj[key] = row[PCore.getAnnotationUtils().getPropertyName(fields[key])];
             return obj;
-          }, {}),
-        ),
+          }, {})
+        )
       };
     });
 };
@@ -86,18 +86,18 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     borderLeft: '6px solid',
-    borderLeftColor: theme.palette.primary.light,
+    borderLeftColor: theme.palette.primary.light
   },
   avatar: {
     backgroundColor: theme.palette.primary.light,
-    color: theme.palette.getContrastText(theme.palette.primary.light),
+    color: theme.palette.getContrastText(theme.palette.primary.light)
   },
   todoWrapper: {
     borderLeft: '6px solid',
     borderLeftColor: theme.palette.primary.light,
     padding: theme.spacing(1),
-    margin: theme.spacing(1),
-  },
+    margin: theme.spacing(1)
+  }
 }));
 
 export default function ToDo(props: ToDoProps) {
@@ -109,7 +109,7 @@ export default function ToDo(props: ToDoProps) {
     showTodoList = true,
     myWorkList = {},
     type = 'worklist',
-    isConfirm = false,
+    isConfirm = false
   } = props;
 
   const CONSTS = PCore.getConstants();
@@ -137,7 +137,7 @@ export default function ToDo(props: ToDoProps) {
   const [count, setCount] = useState(0);
 
   const {
-    WORK_BASKET: { MY_WORK_LIST },
+    WORK_BASKET: { MY_WORK_LIST }
   } = PCore.getConstants();
 
   function initAssignments(): any[] {
@@ -153,7 +153,7 @@ export default function ToDo(props: ToDoProps) {
       setCount(responseData.totalCount);
       setAssignments(responseData.data);
     },
-    [MY_WORK_LIST],
+    [MY_WORK_LIST]
   );
 
   useEffect(() => {
@@ -215,7 +215,7 @@ export default function ToDo(props: ToDoProps) {
 
     const options: any = {
       containerName: sTargetContainerName,
-      channelName: '',
+      channelName: ''
     };
 
     if (classname === null || classname === '') {
@@ -298,7 +298,7 @@ export default function ToDo(props: ToDoProps) {
               <Typography variant='h6'>{assignment?.name}</Typography>
               {`${localizedVal('Task in', localeCategory)} ${renderTaskId(type, getPConnect, showTodoList, assignment)} \u2022  ${localizedVal(
                 'Urgency',
-                localeCategory,
+                localeCategory
               )}  ${getPriority(assignment)}`}
             </div>
             {(!isConfirm || canPerform) && (

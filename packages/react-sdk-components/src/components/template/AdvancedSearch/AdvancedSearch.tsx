@@ -8,7 +8,7 @@ export default function AdvancedSearch(props) {
   const { getPConnect, targetObjectClass, localeReference } = props;
   const SearchGroups = getComponentFromMap('SearchGroups');
   const { dataReferenceConfigToChild, isCreateNewReferenceEnabled, disableStartingFieldsForReference, pyID, searchSelectCacheKey } = useContext(
-    DataReferenceAdvancedSearchContext,
+    DataReferenceAdvancedSearchContext
   ) as any;
 
   const { selectionMode, value: singleSelectFieldValue, readonlyContextList: multiSelectField } = dataReferenceConfigToChild;
@@ -55,14 +55,14 @@ export default function AdvancedSearch(props) {
         dataReferenceConfigToChild,
         isCreateNewReferenceEnabled,
         disableStartingFieldsForReference,
-        pyID,
+        pyID
       }),
       searchFields,
       showRecords,
       label: localizedVal('Search results', 'DataReference'),
       searchSelectCacheKey,
-      cache,
-    },
+      cache
+    }
   });
 
   const { selectionList, dataRelationshipContext } = editableFieldComp.props.getPConnect().getConfigProps();
@@ -74,7 +74,7 @@ export default function AdvancedSearch(props) {
     localeReference,
     setShowRecords,
     searchSelectCacheKey,
-    cache,
+    cache
   };
 
   return (

@@ -21,7 +21,7 @@ const editPegaComponentsMapInLib = function () {
     files: [compJsFileToEdit, compJSMapFileToEdit, compDtsFileToEdit, compDtsMapFileToEdit],
     from: /\/src\//g,
     to: '/lib/',
-    countMatches: true,
+    countMatches: true
   };
 
   try {

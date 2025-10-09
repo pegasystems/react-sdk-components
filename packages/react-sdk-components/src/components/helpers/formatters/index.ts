@@ -6,7 +6,7 @@ import { getCurrentTimezone, getLocale } from './common';
 export default {
   ...Boolean,
   ...Currency,
-  ...DateFormatter,
+  ...DateFormatter
 };
 
 function getDateObject(text): Date {
@@ -64,7 +64,7 @@ export function format(value, type, options = {}): string {
       const defaultOptions = {
         locale: getLocale(),
         position: 'before',
-        decPlaces: 2,
+        decPlaces: 2
       };
       const params = { ...defaultOptions, ...options };
       formattedValue = Currency.Currency(value, params);
@@ -95,7 +95,7 @@ export function format(value, type, options = {}): string {
     case 'date': {
       const defaultOptions = {
         format: 'MMM DD, YYYY',
-        timezone: getCurrentTimezone(),
+        timezone: getCurrentTimezone()
       };
       const params = { ...defaultOptions, ...options };
       formattedValue = DateFormatter.Date(parseDateInISO(value), params);
@@ -105,7 +105,7 @@ export function format(value, type, options = {}): string {
     case 'datetime': {
       const defaultOptions = {
         format: 'MMM DD, YYYY h:mm A',
-        timezone: getCurrentTimezone(),
+        timezone: getCurrentTimezone()
       };
       const params = { ...defaultOptions, ...options };
       formattedValue = DateFormatter.Date(parseDateInISO(value), params);

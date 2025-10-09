@@ -29,8 +29,8 @@ export default function Details(props: DetailsProps) {
     createElement(createPConnectComponent(), {
       ...configObject,
 
-      key: index.toString(),
-    }),
+      key: index.toString()
+    })
   );
 
   // Set up highlighted data to pass in return if is set to show, need raw metadata to pass to createComponent

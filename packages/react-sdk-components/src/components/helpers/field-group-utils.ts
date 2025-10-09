@@ -44,8 +44,8 @@ export function buildView(pConn, index, viewConfigPath): ReactElement {
       context,
       pageReference,
       referenceList,
-      hasForm: true,
-    },
+      hasForm: true
+    }
   };
 
   const view = PCore.createPConnect(config);

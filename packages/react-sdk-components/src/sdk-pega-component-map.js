@@ -233,7 +233,7 @@ const pegaSdkComponentMap = {
   WideNarrowForm,
   WideNarrowPage,
   WssNavBar,
-  WssQuickCreate,
+  WssQuickCreate
 };
 
 export default pegaSdkComponentMap;
