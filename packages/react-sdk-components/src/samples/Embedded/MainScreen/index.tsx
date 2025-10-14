@@ -155,7 +155,7 @@ export default function MainScreen(props) {
     setShowPega(false);
   };
 
-  const onShopNow = async optionClicked => {
+  const onShopNow = async (optionClicked) => {
     setShowLandingPage(false);
     setShowPega(true);
     const sdkConfig = await getSdkConfig();
@@ -208,7 +208,7 @@ export default function MainScreen(props) {
               </h2>
             </div>
             <div className={classes.plansContainer}>
-              {shoppingOptions.map(option => (
+              {shoppingOptions.map((option) => (
                 <ShoppingOptionCard key={option.level} {...option} onClick={onShopNow} />
               ))}
             </div>
