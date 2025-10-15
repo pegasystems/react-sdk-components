@@ -21,7 +21,7 @@ const updateDirtyCheckChangeList = jest.fn();
 const validate = jest.fn();
 const clearErrorMessages = jest.fn();
 const [ignoreSuggestion, acceptSuggestion] = [jest.fn(), jest.fn()];
-const getDefaultProps = () => ({
+const defaultProps = {
   getPConnect: jest.fn(
     () =>
       ({
@@ -66,11 +66,11 @@ const getDefaultProps = () => ({
     { key: 'option3', value: 'Option 3' },
     { key: 'option4', value: 'Option 4' }
   ]
-});
+};
 
 describe('AutoComplete Component', () => {
   test('renders with required attribute', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.required = true;
     const { rerender } = render(<AutoComplete {...props} />);
     expect(screen.getAllByText('AutoComplete')[0]).toHaveClass('Mui-required');
@@ -81,7 +81,7 @@ describe('AutoComplete Component', () => {
   });
 
   test('renders with disabled attribute', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.disabled = true;
     const { rerender } = render(<AutoComplete {...props} />);
     expect(screen.getByText('AutoComplete')).toHaveClass('Mui-disabled');
@@ -92,7 +92,7 @@ describe('AutoComplete Component', () => {
   });
 
   test('renders with readOnly attribute', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.readOnly = true;
     const { getByTestId, rerender } = render(<TextInput {...props} />);
     expect(getByTestId('autoCompleteTestId')).toHaveAttribute('readonly');
@@ -103,13 +103,13 @@ describe('AutoComplete Component', () => {
   });
 
   test('renders with label', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     const { getByText } = render(<AutoComplete {...props} />);
     expect(getByText('AutoComplete')).toBeVisible();
   });
 
   test('renders in DISPLAY_ONLY mode', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.displayMode = 'DISPLAY_ONLY';
     props.value = 'Hi there!';
     const { getByText } = render(<AutoComplete {...props} />);
@@ -117,7 +117,7 @@ describe('AutoComplete Component', () => {
   });
 
   test('renders in STACKED_LARGE_VAL mode', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.displayMode = 'STACKED_LARGE_VAL';
     props.value = 'Hi there!';
     const { getByText } = render(<AutoComplete {...props} />);
@@ -125,7 +125,7 @@ describe('AutoComplete Component', () => {
   });
 
   test('does not invoke onBlur handler for readOnly fields', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.readOnly = true;
     const { getByTestId } = render(<TextInput {...props} />);
     fireEvent.change(getByTestId('autoCompleteTestId'), { target: { value: 'Option 1' } });
@@ -134,7 +134,7 @@ describe('AutoComplete Component', () => {
   });
 
   test('invokes handlers for blur and change events', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     const { getByRole, getByText } = render(<AutoComplete {...props} />);
     const input = getByRole('combobox');
     fireEvent.change(input, { target: { value: 'Option 1' } });
@@ -144,7 +144,7 @@ describe('AutoComplete Component', () => {
   });
 
   test('invokes handlers for blur and change events', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     const { getByRole } = render(<AutoComplete {...props} />);
     const input = getByRole('combobox');
     fireEvent.change(input, { target: { value: 'Option 1' } });
@@ -153,7 +153,7 @@ describe('AutoComplete Component', () => {
   });
 
   test('handles input value changes correctly', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     const { getByRole, getByText } = render(<AutoComplete {...props} />);
     const input = getByRole('combobox');
     fireEvent.change(input, { target: { value: 'Option 1' } });

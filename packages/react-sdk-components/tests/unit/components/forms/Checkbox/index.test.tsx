@@ -1,185 +1,3 @@
-// import React from 'react';
-// import { render, fireEvent, screen } from '@testing-library/react';
-// import '@testing-library/jest-dom/extend-expect';
-// import CheckboxComponent from '../../../../../src/components/field/Checkbox';
-// import handleEvent from '../../../../../src/components/helpers/event-utils';
-
-// import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../../../../src/components/helpers/instructions-utils';
-
-// jest.mock('../../../../../src/components/helpers/event-utils');
-// jest.mock('../../../../../src/bridge/helpers/sdk_component_map', () => ({
-//   getComponentFromMap: jest.fn(() => require('../FieldValueList').default)
-// }));
-// jest.mock('../../../../../src/components/helpers/instructions-utils', () => ({
-//   insertInstruction: jest.fn(),
-//   deleteInstruction: jest.fn(),
-//   updateNewInstuctions: jest.fn()
-// }));
-
-// const updateFieldValue = jest.fn();
-// const triggerFieldChange = jest.fn();
-// const validate = jest.fn();
-// const clearErrorMessages = jest.fn();
-
-// const getDefaultProps = () => ({
-//   getPConnect: jest.fn(
-//     () =>
-//       ({
-//         getActionsApi: () => ({ updateFieldValue, triggerFieldChange }),
-//         getStateProps: () => ({
-//           value: '.checkbox'
-//         }),
-//         getValidationApi: () => ({
-//           validate
-//         }),
-//         clearErrorMessages
-//       }) as any
-//   ),
-//   label: 'Checkbox Label',
-//   caption: 'Checkbox Caption',
-//   required: false,
-//   disabled: false,
-//   value: false,
-//   validatemessage: '',
-//   status: '',
-//   readOnly: false,
-//   testId: 'checkboxTestId',
-//   fieldMetadata: {},
-//   helperText: '',
-//   displayMode: '',
-//   hideLabel: false,
-//   trueLabel: 'True',
-//   falseLabel: 'False',
-//   selectionMode: '',
-//   datasource: {},
-//   selectionKey: '',
-//   selectionList: '',
-//   primaryField: '',
-//   referenceList: '',
-//   readonlyContextList: [{ key: '' }],
-//   onChange: jest.fn()
-// });
-
-// describe('CheckboxComponent', () => {
-//   test('renders with required attribute', () => {
-//     const props = getDefaultProps();
-//     props.required = true;
-//     const { rerender } = render(<CheckboxComponent {...props} />);
-//     expect(screen.getByText('Checkbox Label')).toBeVisible();
-//     expect(screen.getByText('Checkbox Label').closest('legend')).toHaveClass('Mui-required');
-
-//     props.required = false;
-//     rerender(<CheckboxComponent {...props} />);
-//     expect(screen.getByText('Checkbox Label').closest('legend')).not.toHaveClass('Mui-required');
-//   });
-
-//   test('renders with disabled attribute', () => {
-//     const props = getDefaultProps();
-//     props.disabled = true;
-//     render(<CheckboxComponent {...props} />);
-//     expect(screen.getByLabelText('Checkbox Caption')).toBeDisabled();
-//   });
-
-//   test('renders with readOnly attribute', () => {
-//     const props = getDefaultProps();
-//     props.readOnly = true;
-//     render(<CheckboxComponent {...props} />);
-//     expect(screen.getByLabelText('Checkbox Caption')).toHaveAttribute('readonly');
-//   });
-
-//   test('renders with label', () => {
-//     const props = getDefaultProps();
-//     render(<CheckboxComponent {...props} />);
-//     expect(screen.getByText('Checkbox Label')).toBeVisible();
-//   });
-
-//   test('renders in DISPLAY_ONLY mode', () => {
-//     const props = getDefaultProps();
-//     props.displayMode = 'DISPLAY_ONLY';
-//     props.value = true;
-//     render(<CheckboxComponent {...props} />);
-//     expect(screen.getByText('True')).toBeVisible();
-//   });
-
-//   test('renders in STACKED_LARGE_VAL mode', () => {
-//     const props = getDefaultProps();
-//     props.displayMode = 'STACKED_LARGE_VAL';
-//     props.value = true;
-//     render(<CheckboxComponent {...props} />);
-//     expect(screen.getByText('True')).toBeVisible();
-//   });
-
-//   test('does not invoke onBlur handler for readOnly fields', () => {
-//     const props = getDefaultProps();
-//     props.readOnly = true;
-//     render(<CheckboxComponent {...props} />);
-//     fireEvent.change(screen.getByTestId('checkboxTestId'), { target: { checked: true } });
-//     fireEvent.blur(screen.getByTestId('checkboxTestId'));
-//     expect(handleEvent).not.toHaveBeenCalled();
-//   });
-
-//   test('invokes handlers for blur and change events', () => {
-//     const props = getDefaultProps();
-//     render(<CheckboxComponent {...props} />);
-
-//     const checkbox = screen.getByLabelText('Checkbox Caption') as HTMLInputElement;
-//     fireEvent.click(checkbox, {
-//       target: {
-//         checked: true
-//       }
-//     });
-//     expect(handleEvent).toHaveBeenCalled();
-//   });
-
-//   test('renders multiple checkboxes in multi-selection mode', () => {
-//     const props = getDefaultProps();
-//     props.selectionMode = 'multi';
-//     props.datasource = {
-//       source: [
-//         { key: '1', value: 'Option 1' },
-//         { key: '2', value: 'Option 2' },
-//         { key: '3', value: 'Option 3' },
-//         { key: '4', value: 'Option 4' }
-//       ]
-//     };
-//     props.selectionKey = 'selection.key';
-//     props.selectionList = 'selectionList';
-//     props.primaryField = 'primaryField';
-//     props.readonlyContextList = [{ key: '1' }];
-//     const { getByLabelText } = render(<CheckboxComponent {...props} />);
-//     expect(getByLabelText('Option 1').closest('span')).toHaveClass('Mui-checked');
-//   });
-
-//   test('invokes handlers for multi-selection mode', () => {
-//     const props = getDefaultProps();
-//     props.selectionMode = 'multi';
-//     props.datasource = {
-//       source: [
-//         { key: '1', value: 'Option 1' },
-//         { key: '2', value: 'Option 2' }
-//       ]
-//     };
-//     props.selectionKey = 'selection.key';
-//     props.selectionList = 'selectionList';
-//     props.primaryField = 'primaryField';
-//     props.readonlyContextList = [{ key: '1' }];
-//     render(<CheckboxComponent {...props} />);
-//     const checkbox1 = screen.getByLabelText('Option 1') as HTMLInputElement;
-//     fireEvent.click(checkbox1, {
-//       target: {
-//         checked: false
-//       }
-//     });
-//     const checkbox2 = screen.getByLabelText('Option 1') as HTMLInputElement;
-//     fireEvent.click(checkbox2, {
-//       target: {
-//         checked: true
-//       }
-//     });
-//     expect(insertInstruction).toHaveBeenCalled();
-//   });
-// });
-
 import React from 'react';
 import { render, fireEvent, screen, cleanup } from '@testing-library/react';
 import CheckboxComponent from '../../../../../src/components/field/Checkbox';
@@ -205,14 +23,14 @@ jest.mock('../../../../../src/components/helpers/instructions-utils', () => ({
 
 jest.mock('../../../../../src/bridge/helpers/sdk_component_map', () => ({
   __esModule: true,
-  getComponentFromMap: name => {
+  getComponentFromMap: (name) => {
     if (name === 'SelectableCard') {
-      return props => (
+      return (props) => (
         <div data-test-id={`selectable-card-${props.testId}`}>
           <button
             data-test-id={`card-option-${props.testId}-opt1`}
             id='opt1'
-            onClick={e => {
+            onClick={(e) => {
               props.onChange({
                 target: { id: 'opt1', checked: true },
                 stopPropagation: () => {}
@@ -228,9 +46,6 @@ jest.mock('../../../../../src/bridge/helpers/sdk_component_map', () => ({
     if (name === 'FieldValueList') {
       return require('../FieldValueList').default;
     }
-    // if (name === 'FieldValueList') {
-    //   return ({ name, value, variant }) => <div data-test-id={`field-value-${variant ?? 'default'}`}>{`${name}: ${value}`}</div>;
-    // }
     return null;
   }
 }));
@@ -247,7 +62,7 @@ const getPConnect = jest.fn(
     }) as any
 );
 
-const getDefaultProps = () => ({
+const defaultProps = {
   getPConnect,
   label: 'Checkbox Label',
   caption: 'Checkbox Caption',
@@ -281,7 +96,7 @@ const getDefaultProps = () => ({
   renderMode: '',
   image: 'data.image',
   onChange: jest.fn()
-});
+};
 
 describe('CheckboxComponent', () => {
   afterEach(() => {
@@ -290,14 +105,14 @@ describe('CheckboxComponent', () => {
   });
 
   test('renders with label and helper text', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     render(<CheckboxComponent {...props} />);
     expect(screen.getByText('Checkbox Label')).toBeInTheDocument();
     expect(screen.getByText('Checkbox helper text')).toBeInTheDocument();
   });
 
   test('renders with required attribute', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.required = true;
     const { rerender } = render(<CheckboxComponent {...props} />);
     expect(screen.getByText('Checkbox Label')).toBeVisible();
@@ -309,7 +124,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('renders with disabled attribute', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.required = true;
     props.disabled = true;
     render(<CheckboxComponent {...props} />);
@@ -318,7 +133,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('renders with readOnly attribute', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.readOnly = true;
     render(<CheckboxComponent {...props} />);
     const checkbox = screen.getByRole('checkbox');
@@ -326,7 +141,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('renders with validation message overriding helper text', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.validatemessage = 'Validation error';
     render(<CheckboxComponent {...props} />);
     expect(screen.getByText('Validation error')).toBeVisible();
@@ -334,7 +149,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('calls handleEvent on change when not readOnly', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     render(<CheckboxComponent {...props} />);
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
@@ -342,7 +157,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('calls validate on blur when not readOnly', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     render(<CheckboxComponent {...props} />);
     const checkbox = screen.getByRole('checkbox');
     fireEvent.blur(checkbox);
@@ -350,7 +165,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('does not call handleEvent or validate when readOnly', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.readOnly = true;
     render(<CheckboxComponent {...props} />);
     const checkbox = screen.getByRole('checkbox');
@@ -361,7 +176,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('renders in DISPLAY_ONLY mode', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.displayMode = 'DISPLAY_ONLY';
     props.value = true;
     render(<CheckboxComponent {...props} />);
@@ -369,7 +184,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('renders in STACKED_LARGE_VAL mode', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.displayMode = 'STACKED_LARGE_VAL';
     props.value = false;
     render(<CheckboxComponent {...props} />);
@@ -377,7 +192,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('renders multi-selection checkboxes and handles selection', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.selectionMode = 'multi';
     props.datasource = {
       source: [
@@ -400,14 +215,14 @@ describe('CheckboxComponent', () => {
 
   // Card variant tests
   test('renders SelectableCard when variant is card', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.variant = 'card';
     render(<CheckboxComponent {...props} />);
     expect(screen.getByTestId(`selectable-card-${props.testId}`)).toBeInTheDocument();
   });
 
   test('handles card option selection', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.variant = 'card';
     render(<CheckboxComponent {...props} />);
     const cardOption = screen.getByTestId(`card-option-${props.testId}-opt1`);
@@ -419,7 +234,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('validates on blur in card variant', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.variant = 'card';
     props.readonlyContextList = []; // ✅ ensure this is defined
     render(<CheckboxComponent {...props} />);
@@ -429,7 +244,7 @@ describe('CheckboxComponent', () => {
   });
 
   test('renders label in card variant', () => {
-    const props = getDefaultProps();
+    const props = { ...defaultProps };
     props.variant = 'card';
     render(<CheckboxComponent {...props} />);
     expect(screen.getByText('Checkbox Label')).toBeInTheDocument();
