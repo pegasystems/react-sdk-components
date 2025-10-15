@@ -116,11 +116,11 @@ export default function CheckboxComponent(props: CheckboxProps) {
     return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} variant='stacked' />;
   }
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     handleEvent(actionsApi, 'changeNblur', propName, event.target.checked);
   };
 
-  const handleBlur = (event) => {
+  const handleBlur = event => {
     thePConn.getValidationApi().validate(event.target.checked);
   };
 
@@ -155,10 +155,10 @@ export default function CheckboxComponent(props: CheckboxProps) {
             dataSource={datasource}
             getPConnect={getPConnect}
             readOnly={renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY' || readOnly}
-            onChange={(e) => {
+            onChange={e => {
               e.stopPropagation();
               const recordKey = selectionKey?.split('.').pop();
-              const selectedItem = datasource?.source?.find((item) => item[recordKey as any] === e.target.id) ?? {};
+              const selectedItem = datasource?.source?.find(item => item[recordKey as any] === e.target.id) ?? {};
               handleCheckboxChange(e, {
                 id: selectedItem[recordKey as any],
                 primary: selectedItem[recordKey as any]
@@ -216,12 +216,12 @@ export default function CheckboxComponent(props: CheckboxProps) {
           control={
             <Checkbox
               key={index}
-              checked={selectedvalues?.some?.((data) => data[dataField] === element.key)}
-              onChange={(event) => handleChangeMultiMode(event, element)}
+              checked={selectedvalues?.some?.(data => data[dataField] === element.key)}
+              onChange={event => handleChangeMultiMode(event, element)}
               onBlur={() => {
                 thePConn.getValidationApi().validate(selectedvalues, selectionList);
               }}
-              data-testid={`${testId}:${element.value}`}
+              data-test-id={`${testId}:${element.value}`}
             />
           }
           key={index}
