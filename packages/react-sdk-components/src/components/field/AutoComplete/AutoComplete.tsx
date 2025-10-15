@@ -71,7 +71,8 @@ export default function AutoComplete(props: AutoCompleteProps) {
     status,
     helperText,
     hideLabel,
-    onRecordChange
+    onRecordChange,
+    disabled
   } = props;
 
   const context = getPConnect().getContextName();
@@ -210,6 +211,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
           required={required}
           error={status === 'error'}
           label={label}
+          disabled={disabled}
           data-test-id={testId}
         />
       )}
