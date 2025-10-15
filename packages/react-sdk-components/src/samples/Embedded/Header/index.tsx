@@ -150,7 +150,7 @@ export default function Header() {
             </li>
             <li>
               <a href='/' className='profile-link' aria-label='User Profile'>
-                <img src='./assets/img/Frame 727.png' alt='User Profile' className={classes.profileAvatar} />
+                <img src='./assets/img/UserProfile.png' alt='User Profile' className={classes.profileAvatar} />
               </a>
             </li>
           </ul>

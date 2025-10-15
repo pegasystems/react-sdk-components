@@ -81,7 +81,7 @@ export default function ResolutionScreen() {
   return (
     <div className={classes.resolutionPage}>
       <div className={classes.resolutionCard}>
-        <img src='./assets/img/Frame 613.png' alt='Success Checkmark' className={classes.successImage} />
+        <img src='./assets/img/SuccessIcon.png' alt='Success Checkmark' className={classes.successImage} />
 
         <h2 className={classes.title}>Get excited for your new phone!</h2>
         <p className={classes.message}>
