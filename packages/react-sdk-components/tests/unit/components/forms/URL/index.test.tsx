@@ -35,7 +35,7 @@ const defaultProps = {
         getCaseInfo: jest.fn(() => ({
           getClassName: jest.fn(() => 'TestClass')
         })),
-        getLocalizedValue: jest.fn(value => value),
+        getLocalizedValue: jest.fn((value) => value),
         getLocaleRuleNameFromKeys: jest.fn(() => 'localeRuleName')
       }) as any
   ),

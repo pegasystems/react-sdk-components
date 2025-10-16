@@ -38,7 +38,7 @@ const defaultProps = {
         getCaseInfo: jest.fn(() => ({
           getClassName: jest.fn(() => 'TestClass')
         })),
-        getLocalizedValue: jest.fn(value => value),
+        getLocalizedValue: jest.fn((value) => value),
         getLocaleRuleNameFromKeys: jest.fn(() => 'localeRuleName')
       }) as any
   ),
@@ -59,7 +59,7 @@ const defaultProps = {
 };
 
 describe('Time Component', () => {
-  const renderWithLocalization = ui => {
+  const renderWithLocalization = (ui) => {
     return render(<LocalizationProvider dateAdapter={AdapterDayjs}>{ui}</LocalizationProvider>);
   };
 

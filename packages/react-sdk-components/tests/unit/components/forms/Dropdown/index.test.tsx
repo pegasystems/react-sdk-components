@@ -8,7 +8,7 @@ import TextInput from '../../../../../src/components/field/TextInput';
 jest.mock('../../../../../src/components/helpers/event-utils');
 jest.mock('../../../../../src/components/helpers/utils', () => ({
   getDataPage: jest.fn(),
-  getOptionList: jest.fn(value => {
+  getOptionList: jest.fn((value) => {
     return value.datasource;
   })
 }));
@@ -49,7 +49,7 @@ const defaultProps = {
         },
         // getCaseInfo: () => ({ getClassName: () => 'Work-' }),
         getLocaleRuleNameFromKeys: (className, contextName, ruleName) => `${className}!${contextName}!${ruleName}`,
-        getLocalizedValue: value => value,
+        getLocalizedValue: (value) => value,
         updateDirtyCheckChangeList,
         clearErrorMessages,
         ignoreSuggestion,

@@ -33,7 +33,7 @@ window.PCore = {
   },
   getLocaleUtils(): any {
     return {
-      getLocaleValue: value => {
+      getLocaleValue: (value) => {
         return value;
       }
     };
@@ -80,7 +80,7 @@ const defaultProps = {
 };
 
 describe('Date Component', () => {
-  const renderWithLocalization = ui => {
+  const renderWithLocalization = (ui) => {
     return render(<LocalizationProvider dateAdapter={AdapterDayjs}>{ui}</LocalizationProvider>);
   };
 
