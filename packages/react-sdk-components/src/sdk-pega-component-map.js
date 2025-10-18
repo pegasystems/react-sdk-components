@@ -32,6 +32,7 @@ import Date from './components/field/Date';
 import DateTime from './components/field/DateTime';
 import Decimal from './components/field/Decimal';
 import DefaultForm from './components/template/DefaultForm';
+import DefaultPage from './components/template/DefaultPage/DefaultPage';
 import DeferLoad from './components/infra/DeferLoad';
 import Details from './components/template/Details/Details';
 import DetailsSubTabs from './components/template/Details/DetailsSubTabs';
@@ -152,6 +153,7 @@ const pegaSdkComponentMap = {
   DateTime,
   Decimal,
   DefaultForm,
+  DefaultPage,
   DeferLoad,
   Details,
   DetailsSubTabs,
