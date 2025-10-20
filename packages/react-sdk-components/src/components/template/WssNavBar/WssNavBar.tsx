@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     filter: 'var(--svg-color)'
   },
   appName: {
-    color: 'var(--app-text-color)',
+    // color: 'var(--app-text-color)',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(4),
     fontSize: '1.5rem'

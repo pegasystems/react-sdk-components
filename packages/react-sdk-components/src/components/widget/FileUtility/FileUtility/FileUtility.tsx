@@ -7,7 +7,7 @@ import download from 'downloadjs';
 // import SummaryList from '../../SummaryList';
 // import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
 import './FileUtility.css';
-import { IconButton, Menu, MenuItem, Button, CircularProgress } from '@mui/material';
+import { IconButton, Menu, MenuItem, Button, CircularProgress, Card } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { validateMaxSize } from '../../../helpers/attachmentHelpers';
@@ -487,7 +487,7 @@ export default function FileUtility(props: FileUtilityProps) {
   }
 
   return (
-    <div className='psdk-utility' id='file-utility'>
+    <Card className='psdk-utility' id='file-utility'>
       {inProgress && (
         <div className='progress-div'>
           <CircularProgress />
@@ -642,6 +642,6 @@ export default function FileUtility(props: FileUtilityProps) {
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

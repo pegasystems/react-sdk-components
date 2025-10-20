@@ -173,6 +173,10 @@ const darkTheme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
+        body: {
+          background: 'radial-gradient(178.62% 112% at 50% -12%, #0B0F2A 69.96%, #111951 89.19%)',
+          backgroundAttachment: 'fixed'
+        },
         ...darkThemeColours
       }
     },
@@ -222,8 +226,8 @@ const darkTheme = createTheme({
       contrastText: '#fff'
     },
     background: {
-      default: '#1a103c', // primary-bg
-      paper: '#2a1f54' // card-bg
+      // default: 'radial-gradient(178.62% 112% at 50% -12%, #0B0F2A 69.96%, #111951 89.19%)',
+      paper: 'rgba(255, 255, 255, 0.1)' // card-bg
     },
     text: {
       primary: '#e0e0e0', // text-light

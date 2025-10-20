@@ -30,7 +30,7 @@ interface AppShellProps extends PConnProps {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.backgroundColor
+    // backgroundColor: theme.backgroundColor
   },
   content: {
     flexGrow: 1,
