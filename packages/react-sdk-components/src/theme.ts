@@ -139,6 +139,16 @@ const lightTheme = createTheme({
       }
     }
   },
+  actionButtons: {
+    primary: {
+      backgroundColor: '#cc0f60',
+      color: '#FFFFFF'
+    },
+    secondary: {
+      backgroundColor: '#3F51B5',
+      color: '#FFFFFF'
+    }
+  },
   modal: {
     backgroundColor: 'rgba(100, 100, 100, 0.4)',
     topColor: 'white'
@@ -194,6 +204,16 @@ const darkTheme = createTheme({
           width: '100%'
         }
       }
+    }
+  },
+  actionButtons: {
+    primary: {
+      backgroundColor: '#C70BB5',
+      color: '#FFFFFF'
+    },
+    secondary: {
+      backgroundColor: '#FFFFFF',
+      color: '#C70BB5'
     }
   },
   embedded: {

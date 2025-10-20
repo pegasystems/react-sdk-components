@@ -10,10 +10,18 @@ interface ActionButtonsProps {
   onButtonPress: any;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   divider: {
     marginTop: '10px',
     marginBottom: '10px'
+  },
+  secondaryButton: {
+    backgroundColor: theme.actionButtons.secondary.backgroundColor,
+    color: theme.actionButtons.secondary.color
+  },
+  primaryButton: {
+    backgroundColor: theme.actionButtons.primary.backgroundColor,
+    color: theme.actionButtons.primary.color
   }
 }));
 
@@ -36,7 +44,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
             {arSecondaryButtons.map((sButton) => (
               <Grid2 key={sButton.name}>
                 <Button
-                  // className={classes.secondaryButton}
+                  className={classes.secondaryButton}
                   color='secondary'
                   variant='contained'
                   onClick={() => {
@@ -54,7 +62,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
             {arMainButtons.map((mButton) => (
               <Grid2 key={mButton.name}>
                 <Button
-                  // className={classes.primaryButton}
+                  className={classes.primaryButton}
                   color='primary'
                   variant='contained'
                   onClick={() => {
