@@ -163,7 +163,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const menuIconOverride$ = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
 
   const resolvedFields = children?.[0]?.children || presets?.[0].children?.[0].children;
-  const primaryFieldsViewIndex = resolvedFields.findIndex((field) => field.config.value === 'pyPrimaryFields');
+  const primaryFieldsViewIndex = resolvedFields.findIndex(field => field.config.value === 'pyPrimaryFields');
   // NOTE: props has each child.config with datasource and value undefined
   //  but getRawMetadata() has each child.config with datasource and value showing their unresolved values (ex: "@P thePropName")
   //  We need to use the prop name as the "glue" to tie the table dataSource, displayColumns and data together.
@@ -218,7 +218,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         .getListActions()
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
-          fieldDefs.filter((item) => item.name).map((item) => item.name)
+          fieldDefs.filter(item => item.name).map(item => item.name)
         );
     } else {
       // @ts-expect-error - An argument for 'fields' was not provided
@@ -226,12 +226,12 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     }
   }, []);
 
-  const displayedColumns = fieldDefs.map((field) => {
+  const displayedColumns = fieldDefs.map(field => {
     return field.name ? field.name : field.cellRenderer;
   });
 
   const getFormattedValue = (val, key) => {
-    const rawField = fieldsWithPropNames.find((item) => item.propName === key);
+    const rawField = fieldsWithPropNames.find(item => item.propName === key);
     let options = {};
     if (rawField && ['Boolean', 'Checkbox'].includes(rawField.type)) {
       const { trueLabel, falseLabel } = rawField.config;
@@ -258,10 +258,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     return getFormattedValue(valBuilder, inColKey);
   }
 
-  const formatRowsData = (data) => {
+  const formatRowsData = data => {
     if (!data) return {};
 
-    return data.map((item) => {
+    return data.map(item => {
       return displayedColumns.reduce((dataForRow, colKey) => {
         dataForRow[colKey] = getRowValue(item, colKey);
         return dataForRow;
@@ -273,12 +273,12 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (!referenceList.length && dataPageName) {
       getDataPage(dataPageName, parameters, context)
-        .then((listData) => {
+        .then(listData => {
           const data = formatRowsData(listData);
           myRows = data;
           setRowData(data);
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e);
         });
     } else {
@@ -359,7 +359,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     const eleData: any = [];
     referenceList.forEach((element, index) => {
       const data: any = [];
-      rawFields.forEach((item) => {
+      rawFields.forEach(item => {
         // removing label field from config to hide title in the table cell
         if (!item.config.hide) {
           item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'DISPLAY_ONLY' : undefined } };
@@ -631,7 +631,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                         <MoreIcon
                           style={{ cursor: 'pointer', zIndex: 1000 }}
                           id='menu-icon'
-                          onClick={(event) => {
+                          onClick={event => {
                             _menuClick(event, field.name, field.meta.type, field.label);
                           }}
                         />
@@ -697,7 +697,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                             <MoreIcon
                               id='table-edit-menu-icon'
                               className={classes.moreIcon}
-                              onClick={(event) => {
+                              onClick={event => {
                                 editMenuClick(event, index);
                               }}
                             />

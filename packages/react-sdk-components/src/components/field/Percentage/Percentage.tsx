@@ -80,7 +80,7 @@ export default function Percentage(props: PercentageProps) {
     handleEvent(actions, 'changeNblur', propName, values);
   }
 
-  const handleChange = (val) => {
+  const handleChange = val => {
     setValues(val.value);
   };
 
@@ -97,7 +97,7 @@ export default function Percentage(props: PercentageProps) {
       error={status === 'error'}
       label={label}
       value={values}
-      onValueChange={(val) => {
+      onValueChange={val => {
         handleChange(val);
       }}
       onBlur={!readOnly ? PercentageOnBlur : undefined}

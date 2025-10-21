@@ -50,7 +50,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
   const canBeChangedInReviewMode = editableInReview && ['Autocomplete', 'Dropdown'].includes(rawViewMetadata.config.componentType);
 
   // Editable first child on change handler
-  const onRecordChange = (event) => {
+  const onRecordChange = event => {
     const caseKey = pConn.getCaseInfo().getKey();
     const refreshOptions = { autoDetectRefresh: true, propertyName: '' };
     refreshOptions.propertyName = rawViewMetadata.config?.value;
@@ -74,12 +74,12 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
       PCore.getCaseUtils()
         .getCaseEditLock(caseKey, '')
-        .then((caseResponse) => {
+        .then(caseResponse => {
           const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
           let curr = {};
           const commitData = curr;
 
-          pageTokens.forEach((el) => {
+          pageTokens.forEach(el => {
             if (el !== '') {
               curr[el] = {};
               curr = curr[el];
@@ -99,7 +99,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
 
           PCore.getCaseUtils()
             .updateCaseEditFieldsData(caseKey, { [caseKey]: commitData }, caseResponse.headers.etag, pConn.getContextName())
-            .then((response) => {
+            .then(response => {
               PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), (response.data as any).data.caseInfo.lastUpdateTime);
               PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
             });

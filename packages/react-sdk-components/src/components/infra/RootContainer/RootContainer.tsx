@@ -70,7 +70,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Messages';
 
-  const messages = httpMessages ? httpMessages.map((msg) => localizedVal(msg.message, localeCategory)) : httpMessages;
+  const messages = httpMessages ? httpMessages.map(msg => localizedVal(msg.message, localeCategory)) : httpMessages;
 
   hasBanner = messages && messages.length > 0;
   banners = hasBanner && <div>{localizedVal(`RootContainer: trying to emit Banner with ${messages}`, localeCategory)}</div>;
@@ -150,7 +150,7 @@ export default function RootContainer(props: PropsWithChildren<RootContainerProp
 
   useEffect(() => {
     const { containers } = PCore.getStore().getState();
-    const items = Object.keys(containers).filter((item) => item.includes('root'));
+    const items = Object.keys(containers).filter(item => item.includes('root'));
     (PCore.getContainerUtils().getContainerAPI() as any).addContainerItems(items);
   }, [routingInfo]);
 

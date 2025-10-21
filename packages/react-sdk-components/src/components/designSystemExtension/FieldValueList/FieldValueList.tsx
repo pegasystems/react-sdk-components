@@ -12,7 +12,7 @@ interface FieldValueListProps {
   isHtml?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),

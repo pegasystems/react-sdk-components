@@ -268,7 +268,7 @@ export default function ListView(props: ListViewProps) {
       if (order !== 0) return order;
       return a[1] - b[1];
     });
-    return stabilizedThis.map((el) => el[0]);
+    return stabilizedThis.map(el => el[0]);
   }
 
   const [page, setPage] = useState(0);
@@ -290,7 +290,7 @@ export default function ListView(props: ListViewProps) {
       if (theField.indexOf('.') === 0) {
         theField = theField.substring(1);
       }
-      const colIndex = fields.findIndex((ele) => ele.name === theField);
+      const colIndex = fields.findIndex(ele => ele.name === theField);
       // const displayAsLink = field.config.displayAsLink;
       const { additionalDetails = {} } = field.config;
       let shouldDisplayAsSemanticLink = additionalDetails.type === 'DISPLAY_LINK';
@@ -367,7 +367,7 @@ export default function ListView(props: ListViewProps) {
       field = getFieldFromFilter(filterExpression, isDateRange);
       selectParam = [];
       // Constructing the select parameters list (will be sent in dashboardFilterPayload)
-      columnList.current.forEach((col) => {
+      columnList.current.forEach(col => {
         selectParam.push({
           field: col
         });
@@ -488,15 +488,15 @@ export default function ListView(props: ListViewProps) {
     } else {
       // NOTE: If we ever decide to not set up all the `fieldDefs` on select, ensure that the fields
       //  corresponding to `state.groups` are set up. Needed in Client-mode grouping/pagination.
-      fieldDefs.forEach((field) => {
-        if (!listFields.find((f) => f.field === field.name)) {
+      fieldDefs.forEach(field => {
+        if (!listFields.find(f => f.field === field.name)) {
           listFields.push({
             field: field.name
           });
         }
       });
-      patchQueryFields.forEach((k) => {
-        if (!listFields.find((f) => f.field === k)) {
+      patchQueryFields.forEach(k => {
+        if (!listFields.find(f => f.field === k)) {
           listFields.push({
             field: k
           });
@@ -504,8 +504,8 @@ export default function ListView(props: ListViewProps) {
       });
     }
 
-    compositeKeys.forEach((k) => {
-      if (!listFields.find((f) => f.field === k)) {
+    compositeKeys.forEach(k => {
+      if (!listFields.find(f => f.field === k)) {
         listFields.push({
           field: k
         });
@@ -522,7 +522,7 @@ export default function ListView(props: ListViewProps) {
       !elementFound &&
       Array.isArray(select) &&
       !(compositeKeys !== null && compositeKeys?.length) &&
-      !select.find((sel) => sel.field === itemKey)
+      !select.find(sel => sel.field === itemKey)
     ) {
       return [
         ...select,
@@ -540,9 +540,9 @@ export default function ListView(props: ListViewProps) {
     return fieldsMap.get(columnId);
   };
 
-  const getFieldsMap = (fieldDefs) => {
+  const getFieldsMap = fieldDefs => {
     const fieldsMap = new Map();
-    fieldDefs.forEach((element) => {
+    fieldDefs.forEach(element => {
       fieldsMap.set(element.id, element);
     });
     return fieldsMap;
@@ -564,7 +564,7 @@ export default function ListView(props: ListViewProps) {
 
     const selectParams: any = [];
 
-    myColumns.forEach((column) => {
+    myColumns.forEach(column => {
       selectParams.push({
         field: column.id
       });
@@ -572,7 +572,7 @@ export default function ListView(props: ListViewProps) {
 
     const colList: any = [];
 
-    selectParams.forEach((col) => {
+    selectParams.forEach(col => {
       colList.push(col.field);
     });
 
@@ -608,7 +608,7 @@ export default function ListView(props: ListViewProps) {
     return Object.entries(data.payload).reduce((acc, [field, value]) => {
       if (value) {
         let comparator = 'EQ';
-        const filterRecord = listContext.meta.fieldDefs.filter((item) => item.id === field);
+        const filterRecord = listContext.meta.fieldDefs.filter(item => item.id === field);
         if (filterRecord?.[0]?.meta.type === 'TextInput') {
           comparator = 'CONTAINS';
         }
@@ -638,7 +638,7 @@ export default function ListView(props: ListViewProps) {
       setTimeout(() => {
         PCore.getPubSubUtils().subscribe(
           PCore.getConstants().PUB_SUB_EVENTS.EVENT_DASHBOARD_FILTER_CHANGE,
-          (data) => {
+          data => {
             processFilterChange(data);
           },
           `dashboard-component-${'id'}`,
@@ -657,7 +657,7 @@ export default function ListView(props: ListViewProps) {
         );
         PCore.getPubSubUtils().subscribe(
           PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS,
-          (data) => {
+          data => {
             showRecords = data.showRecords;
             const filterData = prepareFilters(data);
             processFilterChange(filterData);
@@ -683,12 +683,12 @@ export default function ListView(props: ListViewProps) {
   }, [listContext]);
 
   function searchFilter(value: string, rows: any[]) {
-    const cols = arColumns.map((ele) => {
+    const cols = arColumns.map(ele => {
       return ele.id;
     });
 
     function filterArray(el: any): boolean {
-      return Object.keys(el).some((key) => {
+      return Object.keys(el).some(key => {
         // only search columns that are displayed (pzInsKey and pxRefObjectClass are added and may or may not be displayed)
         if (cols.includes(key)) {
           const myVal = el[key];
@@ -1006,9 +1006,9 @@ export default function ListView(props: ListViewProps) {
     const value = event.target.value;
     const reqObj = {};
     if (compositeKeys?.length > 1) {
-      const index = response.findIndex((element) => element[rowID] === value);
+      const index = response.findIndex(element => element[rowID] === value);
       const selectedRow = response[index];
-      compositeKeys.forEach((element) => {
+      compositeKeys.forEach(element => {
         reqObj[element] = selectedRow[element];
       });
     } else {
@@ -1018,14 +1018,14 @@ export default function ListView(props: ListViewProps) {
     setSelectedValue(value);
   };
 
-  const onCheckboxClick = (event) => {
+  const onCheckboxClick = event => {
     const value = event?.target?.value;
     const checked = event?.target?.checked;
     const reqObj: any = {};
     if (compositeKeys?.length > 1) {
-      const index = response.findIndex((element) => element[rowID] === value);
+      const index = response.findIndex(element => element[rowID] === value);
       const selectedRow = response[index];
-      compositeKeys.forEach((element) => {
+      compositeKeys.forEach(element => {
         reqObj[element] = selectedRow[element];
       });
       reqObj.$selected = checked;
@@ -1092,7 +1092,7 @@ export default function ListView(props: ListViewProps) {
                 <Table stickyHeader aria-label='sticky table'>
                   <TableHead>
                     <TableRow>
-                      {arColumns.map((column) => {
+                      {arColumns.map(column => {
                         return (
                           <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
                             <TableSortLabel
@@ -1108,7 +1108,7 @@ export default function ListView(props: ListViewProps) {
                             </TableSortLabel>
                             <MoreIcon
                               className={classes.moreIcon}
-                              onClick={(event) => {
+                              onClick={event => {
                                 _menuClick(event, column.id, column.type, column.label);
                               }}
                             />
@@ -1121,10 +1121,10 @@ export default function ListView(props: ListViewProps) {
                     {arRows &&
                       stableSort(arRows, getComparator(order, orderBy))
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row) => {
+                        .map(row => {
                           return (
                             <TableRow key={row.pxRefObjectInsName || row.pyID}>
-                              {arColumns.map((column) => {
+                              {arColumns.map(column => {
                                 const value = row[column.id];
                                 return (
                                   <TableCell key={column.id} align={column.align} className={classes.cell}>
@@ -1156,7 +1156,7 @@ export default function ListView(props: ListViewProps) {
                   <TableHead>
                     <TableRow>
                       {(selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) && <TableCell />}
-                      {arColumns.map((column) => {
+                      {arColumns.map(column => {
                         return (
                           <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
                             <TableSortLabel
@@ -1179,7 +1179,7 @@ export default function ListView(props: ListViewProps) {
                       arRows.length > 0 &&
                       stableSort(arRows, getComparator(order, orderBy))
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row) => {
+                        .map(row => {
                           return (
                             <TableRow key={row[rowID]}>
                               {selectionMode === SELECTION_MODE.SINGLE && (
@@ -1197,12 +1197,12 @@ export default function ListView(props: ListViewProps) {
                                 <TableCell>
                                   <Checkbox
                                     onChange={onCheckboxClick}
-                                    checked={selectedValues.some((selectedValue) => selectedValue[rowID] === row[rowID])}
+                                    checked={selectedValues.some(selectedValue => selectedValue[rowID] === row[rowID])}
                                     value={row[rowID]}
                                   />
                                 </TableCell>
                               )}
-                              {arColumns.map((column) => {
+                              {arColumns.map(column => {
                                 const value = row[column.id];
                                 return (
                                   <TableCell className={classes.cell} key={column.id} align={column.align}>

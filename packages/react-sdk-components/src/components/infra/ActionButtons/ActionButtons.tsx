@@ -41,7 +41,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
       <Grid2 container spacing={4} justifyContent='space-between'>
         <Grid2>
           <Grid2 container spacing={1}>
-            {arSecondaryButtons.map((sButton) => (
+            {arSecondaryButtons.map(sButton => (
               <Grid2 key={sButton.name}>
                 <Button
                   className={classes.secondaryButton}
@@ -59,7 +59,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
         </Grid2>
         <Grid2>
           <Grid2 container spacing={1}>
-            {arMainButtons.map((mButton) => (
+            {arMainButtons.map(mButton => (
               <Grid2 key={mButton.name}>
                 <Button
                   className={classes.primaryButton}

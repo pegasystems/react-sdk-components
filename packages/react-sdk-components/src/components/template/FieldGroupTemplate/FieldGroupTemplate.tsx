@@ -65,7 +65,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     const addFieldGroupItem = () => {
       addRecord();
     };
-    const deleteFieldGroupItem = (index) => {
+    const deleteFieldGroupItem = index => {
       if (PCore.getPCoreVersion()?.includes('8.7')) {
         pConn.getListActions().deleteEntry(index, pageReference);
       } else {

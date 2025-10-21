@@ -20,7 +20,7 @@ interface CaseViewProps extends PConnProps {
   lastUpdateCaseTime: any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -73,7 +73,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
 
   const classes = useStyles();
 
-  const editAction = availableActions.find((action) => action.ID === 'pyUpdateCaseDetails');
+  const editAction = availableActions.find(action => action.ID === 'pyUpdateCaseDetails');
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'CaseView';
@@ -125,7 +125,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
       let { label, inheritedProps } = theTabCompConfig;
       // For some tabs, "label" property is not avaialable in theTabCompConfig, so will get them from inheritedProps
       if (!label) {
-        inheritedProps.forEach((inheritedProp) => {
+        inheritedProps.forEach(inheritedProp => {
           if (inheritedProp.prop === 'label') {
             label = inheritedProp.value;
           }

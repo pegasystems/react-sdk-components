@@ -45,7 +45,7 @@ export default function Multiselect(props) {
     ];
     let secondaryColumns: any = [];
     if (secondaryFields) {
-      secondaryColumns = secondaryFields.map((secondaryField) => ({
+      secondaryColumns = secondaryFields.map(secondaryField => ({
         value: secondaryField,
         display: 'true',
         secondary: 'true',
@@ -118,7 +118,7 @@ export default function Multiselect(props) {
 
       selectedRows =
         selectedRows &&
-        selectedRows.map((item) => {
+        selectedRows.map(item => {
           return {
             id: item[selectionKey.startsWith('.') ? selectionKey.substring(1) : selectionKey],
             primary: item[primaryField.startsWith('.') ? primaryField.substring(1) : primaryField]
@@ -157,7 +157,7 @@ export default function Multiselect(props) {
     if (listType !== 'associated') {
       PCore.getDataApi()
         ?.init(dataConfig, contextName)
-        .then((dataObj) => {
+        .then(dataObj => {
           dataApiObj.current = dataObj;
           if (!isGroupData) {
             getCaseListBasedOnParamsDebounced.current(inputValue ?? '', '', [...selectedItems], [...itemsTree]);
@@ -166,13 +166,13 @@ export default function Multiselect(props) {
     }
   }, [dataConfig, listType, dataConfig.columns, inputValue, dataConfig.groupColumnsConfig, showSecondaryInSearchOnly]);
 
-  const onSearchHandler = (ev) => {
+  const onSearchHandler = ev => {
     const searchText = ev.target.value;
     setInputValue(searchText);
     getCaseListBasedOnParamsDebounced.current(searchText, '', [...selectedItems], [...itemsTree], true);
   };
 
-  const setSelectedItemsForReferenceList = (item) => {
+  const setSelectedItemsForReferenceList = item => {
     // Clear error messages if any
     const propName = pConn.getStateProps().selectionList;
     pConn.clearErrorMessages({
@@ -190,19 +190,19 @@ export default function Multiselect(props) {
     let clickedItem;
     let updatedItems: any = [];
     if (newSelectedValues && newSelectedValues.length > 0) {
-      updatedItems = newSelectedValues.map((ele) => {
+      updatedItems = newSelectedValues.map(ele => {
         ele.selected = true;
         return ele;
       });
     }
     if (newSelectedValues.length > selectedItems.length) {
-      clickedItem = newSelectedValues.filter((item) => !selectedItems.some((ele: any) => ele.id === item.id));
+      clickedItem = newSelectedValues.filter(item => !selectedItems.some((ele: any) => ele.id === item.id));
     } else {
       clickedItem = selectedItems.filter((item: any) => !newSelectedValues.some((ele: any) => ele.id === item.id));
       clickedItem[0].selected = false;
     }
-    itemsTree.forEach((ele) => {
-      ele.selected = !!updatedItems.find((item) => item.id === ele.id);
+    itemsTree.forEach(ele => {
+      ele.selected = !!updatedItems.find(item => item.id === ele.id);
     });
 
     setSelectedItems(updatedItems);
@@ -230,7 +230,7 @@ export default function Multiselect(props) {
       //     {option.primary}
       //   </>
       // )}
-      renderInput={(params) => (
+      renderInput={params => (
         <TextField {...params} variant='outlined' fullWidth label={label} placeholder={placeholder} size='small' onChange={onSearchHandler} />
       )}
     />

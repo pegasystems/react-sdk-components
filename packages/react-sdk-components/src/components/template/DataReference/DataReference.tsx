@@ -87,7 +87,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
 
   let firstChildPConnect;
 
-  const localizedPlaceholderOption = (placeholder) => {
+  const localizedPlaceholderOption = placeholder => {
     const { GENERIC_BUNDLE_KEY } = PCore.getLocaleUtils?.() ?? {};
     const localizedDefaultPlaceholder = pConn.getLocalizedValue('select_placeholder_default', 'CosmosFields', GENERIC_BUNDLE_KEY);
     // If we have a placeholder, push that option in the list of items
@@ -120,17 +120,17 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
             ''
           ) as Promise<any>
         )
-          .then((res) => {
+          .then(res => {
             if (res.data.data !== null) {
               const ddDataSource = firstChildMeta.config.datasource.filterDownloadedFields
                 ? res.data.data
                 : res.data.data
-                    .map((listItem) => ({
+                    .map(listItem => ({
                       key: listItem[key.split(' .', 2)[1]],
                       text: listItem[text.split(' .', 2)[1]],
                       value: listItem[value.split(' .', 2)[1]]
                     }))
-                    .filter((item) => item.key);
+                    .filter(item => item.key);
               // Filtering out undefined entries that will break preview
               setDropDownDataSource(ddDataSource);
             } else {
@@ -138,7 +138,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
               setDropDownDataSource(ddDataSource);
             }
           })
-          .catch((err) => {
+          .catch(err => {
             console.error(err?.stack);
             return Promise.resolve({
               data: { data: [] }
@@ -172,12 +172,13 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     }
   }
 
-  const handleSelection = (event) => {
+  const handleSelection = event => {
     const caseKey = pConn.getCaseInfo().getKey();
     const refreshOptions: any = { autoDetectRefresh: true };
 
-    if (pConn.getRawMetadata()?.children?.length > 0 && pConn.getRawMetadata()?.children[0].config?.value) {
-      refreshOptions.propertyName = pConn.getRawMetadata()?.children[0].config.value;
+    const children: any = pConn.getRawMetadata()?.children;
+    if (children?.length > 0 && children[0].config?.value) {
+      refreshOptions.propertyName = children[0].config.value;
       refreshOptions.classID = (pConn.getRawMetadata() as any).classID;
     }
 
@@ -207,12 +208,12 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
           .catch(() => {});
       }
     } else if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
-      (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then((caseResponse) => {
+      (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then(caseResponse => {
         const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
         let curr = {};
         const commitData = curr;
 
-        pageTokens.forEach((el) => {
+        pageTokens.forEach(el => {
           if (el !== '') {
             curr[el] = {};
             curr = curr[el];
@@ -237,7 +238,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
             caseResponse.headers.etag,
             pConn.getContextName()
           ) as Promise<any>
-        ).then((response) => {
+        ).then(response => {
           PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
           PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
         });
@@ -444,7 +445,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   if (firstChildMeta?.type !== 'Region') {
     const viewsRegion = rawViewMetadata.children[1];
     if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
-      viewsRegion.children.map((child) => {
+      viewsRegion.children.map(child => {
         child.config.isEmbeddedInDataReference = true;
         return child;
       });

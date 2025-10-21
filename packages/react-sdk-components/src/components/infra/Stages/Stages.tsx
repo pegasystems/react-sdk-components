@@ -10,7 +10,7 @@ interface StagesProps extends PConnProps {
   stages: any[];
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -47,7 +47,7 @@ function getFilteredStages(stages) {
     return [];
   }
 
-  return stages.filter((stage) => stage.type !== 'Alternate' || (stage.type === 'Alternate' && stage.visited_status === 'active'));
+  return stages.filter(stage => stage.type !== 'Alternate' || (stage.type === 'Alternate' && stage.visited_status === 'active'));
 }
 
 /* TODO - this component should be refactored and not exposed as top level DX Component -

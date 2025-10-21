@@ -15,7 +15,7 @@ interface IOption {
 
 const flattenParameters = (params = {}) => {
   const flatParams = {};
-  Object.keys(params).forEach((key) => {
+  Object.keys(params).forEach(key => {
     const { name, value: theVal } = params[key];
     flatParams[name] = theVal;
   });
@@ -23,18 +23,18 @@ const flattenParameters = (params = {}) => {
   return flatParams;
 };
 
-const preProcessColumns = (columnList) => {
-  return columnList.map((col) => {
+const preProcessColumns = columnList => {
+  return columnList.map(col => {
     const tempColObj = { ...col };
     tempColObj.value = col.value && col.value.startsWith('.') ? col.value.substring(1) : col.value;
     return tempColObj;
   });
 };
 
-const getDisplayFieldsMetaData = (columnList) => {
-  const displayColumns = columnList.filter((col) => col.display === 'true');
+const getDisplayFieldsMetaData = columnList => {
+  const displayColumns = columnList.filter(col => col.display === 'true');
   const metaDataObj: any = { key: '', primary: '', secondary: [] };
-  const keyCol = columnList.filter((col) => col.key === 'true');
+  const keyCol = columnList.filter(col => col.key === 'true');
   metaDataObj.key = keyCol.length > 0 ? keyCol[0].value : 'auto';
   for (let index = 0; index < displayColumns.length; index += 1) {
     if (displayColumns[index].primary === 'true') {
@@ -141,7 +141,7 @@ export default function Dropdown(props: DropdownProps) {
       getDataPage(datasource, parameters, context).then((results: any) => {
         const optionsData: any[] = [];
         const displayColumn = getDisplayFieldsMetaData(columns);
-        results?.forEach((element) => {
+        results?.forEach(element => {
           const val = element[displayColumn.primary]?.toString();
           const obj = {
             key: element[displayColumn.key] || element.pyGUID,
@@ -154,7 +154,7 @@ export default function Dropdown(props: DropdownProps) {
     }
   }, []);
 
-  const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter((field) => field?.classID === className)[0] : fieldMetadata;
+  const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter(field => field?.classID === className)[0] : fieldMetadata;
 
   let displayName = metaData?.datasource?.propertyForDisplayText;
   displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
@@ -189,7 +189,7 @@ export default function Dropdown(props: DropdownProps) {
   };
 
   if (displayMode) {
-    return displayFn(displayMode, options.find((option) => option.key === value)?.value || value);
+    return displayFn(displayMode, options.find(option => option.key === value)?.value || value);
   }
 
   if (readOnly) {
@@ -200,7 +200,7 @@ export default function Dropdown(props: DropdownProps) {
     'data-test-id': testId
   };
 
-  const handleChange = (evt) => {
+  const handleChange = evt => {
     const selectedValue = evt.target.value === placeholder ? '' : evt.target.value;
     handleEvent(actionsApi, 'changeNblur', propName, selectedValue);
     if (onRecordChange) {

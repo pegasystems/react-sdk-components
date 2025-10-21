@@ -77,7 +77,7 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     handleClose();
   }
 
-  availableActions.forEach((action) => {
+  availableActions.forEach(action => {
     arMenuItems.push(
       <MenuItem key={action.ID} onClick={() => _actionMenuActionsClick(action)}>
         {localizedVal(action.name, '', localeKey)}
@@ -85,7 +85,7 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     );
   });
 
-  availableProcesses.forEach((process) => {
+  availableProcesses.forEach(process => {
     arMenuItems.push(
       <MenuItem key={process.ID} onClick={() => _actionMenuProcessClick(process)}>
         {localizedVal(process.name, '', localeKey)}

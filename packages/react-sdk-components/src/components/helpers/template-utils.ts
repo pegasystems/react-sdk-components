@@ -4,9 +4,9 @@ export function getAllFields(pConnect: any) {
   const metadata = pConnect.getRawMetadata();
   let allFields: any[] = [];
   if (metadata.children && metadata.children.map) {
-    allFields = metadata.children.map((fields) => {
+    allFields = metadata.children.map(fields => {
       const children = fields.children instanceof Array ? fields.children : [];
-      return children.map((field) => field.config);
+      return children.map(field => field.config);
     });
   }
   return allFields;

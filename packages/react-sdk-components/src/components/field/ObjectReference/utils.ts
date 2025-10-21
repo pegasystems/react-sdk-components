@@ -2,7 +2,7 @@ import { Utils } from '../../helpers/utils';
 
 export const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
-const getLeafNameFromPropertyName = (property) => property?.substr(property.lastIndexOf('.'));
+const getLeafNameFromPropertyName = property => property?.substr(property.lastIndexOf('.'));
 
 const isSelfReferencedProperty = (param, referenceProp) => param === referenceProp?.split('.', 2)[1];
 
@@ -94,7 +94,7 @@ export const generateColumns = (config, pConn, referenceType) => {
     });
   }
 
-  compositeKeys.forEach((key) => {
+  compositeKeys.forEach(key => {
     if (value !== key)
       columns.push({
         value: key,
@@ -108,4 +108,4 @@ export const generateColumns = (config, pConn, referenceType) => {
   config.columns = columns;
 };
 
-export const getDataRelationshipContextFromKey = (key) => key.split('.', 2)[1];
+export const getDataRelationshipContextFromKey = key => key.split('.', 2)[1];
