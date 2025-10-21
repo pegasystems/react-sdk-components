@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { useEffect, useMemo, useState } from 'react';
 import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 import { makeStyles } from '@mui/styles';
@@ -155,7 +154,7 @@ export default function MainScreen(props) {
     setShowPega(false);
   };
 
-  const onShopNow = async (optionClicked) => {
+  const onShopNow = async optionClicked => {
     setShowLandingPage(false);
     setShowPega(true);
     const sdkConfig = await getSdkConfig();
@@ -179,7 +178,6 @@ export default function MainScreen(props) {
     PCore.getMashupApi()
       .createCase(mashupCaseType, PCore.getConstants().APP.APP, options)
       .then(() => {
-        // eslint-disable-next-line no-console
         console.log('createCase rendering is complete');
       });
   };
@@ -203,12 +201,12 @@ export default function MainScreen(props) {
           <section className={classes.plansSection}>
             <div className={classes.plansIntro}>
               <h2>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
+                {}
                 The phones you want at prices you'll <span className={classes.highlight}>love.</span>
               </h2>
             </div>
             <div className={classes.plansContainer}>
-              {shoppingOptions.map((option) => (
+              {shoppingOptions.map(option => (
                 <ShoppingOptionCard key={option.level} {...option} onClick={onShopNow} />
               ))}
             </div>
