@@ -35,7 +35,7 @@ export default function TwoColumn(props: PropsWithChildren<TwoColumnProps>) {
   const colAArray = templateCol
     .replaceAll(/[a-z]+/g, '')
     .split(/\s/)
-    .map((itm) => Number(itm));
+    .map(itm => Number(itm));
   const totalCols = colAArray.reduce((v, itm) => itm + v, 0);
   const ratio = 12 / totalCols;
   aSize = (ratio * colAArray[0]) as GridSize;

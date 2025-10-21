@@ -13,7 +13,7 @@ interface DetailsFieldsProps {
   fields: any[];
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),

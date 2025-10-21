@@ -151,7 +151,7 @@ export default function Location(props: LocationProps) {
   const handleGetCurrentLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           const coordinateString = `${lat}, ${lng}`;
@@ -179,7 +179,7 @@ export default function Location(props: LocationProps) {
             });
           }
         },
-        (error) => {
+        error => {
           console.error('Error getting current location: ', error);
         }
       );

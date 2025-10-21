@@ -29,7 +29,7 @@ export default function AlertBanner(props: AlertBannerProps) {
 
   return (
     <div id={id}>
-      {messages.map((message) => (
+      {messages.map(message => (
         <Alert key={message} variant='outlined' severity={SEVERITY_MAP[variant]} {...additionalProps}>
           {message}
         </Alert>

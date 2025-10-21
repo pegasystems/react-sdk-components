@@ -61,7 +61,7 @@ const iconMap = {
 
 const drawerWidth = 300;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   drawerPaper: {
     position: 'relative',
     whiteSpace: 'nowrap',
@@ -93,7 +93,8 @@ const useStyles = makeStyles((theme) => ({
   },
   appListLogo: {
     marginRight: theme.spacing(2),
-    width: '3.6rem'
+    width: '3.6rem',
+    filter: 'var(--svg-color)'
   },
   appListIcon: {
     color: theme.palette.getContrastText(theme.palette.primary.light)
@@ -231,7 +232,7 @@ export default function NavBar(props: NavBarProps) {
       </List>
       <Collapse in={bShowCaseTypes && open} timeout='auto' unmountOnExit className='scrollable'>
         <List component='div' disablePadding>
-          {caseTypes.map((caseType) => (
+          {caseTypes.map(caseType => (
             <ListItemButton
               className={classes.nested}
               onClick={() => navPanelCreateCaseType(caseType.pyClassName, caseType.pyFlowType)}
@@ -246,7 +247,7 @@ export default function NavBar(props: NavBarProps) {
         </List>
       </Collapse>
       <List>
-        {navPages.map((page) => (
+        {navPages.map(page => (
           <ListItemButton onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
             <ListItemIcon>{iconMap[page.pxPageViewIcon]}</ListItemIcon>
             <ListItemText primary={localeUtils.getLocaleValue(page.pyLabel, '', localeReference)} />

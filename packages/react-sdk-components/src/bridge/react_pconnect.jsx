@@ -114,7 +114,7 @@ const connectRedux = (component, c11nEnv) => {
   )(component);
 };
 
-const getComponent = (c11nEnv) => {
+const getComponent = c11nEnv => {
   // PCore is defined in pxBootstrapShell - eventually will be exported in place of constellationCore
   const ComponentsRegistry = PCore.getComponentsRegistry();
   const type = c11nEnv.getComponentName();
@@ -325,19 +325,19 @@ document.addEventListener('SdkConstellationReady', () => {
 
   PCore.getAssetLoader().register('component-loader', async (componentNames = []) => {
     const promises = [];
-    componentNames.forEach((comp) => {
+    componentNames.forEach(comp => {
       if (/^[A-Z]/.test(comp) && !LazyComponentMap[comp]) {
         if (!ComponentMap[comp]) {
           const srcUrl = `${PCore.getAssetLoader().getConstellationServiceUrl()}/v860/${PCore.getAssetLoader().getAppAlias()}/component/${comp}.js`;
           promises.push(PCore.getAssetLoader().getLoader()(srcUrl, 'script'));
         } else {
           if (ComponentMap[comp].modules && ComponentMap[comp].modules.length) {
-            ComponentMap[comp].modules.forEach((module) => {
+            ComponentMap[comp].modules.forEach(module => {
               LazyComponentMap[comp] = module;
             });
           }
           if (ComponentMap[comp].scripts && ComponentMap[comp].scripts.length) {
-            ComponentMap[comp].scripts.forEach((script) => {
+            ComponentMap[comp].scripts.forEach(script => {
               promises.push(PCore.getAssetLoader().getLoader()(script, 'script'));
             });
           }

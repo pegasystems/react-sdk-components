@@ -30,7 +30,7 @@ export default function ScalarList(props: ScalarListProps) {
 
   const { label, getPConnect, componentType, value: scalarValues, displayMode, hideLabel, ...restProps } = props;
 
-  const items = scalarValues?.map((scalarValue) => {
+  const items = scalarValues?.map(scalarValue => {
     return getPConnect().createComponent(
       {
         type: componentType,

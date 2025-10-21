@@ -10,13 +10,18 @@ interface ActionButtonsProps {
   onButtonPress: any;
 }
 
-const useStyles = makeStyles((/* theme */) => ({
-  button: {
-    padding: '0px 5px'
-  },
+const useStyles = makeStyles(theme => ({
   divider: {
     marginTop: '10px',
     marginBottom: '10px'
+  },
+  secondaryButton: {
+    backgroundColor: theme.actionButtons.secondary.backgroundColor,
+    color: theme.actionButtons.secondary.color
+  },
+  primaryButton: {
+    backgroundColor: theme.actionButtons.primary.backgroundColor,
+    color: theme.actionButtons.primary.color
   }
 }));
 
@@ -36,11 +41,12 @@ export default function ActionButtons(props: ActionButtonsProps) {
       <Grid2 container spacing={4} justifyContent='space-between'>
         <Grid2>
           <Grid2 container spacing={1}>
-            {arSecondaryButtons.map((sButton) => (
+            {arSecondaryButtons.map(sButton => (
               <Grid2 key={sButton.name}>
                 <Button
-                  variant='contained'
+                  className={classes.secondaryButton}
                   color='secondary'
+                  variant='contained'
                   onClick={() => {
                     _onButtonPress(sButton.jsAction, 'secondary');
                   }}
@@ -53,11 +59,12 @@ export default function ActionButtons(props: ActionButtonsProps) {
         </Grid2>
         <Grid2>
           <Grid2 container spacing={1}>
-            {arMainButtons.map((mButton) => (
+            {arMainButtons.map(mButton => (
               <Grid2 key={mButton.name}>
                 <Button
-                  variant='contained'
+                  className={classes.primaryButton}
                   color='primary'
+                  variant='contained'
                   onClick={() => {
                     _onButtonPress(mButton.jsAction, 'primary');
                   }}

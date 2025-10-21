@@ -22,7 +22,7 @@ interface OperatorProps extends PConnProps {
   displayLabel?: any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(1),
     margin: theme.spacing(1)
@@ -165,7 +165,7 @@ export default function Operator(props: OperatorProps) {
         <Grid2 size={{ xs: 12 }}>
           <Typography variant='h6'>{caseOpName}</Typography>
         </Grid2>
-        {popoverFields.map((field) => {
+        {popoverFields.map(field => {
           return (
             <React.Fragment key={field.id}>
               <Grid2 container size={{ xs: 12 }} spacing={1}>

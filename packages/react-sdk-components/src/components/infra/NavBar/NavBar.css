@@ -154,7 +154,7 @@
   text-align: center;
   display: inline-flex;
   background: var(--app-neutral-color);
-  color: white;
+  color: var(--app-text-color);
   font-weight: normal;
   font-size: 1rem;
 }

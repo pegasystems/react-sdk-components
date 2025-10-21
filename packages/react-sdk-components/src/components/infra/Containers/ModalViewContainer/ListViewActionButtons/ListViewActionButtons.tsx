@@ -52,7 +52,7 @@ function ListViewActionButtons(props: ListViewActionButtonsProps) {
             .then(() => {
               closeActionsDialog();
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err);
             })
             .finally(() => {

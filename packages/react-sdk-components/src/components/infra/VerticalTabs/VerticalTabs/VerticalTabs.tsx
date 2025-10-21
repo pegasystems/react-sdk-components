@@ -12,7 +12,7 @@ interface VerticalTabsProps {
 
 // The MuiTabs-indicator class is in a span whose parent is div (under the Tabs root component)
 //  So, we're going to make the selected vertical tab indicator use a color from our theme.
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   tabs: {
     '& div > span': {
       backgroundColor: theme.palette.info.dark,
@@ -59,7 +59,7 @@ export default function VerticalTabs(props: VerticalTabsProps) {
     <div id='VerticalTabs'>
       {/* VerticalTabs: {JSON.stringify(tabconfig)} */}
       <Tabs className={classes.tabs} orientation='vertical' value={value} onChange={handleChange}>
-        {tabconfig.map((tab) => (
+        {tabconfig.map(tab => (
           <LeftAlignVerticalTab {...props} label={tab.name} key={tab.name} />
         ))}
       </Tabs>

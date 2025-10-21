@@ -28,7 +28,7 @@ interface FlowContainerProps extends PConnProps {
 // is totally at your own risk.
 //
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(2),
     paddingLeft: theme.spacing(2),
@@ -204,7 +204,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
 
   const displayPageMessages = () => {
     let hasBanner = false;
-    const messages = pageMessages ? pageMessages.map((msg) => localizedVal(msg.message, 'Messages')) : pageMessages;
+    const messages = pageMessages ? pageMessages.map(msg => localizedVal(msg.message, 'Messages')) : pageMessages;
     hasBanner = messages && messages.length > 0;
     return hasBanner && <AlertBanner id='flowContainerBanner' variant='urgent' messages={messages} />;
   };

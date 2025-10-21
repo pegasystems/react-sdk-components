@@ -39,7 +39,7 @@ const getCompositeKeys = (pConnect, property) => {
   const fieldMetadata = pConnect.getFieldMetadata(property) || {};
   const { datasource: { parameters: fieldParameters = {} } = {} } = fieldMetadata;
   const compositeKeys: any = [];
-  Object.values(fieldParameters).forEach((param) => {
+  Object.values(fieldParameters).forEach(param => {
     if (isSelfReferencedProperty(param, property)) {
       compositeKeys.push(param);
     }

@@ -50,7 +50,7 @@ export default {
       type: 'customFormat',
       format: 'MMM DD, YYYY'
     }),
-  'DateTime-Since': (value) => DateFormatter(value, { type: 'fromNow' }),
+  'DateTime-Since': value => DateFormatter(value, { type: 'fromNow' }),
   'Time-Only': (value, options) =>
     TimeFormatter(value, {
       ...options,
