@@ -238,7 +238,7 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, op
 
   // get resolved field labels for primary fields raw config included in configFields
   const fieldsLabels = updateFieldLabels(fields, configFields, primaryFieldsViewIndex, pConnect, {
-    columnsRawConfig: pConnect.getRawConfigProps()?.children.find((item) => item?.name === 'Columns')?.children
+    columnsRawConfig: pConnect.getRawConfigProps()?.children?.find((item) => item?.name === 'Columns')?.children
   });
 
   const fieldDefs = configFields.map((field, index) => {

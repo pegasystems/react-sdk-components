@@ -64,7 +64,6 @@ export default function DefaultPage({
   backgroundColor = '',
   tintImage
 }: DefaultPageProps) {
-  // const genAICoachProps = useGenAICoachObj(coaches.length ? coaches : undefined, localeReference, getPConnect());
   const childArray = useMemo(() => {
     return Children.toArray(children);
   }, [children]);

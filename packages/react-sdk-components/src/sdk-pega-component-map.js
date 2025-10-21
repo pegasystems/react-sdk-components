@@ -32,7 +32,7 @@ import Date from './components/field/Date';
 import DateTime from './components/field/DateTime';
 import Decimal from './components/field/Decimal';
 import DefaultForm from './components/template/DefaultForm';
-import DefaultPage from './components/template/DefaultPage/DefaultPage';
+import DefaultPage from './components/template/DefaultPage';
 import DeferLoad from './components/infra/DeferLoad';
 import Details from './components/template/Details/Details';
 import DetailsSubTabs from './components/template/Details/DetailsSubTabs';
@@ -86,6 +86,7 @@ import RootContainer from './components/infra/RootContainer/RootContainer';
 import ScalarList from './components/field/ScalarList';
 import SearchForm from './components/template/DataReference/SearchForm';
 import SearchGroups from './components/template/AdvancedSearch/SearchGroups';
+import SelfServiceCaseView from './components/template/SelfServiceCaseView';
 import SemanticLink from './components/field/SemanticLink';
 import SelectableCard from './components/field/SelectableCard';
 import SimpleTable from './components/template/SimpleTable/SimpleTable';
@@ -208,6 +209,7 @@ const pegaSdkComponentMap = {
   SearchForm,
   SearchGroups,
   SelectableCard,
+  SelfServiceCaseView,
   SemanticLink,
   SimpleTable,
   SimpleTableManual,
