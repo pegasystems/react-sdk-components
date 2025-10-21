@@ -257,5 +257,7 @@ const darkTheme = createTheme({
   }
 });
 
+const sdkConfig = await getSdkConfig();
+
 // eslint-disable-next-line import/prefer-default-export
-export const theme = getSdkConfig().theme === 'dark' ? darkTheme : lightTheme;
+export const theme = sdkConfig.theme === 'dark' ? darkTheme : lightTheme;
