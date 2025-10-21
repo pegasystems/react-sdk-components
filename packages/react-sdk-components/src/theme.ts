@@ -2,7 +2,7 @@
 import { createTheme } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 
-const sdkConfig = require('../../../sdk-config.json');
+import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 
 /**
  * Since makeStyles is now exported from @mui/styles package which does not know about Theme in the core package.
@@ -258,4 +258,4 @@ const darkTheme = createTheme({
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export const theme = sdkConfig.sdkConfig.theme === 'dark' ? darkTheme : lightTheme;
+export const theme = getSdkConfig().theme === 'dark' ? darkTheme : lightTheme;

@@ -64,7 +64,6 @@
   display: inline-block;
   vertical-align: middle;
   filter: var(--svg-color);
-  /* filter: invert(28%) sepia(20%) saturate(3903%) hue-rotate(209deg) brightness(101%) contrast(87%); */
 }
 
 .psdk-utility-link-button {

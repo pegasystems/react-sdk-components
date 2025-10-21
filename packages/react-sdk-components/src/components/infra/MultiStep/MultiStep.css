@@ -17,7 +17,6 @@
 
 .psdk-current-svg-icon {
   width: 1rem;
-  /* filter: var(--app-primary-color-filter); */
   filter: var(--svg-color);
 }
 

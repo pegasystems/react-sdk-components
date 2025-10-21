@@ -79,17 +79,10 @@
 .tox .tox-dialog {
   background-color: var(--modal-top-color) !important;
   color: var(--app-text-color) !important;
-  /* border-radius: 8px !important; */
-  /* box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5) !important; */
   border: 1px solid var(--modal-border-color) !important;
-  /* border-radius: 10px; */
   padding: 20px !important;
   box-shadow: 0 0 10px 3px var(--modal-box-shadow-color) !important;
 }
-
-/* .tox-dialog__body input{
-
-} */
 
 .tox .tox-dialog__header {
   background-color: var(--modal-top-color) !important;

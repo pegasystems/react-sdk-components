@@ -74,7 +74,7 @@ const useStyles = makeStyles((/* theme */) => ({
     fontSize: '14px'
   },
   header: {
-    background: 'var(--table-header-background'
+    background: 'var(--table-header-background)'
   },
   tableCell: {
     borderRight: '1px solid lightgray',

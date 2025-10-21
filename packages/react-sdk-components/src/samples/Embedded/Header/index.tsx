@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
   },
   embedTopIcon: {
     width: '40px',
-    // filter: 'invert(100%)'
     filter: 'var(--svg-color)'
   }
 }));
