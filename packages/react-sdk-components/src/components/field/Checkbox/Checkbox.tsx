@@ -221,7 +221,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
               onBlur={() => {
                 thePConn.getValidationApi().validate(selectedvalues, selectionList);
               }}
-              data-testid={`${testId}:${element.value}`}
+              data-test-id={`${testId}:${element.value}`}
             />
           }
           key={index}

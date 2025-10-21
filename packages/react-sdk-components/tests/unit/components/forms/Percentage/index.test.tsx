@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import TextInput from '../../../../../src/components/field/TextInput';
+import Percentage from '../../../../../src/components/field/Percentage';
 
 const mockHandleEvent = jest.fn();
 jest.mock('../../../../../src/components/helpers/event-utils', () => ({
@@ -10,6 +10,18 @@ jest.mock('../../../../../src/components/helpers/event-utils', () => ({
 
 jest.mock('../../../../../src/bridge/helpers/sdk_component_map', () => ({
   getComponentFromMap: jest.fn(() => require('../FieldValueList').default)
+}));
+
+jest.mock('../../../../../src/components/field/Currency/currency-utils', () => ({
+  getCurrencyCharacters: jest.fn(() => ({
+    theDecimalIndicator: '.',
+    theDigitGroupSeparator: ','
+  })),
+  getCurrencyOptions: jest.fn(() => ({}))
+}));
+
+jest.mock('../../../../../src/components/helpers/formatters', () => ({
+  format: jest.fn((value) => value)
 }));
 
 const updateFieldValue = jest.fn();
@@ -24,130 +36,125 @@ const defaultProps = {
       ({
         getActionsApi: () => ({ updateFieldValue, triggerFieldChange }),
         getStateProps: () => ({
-          value: '.textInput'
+          value: '.percentage'
         }),
         getValidationApi: () => ({
           validate
         }),
+        getComponentName: () => 'Percentage',
         updateDirtyCheckChangeList,
         clearErrorMessages,
         ignoreSuggestion,
         acceptSuggestion
       }) as any
   ),
-  label: 'Test Label',
+  label: 'Percentage Label',
   required: false,
   disabled: false,
-  value: '',
+  value: '25',
   validatemessage: '',
   status: '',
   readOnly: false,
-  testId: 'textInputTestId',
-  fieldMetadata: { maxLength: 50 },
+  testId: 'percentageTestId',
   helperText: 'Helper text',
   displayMode: '',
   hideLabel: false,
-  placeholder: 'Enter text',
+  placeholder: 'Enter percentage',
+  currencyISOCode: 'USD',
+  showGroupSeparators: 'true',
+  decimalPrecision: 2,
   onChange: jest.fn()
 };
 
-describe('TextInput Component', () => {
+describe('Percentage Component', () => {
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();
   });
 
   test('renders with label and placeholder', () => {
-    render(<TextInput {...defaultProps} />);
-    expect(screen.getByLabelText('Test Label')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Enter text')).toBeInTheDocument();
+    render(<Percentage {...defaultProps} />);
+    expect(screen.getByLabelText('Percentage Label')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter percentage')).toBeInTheDocument();
   });
 
   test('renders with required attribute', () => {
-    const props = { ...defaultProps };
-    props.required = true;
-    const { rerender } = render(<TextInput {...props} />);
-    const input = screen.getByTestId('textInputTestId');
+    const props = { ...defaultProps, required: true };
+    const { rerender } = render(<Percentage {...props} />);
+    const input = screen.getByTestId('percentageTestId');
     expect(input).toBeRequired();
 
     props.required = false;
-    rerender(<TextInput {...props} />);
+    rerender(<Percentage {...props} />);
     expect(input).not.toBeRequired();
   });
 
   test('renders with disabled attribute', () => {
-    const props = { ...defaultProps };
-    props.disabled = true;
-    const { rerender } = render(<TextInput {...props} />);
-    const input = screen.getByTestId('textInputTestId');
+    const props = { ...defaultProps, disabled: true };
+    const { rerender } = render(<Percentage {...props} />);
+    const input = screen.getByTestId('percentageTestId');
     expect(input).toBeDisabled();
 
     props.disabled = false;
-    rerender(<TextInput {...props} />);
+    rerender(<Percentage {...props} />);
     expect(input).not.toBeDisabled();
   });
 
   test('renders with readOnly attribute', () => {
     const props = { ...defaultProps, readOnly: true };
-    const { rerender, getByTestId } = render(<TextInput {...props} />);
-    const input = screen.getByLabelText('Test Label');
+    const { rerender, getByTestId } = render(<Percentage {...props} />);
+    const input = screen.getByLabelText('Percentage Label');
     expect(input).toHaveAttribute('readonly');
 
     props.readOnly = false;
-    rerender(<TextInput {...props} />);
-    expect(getByTestId('textInputTestId')).not.toHaveAttribute('readonly');
+    rerender(<Percentage {...props} />);
+    expect(getByTestId('percentageTestId')).not.toHaveAttribute('readonly');
   });
 
   test('renders with helper text', () => {
-    render(<TextInput {...defaultProps} />);
+    render(<Percentage {...defaultProps} />);
     expect(screen.getByText('Helper text')).toBeInTheDocument();
   });
 
   test('renders with validation message overriding helper text', () => {
     const props = { ...defaultProps, validatemessage: 'Validation error' };
-    render(<TextInput {...props} />);
+    render(<Percentage {...props} />);
     expect(screen.getByText('Validation error')).toBeInTheDocument();
     expect(screen.queryByText('Helper text')).not.toBeInTheDocument();
   });
 
-  test('renders with maxLength attribute', () => {
-    render(<TextInput {...defaultProps} />);
-    const input = screen.getByLabelText('Test Label');
-    expect(input).toHaveAttribute('maxlength', '50');
-  });
-
   test('updates value on change', () => {
-    render(<TextInput {...defaultProps} />);
-    const input = screen.getByLabelText('Test Label');
-    fireEvent.change(input, { target: { value: 'New value' } });
-    expect(input).toHaveValue('New value');
+    render(<Percentage {...defaultProps} />);
+    const input = screen.getByLabelText('Percentage Label');
+    fireEvent.change(input, { target: { value: '50' } });
+    expect(input).toHaveValue('50%');
   });
 
   test('calls handleEvent on blur when not readOnly', () => {
-    render(<TextInput {...defaultProps} />);
-    const input = screen.getByLabelText('Test Label');
-    fireEvent.change(input, { target: { value: 'Blur value' } });
+    render(<Percentage {...defaultProps} />);
+    const input = screen.getByLabelText('Percentage Label');
+    fireEvent.change(input, { target: { value: '75' } });
     fireEvent.blur(input);
-    expect(mockHandleEvent).toHaveBeenCalledWith(expect.any(Object), 'changeNblur', '.textInput', 'Blur value');
+    expect(mockHandleEvent).toHaveBeenCalledWith(expect.any(Object), 'changeNblur', '.percentage', '75');
   });
 
   test('does not call handleEvent on blur when readOnly', () => {
     const props = { ...defaultProps, readOnly: true };
-    render(<TextInput {...props} />);
-    const input = screen.getByLabelText('Test Label');
+    render(<Percentage {...props} />);
+    const input = screen.getByLabelText('Percentage Label');
     fireEvent.blur(input);
     expect(mockHandleEvent).not.toHaveBeenCalled();
   });
 
   test('renders in DISPLAY_ONLY mode', () => {
-    const props = { ...defaultProps, displayMode: 'DISPLAY_ONLY', value: 'Display Value' };
-    render(<TextInput {...props} />);
-    expect(screen.getByText('Display Value')).toBeInTheDocument();
+    const props = { ...defaultProps, displayMode: 'DISPLAY_ONLY', value: '30' };
+    render(<Percentage {...props} />);
+    expect(screen.getByText('30')).toBeInTheDocument();
   });
 
   test('renders in STACKED_LARGE_VAL mode', () => {
-    const props = { ...defaultProps, displayMode: 'STACKED_LARGE_VAL', value: 'Stacked Value' };
-    render(<TextInput {...props} />);
-    expect(screen.getByText('Stacked Value')).toBeInTheDocument();
+    const props = { ...defaultProps, displayMode: 'STACKED_LARGE_VAL', value: '45' };
+    render(<Percentage {...props} />);
+    expect(screen.getByText('45')).toBeInTheDocument();
   });
 });
