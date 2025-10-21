@@ -1,12 +1,11 @@
 import React, { forwardRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { FormControl, FormHelperText, InputLabel } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, useTheme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 import { useAfterInitialEffect, useConsolidatedRef, useUID } from '../../../hooks';
-import { theme } from '../../../theme';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   fieldLabel: {
     position: 'relative',
     transform: 'translate(0, 0px) scale(1)',
@@ -32,6 +31,7 @@ interface RichTextEditorProps {
 }
 
 const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorProps, ref) {
+  const theme = useTheme();
   const classes = useStyles();
   const uid = useUID();
   const { id = uid, defaultValue, label, labelHidden, info, testId, placeholder, disabled, required, readOnly, error, onBlur, onChange } = props;
@@ -91,27 +91,27 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
           skin: 'oxide-dark', // or 'oxide' for light theme
           // ...other TinyMCE config...
           content_style: `
-        body {
-          font-family: ${theme.typography.fontFamily};
-          font-size: ${theme.typography.fontSize}px;
-          color: ${theme.palette.text.primary};
-          background: ${theme.palette.background.paper};
-        }
-        a { color: ${theme.palette.primary.main}; }
-        h1, h2, h3, h4, h5, h6 { color: ${theme.palette.text.primary}; font-family: ${theme.typography.fontFamily}; }
-        blockquote { color: ${theme.palette.text.secondary}; border-left: 4px solid ${theme.palette.primary.light}; padding-left: 8px; }
-        ul, ol { color: ${theme.palette.text.primary}; }
-        input, textarea, select {
-          background: ${theme.palette.background.paper};
-          color: ${theme.palette.text.primary};
-          border: 1px solid ${theme.palette.divider};
-          border-radius: 4px;
-          padding: 6px 10px;
-          font-size: 1em;
-          font-family: inherit;
-      }
-      /* Add more styles as needed */
-    `,
+            body {
+              font-family: ${theme.typography.fontFamily};
+              font-size: ${theme.typography.fontSize}px;
+              color: ${theme.palette.text.primary};
+              background: ${theme.palette.background.paper};
+            }
+            a { color: ${theme.palette.primary.main}; }
+            h1, h2, h3, h4, h5, h6 { color: ${theme.palette.text.primary}; font-family: ${theme.typography.fontFamily}; }
+            blockquote { color: ${theme.palette.text.secondary}; border-left: 4px solid ${theme.palette.primary.light}; padding-left: 8px; }
+            ul, ol { color: ${theme.palette.text.primary}; }
+            input, textarea, select {
+              background: ${theme.palette.background.paper};
+              color: ${theme.palette.text.primary};
+              border: 1px solid ${theme.palette.divider};
+              border-radius: 4px;
+              padding: 6px 10px;
+              font-size: 1em;
+              font-family: inherit;
+            }
+            /* Add more styles as needed */
+          `,
           placeholder,
           menubar: false,
           statusbar: false,

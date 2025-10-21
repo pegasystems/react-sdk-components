@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { createTheme } from '@mui/material';
-import { Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 
-import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
+import sdkConfig from '../../../sdk-config.json';
 
 /**
  * Since makeStyles is now exported from @mui/styles package which does not know about Theme in the core package.
@@ -256,7 +256,5 @@ const darkTheme = createTheme({
     divider: 'rgba(255, 255, 255, 0.1)' // border-color
   }
 });
-
-const sdkConfig = await getSdkConfig();
 
 export const theme = sdkConfig.theme === 'dark' ? darkTheme : lightTheme;
