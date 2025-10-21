@@ -1,6 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   resolutionPart: {
     display: 'flex',
     flexDirection: 'row'
@@ -18,15 +18,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '28px',
     lineHeight: '40px',
     padding: '20px 20px',
-    color: 'darkslategray'
+    color: theme.embedded.resolutionTextColor
   },
   pegaPartAccompanimentImage: {
     width: '700px',
     margin: '20px',
-    borderRadius: '10px'
+    borderRadius: '10px',
+    filter: 'var(--svg-color)'
   },
   resolutionButton: {
-    color: 'white',
+    color: 'var(--app-text-color)',
     backgroundColor: theme.palette.warning.main,
     fontSize: '25px',
     fontWeight: 'bold',

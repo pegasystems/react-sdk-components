@@ -327,7 +327,7 @@ export function createPConnect(contextName, referenceList, pageReference): any {
   };
 
   // create PConnect object
-  const config = { meta: {}, options };
+  const config: any = { meta: {}, options };
   const { getPConnect } = PCore.createPConnect(config);
 
   return getPConnect();

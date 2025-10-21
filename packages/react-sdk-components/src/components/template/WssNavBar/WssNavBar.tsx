@@ -25,7 +25,7 @@ interface WssNavBarProps extends PConnProps {
   appName: any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex'
   },
@@ -36,10 +36,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2)
   },
   appListLogo: {
-    width: '3.6rem'
+    width: '3.6rem',
+    filter: 'var(--svg-color)'
   },
   appName: {
-    color: 'white',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(4),
     fontSize: '1.5rem'
@@ -74,7 +74,7 @@ export default function WssNavBar(props: WssNavBarProps) {
 
   const navLinksContent = (
     <Box id='nav-links' sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} style={{ justifyContent: alignment }}>
-      {navLinks.map((link) => (
+      {navLinks.map(link => (
         <Button className='link-style' key={link.text} onClick={link.onClick}>
           {link.text}
         </Button>
@@ -117,7 +117,7 @@ export default function WssNavBar(props: WssNavBarProps) {
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
               >
-                {navLinks.map((link) => (
+                {navLinks.map(link => (
                   <MenuItem key={link.text} onClick={link.onClick}>
                     <Typography>{link.text}</Typography>
                   </MenuItem>

@@ -37,7 +37,7 @@ export default function SelectableCard(props) {
 
   return (
     <>
-      {(cardDataSource || []).map((item) => {
+      {(cardDataSource || []).map(item => {
         const resolvedFields = resolveReferenceFields(item, hideFieldLabels, recordKey, pConn);
 
         const commonProps = {
@@ -130,7 +130,7 @@ export default function SelectableCard(props) {
                         <Checkbox
                           id={item[recordKey]}
                           getPConnect={getPConnect}
-                          checked={readOnlyList.some((data) => data[recordKey] === item[recordKey])}
+                          checked={readOnlyList.some(data => data[recordKey] === item[recordKey])}
                           onChange={onChange}
                           onBlur={onBlur}
                           onClick={onClick}

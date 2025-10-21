@@ -11,6 +11,10 @@
   flex-direction: row;
   padding: 0.25rem 0rem 0.25rem 0.25rem;
   margin-bottom: 0.5rem;
+  align-items: center;
+  border: 0.0625rem solid var(--utility-card-border-color);
+  border-radius: calc(0.25rem);
+  min-height: 3rem;
 }
 
 .psdk-utility-card-icon {
@@ -23,6 +27,7 @@
 .psdk-utility-card-svg-icon {
   width: 2.5rem;
   display: inline-block;
+  filter: var(--svg-color);
 }
 
 .psdk-utility-card-main {
@@ -40,14 +45,7 @@
 .psdk-utility-card-action-svg-icon {
   width: 1.4rem;
   display: inline-block;
-}
-
-.psdk-utility-card {
-  display: flex;
-  align-items: center;
-  border: 0.0625rem solid rgb(207, 207, 207);
-  border-radius: calc(0.25rem);
-  min-height: 3rem;
+  filter: var(--svg-color);
 }
 
 .psdk-utility-button {
@@ -65,14 +63,14 @@
   width: 1.4rem;
   display: inline-block;
   vertical-align: middle;
-  filter: invert(28%) sepia(20%) saturate(3903%) hue-rotate(209deg) brightness(101%) contrast(87%);
+  filter: var(--svg-color);
 }
 
-.psdk-link-button {
+.psdk-utility-link-button {
   background: none;
   border: none;
   align-items: center;
   display: flex;
   padding: 0;
-  color: #3f51b5;
+  color: var(--link-button-color);
 }

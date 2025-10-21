@@ -10,7 +10,7 @@ interface AppAnnouncementProps extends PConnProps {
   whatsnewlink?: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -23,7 +23,7 @@ export default function AppAnnouncement(props: AppAnnouncementProps) {
   const { header = '', description = '', datasource = [], whatsnewlink = '' } = props;
   let details = [];
   if (datasource && datasource.source) {
-    details = datasource.source.map((item) => {
+    details = datasource.source.map(item => {
       return item.name;
     });
   }

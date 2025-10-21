@@ -4,8 +4,9 @@ import { FormControl, FormHelperText, InputLabel } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 import { useAfterInitialEffect, useConsolidatedRef, useUID } from '../../../hooks';
+import { theme } from '../../../theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   fieldLabel: {
     position: 'relative',
     transform: 'translate(0, 0px) scale(1)',
@@ -42,7 +43,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
     editorRef?.current.mode.set(readOnly || disabled ? 'readonly' : 'design');
   }, [readOnly, disabled]);
 
-  const filePickerCallback = (cb) => {
+  const filePickerCallback = cb => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -87,6 +88,30 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
         initialValue={defaultValue}
         disabled={disabled}
         init={{
+          skin: 'oxide-dark', // or 'oxide' for light theme
+          // ...other TinyMCE config...
+          content_style: `
+        body {
+          font-family: ${theme.typography.fontFamily};
+          font-size: ${theme.typography.fontSize}px;
+          color: ${theme.palette.text.primary};
+          background: ${theme.palette.background.paper};
+        }
+        a { color: ${theme.palette.primary.main}; }
+        h1, h2, h3, h4, h5, h6 { color: ${theme.palette.text.primary}; font-family: ${theme.typography.fontFamily}; }
+        blockquote { color: ${theme.palette.text.secondary}; border-left: 4px solid ${theme.palette.primary.light}; padding-left: 8px; }
+        ul, ol { color: ${theme.palette.text.primary}; }
+        input, textarea, select {
+          background: ${theme.palette.background.paper};
+          color: ${theme.palette.text.primary};
+          border: 1px solid ${theme.palette.divider};
+          border-radius: 4px;
+          padding: 6px 10px;
+          font-size: 1em;
+          font-family: inherit;
+      }
+      /* Add more styles as needed */
+    `,
           placeholder,
           menubar: false,
           statusbar: false,
@@ -95,7 +120,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
           autoresize_bottom_margin: 0,
           toolbar: disabled ? false : 'blocks | bold italic strikethrough | bullist numlist outdent indent | link image',
           toolbar_location: 'bottom',
-          content_style: 'body { font-family:Helvetica, Arial,sans-serif; font-size:14px }',
+          // content_style: 'body { font-family:Helvetica, Arial,sans-serif; font-size:14px }',
           branding: false,
           paste_data_images: true,
           file_picker_types: 'image',

@@ -19,7 +19,7 @@ export default function RichText(props: RichTextProps) {
   const editorRef: any = useRef(null);
 
   let { readOnly, required, disabled } = props;
-  [readOnly, required, disabled] = [readOnly, required, disabled].map((prop) => prop === true || (typeof prop === 'string' && prop === 'true'));
+  [readOnly, required, disabled] = [readOnly, required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
 
   const helperTextToDisplay = validatemessage || helperText;
 

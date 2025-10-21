@@ -22,7 +22,7 @@ const publishEvent = ({ clearSelections, viewName }) => {
   PCore.getPubSubUtils().publish('update-advanced-search-selections', payload);
 };
 
-const checkIfSelectionsExist = (getPConnect) => {
+const checkIfSelectionsExist = getPConnect => {
   const { MULTI } = PCore.getConstants().LIST_SELECTION_MODE;
   const { selectionMode, readonlyContextList, contextPage, contextClass, name } = getPConnect().getConfigProps();
   const isMultiSelectMode = selectionMode === MULTI;
@@ -35,12 +35,12 @@ const checkIfSelectionsExist = (getPConnect) => {
   if (isMultiSelectMode) {
     selectionsExist = readonlyContextList?.length > 0;
   } else if (contextPage) {
-    selectionsExist = compositeKeys?.filter((key) => !['', null, undefined].includes(contextPage[key]))?.length > 0;
+    selectionsExist = compositeKeys?.filter(key => !['', null, undefined].includes(contextPage[key]))?.length > 0;
   }
   return selectionsExist;
 };
 
-const SearchForm = (props) => {
+const SearchForm = props => {
   const { children, getPConnect, searchSelectCacheKey } = props;
 
   const deferLoadedTabs = children[2];
@@ -55,10 +55,10 @@ const SearchForm = (props) => {
   // @ts-ignore
   const { data: tabData } = useGetTabsCount(deferLoadedTabs, 'searchForm', currentTabId);
 
-  const handleTabClick = (event) => {
+  const handleTabClick = event => {
     const tabId: any = event.target.value;
     const viewName = tabData
-      .find((tab) => tab.id === currentTabId)
+      .find(tab => tab.id === currentTabId)
       .getPConnect()
       .getConfigProps().name;
 
@@ -74,7 +74,7 @@ const SearchForm = (props) => {
 
   const clearSelectionAndSwitchTab = () => {
     const viewName = tabData
-      .find((tab) => tab.id === currentTabId)
+      .find(tab => tab.id === currentTabId)
       .getPConnect()
       .getConfigProps().name;
     publishEvent({ clearSelections: true, viewName });
@@ -86,7 +86,7 @@ const SearchForm = (props) => {
     setOpen(false); // Close the dialog
   };
 
-  const tabItems = tabData?.filter((tab) => tab.visibility()) || [];
+  const tabItems = tabData?.filter(tab => tab.visibility()) || [];
   const propsToUse = { ...getPConnect().getInheritedProps() };
 
   let searchCategoriesComp;
@@ -94,7 +94,7 @@ const SearchForm = (props) => {
     searchCategoriesComp = (
       <Grid2 container spacing={2}>
         <TextField value={currentTabId} select onChange={handleTabClick} fullWidth>
-          {tabItems.map((tab) => (
+          {tabItems.map(tab => (
             <MenuItem key={tab.id} value={tab.id}>
               {tab.name}
             </MenuItem>
@@ -105,7 +105,7 @@ const SearchForm = (props) => {
   } else if (tabItems.length > 1) {
     searchCategoriesComp = (
       <RadioGroup row value={currentTabId} onChange={handleTabClick}>
-        {tabItems.map((tab) => (
+        {tabItems.map(tab => (
           <FormControlLabel key={tab.id} value={tab.id} control={<Radio />} label={tab.name} />
         ))}
       </RadioGroup>
@@ -118,11 +118,11 @@ const SearchForm = (props) => {
       {searchCategoriesComp}
       <TabContext value={currentTabId}>
         <Tabs style={{ display: 'none' }} value={currentTabId} onChange={(e, newValue) => setCurrentTabId(newValue)}>
-          {tabItems.map((tab) => (
+          {tabItems.map(tab => (
             <Tab key={tab.id} label={tab.name} value={tab.id} />
           ))}
         </Tabs>
-        {tabItems.map((tab) => (
+        {tabItems.map(tab => (
           <TabPanel style={{ padding: '0px' }} key={tab.id} value={tab.id}>
             <div className='search-form'>{tab.content}</div>
           </TabPanel>

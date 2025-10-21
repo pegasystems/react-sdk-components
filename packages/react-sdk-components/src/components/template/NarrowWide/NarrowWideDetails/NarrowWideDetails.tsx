@@ -40,7 +40,7 @@ export default function NarrowWideDetails(props: NarrowWideDetailsProps) {
   let highlightedDataArr = [];
   if (showHighlightedData) {
     const { highlightedData = [] } = (getPConnect().getRawMetadata() as any).config;
-    highlightedDataArr = highlightedData.map((field) => {
+    highlightedDataArr = highlightedData.map(field => {
       field.config.displayMode = 'STACKED_LARGE_VAL';
 
       // Mark as status display when using pyStatusWork

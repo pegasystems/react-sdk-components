@@ -28,10 +28,8 @@ interface AppShellProps extends PConnProps {
   pageMessages: string[];
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex'
-  },
+const useStyles = makeStyles(theme => ({
+  root: {},
   content: {
     flexGrow: 1,
     height: '100vh',
@@ -153,8 +151,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     else {
       PCore.getAssetLoader()
         .getSvcImage(portalLogo)
-        .then((blob) => window.URL.createObjectURL(blob))
-        .then((data) => {
+        .then(blob => window.URL.createObjectURL(blob))
+        .then(data => {
           setIconURL(data);
           setFullIconURL(data);
         })
@@ -168,8 +166,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     if (imageKey && portalTemplate === 'wss') {
       PCore.getAssetLoader()
         .getSvcImage(imageKey)
-        .then((blob) => window.URL.createObjectURL(blob))
-        .then((imagePath) => setImageBlobUrl(imagePath));
+        .then(blob => window.URL.createObjectURL(blob))
+        .then(imagePath => setImageBlobUrl(imagePath));
     }
   }, []);
 
@@ -191,7 +189,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
 
   const links = !pages
     ? []
-    : pages.map((page) => {
+    : pages.map(page => {
         const name = localizedVal(page.pyLabel, '', localeReference);
         return {
           text: name,
@@ -212,7 +210,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
 
   if (portalTemplate === 'wss') {
     return (
-      <div id='AppShell'>
+      <div id='AppShell' className={classes.root}>
         <WssNavBar
           portalName={portalName}
           imageSrc={iconURL}
@@ -239,7 +237,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
 
   return (
     <NavContext.Provider value={{ open, setOpen }}>
-      <div id='AppShell' className={classes.root}>
+      <div id='AppShell' className={classes.root} style={{ display: 'flex' }}>
         <NavBar
           getPConnect={getPConnect}
           pConn={getPConnect()}

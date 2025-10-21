@@ -7,7 +7,7 @@ interface FollowersProps extends PConnProps {
   // If any, enter additional props that only exist on this component
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
@@ -17,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1)
-    // borderLeft: "6px solid",
-    // borderLeftColor: green[300]
   }
 }));
 

@@ -88,7 +88,7 @@ function getConfigObject(item, pConnect, isReverseCoexistence = false) {
   return null;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   dlgTitle: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
@@ -178,7 +178,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     }
   }
 
-  const dismissCancelAlert = (dismissAllModals) => {
+  const dismissCancelAlert = dismissAllModals => {
     setShowCancelAlert(false);
 
     if (dismissAllModals) {
@@ -214,7 +214,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     subscribe(EVENT_SHOW_CANCEL_ALERT, showAlert, EVENT_SHOW_CANCEL_ALERT /* Unique string for subscription */);
     subscribe(
       ERROR_WHILE_RENDERING,
-      (error) => {
+      error => {
         // setError(true);
 
         console.error(error);

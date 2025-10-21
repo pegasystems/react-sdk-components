@@ -67,7 +67,7 @@ export default function FullPortal() {
    */
   function startPortal() {
     // NOTE: When loadMashup is complete, this will be called.
-    PCore.onPCoreReady((renderObj) => {
+    PCore.onPCoreReady(renderObj => {
       // Check that we're seeing the PCore version we expect
       compareSdkPCoreVersions();
 
@@ -102,7 +102,7 @@ export default function FullPortal() {
       setPortalSelectionScreen(true);
       setDefaultPortalName(defaultPortal);
       // Getting current user's access group's available portals list other than excluded portals (relies on Traditional DX APIs)
-      getAvailablePortals().then((portals) => {
+      getAvailablePortals().then(portals => {
         setAvailablePortals(portals as string[]);
       });
     }

@@ -13,7 +13,7 @@ interface FieldGroupProps {
   instructions?: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     gap: '5px',
-    cursor: (collapsible) => (collapsible ? 'pointer' : 'auto')
+    cursor: collapsible => (collapsible ? 'pointer' : 'auto')
   },
   instructionText: {
     padding: '5px 0'
@@ -51,7 +51,7 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
   );
 
   const headerClickHandler = () => {
-    setCollapsed((current) => !current);
+    setCollapsed(current => !current);
   };
 
   return (

@@ -1,6 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   swatchHeader: {
     display: 'flex',
     flexDirection: 'row',
@@ -17,12 +17,12 @@ const useStyles = makeStyles((theme) => ({
   },
   swatchPlay: {
     letterSpacing: 'normal',
-    color: 'white',
+    color: 'var(--app-text-color)',
     fontSize: '25px'
   },
   swatchLevel: {
     letterSpacing: 'normal',
-    color: 'white',
+    color: 'var(--app-text-color)',
     fontSize: '28px',
     fontWeight: 'bold'
   },
@@ -37,13 +37,13 @@ const useStyles = makeStyles((theme) => ({
   },
   swatchCount: {
     letterSpacing: 'normal',
-    color: 'white',
+    color: 'var(--app-text-color)',
     fontSize: '40px',
     fontWeight: 'bold'
   },
   swatchLabel: {
     letterSpacing: 'normal',
-    color: 'white',
+    color: 'var(--app-text-color)',
     fontSize: '17px'
   },
   swatchBody: {
@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column'
   },
   swatchShopButton: {
-    color: 'white',
+    color: 'var(--app-text-color)',
     backgroundColor: theme.palette.warning.main,
     fontSize: '25px',
     fontWeight: 'bold',

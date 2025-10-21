@@ -60,7 +60,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
     };
   });
 
-  const fireFilterChange = (filterValue) => {
+  const fireFilterChange = filterValue => {
     const filterData = {
       filterId,
       filterExpression: getFilterExpression(filterValue, name, metadata)
@@ -70,7 +70,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
   };
 
   const fireFilterChangeDebounced = debounce(500, fireFilterChange);
-  const dateRangeChangeHandler = (value) => {
+  const dateRangeChangeHandler = value => {
     const { start, end } = value;
 
     let startDate = getFormattedDate(start);
@@ -91,13 +91,13 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
   };
 
   const renderAutoComplete = () => {
-    metadata.config.onRecordChange = (e) => {
+    metadata.config.onRecordChange = e => {
       fireFilterChange(e.id);
     };
     return getPConnect().createComponent(metadata, '', 0, {}); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional);
   };
 
-  const onChange = (dates) => {
+  const onChange = dates => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
@@ -128,7 +128,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
       )}
       {type === 'AutoComplete' && (
         <span
-          onChange={(event) => {
+          onChange={event => {
             if (event && event.target && !(event.target as HTMLInputElement).value) {
               fireFilterChange('ALL');
             }
@@ -139,7 +139,7 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
       )}
       {children && (
         <span
-          onChange={(event) => {
+          onChange={event => {
             fireFilterChangeDebounced((event.target as HTMLInputElement).value);
           }}
         >

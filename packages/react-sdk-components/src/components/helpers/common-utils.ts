@@ -16,7 +16,7 @@ export function getGenericFieldsLocalizedValue(path: string, key: string): strin
 
   // Split the path and traverse the object
   const pathParts = path.split('.');
-  let currentObj = localeStore;
+  let currentObj: any = localeStore;
 
   for (const part of pathParts) {
     if (!currentObj[part]) return key;

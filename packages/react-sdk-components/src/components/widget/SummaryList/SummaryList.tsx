@@ -15,7 +15,7 @@ export default function SummaryList(props: SummaryListProps) {
   const { menuIconOverride$: menuOverride = '' } = props;
   return (
     <div>
-      {props.arItems$.map((file) => (
+      {props.arItems$.map(file => (
         <SummaryItem key={file.id} menuIconOverride$={menuOverride} arItems$={file} menuIconOverrideAction$={props.menuIconOverrideAction$} />
       ))}
     </div>

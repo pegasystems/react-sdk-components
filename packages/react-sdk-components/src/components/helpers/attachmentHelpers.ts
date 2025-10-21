@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import download from 'downloadjs';
 
-export const isContentBinary = (headers) => {
+export const isContentBinary = headers => {
   return headers && headers['content-transfer-encoding'] === 'binary';
 };
 
-export const isContentBase64 = (headers) => {
+export const isContentBase64 = headers => {
   return headers && headers['content-transfer-encoding'] === 'base64';
 };
 
@@ -36,13 +36,13 @@ export const fileDownloadVar = (content, type, name, extension) => {
   }
 };
 
-export const useFileDownload = (context) => {
+export const useFileDownload = context => {
   return useCallback(
     ({ ID, name, extension, type, category, responseType }) => {
       if (category !== 'pxDocument') {
         PCore.getAttachmentUtils()
           .downloadAttachment(ID, context, responseType)
-          .then((content) => {
+          .then(content => {
             fileDownloadVar(content, type, name, extension);
           })
 
@@ -51,7 +51,7 @@ export const useFileDownload = (context) => {
         PCore.getAttachmentUtils()
           // @ts-expect-error
           .downloadDocument(ID, context, responseType)
-          .then((content) => {
+          .then(content => {
             fileDownloadVar(content, type, name, extension);
           })
 
@@ -75,8 +75,8 @@ export const getIconFromFileType = (fileType): string => {
     icon = 'document-pdf';
   } else {
     const [, subtype] = fileType.split('/');
-    const foundMatch = (sources) => {
-      return sources.some((key) => subtype.includes(key));
+    const foundMatch = sources => {
+      return sources.some(key => subtype.includes(key));
     };
 
     if (foundMatch(['excel', 'spreadsheet'])) {
@@ -94,4 +94,4 @@ export const validateMaxSize = (fileObj: any, maxSizeInMB: string): boolean => {
   return parseFloat(fileSize) < parseFloat(maxSizeInMB);
 };
 
-export const isFileUploadedToServer = (file) => file.responseProps && !file.responseProps.ID?.includes('temp');
+export const isFileUploadedToServer = file => file.responseProps && !file.responseProps.ID?.includes('temp');

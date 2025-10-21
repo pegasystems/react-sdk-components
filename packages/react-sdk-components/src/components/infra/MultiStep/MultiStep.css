@@ -17,7 +17,7 @@
 
 .psdk-current-svg-icon {
   width: 1rem;
-  filter: var(--app-primary-color-filter);
+  filter: var(--svg-color);
 }
 
 .psdk-not-current-svg-icon {
@@ -40,7 +40,7 @@ mat-horizontal-stepper {
 
 .psdk-sub-step-not-current {
   padding-left: 0.625rem;
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--step-label-color);
 }
 
 .psdk-flow-container-top {
@@ -80,7 +80,7 @@ mat-horizontal-stepper {
 .psdk-vertical-step-icon {
   margin-right: 12px;
   background-color: var(--app-neutral-color);
-  color: #fff;
+  color: var(--app-text-color);
   border-radius: 50%;
   height: 24px;
   width: 24px;
@@ -93,13 +93,13 @@ mat-horizontal-stepper {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
+  color: var(--app-text-color);
 }
 
 .psdk-vertical-step-icon-selected {
   margin-right: 12px;
   background-color: var(--app-primary-color);
-  color: #fff;
+  color: var(--app-text-color);
   border-radius: 50%;
   height: 24px;
   width: 24px;
@@ -108,7 +108,7 @@ mat-horizontal-stepper {
 }
 
 .psdk-vertical-step-label {
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--step-label-color);
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
@@ -180,7 +180,7 @@ mat-horizontal-stepper {
 
 .psdk-horizontal-step-icon {
   background-color: var(--app-neutral-color);
-  color: #fff;
+  color: var(--app-text-color);
   border-radius: 50%;
   height: 24px;
   width: 24px;
@@ -201,7 +201,7 @@ mat-horizontal-stepper {
 
 .psdk-horizontal-step-icon-selected {
   background-color: var(--app-primary-color);
-  color: #fff;
+  color: var(--app-text-color);
   border-radius: 50%;
   height: 24px;
   width: 24px;
