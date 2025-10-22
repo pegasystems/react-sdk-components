@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   header: {
-    backgroundColor: '#100a2a',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    backgroundColor: theme.palette.mode === 'dark' ? 'var(--app-nav-bg)' : theme.palette.background.paper,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     padding: '1rem 0'
   },
   embedTopIcon: {
     width: '40px',
-    filter: 'invert(100%)'
+    filter: 'var(--svg-color)'
   },
   navContainer: {
     width: '90%',
@@ -41,7 +41,7 @@ const useStyles = makeStyles({
       width: '80%',
       maxWidth: '320px',
       height: '100vh',
-      backgroundColor: '#211649',
+      backgroundColor: 'var(--utility-background-color)',
       boxShadow: '-5px 0 15px rgba(0,0,0,0.2)',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -64,10 +64,10 @@ const useStyles = makeStyles({
     margin: 0,
     '& a': {
       textDecoration: 'none',
-      color: '#e0e0e0',
+      color: theme.palette.mode === 'dark' ? 'var(--app-nav-color)' : theme.palette.text.primary,
       transition: 'color 0.3s ease',
       '&:hover': {
-        color: '#ffffff'
+        color: theme.palette.mode === 'dark' ? theme.palette.primary.contrastText : theme.palette.primary.main
       }
     },
     '@media (max-width: 768px)': {
@@ -81,7 +81,13 @@ const useStyles = makeStyles({
         flexDirection: 'column',
         gap: '2rem',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        '& a': {
+          color: theme.palette.text.primary,
+          '&:hover': {
+            color: theme.palette.primary.main
+          }
+        }
       }
     }
   },
@@ -97,11 +103,12 @@ const useStyles = makeStyles({
     cursor: 'pointer',
     zIndex: 1001,
     padding: 0,
+    color: theme.palette.mode === 'dark' ? theme.palette.primary.contrastText : theme.palette.text.primary,
     '@media (max-width: 768px)': {
       display: 'block'
     }
   }
-});
+}));
 export default function Header() {
   const classes = useStyles();
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -155,10 +162,9 @@ export default function Header() {
             </li>
           </ul>
         </div>
-
         <button type='button' className={classes.menuToggle} onClick={toggleMenu} aria-label='Open menu'>
           <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-            <path d='M4 6H20M4 12H20M4 18H20' stroke='white' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
+            <path d='M4 6H20M4 12H20M4 18H20' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
           </svg>
         </button>
       </nav>

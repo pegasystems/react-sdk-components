@@ -3,7 +3,7 @@ import { sdkSetAuthHeader, sdkSetCustomTokenParamsCB } from '@pega/auth/lib/sdk-
 export const shoppingOptions = [
   {
     name: 'Oceonix 25',
-    imageSrc: './assets/img/White_phone.png',
+    imageSrc: './assets/img/WhitePhone.png',
     saveAmount: 'Save $150',
     monthlyPrice: 'Starting at $18.05/mo',
     tenure: 'for 36 months',
@@ -12,7 +12,7 @@ export const shoppingOptions = [
   },
   {
     name: 'Oceonix 25 Max',
-    imageSrc: './assets/img/Silver_phone.png',
+    imageSrc: './assets/img/SilverPhone.png',
     saveAmount: 'Save $200',
     monthlyPrice: 'Starting at $22.22/mo',
     tenure: 'for 36 months',
@@ -21,17 +21,18 @@ export const shoppingOptions = [
   },
   {
     name: 'Oceonix 25 Ultra',
-    imageSrc: './assets/img/Gold_phone.png',
+    imageSrc: './assets/img/GoldPhone.png',
     saveAmount: 'Save $250',
     monthlyPrice: 'Starting at $26.38/mo',
     tenure: 'for 36 months',
     retailPrice: 'Retail price: $1,200.00',
-    Lelevelvel: 'Gold'
+    level: 'Gold'
   }
 ];
 
 export function initializeAuthentication(sdkConfigAuth) {
   if ((sdkConfigAuth.mashupGrantType === 'none' || !sdkConfigAuth.mashupClientId) && sdkConfigAuth.customAuthType === 'Basic') {
+    // Service package to use custom auth with Basic
     const sB64 = window.btoa(`${sdkConfigAuth.mashupUserIdentifier}:${window.atob(sdkConfigAuth.mashupPassword)}`);
     sdkSetAuthHeader(`Basic ${sB64}`);
   }
@@ -42,11 +43,14 @@ export function initializeAuthentication(sdkConfigAuth) {
     let sISOTime = `${expTime.toISOString().split('.')[0]}Z`;
     const regex = /[-:]/g;
     sISOTime = sISOTime.replace(regex, '');
+    // Service package to use custom auth with Basic
     const sB64 = window.btoa(`${sdkConfigAuth.mashupUserIdentifier}:${window.atob(sdkConfigAuth.mashupPassword)}:${sISOTime}`);
     sdkSetAuthHeader(`Basic ${sB64}`);
   }
 
   if (sdkConfigAuth.mashupGrantType === 'customBearer' && sdkConfigAuth.customAuthType === 'CustomIdentifier') {
+    // Use custom bearer with specific custom parameter to set the desired operator via
+    //  a userIdentifier property.  (Caution: highly insecure...being used for simple demonstration)
     sdkSetCustomTokenParamsCB(() => {
       return { userIdentifier: sdkConfigAuth.mashupUserIdentifier };
     });

@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   resolutionPage: {
     display: 'flex',
     justifyContent: 'center',
@@ -9,13 +9,13 @@ const useStyles = makeStyles({
     padding: '2rem'
   },
   resolutionCard: {
-    backgroundColor: '#211649',
+    backgroundColor: 'var(--utility-background-color)',
     borderRadius: '16px',
     padding: '3rem',
     maxWidth: '600px',
     textAlign: 'center',
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-    color: '#e0e0e0',
+    color: theme.palette.text.primary,
     position: 'relative',
     border: '2px solid transparent',
     backgroundClip: 'padding-box',
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
       bottom: 0,
       borderRadius: '16px',
       border: '2px solid transparent',
-      background: 'linear-gradient(to bottom, #8A2BE2, #d43592) border-box',
+      background: `linear-gradient(to bottom, ${theme.actionButtons.secondary.backgroundColor}, ${theme.actionButtons.primary.backgroundColor}) border-box`,
       '-webkit-mask': 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
       '-webkit-mask-composite': 'destination-out',
       maskComposite: 'exclude',
@@ -42,7 +42,7 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: '2rem',
-    color: '#ffffff',
+    color: theme.palette.text.primary,
     marginBottom: '1rem',
     fontWeight: 700,
     margin: 0
@@ -51,14 +51,14 @@ const useStyles = makeStyles({
     fontSize: '1rem',
     lineHeight: 1.6,
     marginBottom: '2rem',
-    color: '#8e8e9c',
+    color: theme.palette.text.secondary,
     margin: 0
   },
   doneButton: {
     display: 'inline-block',
-    background: 'linear-gradient(90deg, #d43592, #a445b2, #d43592)',
+    background: `linear-gradient(90deg, ${theme.actionButtons.primary.backgroundColor}, ${theme.palette.primary.dark}, ${theme.actionButtons.primary.backgroundColor})`,
     backgroundSize: '200% auto',
-    color: '#ffffff !important',
+    color: `${theme.actionButtons.primary.color} !important`,
     padding: '0.75rem 1.5rem',
     borderRadius: '50px',
     textAlign: 'center',
@@ -70,14 +70,16 @@ const useStyles = makeStyles({
     '&:hover': {
       backgroundPosition: 'right center',
       transform: 'scale(1.05)',
-      color: '#ffffff'
+      color: theme.actionButtons.primary.color
     }
   }
-});
-
-export default function ResolutionScreen() {
+}));
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function ResolutionScreen({ PConnect }) {
   const classes = useStyles();
-
+  const ModelName = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.PhoneModelss.ModelName;
+  const Address = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.BillingAddress.Apartment || 'your address';
+  const Email = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.CustomerProfile.EmailAddress || 'your email';
   return (
     <div className={classes.resolutionPage}>
       <div className={classes.resolutionCard}>
@@ -85,8 +87,8 @@ export default function ResolutionScreen() {
 
         <h2 className={classes.title}>Get excited for your new phone!</h2>
         <p className={classes.message}>
-          We have received your order of a new Phone. It will ship out within 1 business day to your address. Your tracking information will be sent
-          to you.
+          We have received your order of a {ModelName}. It will ship out within 1 business day to {Address}. Your tracking information will be sent to{' '}
+          {Email}.
           <br />
           <br />
           Thank you for your business!

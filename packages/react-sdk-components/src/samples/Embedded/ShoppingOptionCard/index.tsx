@@ -1,8 +1,8 @@
 import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   planCard: {
-    backgroundColor: '#211649',
+    backgroundColor: 'var(--utility-background-color)',
     padding: '2rem',
     borderRadius: '16px',
     textAlign: 'center',
@@ -24,10 +24,9 @@ const useStyles = makeStyles({
       bottom: 0,
       borderRadius: '16px',
       border: '2px solid transparent',
-      background: 'linear-gradient(to bottom, #8A2BE2, #d43592) border-box',
+      background: `linear-gradient(to bottom, ${theme.actionButtons.secondary.backgroundColor}, ${theme.actionButtons.primary.backgroundColor}) border-box`,
       '-webkit-mask': 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
       '-webkit-mask-composite': 'destination-out',
-      maskComposite: 'exclude',
       pointerEvents: 'none'
     }
   },
@@ -46,7 +45,7 @@ const useStyles = makeStyles({
     fontSize: '1.5rem',
     fontWeight: 600,
     marginBottom: '0.5rem',
-    color: '#ffffff',
+    color: theme.palette.text.primary,
     margin: 0
   },
   saveAmount: {
@@ -57,27 +56,27 @@ const useStyles = makeStyles({
   },
   monthlyPrice: {
     fontSize: '1rem',
-    color: '#ffffff',
+    color: theme.palette.text.primary,
     margin: 0
   },
   tenure: {
     fontSize: '0.8rem',
-    color: '#8e8e9c',
+    color: theme.palette.text.secondary,
     marginBottom: '1rem',
     margin: 0
   },
   retailPrice: {
     fontSize: '0.8rem',
-    color: '#8e8e9c',
+    color: theme.palette.text.secondary,
     marginBottom: '1.5rem',
     flexGrow: 1,
     margin: 0
   },
   buyButton: {
     display: 'inline-block',
-    background: 'linear-gradient(90deg, #d43592, #a445b2, #d43592)',
+    background: `linear-gradient(90deg, ${theme.actionButtons.primary.backgroundColor}, ${theme.palette.primary.dark}, ${theme.actionButtons.primary.backgroundColor})`,
     backgroundSize: '200% auto',
-    color: '#ffffff !important',
+    color: `${theme.actionButtons.primary.color} !important`,
     padding: '0.75rem 1.5rem',
     borderRadius: '50px',
     textAlign: 'center',
@@ -89,10 +88,10 @@ const useStyles = makeStyles({
     '&:hover': {
       backgroundPosition: 'right center',
       transform: 'scale(1.05)',
-      color: '#ffffff'
+      color: theme.actionButtons.primary.color
     }
   }
-});
+}));
 
 export default function ShoppingOptionCard(props) {
   const classes = useStyles();

@@ -9,27 +9,16 @@ import ShoppingOptionCard from '../ShoppingOptionCard';
 import ResolutionScreen from '../ResolutionScreen';
 import { shoppingOptions } from '../utils';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   appContainer: {
-    backgroundColor: '#100a2a',
+    backgroundColor: 'var(--app-background-color)',
     fontFamily: "'Poppins', sans-serif",
-    color: '#e0e0e0',
+    color: theme.palette.text.primary,
     minHeight: 'calc(100vh - 50px)',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
-  },
-
-  '@global': {
-    '.psdk-flow-container-top': {
-      maxWidth: '1400px',
-      width: '50%',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      marginTop: '5%',
-      padding: 0
-    }
   },
 
   mainContentArea: {
@@ -58,7 +47,7 @@ const useStyles = makeStyles({
       fontSize: '3.5rem',
       lineHeight: 1.2,
       fontWeight: 700,
-      color: '#ffffff'
+      color: theme.palette.text.primary
     }
   },
   heroImage: {
@@ -89,7 +78,7 @@ const useStyles = makeStyles({
       fontSize: '2.8rem',
       lineHeight: 1.3,
       fontWeight: 700,
-      color: '#ffffff'
+      color: theme.palette.text.primary
     },
     '@media (max-width: 1200px)': {
       paddingRight: 0,
@@ -97,7 +86,7 @@ const useStyles = makeStyles({
     }
   },
   highlight: {
-    color: '#d43592'
+    color: theme.actionButtons.primary.backgroundColor
   },
   plansContainer: {
     flexBasis: '75%',
@@ -114,7 +103,7 @@ const useStyles = makeStyles({
     width: '100%'
   },
   pegaForm: {}
-});
+}));
 
 function RootComponent(props) {
   const PegaConnectObj = createPConnectComponent();
@@ -132,13 +121,16 @@ export default function MainScreen(props) {
   const [showResolution, setShowResolution] = useState(false);
 
   useEffect(() => {
+    // Subscribe to the EVENT_CANCEL event to handle the assignment cancellation
     PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, () => cancelAssignment(), 'cancelAssignment');
+    // Subscribe to the END_OF_ASSIGNMENT_PROCESSING event to handle assignment completion
     PCore.getPubSubUtils().subscribe(
       PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.END_OF_ASSIGNMENT_PROCESSING,
       () => assignmentFinished(),
       'endOfAssignmentProcessing'
     );
     return () => {
+      // unsubscribe to the events
       PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, 'cancelAssignment');
       PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.END_OF_ASSIGNMENT_PROCESSING, 'endOfAssignmentProcessing');
     };
@@ -159,12 +151,30 @@ export default function MainScreen(props) {
     setShowPega(true);
     const sdkConfig = await getSdkConfig();
     let mashupCaseType = sdkConfig.serverConfig.appMashupCaseType;
+    // If mashupCaseType is null or undefined, get the first case type from the environment info
     if (!mashupCaseType) {
       const caseTypes = PCore.getEnvironmentInfo()?.environmentInfoObject?.pyCaseTypeList;
       if (caseTypes && caseTypes.length > 0) {
-        mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
+        //mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
+        mashupCaseType = 'DIXL-MediaCo-Work-PurchasePhone';
       }
     }
+    let selectedPhoneGUID = '';
+    const phoneName = optionClicked ? optionClicked.trim() : '';
+    switch (phoneName) {
+      case 'Oceonix 25 Max':
+        selectedPhoneGUID = '2455b75e-3381-4a34-b7db-700dba34a670';
+        break;
+      case 'Oceonix 25 Ultra':
+        selectedPhoneGUID = '535f01f3-a702-4655-bcd0-f1d9c1599a9c';
+        break;
+      case 'Oceonix 25':
+      default:
+        // Set 'Oceonix 25' as the default/fallback
+        selectedPhoneGUID = '0f670ae2-3e61-47d4-b426-edd62558cfb8';
+        break;
+    }
+    // Create options object with default values
     const options: {
       pageName: string;
       startingFields: { [key: string]: any };
@@ -172,9 +182,15 @@ export default function MainScreen(props) {
       pageName: 'pyEmbedAssignment',
       startingFields: {}
     };
-    if (mashupCaseType === 'DIXL-MediaCo-Work-NewService') {
-      options.startingFields.Package = optionClicked;
+    if (mashupCaseType === 'DIXL-MediaCo-Work-PurchasePhone') {
+      options.startingFields['PhoneModelss'] = {
+        pyGUID: selectedPhoneGUID
+      };
+    } else {
+      console.warn(`Unexpected case type: ${mashupCaseType}. PhoneModelss field not set.`);
     }
+    console.log('Creating case with options:', JSON.stringify(options, null, 2));
+    // Create a new case using the mashup API
     PCore.getMashupApi()
       .createCase(mashupCaseType, PCore.getConstants().APP.APP, options)
       .then(() => {
@@ -195,7 +211,7 @@ export default function MainScreen(props) {
               </h1>
             </div>
             <div className={classes.heroImage}>
-              <img src='./assets/img/SDKdevicesImage 2.png' alt='Smartphone, Tablet, and Laptop' />
+              <img src='./assets/img/SDKDevicesImage.png' alt='Smartphone, Tablet, and Laptop' />
             </div>
           </section>
           <section className={classes.plansSection}>
@@ -207,7 +223,7 @@ export default function MainScreen(props) {
             </div>
             <div className={classes.plansContainer}>
               {shoppingOptions.map(option => (
-                <ShoppingOptionCard key={option.level} {...option} onClick={onShopNow} />
+                <ShoppingOptionCard key={option.level} {...option} onClick={() => onShopNow(option.name)} />
               ))}
             </div>
           </section>
@@ -230,7 +246,7 @@ export default function MainScreen(props) {
   return (
     <div className={classes.appContainer}>
       {showLandingPage && renderLandingPage()}
-      {showResolution && <ResolutionScreen />}
+      {showResolution && <ResolutionScreen PConnect={props.getPConnect} />}
       {showPega && renderPegaView()}
     </div>
   );
