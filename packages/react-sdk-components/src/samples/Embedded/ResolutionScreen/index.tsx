@@ -78,8 +78,8 @@ const useStyles = makeStyles(theme => ({
 export default function ResolutionScreen({ PConnect }) {
   const classes = useStyles();
   const ModelName = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.PhoneModelss.ModelName;
-  const Address = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.BillingAddress.Apartment || 'your address';
-  const Email = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.CustomerProfile.EmailAddress || 'your email';
+  const Address = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.BillingAddress.Apartment;
+  const Email = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.CustomerProfile.EmailAddress;
   return (
     <div className={classes.resolutionPage}>
       <div className={classes.resolutionCard}>
