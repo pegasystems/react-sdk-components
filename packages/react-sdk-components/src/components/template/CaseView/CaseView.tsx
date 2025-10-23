@@ -9,6 +9,7 @@ import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
+import { prepareCaseSummaryData } from '../utils';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -18,6 +19,15 @@ interface CaseViewProps extends PConnProps {
   showIconInHeader: boolean;
   caseInfo: any;
   lastUpdateCaseTime: any;
+  bShowUtilitiesRegion: any;
+  bShowCaseActions: any;
+  bShowCaseLifecycle: any;
+  bShowPromotedActions: any;
+  bShowPulseRegion: any;
+  bShowSummaryRegion: any;
+  selfServiceCaseView?: boolean;
+  utilitysRegionEmpty?: boolean;
+  summaryData?: any;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -52,6 +62,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
   const VerticalTabs = getComponentFromMap('VerticalTabs');
   const DeferLoad = getComponentFromMap('DeferLoad');
+  const CaseSummary = getComponentFromMap('CaseSummary');
 
   const {
     getPConnect,
@@ -59,12 +70,15 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     header,
     subheader,
     children = [],
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    showIconInHeader = true,
+    bShowCaseLifecycle,
+    bShowSummaryRegion,
+    bShowUtilitiesRegion,
+    selfServiceCaseView,
+    utilitysRegionEmpty,
     caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
   const { lastUpdateCaseTime = getPConnect().getValue('caseInfo.lastUpdateTime') } = props;
-
+  let { summaryData: { primarySummaryFields = [], secondarySummaryFields = [] } = {} } = props;
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
   const { displayOnlyFA } = useContext<any>(StoreContext);
@@ -84,9 +98,8 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
    */
   function getChildRegionByName(inName: string): any {
     for (const child of children as ReactElement[]) {
-      const theMetadataType: string = (child as ReactElement).props.getPConnect().getRawMetadata().type.toLowerCase();
-      const theMetadataName: string = (child as ReactElement).props.getPConnect().getRawMetadata().name.toLowerCase();
-
+      const theMetadataType: string = (child as ReactElement).props.getPConnect().getRawMetadata().type?.toLowerCase();
+      const theMetadataName: string = (child as ReactElement).props.getPConnect().getRawMetadata().name?.toLowerCase();
       if (theMetadataType === 'region' && theMetadataName === inName) {
         return child;
       }
@@ -95,7 +108,14 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     return null;
   }
 
-  const theSummaryRegion = getChildRegionByName('summary');
+  const theSummaryRegion = children && children[0];
+
+  if (!selfServiceCaseView) {
+    const data = prepareCaseSummaryData(theSummaryRegion);
+    primarySummaryFields = data.primarySummaryFields;
+    secondarySummaryFields = data.secondarySummaryFields;
+  }
+
   const theStagesRegion = getChildRegionByName('stages');
   const theTodoRegion = getChildRegionByName('todo');
   const theUtilitiesRegion = getChildRegionByName('utilities');
@@ -109,7 +129,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   // const tmpLoadData2 = { config: { label: "Case History", name: "CaseHistory" }, type: "DeferLoad" };
 
   // Extract the tabs we need to display from theTabsRegion (one tab per entry in theTabsRegionChildren)
-  const theTabsRegionChildren = theTabsRegion.props.getPConnect().getChildren();
+  const theTabsRegionChildren = theTabsRegion?.props.getPConnect().getChildren();
 
   // vertTabInfo is sent to VerticalTabs component
   const vertTabInfo: object[] = [];
@@ -208,45 +228,49 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
       return (
         <Grid2 container>
           <Grid2 size={{ xs: 3 }}>
-            <div hidden={true} id='current-caseID'>
-              {currentCaseID}
-            </div>
-            <Card className={classes.root}>
-              <CardHeader
-                className={classes.caseViewHeader}
-                title={
-                  <Typography variant='h6' component='div' id='case-name'>
-                    {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
-                  </Typography>
-                }
-                subheader={
-                  <Typography variant='body1' component='div' id='caseId'>
-                    {subheader}
-                  </Typography>
-                }
-                avatar={
-                  <Avatar className={classes.caseViewIconBox} variant='square'>
-                    <img src={svgCase} className={classes.caseViewIconImage} />
-                  </Avatar>
-                }
-              />
-              {getActionButtonsHtml()}
-              <Divider />
-              {theSummaryRegion}
-              <Divider />
-              {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
-            </Card>
+            {(selfServiceCaseView ? bShowSummaryRegion && (primarySummaryFields.length > 0 || secondarySummaryFields.length > 0) : true) && (
+              <div>
+                <div hidden={true} id='current-caseID'>
+                  {currentCaseID}
+                </div>
+                <Card className={classes.root}>
+                  <CardHeader
+                    className={classes.caseViewHeader}
+                    title={
+                      <Typography variant='h6' component='div' id='case-name'>
+                        {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
+                      </Typography>
+                    }
+                    subheader={
+                      <Typography variant='body1' component='div' id='caseId'>
+                        {subheader}
+                      </Typography>
+                    }
+                    avatar={
+                      <Avatar className={classes.caseViewIconBox} variant='square'>
+                        <img src={svgCase} className={classes.caseViewIconImage} />
+                      </Avatar>
+                    }
+                  />
+                  {!selfServiceCaseView && getActionButtonsHtml()}
+                  <Divider />
+                  <CaseSummary arPrimaryFields={primarySummaryFields} arSecondaryFields={secondarySummaryFields}></CaseSummary>
+                  <Divider />
+                  {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
+                </Card>
+              </div>
+            )}
           </Grid2>
 
           <Grid2 size={{ xs: 6 }}>
-            {theStagesRegion}
+            {bShowCaseLifecycle && theStagesRegion}
             {theTodoRegion}
             {deferLoadInfo.length > 0 && (
               <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab lastUpdateCaseTime={lastUpdateCaseTime} />
             )}
           </Grid2>
 
-          <Grid2 size={{ xs: 3 }}>{theUtilitiesRegion}</Grid2>
+          {(selfServiceCaseView ? bShowUtilitiesRegion && utilitysRegionEmpty : true) && <Grid2 size={{ xs: 3 }}>{theUtilitiesRegion}</Grid2>}
         </Grid2>
       );
     }
