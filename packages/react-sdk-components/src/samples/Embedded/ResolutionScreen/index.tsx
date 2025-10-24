@@ -74,12 +74,17 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function ResolutionScreen({ PConnect }) {
+
+export default function ResolutionScreen() {
   const classes = useStyles();
-  const ModelName = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.PhoneModelss.ModelName;
-  const Address = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.BillingAddress.Apartment;
-  const Email = PCore.getStore().getState().data['app/primary_1/workarea_1'].caseInfo.content.CustomerProfile.EmailAddress;
+
+  const primaryContainer = PCore.getContainerUtils().getActiveContainerItemName('app/primary') || 'app/primary_1';
+  const workareaContainer = PCore.getContainerUtils().getActiveContainerItemName(primaryContainer + '/workarea') || 'app/primary_1/workarea_1';
+
+  const ModelName = PCore.getStoreValue('.PhoneModelss.ModelName', 'caseInfo.content', workareaContainer);
+  const Address = PCore.getStoreValue('.BillingAddress.Apartment', 'caseInfo.content', workareaContainer);
+  const Email = PCore.getStoreValue('.CustomerProfile.EmailAddress', 'caseInfo.content', workareaContainer);
+
   return (
     <div className={classes.resolutionPage}>
       <div className={classes.resolutionCard}>

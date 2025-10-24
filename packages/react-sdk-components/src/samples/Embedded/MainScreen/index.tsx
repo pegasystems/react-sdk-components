@@ -108,9 +108,18 @@ const useStyles = makeStyles(theme => ({
 function RootComponent(props) {
   const PegaConnectObj = createPConnectComponent();
   const thePConnObj = <PegaConnectObj {...props} />;
+
+  /**
+   * NOTE: For Embedded mode, we add in displayOnlyFA to our React context
+   * so it is available to any component that may need it.
+   * VRS: Attempted to remove displayOnlyFA but it presently handles various components which
+   * SDK does not yet support, so all those need to be fixed up before it can be removed.
+   * To be done in a future sprint.
+   */
   const contextValue = useMemo(() => {
     return { store: PCore.getStore(), displayOnlyFA: true };
-  }, []);
+  }, [PCore.getStore()]);
+
   return <StoreContext.Provider value={contextValue}>{thePConnObj}</StoreContext.Provider>;
 }
 
@@ -189,7 +198,7 @@ export default function MainScreen(props) {
     } else {
       console.warn(`Unexpected case type: ${mashupCaseType}. PhoneModelss field not set.`);
     }
-    console.log('Creating case with options:', JSON.stringify(options, null, 2));
+
     // Create a new case using the mashup API
     PCore.getMashupApi()
       .createCase(mashupCaseType, PCore.getConstants().APP.APP, options)
@@ -246,7 +255,7 @@ export default function MainScreen(props) {
   return (
     <div className={classes.appContainer}>
       {showLandingPage && renderLandingPage()}
-      {showResolution && <ResolutionScreen PConnect={props.getPConnect} />}
+      {showResolution && <ResolutionScreen />}
       {showPega && renderPegaView()}
     </div>
   );
