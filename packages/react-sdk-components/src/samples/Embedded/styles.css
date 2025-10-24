@@ -43,7 +43,3 @@
 #pega-part-of-page img {
   background-color: transparent !important;
 }
-
-.selectable-card-grid-style {
-  grid-template-columns: repeat(auto-fit, minmax(min(30%, 40ch), 1fr)) !important;
-}
