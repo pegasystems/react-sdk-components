@@ -2,7 +2,6 @@ import React, { forwardRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { FormControl, FormHelperText, InputLabel, useTheme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-
 import { useAfterInitialEffect, useConsolidatedRef, useUID } from '../../../hooks';
 
 const useStyles = makeStyles(theme => ({
@@ -88,7 +87,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
         initialValue={defaultValue}
         disabled={disabled}
         init={{
-          skin: 'oxide-dark', // or 'oxide' for light theme
+          skin: theme.palette.mode === 'dark' ? 'oxide-dark' : 'oxide',
           // ...other TinyMCE config...
           content_style: `
             body {
@@ -109,6 +108,10 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
               padding: 6px 10px;
               font-size: 1em;
               font-family: inherit;
+            }
+            .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
+              color: ${theme.palette.text.secondary};
+              opacity: 0.7;
             }
             /* Add more styles as needed */
           `,
