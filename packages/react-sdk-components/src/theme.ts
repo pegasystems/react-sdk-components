@@ -247,7 +247,7 @@ const darkTheme = createTheme({
     },
     background: {
       // default: 'radial-gradient(178.62% 112% at 50% -12%, #0B0F2A 69.96%, #111951 89.19%)',
-      paper: 'rgba(255, 255, 255, 0.1)' // card-bg
+      paper: '#18132c'
     },
     text: {
       primary: '#e0e0e0', // text-light
