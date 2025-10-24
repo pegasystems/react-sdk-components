@@ -108,7 +108,10 @@ export default function RadioButtons(props: RadioButtonsProps) {
     return (
       <div>
         <h4 style={{ marginTop: 0, marginBottom: 0 }}>{label}</h4>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 40ch), 1fr))', gridAutoRows: '1fr', gap: '0.5rem' }}>
+        <div
+          className='selectable-card-grid-style'
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 40ch), 1fr))', gridAutoRows: '1fr', gap: '0.5rem' }}
+        >
           <SelectableCard
             hideFieldLabels={hideFieldLabels}
             additionalProps={additionalProps}
