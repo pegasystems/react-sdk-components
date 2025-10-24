@@ -74,7 +74,7 @@ export default function SelectableCard(props) {
         }
 
         const component = (
-          <div style={{ paddingTop: '15px' }}>
+          <div key={item[recordKey]} style={{ paddingTop: '15px' }}>
             <Card className={className} style={{ display: 'flex', flexDirection: 'column', height: '100%' }} data-testid={testId}>
               <CardContent
                 style={{
