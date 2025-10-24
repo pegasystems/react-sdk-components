@@ -9,6 +9,7 @@ import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
+import { prepareCaseSummaryData } from '../utils';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -52,6 +53,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
   const VerticalTabs = getComponentFromMap('VerticalTabs');
   const DeferLoad = getComponentFromMap('DeferLoad');
+  const CaseSummary = getComponentFromMap('CaseSummary');
 
   const {
     getPConnect,
@@ -59,12 +61,9 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     header,
     subheader,
     children = [],
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    showIconInHeader = true,
     caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
   } = props;
   const { lastUpdateCaseTime = getPConnect().getValue('caseInfo.lastUpdateTime') } = props;
-
   const currentCaseID = props.caseInfo.ID;
   let isComponentMounted = true;
   const { displayOnlyFA } = useContext<any>(StoreContext);
@@ -84,9 +83,8 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
    */
   function getChildRegionByName(inName: string): any {
     for (const child of children as ReactElement[]) {
-      const theMetadataType: string = (child as ReactElement).props.getPConnect().getRawMetadata().type.toLowerCase();
-      const theMetadataName: string = (child as ReactElement).props.getPConnect().getRawMetadata().name.toLowerCase();
-
+      const theMetadataType: string = (child as ReactElement).props.getPConnect().getRawMetadata().type?.toLowerCase();
+      const theMetadataName: string = (child as ReactElement).props.getPConnect().getRawMetadata().name?.toLowerCase();
       if (theMetadataType === 'region' && theMetadataName === inName) {
         return child;
       }
@@ -95,7 +93,12 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     return null;
   }
 
-  const theSummaryRegion = getChildRegionByName('summary');
+  const theSummaryRegion = children && children[0];
+
+  const data = prepareCaseSummaryData(theSummaryRegion);
+  const primarySummaryFields = data.primarySummaryFields;
+  const secondarySummaryFields = data.secondarySummaryFields;
+
   const theStagesRegion = getChildRegionByName('stages');
   const theTodoRegion = getChildRegionByName('todo');
   const theUtilitiesRegion = getChildRegionByName('utilities');
@@ -109,7 +112,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   // const tmpLoadData2 = { config: { label: "Case History", name: "CaseHistory" }, type: "DeferLoad" };
 
   // Extract the tabs we need to display from theTabsRegion (one tab per entry in theTabsRegionChildren)
-  const theTabsRegionChildren = theTabsRegion.props.getPConnect().getChildren();
+  const theTabsRegionChildren = theTabsRegion?.props.getPConnect().getChildren();
 
   // vertTabInfo is sent to VerticalTabs component
   const vertTabInfo: object[] = [];
@@ -232,7 +235,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
               />
               {getActionButtonsHtml()}
               <Divider />
-              {theSummaryRegion}
+              <CaseSummary arPrimaryFields={primarySummaryFields} arSecondaryFields={secondarySummaryFields}></CaseSummary>
               <Divider />
               {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
             </Card>
