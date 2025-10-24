@@ -211,36 +211,34 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
       return (
         <Grid2 container>
           <Grid2 size={{ xs: 3 }}>
-            <div>
-              <div hidden={true} id='current-caseID'>
-                {currentCaseID}
-              </div>
-              <Card className={classes.root}>
-                <CardHeader
-                  className={classes.caseViewHeader}
-                  title={
-                    <Typography variant='h6' component='div' id='case-name'>
-                      {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
-                    </Typography>
-                  }
-                  subheader={
-                    <Typography variant='body1' component='div' id='caseId'>
-                      {subheader}
-                    </Typography>
-                  }
-                  avatar={
-                    <Avatar className={classes.caseViewIconBox} variant='square'>
-                      <img src={svgCase} className={classes.caseViewIconImage} />
-                    </Avatar>
-                  }
-                />
-                {getActionButtonsHtml()}
-                <Divider />
-                <CaseSummary arPrimaryFields={primarySummaryFields} arSecondaryFields={secondarySummaryFields}></CaseSummary>
-                <Divider />
-                {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
-              </Card>
+            <div hidden={true} id='current-caseID'>
+              {currentCaseID}
             </div>
+            <Card className={classes.root}>
+              <CardHeader
+                className={classes.caseViewHeader}
+                title={
+                  <Typography variant='h6' component='div' id='case-name'>
+                    {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
+                  </Typography>
+                }
+                subheader={
+                  <Typography variant='body1' component='div' id='caseId'>
+                    {subheader}
+                  </Typography>
+                }
+                avatar={
+                  <Avatar className={classes.caseViewIconBox} variant='square'>
+                    <img src={svgCase} className={classes.caseViewIconImage} />
+                  </Avatar>
+                }
+              />
+              {getActionButtonsHtml()}
+              <Divider />
+              <CaseSummary arPrimaryFields={primarySummaryFields} arSecondaryFields={secondarySummaryFields}></CaseSummary>
+              <Divider />
+              {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
+            </Card>
           </Grid2>
 
           <Grid2 size={{ xs: 6 }}>
