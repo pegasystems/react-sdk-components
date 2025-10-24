@@ -93,7 +93,7 @@ export default function SelectableCard(props) {
                       alt={image.alt}
                       style={{
                         width: '100%',
-                        backgroundColor: 'rgb(233, 238, 243)',
+                        backgroundColor: 'transparent',
                         aspectRatio: '16 / 9',
                         maxHeight: '100%',
                         height: '100%',
