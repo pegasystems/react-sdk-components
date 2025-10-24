@@ -152,7 +152,7 @@ export default function SelectableCard(props) {
                         margin: '5px'
                       }}
                     >
-                      <div style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{field.name}</div>
+                      {field.name && <div>{field.name}</div>}
                       <div>{field?.value?.props.value}</div>
                     </div>
                   ))}
