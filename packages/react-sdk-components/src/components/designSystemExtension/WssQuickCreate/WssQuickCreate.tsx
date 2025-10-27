@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
-import './WssQuickCreate.css';
 import { makeStyles } from '@mui/styles';
+import './WssQuickCreate.css';
 
 // WssQuickCreate is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 export default function WssQuickCreate(props: WssQuickCreateProps) {
   const { heading, actions } = props;
   const classes = useStyles();
+
   return (
     <div>
       <h1 id='quick-links-heading' className='quick-links-heading'>
