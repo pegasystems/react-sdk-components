@@ -1,36 +1,29 @@
 .quick-link-ul-list {
   list-style: none;
   padding: 0;
-  grid-template-columns: repeat(auto-fill, minmax(min(40ch, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(20ch, 100%), 1fr));
   display: grid;
   gap: calc(1rem);
-}
-
-.quick-link-list {
-  background-color: var(--link-button-color);
-  color: var(--app-text-color);
-  border-radius: 8px;
 }
 
 .quick-link-button {
   text-transform: capitalize !important;
   font-size: 16px !important;
   color: var(--app-text-color) !important;
-  padding: calc(0.5rem * 2) !important;
-  height: 6rem;
+  height: 10rem;
   width: 100%;
-  justify-content: start !important;
 }
 
 .quick-link-icon {
-  width: 1em;
-  height: 1em;
   flex-shrink: 0;
-  filter: var(--svg-color);
+  object-fit: contain;
+  width: 3rem;
+  height: 3rem;
 }
 
 .quick-link-button-span {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0.5rem;
 }
