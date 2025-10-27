@@ -1,19 +1,4 @@
 /* global styles*/
-
-.psdk-flow-container-top {
-  max-width: 1400px;
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 5%;
-  margin-bottom: 5%;
-  padding: 0;
-}
-.psdk-horizontal-stepper-header-container {
-  display: none;
-  margin-bottom: 2rem;
-}
-
 #pega-part-of-page .psdk-flow-container-top {
   max-width: 1400px;
   width: 50%;
@@ -38,8 +23,4 @@
 
 #pega-part-of-page .MuiCardContent-root:last-child {
   padding-bottom: 0px !important;
-}
-
-#pega-part-of-page img {
-  background-color: transparent !important;
 }

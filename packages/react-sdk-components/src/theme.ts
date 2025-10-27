@@ -53,7 +53,7 @@ const lightThemeColours = {
     '--app-warning-color-dark': '#f57c00',
 
     '--app-background-color': 'whitesmoke',
-    '--app-form-color': 'white',
+    '--app-form-bg-color': 'white',
 
     /* App Navigation */
     '--app-nav-bg': '#262626' /*! default */,
@@ -75,7 +75,10 @@ const lightThemeColours = {
     '--selected-step-label-color': 'rgba(0, 0, 0, 0.87)',
     '--step-label-color': 'rgba(0, 0, 0, 0.54)',
     '--svg-color': 'invert(0%)',
-    '--secondary-button-text-color': '#ffffff'
+    '--secondary-button-text-color': '#ffffff',
+
+    '--text-primary-color': '#000',
+    '--text-secondary-color': '#c0c0c0'
   }
 };
 const darkThemeColours = {
@@ -95,7 +98,7 @@ const darkThemeColours = {
     '--app-warning-color-dark': '#c68400' /* dark amber */,
 
     '--app-background-color': '#060326' /* main dark background */,
-    '--app-form-color': '#18132c' /* slightly lighter for forms */,
+    '--app-form-bg-color': '#23273f' /* slightly lighter for forms */,
 
     /* App Navigation */
     '--app-nav-bg': '#18132c' /* navigation background */,
@@ -117,7 +120,10 @@ const darkThemeColours = {
     '--selected-step-label-color': 'rgba(0, 0, 0, 0.87)',
     '--step-label-color': 'rgba(0, 0, 0, 0.54)',
     '--svg-color': 'invert(100%)',
-    '--secondary-button-text-color': '#1a103c'
+    '--secondary-button-text-color': '#1a103c',
+
+    '--text-primary-color': '#e0e0e0',
+    '--text-secondary-color': '#c0c0c0'
   }
 };
 
@@ -247,7 +253,8 @@ const darkTheme = createTheme({
     },
     background: {
       // default: 'radial-gradient(178.62% 112% at 50% -12%, #0B0F2A 69.96%, #111951 89.19%)',
-      paper: '#18132c'
+      // paper: '#18132c'
+      paper: '#191b2c' // card-bg
     },
     text: {
       primary: '#e0e0e0', // text-light

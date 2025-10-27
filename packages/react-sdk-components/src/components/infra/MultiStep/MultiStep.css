@@ -213,7 +213,7 @@ mat-horizontal-stepper {
 }
 
 .psdk-horizontal-step-label {
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--text-secondary-color);
   display: inline-block;
   min-width: 50px;
   vertical-align: middle;
@@ -223,7 +223,7 @@ mat-horizontal-stepper {
 }
 
 .psdk-horizontal-step-label-selected {
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--text-primary-color);
   display: inline-block;
   min-width: 50px;
   vertical-align: middle;
