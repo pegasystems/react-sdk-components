@@ -234,8 +234,8 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#C70BB5', // accent pink
-      light: '#C70BB5', // lighter shade of pink
+      main: '#C70BB5', // pink
+      light: '#C70BB5', // pink
       dark: '#c2185b', // darker shade
       contrastText: '#ffffff' // white text on pink buttons
     },
@@ -247,8 +247,8 @@ const darkTheme = createTheme({
     },
     info: {
       main: '#e91e63', // Pink
-      dark: '#ad1457', // Darker pink
-      light: '#f8bbd0', // Light pink for backgrounds
+      dark: '#E885D2', // Light pink
+      light: '#C70BB5', // Lighter pink for backgrounds
       contrastText: '#fff'
     },
     background: {
