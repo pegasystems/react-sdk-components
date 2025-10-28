@@ -89,7 +89,7 @@ const lightThemeColours = {
 };
 const darkThemeColours = {
   ':root': {
-    '--app-primary-color': '#f72585' /* accent pink */,
+    '--app-primary-color': '#C70BB5' /* accent pink */,
     '--app-primary-dark-color': '#c2185b' /* darker pink */,
     '--app-primary-light-color': '#ff5ca2' /* lighter pink */,
     '--app-secondary-color': '#c0c0c0' /* accent silver */,
@@ -252,8 +252,8 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#f72585', // accent pink
-      light: '#ff5ca2', // lighter shade of pink
+      main: '#C70BB5', // pink
+      light: '#C70BB5', // pink
       dark: '#c2185b', // darker shade
       contrastText: '#ffffff' // white text on pink buttons
     },
@@ -265,8 +265,8 @@ const darkTheme = createTheme({
     },
     info: {
       main: '#e91e63', // Pink
-      dark: '#ad1457', // Darker pink
-      light: '#f8bbd0', // Light pink for backgrounds
+      dark: '#E885D2', // Light pink
+      light: '#C70BB5', // Lighter pink for backgrounds
       contrastText: '#fff'
     },
     background: {
