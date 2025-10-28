@@ -81,7 +81,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   const classes = useStyles();
   const actionsAPI = pConn.getActionsApi();
   const localeReference = pConn.getValue('.pyLocaleReference', ''); // 2nd arg empty string until typedef marked correctly
-  const [imageBlobUrl, setImageBlobUrl] = useState<string | null>(null);
+  const [imageBlobUrl, setImageBlobUrl] = useState<string | Blob | null>(null);
   // useState for appName and mapChildren - note these are ONLY updated once (on component mount!)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [appName, setAppName] = useState('');
@@ -133,8 +133,8 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     }
   }, []);
 
-  const [iconURL, setIconURL] = useState('');
-  const [fullIconURL, setFullIconURL] = useState('');
+  const [iconURL, setIconURL] = useState<string | Blob>('');
+  const [fullIconURL, setFullIconURL] = useState<string | Blob>('');
   useEffect(() => {
     // using the default icon then fetch it from the static folder (not auth involved)
     if (
@@ -150,8 +150,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     // not using default icon to fetch it using the way which uses authentication
     else {
       PCore.getAssetLoader()
-        .getSvcImage(portalLogo)
-        .then(blob => window.URL.createObjectURL(blob))
+        .getSvcImageUrl(portalLogo)
         .then(data => {
           setIconURL(data);
           setFullIconURL(data);
@@ -165,8 +164,7 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
   useEffect(() => {
     if (imageKey && portalTemplate === 'wss') {
       PCore.getAssetLoader()
-        .getSvcImage(imageKey)
-        .then(blob => window.URL.createObjectURL(blob))
+        .getSvcImageUrl(imageKey)
         .then(imagePath => setImageBlobUrl(imagePath));
     }
   }, []);
