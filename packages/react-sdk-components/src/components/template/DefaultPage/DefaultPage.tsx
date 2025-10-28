@@ -1,5 +1,6 @@
 import { useMemo, Children } from 'react';
 import type { ReactNode } from 'react';
+import { Grid2 } from '@mui/material';
 import Banner from '../../designSystemExtension/Banner';
 
 export interface CommonPageProps {
@@ -53,6 +54,13 @@ interface DefaultPageProps extends CommonPageProps {
   // layoutModel?: GridLayoutModel | undefined;
 }
 
+const COLUMNS_WIDTHS = {
+  'one-column': [12],
+  'two-column': [6, 6],
+  'narrow-wide': [4, 8],
+  'wide-narrow': [8, 4]
+};
+
 export default function DefaultPage({
   layout = 'one-column',
   children,
@@ -85,4 +93,14 @@ export default function DefaultPage({
       />
     );
   }
+
+  return (
+    <Grid2 container spacing={1}>
+      {childArray.map((child, index) => (
+        <Grid2 key={index} size={COLUMNS_WIDTHS[layout][index]}>
+          {child}
+        </Grid2>
+      ))}
+    </Grid2>
+  );
 }
