@@ -86,7 +86,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     borderLeft: '6px solid',
-    borderLeftColor: theme.palette.primary.light
+    borderLeftColor: theme.palette.primary.light,
+    borderRadius: 16
   },
   avatar: {
     backgroundColor: theme.palette.primary.light,

@@ -157,10 +157,9 @@ export default function ListView(props: ListViewProps) {
         width: '100%',
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        display: 'grid'
-      },
-      search: {
-        padding: '5px 5px'
+        display: 'grid',
+        borderRadius: 16,
+        padding: 20
       },
       table: {
         minWidth: 750
@@ -189,10 +188,6 @@ export default function ListView(props: ListViewProps) {
         position: 'absolute',
         top: 20,
         width: 1
-      },
-      title: {
-        marginTop: theme.spacing(1),
-        marginLeft: theme.spacing(1)
       }
     })
   );
@@ -1065,162 +1060,162 @@ export default function ListView(props: ListViewProps) {
     <>
       {arColumns && arColumns.length > 0 && (
         <Paper className={classes.paper}>
-          <Typography className={classes.title} variant='h6' color='textPrimary' gutterBottom>
-            {_listTitle()}
-          </Typography>
-          {globalSearch && (
-            <Grid2 container spacing={1} alignItems='flex-end' className={classes.search}>
-              <Grid2>
-                <SearchIcon />
+          <Grid2 container justifyContent='space-between'>
+            <Typography variant='h6' color='textPrimary' gutterBottom>
+              {_listTitle()}
+            </Typography>
+            {globalSearch && (
+              <Grid2 container spacing={1} alignItems='flex-end'>
+                <Grid2>
+                  <SearchIcon />
+                </Grid2>
+                <Grid2>
+                  <TextField
+                    label={PCore.getLocaleUtils().getLocaleValue('Search', 'Search')}
+                    fullWidth
+                    variant='outlined'
+                    placeholder=''
+                    size='small'
+                    id='search'
+                    onChange={_onSearch}
+                  />
+                </Grid2>
               </Grid2>
-              <Grid2>
-                <TextField
-                  label={PCore.getLocaleUtils().getLocaleValue('Search', 'Search')}
-                  fullWidth
-                  variant='outlined'
-                  placeholder=''
-                  size='small'
-                  id='search'
-                  onChange={_onSearch}
-                />
-              </Grid2>
-            </Grid2>
-          )}
-          <>
-            {!bInForm ? (
-              <TableContainer id='list-view' className={classes.tableInForm}>
-                <Table stickyHeader aria-label='sticky table'>
-                  <TableHead>
-                    <TableRow>
-                      {arColumns.map(column => {
-                        return (
-                          <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
-                            <TableSortLabel
-                              active={orderBy === column.id}
-                              direction={orderBy === column.id ? order : 'asc'}
-                              onClick={createSortHandler(column.id)}
-                            >
-                              {column.label}
-                              {_showFilteredIcon(column.id) && <FilterListIcon className={classes.filteredIcon} />}
-                              {orderBy === column.id ? (
-                                <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
-                              ) : null}
-                            </TableSortLabel>
-                            <MoreIcon
-                              className={classes.moreIcon}
-                              onClick={event => {
-                                _menuClick(event, column.id, column.type, column.label);
-                              }}
-                            />
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {arRows &&
-                      stableSort(arRows, getComparator(order, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map(row => {
-                          return (
-                            <TableRow key={row.pxRefObjectInsName || row.pyID}>
-                              {arColumns.map(column => {
-                                const value = row[column.id];
-                                return (
-                                  <TableCell key={column.id} align={column.align} className={classes.cell}>
-                                    {_showButton(column.id, row) || column.displayAsLink ? (
-                                      <Link
-                                        component='button'
-                                        onClick={() => {
-                                          _listViewClick(row, column);
-                                        }}
-                                        underline='hover'
-                                      >
-                                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                                      </Link>
-                                    ) : (
-                                      <>{column.format && typeof value === 'number' ? column.format(value) : value || '---'}</>
-                                    )}
-                                  </TableCell>
-                                );
-                              })}
-                            </TableRow>
-                          );
-                        })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            ) : (
-              <TableContainer id='list-view'>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      {(selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) && <TableCell />}
-                      {arColumns.map(column => {
-                        return (
-                          <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
-                            <TableSortLabel
-                              active={orderBy === column.id}
-                              direction={orderBy === column.id ? order : 'asc'}
-                              onClick={createSortHandler(column.id)}
-                            >
-                              {column.label}
-                              {orderBy === column.id ? (
-                                <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
-                              ) : null}
-                            </TableSortLabel>
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {arRows &&
-                      arRows.length > 0 &&
-                      stableSort(arRows, getComparator(order, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map(row => {
-                          return (
-                            <TableRow key={row[rowID]}>
-                              {selectionMode === SELECTION_MODE.SINGLE && (
-                                <TableCell>
-                                  <Radio
-                                    onChange={handleChange}
-                                    value={row[rowID]}
-                                    name='radio-buttons'
-                                    inputProps={{ 'aria-label': 'A' }}
-                                    checked={selectedValue === row[rowID]}
-                                  />
-                                </TableCell>
-                              )}
-                              {selectionMode === SELECTION_MODE.MULTI && (
-                                <TableCell>
-                                  <Checkbox
-                                    onChange={onCheckboxClick}
-                                    checked={selectedValues.some(selectedValue => selectedValue[rowID] === row[rowID])}
-                                    value={row[rowID]}
-                                  />
-                                </TableCell>
-                              )}
-                              {arColumns.map(column => {
-                                const value = row[column.id];
-                                return (
-                                  <TableCell className={classes.cell} key={column.id} align={column.align}>
-                                    {processColumnValue(column, value)}
-                                  </TableCell>
-                                );
-                              })}
-                            </TableRow>
-                          );
-                        })}
-                  </TableBody>
-                </Table>
-                {(!arRows || arRows.length === 0) && (
-                  <div className='no-records'>{getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}</div>
-                )}
-              </TableContainer>
             )}
-          </>
+          </Grid2>
+          {!bInForm ? (
+            <TableContainer id='list-view' className={classes.tableInForm}>
+              <Table stickyHeader aria-label='sticky table'>
+                <TableHead>
+                  <TableRow>
+                    {arColumns.map(column => {
+                      return (
+                        <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
+                          <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : 'asc'}
+                            onClick={createSortHandler(column.id)}
+                          >
+                            {column.label}
+                            {_showFilteredIcon(column.id) && <FilterListIcon className={classes.filteredIcon} />}
+                            {orderBy === column.id ? (
+                              <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
+                            ) : null}
+                          </TableSortLabel>
+                          <MoreIcon
+                            className={classes.moreIcon}
+                            onClick={event => {
+                              _menuClick(event, column.id, column.type, column.label);
+                            }}
+                          />
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {arRows &&
+                    stableSort(arRows, getComparator(order, orderBy))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map(row => {
+                        return (
+                          <TableRow key={row.pxRefObjectInsName || row.pyID}>
+                            {arColumns.map(column => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell key={column.id} align={column.align} className={classes.cell}>
+                                  {_showButton(column.id, row) || column.displayAsLink ? (
+                                    <Link
+                                      component='button'
+                                      onClick={() => {
+                                        _listViewClick(row, column);
+                                      }}
+                                      underline='hover'
+                                    >
+                                      {column.format && typeof value === 'number' ? column.format(value) : value}
+                                    </Link>
+                                  ) : (
+                                    <>{column.format && typeof value === 'number' ? column.format(value) : value || '---'}</>
+                                  )}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <TableContainer id='list-view'>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {(selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) && <TableCell />}
+                    {arColumns.map(column => {
+                      return (
+                        <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
+                          <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : 'asc'}
+                            onClick={createSortHandler(column.id)}
+                          >
+                            {column.label}
+                            {orderBy === column.id ? (
+                              <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
+                            ) : null}
+                          </TableSortLabel>
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {arRows &&
+                    arRows.length > 0 &&
+                    stableSort(arRows, getComparator(order, orderBy))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map(row => {
+                        return (
+                          <TableRow key={row[rowID]}>
+                            {selectionMode === SELECTION_MODE.SINGLE && (
+                              <TableCell>
+                                <Radio
+                                  onChange={handleChange}
+                                  value={row[rowID]}
+                                  name='radio-buttons'
+                                  inputProps={{ 'aria-label': 'A' }}
+                                  checked={selectedValue === row[rowID]}
+                                />
+                              </TableCell>
+                            )}
+                            {selectionMode === SELECTION_MODE.MULTI && (
+                              <TableCell>
+                                <Checkbox
+                                  onChange={onCheckboxClick}
+                                  checked={selectedValues.some(selectedValue => selectedValue[rowID] === row[rowID])}
+                                  value={row[rowID]}
+                                />
+                              </TableCell>
+                            )}
+                            {arColumns.map(column => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell className={classes.cell} key={column.id} align={column.align}>
+                                  {processColumnValue(column, value)}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })}
+                </TableBody>
+              </Table>
+              {(!arRows || arRows.length === 0) && (
+                <div className='no-records'>{getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}</div>
+              )}
+            </TableContainer>
+          )}
           {arRows && arRows.length > 0 && (
             <TablePagination
               id='pagination'

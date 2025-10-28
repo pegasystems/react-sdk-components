@@ -38,7 +38,10 @@ export default function Banner(props: BannerProps) {
         </div>
       </div>
       <Grid2 container size={12} className='banner-layout' spacing={1}>
-        <Grid2 size={{ xs: variantMap[variant][0] }} style={{ padding: '1em' }}>
+        <Grid2
+          size={{ xs: variantMap[variant][0] }}
+          style={{ padding: '1em', backgroundColor: 'var(--app-form-bg-color)', borderRadius: '16px', height: 'fit-content' }}
+        >
           {a}
         </Grid2>
         <Grid2 size={{ xs: variantMap[variant][1] }} style={{ padding: '1em' }}>
