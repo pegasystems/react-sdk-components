@@ -33,6 +33,8 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
   function _getVIconClass(status): string {
     if (status === 'current') {
       return 'psdk-vertical-step-icon-selected';
+    } else if (status === 'future') {
+      return 'psdk-vertical-step-icon-future';
     }
 
     return 'psdk-vertical-step-icon';
@@ -57,6 +59,8 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
   function _getHIconClass(step): string {
     if (step.ID === currentStep?.ID) {
       return 'psdk-horizontal-step-icon-selected';
+    } else if (step.visited_status === 'future') {
+      return 'psdk-horizontal-step-icon-future';
     }
 
     return 'psdk-horizontal-step-icon';
@@ -92,7 +96,7 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                         <span>{index + 1}</span>
                       </div>
                     </div>
-                    <div className={_getVLabelClass(mainStep.visited_status)}>{mainStep.name}</div>
+                    <div className={_getVLabelClass(mainStep.visited_status)}>{mainStep.visited_status === 'current' && mainStep.name}</div>
                   </div>
                   <div className={_getVBodyClass(index)}>
                     {mainStep?.steps && (
@@ -122,9 +126,11 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                       </ul>
                     )}
                     {!mainStep?.steps && mainStep.visited_status === 'current' && (
-                      <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
-                        {children}
-                      </AssignmentCard>
+                      <div style={{ paddingLeft: 20 }}>
+                        <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
+                          {children}
+                        </AssignmentCard>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -144,11 +150,7 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                         <span>{index + 1}</span>
                       </div>
                     </div>
-                    <div className={_getHLabelClass(mainStep)}>
-                      <div className='psdk-horizontal-step-text-label' id='selected-label'>
-                        {mainStep.name}
-                      </div>
-                    </div>
+                    <div className={_getHLabelClass(mainStep)}>{mainStep.visited_status === 'current' && mainStep.name}</div>
                   </div>
                   {_showHLine(index) && <div className='psdk-horizontal-step-line' />}
                 </React.Fragment>

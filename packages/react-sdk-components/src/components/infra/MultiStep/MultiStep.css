@@ -79,12 +79,21 @@ mat-horizontal-stepper {
 
 .psdk-vertical-step-icon {
   margin-right: 12px;
-  background-color: var(--app-neutral-color);
+  background-color: var(--stepper-completed-bg-color);
   color: var(--app-text-color);
   border-radius: 50%;
   height: 24px;
   width: 24px;
-  flex-shrink: 0;
+  position: relative;
+}
+
+.psdk-vertical-step-icon-future {
+  margin-right: 12px;
+  color: var(--app-neutral-color);
+  border: 1px solid var(--app-neutral-color);
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
   position: relative;
 }
 
@@ -93,7 +102,6 @@ mat-horizontal-stepper {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: var(--app-text-color);
 }
 
 .psdk-vertical-step-icon-selected {
@@ -162,7 +170,6 @@ mat-horizontal-stepper {
   white-space: nowrap;
   display: flex;
   align-items: center;
-  text-align: left;
 }
 
 .psdk-horizontal-step-header {
@@ -175,20 +182,24 @@ mat-horizontal-stepper {
   height: 72px;
   overflow: hidden;
   align-items: center;
-  padding: 0 24px;
 }
 
 .psdk-horizontal-step-icon {
-  background-color: var(--app-neutral-color);
-  color: var(--app-text-color);
+  background-color: var(--stepper-completed-bg-color);
+  color: white;
   border-radius: 50%;
   height: 24px;
   width: 24px;
-  flex-shrink: 0;
   position: relative;
-  display: block;
-  margin-right: 8px;
-  flex: none;
+}
+
+.psdk-horizontal-step-icon-future {
+  color: var(--app-neutral-color);
+  border: 1px solid var(--app-neutral-color);
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  position: relative;
 }
 
 .psdk-horizontal-step-icon-content {
@@ -205,18 +216,11 @@ mat-horizontal-stepper {
   border-radius: 50%;
   height: 24px;
   width: 24px;
-  flex-shrink: 0;
   position: relative;
-  display: block;
-  margin-right: 8px;
-  flex: none;
 }
 
 .psdk-horizontal-step-label {
   color: var(--text-secondary-color);
-  display: inline-block;
-  min-width: 50px;
-  vertical-align: middle;
   font-size: 14px;
   font-weight: 500;
   white-space: initial;
@@ -224,20 +228,15 @@ mat-horizontal-stepper {
 
 .psdk-horizontal-step-label-selected {
   color: var(--text-primary-color);
-  display: inline-block;
-  min-width: 50px;
-  vertical-align: middle;
   font-size: 14px;
   font-weight: 500;
   white-space: initial;
+  margin-left: 8px;
 }
 
 .psdk-horizontal-step-line {
-  border-top-color: rgba(0, 0, 0, 0.12);
-  border-top-width: 1px;
-  border-top-style: solid;
+  border-top: 1px solid var(--app-neutral-color);
   flex: auto;
-  height: 0;
-  margin: 0 -16px;
   min-width: 32px;
+  margin: 0px 8px;
 }
