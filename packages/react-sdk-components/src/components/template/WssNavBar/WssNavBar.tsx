@@ -36,8 +36,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2)
   },
   appListLogo: {
-    width: '3.6rem',
-    filter: 'var(--svg-color)'
+    width: '100%',
+    height: '100%'
   },
   appName: {
     marginLeft: theme.spacing(2),
@@ -84,8 +84,8 @@ export default function WssNavBar(props: WssNavBarProps) {
 
   return (
     <div id='NavBar' className='nav-bar'>
-      <AppBar position='static' color='primary'>
-        <Container maxWidth='xl'>
+      <AppBar position='fixed' color='primary'>
+        <Container maxWidth={false}>
           <Toolbar disableGutters style={{ justifyContent: 'space-between' }}>
             <Button id='appName' style={{ textTransform: 'capitalize' }} onClick={appInfo.onClick}>
               <img src={appInfo.imageSrc} className={classes.appListLogo} />
