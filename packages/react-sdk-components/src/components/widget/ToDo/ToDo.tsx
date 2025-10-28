@@ -82,11 +82,8 @@ function getID(assignment: any) {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    borderLeft: '6px solid',
-    borderLeftColor: theme.palette.primary.light,
     borderRadius: 16
   },
   avatar: {
@@ -94,8 +91,6 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.getContrastText(theme.palette.primary.light)
   },
   todoWrapper: {
-    borderLeft: '6px solid',
-    borderLeftColor: theme.palette.primary.light,
     padding: theme.spacing(1),
     margin: theme.spacing(1)
   },
