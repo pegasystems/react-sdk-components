@@ -42,9 +42,6 @@ const useStyles = makeStyles(theme => ({
     width: theme.spacing(8),
     height: theme.spacing(8),
     padding: theme.spacing(1)
-  },
-  caseViewIconImage: {
-    filter: 'var(--svg-color)'
   }
 }));
 
@@ -61,7 +58,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     header,
     subheader,
     children = [],
-    caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '' }
+    caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '', caseTypeIcon }
   } = props;
   const { lastUpdateCaseTime = getPConnect().getValue('caseInfo.lastUpdateTime') } = props;
   const currentCaseID = props.caseInfo.ID;
@@ -104,7 +101,12 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const theUtilitiesRegion = getChildRegionByName('utilities');
   const theTabsRegion = getChildRegionByName('tabs');
 
-  const svgCase = Utils.getImageSrc(icon, Utils.getSDKStaticConentUrl());
+  let iconForCaseType = caseTypeIcon ? caseTypeIcon.replace('pi pi-', '') : icon;
+
+  if (!iconForCaseType || iconForCaseType.includes('.')) {
+    iconForCaseType = 'polaris-solid';
+  }
+  const svgCase = Utils.getImageSrc(iconForCaseType, Utils.getSDKStaticConentUrl());
 
   const [activeVertTab, setActiveVertTab] = useState(0);
 
@@ -229,7 +231,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
                 }
                 avatar={
                   <Avatar className={classes.caseViewIconBox} variant='square'>
-                    <img src={svgCase} className={classes.caseViewIconImage} />
+                    <img src={svgCase} />
                   </Avatar>
                 }
               />
