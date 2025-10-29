@@ -15,6 +15,7 @@
     "allowJs": true, // must be false for @pega/pcore-pconnect-typedefs
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     // End of copied from SDK-R
 
     // Need to add this to remove errors of .js files trying to compile to the same path
