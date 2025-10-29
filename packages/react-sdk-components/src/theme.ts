@@ -4,7 +4,6 @@ import type { Theme } from '@mui/material/styles';
 
 import sdkConfig from '../../../sdk-config.json';
 
-
 /**
  * Since makeStyles is now exported from @mui/styles package which does not know about Theme in the core package.
  * you need to augment the DefaultTheme (empty object) in @mui/styles with Theme from the core.
