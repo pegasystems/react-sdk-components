@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 import { makeStyles } from '@mui/styles';
 
-import StoreContext from '../../../bridge/Context/StoreContext';
-import createPConnectComponent from '../../../bridge/react_pconnect';
+import { usePegaAuth } from '../context/PegaAuthProvider';
+import { usePega } from '../context/PegaReadyContext';
 
 import ShoppingOptionCard from '../ShoppingOptionCard';
 import ResolutionScreen from '../ResolutionScreen';
@@ -105,45 +105,35 @@ const useStyles = makeStyles(theme => ({
   pegaForm: {}
 }));
 
-function RootComponent(props) {
-  const PegaConnectObj = createPConnectComponent();
-  const thePConnObj = <PegaConnectObj {...props} />;
+export default function MainScreen() {
+  const { isAuthenticated } = usePegaAuth();
+  const { isPegaReady, PegaContainer } = usePega();
 
-  /**
-   * NOTE: For Embedded mode, we add in displayOnlyFA to our React context
-   * so it is available to any component that may need it.
-   * VRS: Attempted to remove displayOnlyFA but it presently handles various components which
-   * SDK does not yet support, so all those need to be fixed up before it can be removed.
-   * To be done in a future sprint.
-   */
-  const contextValue = useMemo(() => {
-    return { store: PCore.getStore(), displayOnlyFA: true };
-  }, [PCore.getStore()]);
-
-  return <StoreContext.Provider value={contextValue}>{thePConnObj}</StoreContext.Provider>;
-}
-
-export default function MainScreen(props) {
   const classes = useStyles();
+
   const [showPega, setShowPega] = useState(false);
   const [showLandingPage, setShowLandingPage] = useState(true);
   const [showResolution, setShowResolution] = useState(false);
 
   useEffect(() => {
-    // Subscribe to the EVENT_CANCEL event to handle the assignment cancellation
-    PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, () => cancelAssignment(), 'cancelAssignment');
-    // Subscribe to the END_OF_ASSIGNMENT_PROCESSING event to handle assignment completion
-    PCore.getPubSubUtils().subscribe(
-      PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.END_OF_ASSIGNMENT_PROCESSING,
-      () => assignmentFinished(),
-      'endOfAssignmentProcessing'
-    );
+    if (isPegaReady) {
+      // Subscribe to the EVENT_CANCEL event to handle the assignment cancellation
+      PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, () => cancelAssignment(), 'cancelAssignment');
+
+      // Subscribe to the END_OF_ASSIGNMENT_PROCESSING event to handle assignment completion
+      PCore.getPubSubUtils().subscribe(
+        PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.END_OF_ASSIGNMENT_PROCESSING,
+        () => assignmentFinished(),
+        'endOfAssignmentProcessing'
+      );
+    }
+
     return () => {
       // unsubscribe to the events
       PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, 'cancelAssignment');
       PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.END_OF_ASSIGNMENT_PROCESSING, 'endOfAssignmentProcessing');
     };
-  }, []);
+  }, [isPegaReady]);
 
   const cancelAssignment = () => {
     setShowLandingPage(true);
@@ -244,12 +234,14 @@ export default function MainScreen(props) {
     return (
       <div className={classes.pegaViewContainer}>
         <div className={classes.pegaForm} id='pega-part-of-page'>
-          <RootComponent {...props} />
+          <PegaContainer />
           <br />
         </div>
       </div>
     );
   }
+
+  if (!isAuthenticated) return <div>Loading...</div>;
 
   return (
     <div className={classes.appContainer}>
