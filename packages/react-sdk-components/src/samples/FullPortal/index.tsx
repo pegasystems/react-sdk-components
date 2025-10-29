@@ -152,7 +152,7 @@ export default function FullPortal() {
     startPortal();
   };
 
-  const container = portalSelectionScreen ? (
+  const content = portalSelectionScreen ? (
     <InvalidPortal defaultPortal={defaultPortalName} portals={availablePortals} onSelect={loadSelectedPortal} />
   ) : (
     rootComponentProps && <RootComponent {...rootComponentProps} />
@@ -163,7 +163,7 @@ export default function FullPortal() {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          {container}
+          {content}
         </ThemeProvider>
       </StyledEngineProvider>
     </div>
