@@ -152,14 +152,16 @@ export default function FullPortal() {
     startPortal();
   };
 
-  return portalSelectionScreen ? (
-    <InvalidPortal defaultPortal={defaultPortalName} portals={availablePortals} onSelect={loadSelectedPortal} />
-  ) : (
+  return (
     <div id='pega-root'>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          {rootComponentProps && <RootComponent {...rootComponentProps} />}
+          {portalSelectionScreen ? (
+            <InvalidPortal defaultPortal={defaultPortalName} portals={availablePortals} onSelect={loadSelectedPortal} />
+          ) : (
+            rootComponentProps && <RootComponent {...rootComponentProps} />
+          )}
         </ThemeProvider>
       </StyledEngineProvider>
     </div>
