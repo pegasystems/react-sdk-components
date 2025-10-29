@@ -106,7 +106,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   if (!iconForCaseType || iconForCaseType.includes('.')) {
     iconForCaseType = 'polaris-solid';
   }
-  const svgCase = Utils.getImageSrc(iconForCaseType, Utils.getSDKStaticConentUrl());
+  const caseSvgIconUrl = Utils.getImageSrc(iconForCaseType, Utils.getSDKStaticConentUrl());
 
   const [activeVertTab, setActiveVertTab] = useState(0);
 
@@ -231,7 +231,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
                 }
                 avatar={
                   <Avatar className={classes.caseViewIconBox} variant='square'>
-                    <img src={svgCase} />
+                    <img src={caseSvgIconUrl} />
                   </Avatar>
                 }
               />
