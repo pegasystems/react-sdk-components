@@ -27,51 +27,27 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
     currentStep = arNavigationSteps[lastActiveStepIndex >= 0 ? lastActiveStepIndex : 0];
   }
 
-  // const svgCurrent = Utils.getImageSrc("circle-solid", Utils.getSDKStaticConentUrl());
-  // const svgNotCurrent = Utils.getImageSrc("circle-solid", Utils.getSDKStaticConentUrl());
-
-  function _getVIconClass(status): string {
-    if (status === 'current') {
-      return 'psdk-vertical-step-icon-selected';
-    }
-
-    return 'psdk-vertical-step-icon';
-  }
-
-  function _getVLabelClass(status): string {
-    if (status === 'current') {
-      return 'psdk-vertical-step-label-selected';
-    }
-
-    return 'psdk-vertical-step-label';
-  }
-
   function _getVBodyClass(index: number): string {
-    if (index < arNavigationSteps.length - 1) {
-      return 'psdk-vertical-step-body psdk-vertical-step-line';
-    }
+    const baseClass = 'psdk-vertical-step-body';
+    const isNotLastStep = index < arNavigationSteps.length - 1;
 
-    return 'psdk-vertical-step-body';
+    return isNotLastStep ? `${baseClass} psdk-vertical-step-line` : baseClass;
   }
 
-  function _getHIconClass(step): string {
-    if (step.ID === currentStep?.ID) {
-      return 'psdk-horizontal-step-icon-selected';
-    }
+  function _getAutoFlexClass(currentStep): string {
+    const currentStepIndex = arNavigationSteps.findIndex(step => step.ID === currentStep?.ID);
+    const totalSteps = arNavigationSteps.length;
+    const lastStep = arNavigationSteps[totalSteps - 1];
 
-    return 'psdk-horizontal-step-icon';
+    // Apply flex-auto class if current step is active OR if current step is second-to-last and the last step is active
+    const isCurrentStepActive = currentStep.visited_status === 'current';
+    const isSecondToLastWithActiveLastStep = currentStepIndex === totalSteps - 2 && lastStep?.visited_status === 'current';
+
+    return isCurrentStepActive || isSecondToLastWithActiveLastStep ? 'flex-auto' : '';
   }
 
-  function _getHLabelClass(step): string {
-    if (step.ID === currentStep?.ID) {
-      return 'psdk-horizontal-step-label-selected';
-    }
-
-    return 'psdk-horizontal-step-label';
-  }
-
-  function _showHLine(index: number): boolean {
-    return index < arNavigationSteps.length - 1;
+  function isLastStep(index: number): boolean {
+    return index === arNavigationSteps.length - 1;
   }
 
   function buttonPress(sAction: string, sButtonType: string) {
@@ -86,13 +62,13 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
             return (
               <React.Fragment key={mainStep.actionID}>
                 <div className='psdk-vertical-step'>
-                  <div className='psdk-vertical-step-header'>
-                    <div className={_getVIconClass(mainStep.visited_status)}>
+                  <div className={`psdk-vertical-step-header ${mainStep.visited_status}`}>
+                    <div className={`psdk-vertical-step-icon`}>
                       <div className='psdk-vertical-step-icon-content'>
                         <span>{index + 1}</span>
                       </div>
                     </div>
-                    <div className={_getVLabelClass(mainStep.visited_status)}>{mainStep.name}</div>
+                    <div className='psdk-vertical-step-label'>{mainStep.visited_status === 'current' && mainStep.name}</div>
                   </div>
                   <div className={_getVBodyClass(index)}>
                     {mainStep?.steps && (
@@ -122,9 +98,11 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                       </ul>
                     )}
                     {!mainStep?.steps && mainStep.visited_status === 'current' && (
-                      <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
-                        {children}
-                      </AssignmentCard>
+                      <div style={{ paddingLeft: 20 }}>
+                        <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
+                          {children}
+                        </AssignmentCard>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -138,19 +116,15 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
             {arNavigationSteps.map((mainStep, index) => {
               return (
                 <React.Fragment key={mainStep.actionID}>
-                  <div className='psdk-horizontal-step-header'>
-                    <div className={_getHIconClass(mainStep)}>
+                  <div className={`psdk-horizontal-step-header ${mainStep.visited_status}`}>
+                    <div className='psdk-horizontal-step-icon'>
                       <div className='psdk-horizontal-step-icon-content'>
                         <span>{index + 1}</span>
                       </div>
                     </div>
-                    <div className={_getHLabelClass(mainStep)}>
-                      <div className='psdk-horizontal-step-text-label' id='selected-label'>
-                        {mainStep.name}
-                      </div>
-                    </div>
+                    <div className='psdk-horizontal-step-label'>{mainStep.visited_status === 'current' && mainStep.name}</div>
                   </div>
-                  {_showHLine(index) && <div className='psdk-horizontal-step-line' />}
+                  {!isLastStep(index) && <div className={`psdk-horizontal-step-line ${_getAutoFlexClass(mainStep)}`} />}
                 </React.Fragment>
               );
             })}
