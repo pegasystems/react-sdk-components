@@ -27,66 +27,27 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
     currentStep = arNavigationSteps[lastActiveStepIndex >= 0 ? lastActiveStepIndex : 0];
   }
 
-  // const svgCurrent = Utils.getImageSrc("circle-solid", Utils.getSDKStaticConentUrl());
-  // const svgNotCurrent = Utils.getImageSrc("circle-solid", Utils.getSDKStaticConentUrl());
-
-  function _getVIconClass(status): string {
-    if (status === 'current') {
-      return 'psdk-vertical-step-icon-selected';
-    } else if (status === 'future') {
-      return 'psdk-vertical-step-icon-future';
-    }
-
-    return 'psdk-vertical-step-icon';
-  }
-
-  function _getVLabelClass(status): string {
-    if (status === 'current') {
-      return 'psdk-vertical-step-label-selected';
-    }
-
-    return 'psdk-vertical-step-label';
-  }
-
   function _getVBodyClass(index: number): string {
-    if (index < arNavigationSteps.length - 1) {
-      return 'psdk-vertical-step-body psdk-vertical-step-line';
-    }
+    const baseClass = 'psdk-vertical-step-body';
+    const isNotLastStep = index < arNavigationSteps.length - 1;
 
-    return 'psdk-vertical-step-body';
-  }
-
-  function _getHLabelClass(step): string {
-    if (step.ID === currentStep?.ID) {
-      return 'psdk-horizontal-step-label-selected';
-    }
-
-    return 'psdk-horizontal-step-label';
+    return isNotLastStep ? `${baseClass} psdk-vertical-step-line` : baseClass;
   }
 
   function _getAutoFlexClass(currentStep): string {
     const currentStepIndex = arNavigationSteps.findIndex(step => step.ID === currentStep?.ID);
-    const len = arNavigationSteps.length;
+    const totalSteps = arNavigationSteps.length;
+    const lastStep = arNavigationSteps[totalSteps - 1];
 
-    console.log('Current Step Index:', currentStep, arNavigationSteps.length - 2);
+    // Apply flex-auto class if current step is active OR if current step is second-to-last and the last step is active
+    const isCurrentStepActive = currentStep.visited_status === 'current';
+    const isSecondToLastWithActiveLastStep = currentStepIndex === totalSteps - 2 && lastStep?.visited_status === 'current';
 
-    if (currentStepIndex === arNavigationSteps.length - 2 && arNavigationSteps[len - 1].visited_status === 'current') {
-      return 'flex-auto';
-    }
-
-    if (currentStep.visited_status === 'current') {
-      return 'flex-auto';
-    }
-
-    if (currentStep.visited_status === 'current') {
-      return 'flex-auto';
-    }
-
-    return '';
+    return isCurrentStepActive || isSecondToLastWithActiveLastStep ? 'flex-auto' : '';
   }
 
-  function _showHLine(index: number): boolean {
-    return index < arNavigationSteps.length - 1;
+  function isLastStep(index: number): boolean {
+    return index === arNavigationSteps.length - 1;
   }
 
   function buttonPress(sAction: string, sButtonType: string) {
@@ -101,13 +62,13 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
             return (
               <React.Fragment key={mainStep.actionID}>
                 <div className='psdk-vertical-step'>
-                  <div className='psdk-vertical-step-header'>
-                    <div className={_getVIconClass(mainStep.visited_status)}>
+                  <div className={`psdk-vertical-step-header ${mainStep.visited_status}`}>
+                    <div className={`psdk-vertical-step-icon`}>
                       <div className='psdk-vertical-step-icon-content'>
                         <span>{index + 1}</span>
                       </div>
                     </div>
-                    <div className={_getVLabelClass(mainStep.visited_status)}>{mainStep.visited_status === 'current' && mainStep.name}</div>
+                    <div className='psdk-vertical-step-label'>{mainStep.visited_status === 'current' && mainStep.name}</div>
                   </div>
                   <div className={_getVBodyClass(index)}>
                     {mainStep?.steps && (
@@ -161,9 +122,9 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
                         <span>{index + 1}</span>
                       </div>
                     </div>
-                    <div className={_getHLabelClass(mainStep)}>{mainStep.visited_status === 'current' && mainStep.name}</div>
+                    <div className='psdk-horizontal-step-label'>{mainStep.visited_status === 'current' && mainStep.name}</div>
                   </div>
-                  {_showHLine(index) && <div className={`psdk-horizontal-step-line ${_getAutoFlexClass(mainStep)}`} />}
+                  {!isLastStep(index) && <div className={`psdk-horizontal-step-line ${_getAutoFlexClass(mainStep)}`} />}
                 </React.Fragment>
               );
             })}

@@ -79,22 +79,26 @@ mat-horizontal-stepper {
 
 .psdk-vertical-step-icon {
   margin-right: 12px;
-  background-color: var(--stepper-completed-bg-color);
-  color: var(--app-text-color);
   border-radius: 50%;
   height: 24px;
   width: 24px;
   position: relative;
 }
 
-.psdk-vertical-step-icon-future {
-  margin-right: 12px;
+.success .psdk-vertical-step-icon {
+  background-color: var(--stepper-completed-bg-color);
+  color: var(--app-text-color);
+}
+
+.future .psdk-vertical-step-icon {
   color: var(--app-neutral-color);
   border: 1px solid var(--app-neutral-color);
-  border-radius: 50%;
-  height: 24px;
-  width: 24px;
-  position: relative;
+}
+
+.current .psdk-vertical-step-icon {
+  background-color: var(--app-primary-color);
+  color: var(--app-text-color);
+  flex-shrink: 0;
 }
 
 .psdk-vertical-step-icon-content {
@@ -102,17 +106,6 @@ mat-horizontal-stepper {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-.psdk-vertical-step-icon-selected {
-  margin-right: 12px;
-  background-color: var(--app-primary-color);
-  color: var(--app-text-color);
-  border-radius: 50%;
-  height: 24px;
-  width: 24px;
-  flex-shrink: 0;
-  position: relative;
 }
 
 .psdk-vertical-step-label {
@@ -127,16 +120,8 @@ mat-horizontal-stepper {
   font-weight: 500;
 }
 
-.psdk-vertical-step-label-selected {
+.current .psdk-vertical-step-label {
   color: rgba(0, 0, 0, 0.87);
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 50px;
-  vertical-align: middle;
-  font-size: 14px;
-  font-weight: 500;
 }
 
 .psdk-vertical-step-body {
@@ -222,11 +207,8 @@ mat-horizontal-stepper {
   white-space: initial;
 }
 
-.psdk-horizontal-step-label-selected {
+.current .psdk-horizontal-step-label {
   color: var(--text-primary-color);
-  font-size: 14px;
-  font-weight: 500;
-  white-space: initial;
   margin-left: 8px;
 }
 
