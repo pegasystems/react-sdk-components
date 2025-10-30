@@ -97,37 +97,44 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
       const oWorkItem = firstChild.props.getPConnect();
       const oWorkData = oWorkItem.getDataObject();
       const oData: any = thePConn.getDataObject(''); // 1st arg empty string until typedefs allow it to be optional
-
-      if (oWorkData?.caseInfo && oWorkData.caseInfo.assignments !== null) {
-        const oCaseInfo = oData?.caseInfo;
-
-        if (oCaseInfo && oCaseInfo.actionButtons) {
-          setActionButtons(oCaseInfo.actionButtons);
-        }
-
-        if (oCaseInfo?.navigation /* was oCaseInfo.navigation != null */) {
-          setHasNavigation(true);
-
-          if (
-            (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === 'standard') ||
-            oCaseInfo?.navigation?.steps?.length === 1
-          ) {
-            setHasNavigation(false);
-          } else if (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === 'vertical') {
-            setIsVertical(true);
-          } else {
-            setIsVertical(false);
-          }
-
-          if (oCaseInfo?.navigation?.steps) {
-            const steps = JSON.parse(JSON.stringify(oCaseInfo?.navigation?.steps));
-            const formedSteps = getStepsInfo(steps);
-            setArNavigationSteps(formedSteps);
-          }
-
-          setArCurrentStepIndicies(findCurrentIndicies(arNavigationSteps, arCurrentStepIndicies, 0));
-        }
+      const caseInfo = oData?.caseInfo;
+      if (!oWorkData?.caseInfo || oWorkData.caseInfo.assignments === null || !caseInfo) {
+        return;
       }
+
+      // Set action buttons
+      if (caseInfo.actionButtons) {
+        setActionButtons(caseInfo.actionButtons);
+      }
+
+      // Handle navigation setup
+      const navigation = caseInfo.navigation;
+      if (!navigation) {
+        setHasNavigation(false);
+        return;
+      }
+
+      const isStandardTemplate = navigation.template?.toLowerCase() === 'standard';
+      const hasSingleStep = navigation.steps?.length === 1;
+      const shouldHideNavigation = isStandardTemplate || hasSingleStep;
+
+      setHasNavigation(!shouldHideNavigation);
+
+      if (shouldHideNavigation) {
+        return;
+      }
+
+      // set vertical navigation
+      const isVerticalTemplate = navigation.template?.toLowerCase() === 'vertical';
+      setIsVertical(isVerticalTemplate);
+
+      if (navigation.steps) {
+        const steps = JSON.parse(JSON.stringify(navigation.steps));
+        const formedSteps = getStepsInfo(steps);
+        setArNavigationSteps(formedSteps);
+      }
+
+      setArCurrentStepIndicies(findCurrentIndicies(arNavigationSteps, arCurrentStepIndicies, 0));
     }
   }, [children]);
 

@@ -84,7 +84,8 @@ const lightThemeColours = {
     '--secondary-button-text-color': '#ffffff',
 
     '--text-primary-color': '#000',
-    '--text-secondary-color': '#c0c0c0'
+    '--text-secondary-color': '#c0c0c0',
+    '--stepper-completed-bg-color': '#218721'
   }
 };
 const darkThemeColours = {
@@ -129,7 +130,8 @@ const darkThemeColours = {
     '--secondary-button-text-color': '#1a103c',
 
     '--text-primary-color': '#e0e0e0',
-    '--text-secondary-color': '#c0c0c0'
+    '--text-secondary-color': '#c0c0c0',
+    '--stepper-completed-bg-color': '#158715'
   }
 };
 
