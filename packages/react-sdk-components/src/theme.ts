@@ -205,7 +205,13 @@ const darkTheme = createTheme({
           background: 'radial-gradient(178.62% 112% at 50% -12%, #0B0F2A 69.96%, #111951 89.19%)',
           backgroundAttachment: 'fixed'
         },
-        ...darkThemeColours
+        ...darkThemeColours,
+
+        // scrollbar styling
+        '*': {
+          scrollbarWidth: 'thin', // Options: auto | thin | none
+          scrollbarColor: '#555 #2c2c2c' // thumb color, track color
+        }
       }
     },
     MuiPaper: {
