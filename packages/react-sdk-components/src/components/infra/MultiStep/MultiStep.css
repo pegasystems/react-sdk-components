@@ -121,7 +121,7 @@ mat-horizontal-stepper {
 }
 
 .current .psdk-vertical-step-label {
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--text-primary-color);
 }
 
 .psdk-vertical-step-body {
@@ -143,7 +143,7 @@ mat-horizontal-stepper {
   border-left-style: solid;
   top: -16px;
   bottom: -16px;
-  border-left-color: rgba(0, 0, 0, 0.12);
+  border-left-color: var(--app-neutral-color);
 }
 
 .psdk-horizontal-stepper {
