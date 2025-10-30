@@ -20,6 +20,12 @@ declare module '@mui/styles/defaultTheme' {
       backgroundColor: string;
       topColor: string;
     };
+    headerNav: {
+      backgroundColor: string;
+      navLinkColor: string;
+      navLinkHoverColor: string;
+      menuToggleColor: string;
+    };
     embedded: {
       resolutionTextColor: string;
     };
@@ -147,6 +153,12 @@ const lightTheme = createTheme({
       }
     }
   },
+  headerNav: {
+    backgroundColor: '#ffffff',
+    navLinkColor: 'rgba(0, 0, 0, 0.87)',
+    navLinkHoverColor: '#3f51b5',
+    menuToggleColor: 'rgba(0, 0, 0, 0.87)'
+  },
   actionButtons: {
     primary: {
       backgroundColor: '#cc0f60',
@@ -213,6 +225,12 @@ const darkTheme = createTheme({
         }
       }
     }
+  },
+  headerNav: {
+    backgroundColor: 'var(--app-nav-bg)',
+    navLinkColor: 'var(--app-nav-color)',
+    navLinkHoverColor: '#ffffff',
+    menuToggleColor: '#ffffff'
   },
   actionButtons: {
     primary: {
