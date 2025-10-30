@@ -20,6 +20,12 @@ declare module '@mui/styles/defaultTheme' {
       backgroundColor: string;
       topColor: string;
     };
+    headerNav: {
+      backgroundColor: string;
+      navLinkColor: string;
+      navLinkHoverColor: string;
+      menuToggleColor: string;
+    };
     embedded: {
       resolutionTextColor: string;
     };
@@ -78,7 +84,8 @@ const lightThemeColours = {
     '--secondary-button-text-color': '#ffffff',
 
     '--text-primary-color': '#000',
-    '--text-secondary-color': '#c0c0c0'
+    '--text-secondary-color': '#c0c0c0',
+    '--stepper-completed-bg-color': '#218721'
   }
 };
 const darkThemeColours = {
@@ -123,7 +130,8 @@ const darkThemeColours = {
     '--secondary-button-text-color': '#1a103c',
 
     '--text-primary-color': '#e0e0e0',
-    '--text-secondary-color': '#c0c0c0'
+    '--text-secondary-color': '#c0c0c0',
+    '--stepper-completed-bg-color': '#158715'
   }
 };
 
@@ -144,6 +152,12 @@ const lightTheme = createTheme({
         }
       }
     }
+  },
+  headerNav: {
+    backgroundColor: '#ffffff',
+    navLinkColor: 'rgba(0, 0, 0, 0.87)',
+    navLinkHoverColor: '#3f51b5',
+    menuToggleColor: 'rgba(0, 0, 0, 0.87)'
   },
   actionButtons: {
     primary: {
@@ -211,6 +225,12 @@ const darkTheme = createTheme({
         }
       }
     }
+  },
+  headerNav: {
+    backgroundColor: 'var(--app-nav-bg)',
+    navLinkColor: 'var(--app-nav-color)',
+    navLinkHoverColor: '#ffffff',
+    menuToggleColor: '#ffffff'
   },
   actionButtons: {
     primary: {

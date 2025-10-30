@@ -164,8 +164,7 @@ export default function MainScreen(props) {
     if (!mashupCaseType) {
       const caseTypes = PCore.getEnvironmentInfo()?.environmentInfoObject?.pyCaseTypeList;
       if (caseTypes && caseTypes.length > 0) {
-        //mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
-        mashupCaseType = 'DIXL-MediaCo-Work-PurchasePhone';
+        mashupCaseType = mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
       }
     }
     let selectedPhoneGUID = '';
