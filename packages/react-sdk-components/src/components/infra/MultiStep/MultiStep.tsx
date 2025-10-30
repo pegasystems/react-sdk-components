@@ -56,22 +56,33 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
     return 'psdk-vertical-step-body';
   }
 
-  function _getHIconClass(step): string {
-    if (step.ID === currentStep?.ID) {
-      return 'psdk-horizontal-step-icon-selected';
-    } else if (step.visited_status === 'future') {
-      return 'psdk-horizontal-step-icon-future';
-    }
-
-    return 'psdk-horizontal-step-icon';
-  }
-
   function _getHLabelClass(step): string {
     if (step.ID === currentStep?.ID) {
       return 'psdk-horizontal-step-label-selected';
     }
 
     return 'psdk-horizontal-step-label';
+  }
+
+  function _getAutoFlexClass(currentStep): string {
+    const currentStepIndex = arNavigationSteps.findIndex(step => step.ID === currentStep?.ID);
+    const len = arNavigationSteps.length;
+
+    console.log('Current Step Index:', currentStep, arNavigationSteps.length - 2);
+
+    if (currentStepIndex === arNavigationSteps.length - 2 && arNavigationSteps[len - 1].visited_status === 'current') {
+      return 'flex-auto';
+    }
+
+    if (currentStep.visited_status === 'current') {
+      return 'flex-auto';
+    }
+
+    if (currentStep.visited_status === 'current') {
+      return 'flex-auto';
+    }
+
+    return '';
   }
 
   function _showHLine(index: number): boolean {
@@ -144,15 +155,15 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
             {arNavigationSteps.map((mainStep, index) => {
               return (
                 <React.Fragment key={mainStep.actionID}>
-                  <div className='psdk-horizontal-step-header'>
-                    <div className={_getHIconClass(mainStep)}>
+                  <div className={`psdk-horizontal-step-header ${mainStep.visited_status}`}>
+                    <div className='psdk-horizontal-step-icon'>
                       <div className='psdk-horizontal-step-icon-content'>
                         <span>{index + 1}</span>
                       </div>
                     </div>
                     <div className={_getHLabelClass(mainStep)}>{mainStep.visited_status === 'current' && mainStep.name}</div>
                   </div>
-                  {_showHLine(index) && <div className='psdk-horizontal-step-line' />}
+                  {_showHLine(index) && <div className={`psdk-horizontal-step-line ${_getAutoFlexClass(mainStep)}`} />}
                 </React.Fragment>
               );
             })}
