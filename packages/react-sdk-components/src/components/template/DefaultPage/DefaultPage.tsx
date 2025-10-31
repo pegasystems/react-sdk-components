@@ -1,7 +1,7 @@
 import { useMemo, Children } from 'react';
 import type { ReactNode } from 'react';
 import { Grid2 } from '@mui/material';
-import Banner from '../../designSystemExtension/Banner';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 
 export interface CommonPageProps {
   /** Page title */
@@ -72,6 +72,8 @@ export default function DefaultPage({
   backgroundColor = '',
   tintImage
 }: DefaultPageProps) {
+  const Banner = getComponentFromMap('Banner');
+
   const childArray = useMemo(() => {
     return Children.toArray(children);
   }, [children]);

@@ -4,7 +4,6 @@ import { Typography } from '@mui/material';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
 
-import FieldValueList from '../../designSystemExtension/FieldValueList';
 import { getUserId, isUserNameAvailable } from './UserReferenceUtils';
 
 const DROPDOWN_LIST = 'Drop-down list';
@@ -34,6 +33,7 @@ const UserReference = (props: UserReferenceProps) => {
   // Get emitted components from map (so we can get any override that may exist)
   const AutoComplete = getComponentFromMap('AutoComplete');
   const Dropdown = getComponentFromMap('Dropdown');
+  const FieldValueList = getComponentFromMap('FieldValueList');
 
   const {
     label = '',

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 import { makeStyles } from '@mui/styles';
+import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 
 import { usePegaAuth } from '../context/PegaAuthProvider';
 import { usePega } from '../context/PegaReadyContext';
