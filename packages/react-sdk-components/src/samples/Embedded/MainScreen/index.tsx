@@ -107,7 +107,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function MainScreen() {
   const { isAuthenticated } = usePegaAuth();
-  const { isPegaReady, PegaContainer } = usePega();
+  const { isPegaReady, PegaContainer, createCase } = usePega();
 
   const classes = useStyles();
 
@@ -149,14 +149,8 @@ export default function MainScreen() {
     setShowLandingPage(false);
     setShowPega(true);
     const sdkConfig = await getSdkConfig();
-    let mashupCaseType = sdkConfig.serverConfig.appMashupCaseType;
-    // If mashupCaseType is null or undefined, get the first case type from the environment info
-    if (!mashupCaseType) {
-      const caseTypes = PCore.getEnvironmentInfo()?.environmentInfoObject?.pyCaseTypeList;
-      if (caseTypes && caseTypes.length > 0) {
-        mashupCaseType = mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
-      }
-    }
+    const mashupCaseType = sdkConfig.serverConfig.appMashupCaseType;
+
     let selectedPhoneGUID = '';
     const phoneName = optionClicked ? optionClicked.trim() : '';
     switch (phoneName) {
@@ -188,12 +182,10 @@ export default function MainScreen() {
       console.warn(`Unexpected case type: ${mashupCaseType}. PhoneModelss field not set.`);
     }
 
-    // Create a new case using the mashup API
-    PCore.getMashupApi()
-      .createCase(mashupCaseType, PCore.getConstants().APP.APP, options)
-      .then(() => {
-        console.log('createCase rendering is complete');
-      });
+    // Call the createCase function from context to create a new case using the mashup API
+    createCase(mashupCaseType, options).then(() => {
+      console.log('createCase rendering is complete');
+    });
   };
 
   function renderLandingPage() {
@@ -241,7 +233,7 @@ export default function MainScreen() {
     );
   }
 
-  if (!isAuthenticated) return <div>Loading...</div>;
+  if (!isAuthenticated) return <div style={{ textAlign: 'center' }}>Loading...</div>;
 
   return (
     <div className={classes.appContainer}>

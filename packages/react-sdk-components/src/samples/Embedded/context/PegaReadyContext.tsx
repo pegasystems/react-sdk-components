@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material';
+import type { CaseOptions } from '@pega/pcore-pconnect-typedefs/mashup/types';
 
 import StoreContext from '../../../bridge/Context/StoreContext';
 import createPConnectComponent from '../../../bridge/react_pconnect';
@@ -29,6 +31,7 @@ function RootComponent(props) {
 interface PegaContextProps {
   isPegaReady: boolean;
   rootPConnect?: typeof PConnect; // Function to get Pega Connect object, if available
+  createCase: (mashupCaseType: string, options: CaseOptions) => Promise<void>;
   PegaContainer: React.FC;
 }
 
@@ -36,13 +39,19 @@ declare const myLoadMashup: any;
 
 const PegaContext = createContext<PegaContextProps | undefined>(undefined);
 
-export const PegaReadyProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+interface PegaReadyProviderProps {
+  theme: any;
+}
+
+export const PegaReadyProvider: React.FC<React.PropsWithChildren<PegaReadyProviderProps>> = ({ children, theme }) => {
   const { isAuthenticated } = usePegaAuth();
   const [isPegaReady, setIsPegaReady] = useState<boolean>(false);
   const [rootProps, setRootProps] = useState<{
     getPConnect?: () => typeof PConnect;
     [key: string]: any;
   }>({});
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const startMashup = async () => {
     try {
@@ -84,9 +93,53 @@ export const PegaReadyProvider: React.FC<React.PropsWithChildren> = ({ children 
     return undefined;
   }, [rootProps]);
 
-  const PegaContainer = () => (isPegaReady ? <RootComponent {...rootProps} /> : null);
+  const createCase = (mashupCaseType: string, options: CaseOptions) => {
+    if (!isPegaReady) {
+      console.error('Pega is not ready. Cannot create case.');
+      return Promise.reject('Pega is not ready');
+    }
 
-  return <PegaContext.Provider value={{ isPegaReady, rootPConnect, PegaContainer }}>{children}</PegaContext.Provider>;
+    setLoading(true);
+    return new Promise<void>((resolve, reject) => {
+      // If mashupCaseType is null or undefined, get the first case type from the environment info
+      if (!mashupCaseType) {
+        const caseTypes = PCore.getEnvironmentInfo()?.environmentInfoObject?.pyCaseTypeList;
+        if (caseTypes && caseTypes.length > 0) {
+          mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
+        }
+      }
+
+      PCore.getMashupApi()
+        .createCase(mashupCaseType, PCore.getConstants().APP.APP, options)
+        .then(() => {
+          resolve();
+        })
+        .catch(error => {
+          console.error('Error creating case:', error);
+          reject(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    });
+  };
+
+  const PegaContainer = () => {
+    if (loading) return <div style={{ textAlign: 'center' }}>Loading...</div>;
+
+    return isPegaReady ? <RootComponent {...rootProps} /> : null;
+  };
+
+  return (
+    <PegaContext.Provider value={{ isPegaReady, rootPConnect, createCase, PegaContainer }}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </PegaContext.Provider>
+  );
 };
 
 export const usePega = () => {
