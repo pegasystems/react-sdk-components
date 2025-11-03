@@ -1,6 +1,6 @@
 import { type ReactElement, useMemo } from 'react';
 import Grid2 from '@mui/material/Grid2';
-import FieldGroup from '../../designSystemExtension/FieldGroup';
+import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface GroupProps extends PConnFieldProps {
@@ -13,6 +13,8 @@ interface GroupProps extends PConnFieldProps {
 }
 
 export default function Group(props: GroupProps) {
+  const FieldGroup = getComponentFromMap('FieldGroup');
+
   const { children, heading, showHeading, instructions, collapsible, displayMode, type } = props;
 
   const isReadOnly = displayMode === 'DISPLAY_ONLY';

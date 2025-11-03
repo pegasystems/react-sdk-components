@@ -4,6 +4,8 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
+import './RichText.css';
+
 interface RichTextProps extends PConnFieldProps {
   // If any, enter additional props that only exist on TextArea here
   additionalProps?: object;
