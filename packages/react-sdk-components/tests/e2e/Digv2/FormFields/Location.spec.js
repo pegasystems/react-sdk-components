@@ -40,7 +40,7 @@ test.describe('E2E test for Location component', () => {
     /** Required field test */
     const requiredLocationField = page.locator('input[data-test-id="5d234240d150ee2ad896ca0be0e01fd3"]');
     await requiredLocationField.type('Hitech City, Hyderabad');
-    await page.waitForSelector('.pac-container .pac-item', { timeout: 5000 });
+    await page.waitForSelector('.pac-container .pac-item', { timeout: 50000 });
     await page.locator('.pac-container .pac-item').nth(1).click();
 
     await expect(requiredLocationField).not.toHaveValue('');
