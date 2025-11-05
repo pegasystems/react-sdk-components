@@ -44,6 +44,7 @@
     "test-report": "playwright show-report tests/playwright-report",
     "test-jest": "jest --watchAll",
     "test-jest-coverage": "jest --watchAll --coverage",
+    "postinstall": "npx playwright install --with-deps",
     "_comment_internal_SDK_scripts": "The following commands are for internal use and are intended to be called only from public scripts above",
     "_internal-copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html"
   },
