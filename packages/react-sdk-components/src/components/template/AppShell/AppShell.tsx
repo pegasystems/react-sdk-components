@@ -112,6 +112,11 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     });
 
     setMapChildren(tempMap);
+
+    /* TODO: We're setting the `pyPortalTemplate` for now, this would be handled by the CoreJS in the future releases */
+    if (portalTemplate === 'wss') {
+      PCore.getEnvironmentInfo().setEnvironmentInfo({ ...PCore.getEnvironmentInfo().environmentInfoObject, pyPortalTemplate: 'wss' } as any);
+    }
   }, []);
 
   useEffect(() => {
