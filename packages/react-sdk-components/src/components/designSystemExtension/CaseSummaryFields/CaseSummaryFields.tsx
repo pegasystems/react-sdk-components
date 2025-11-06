@@ -223,7 +223,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
 
   // Whenever theFieldsToRender changes, update theFieldsAsGridItems that's used during render
   useEffect(() => {
-    const arGridItems = theFieldsToRender.map((field: any) => {
+    const arGridItems = theFieldsToRender?.map((field: any) => {
       // display the field when either visibility property doesn't exist or is true(if exists)
       if (field.config.visibility === undefined || field.config.visibility === true) {
         return (
