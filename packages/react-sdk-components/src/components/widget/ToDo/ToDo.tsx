@@ -303,7 +303,7 @@ export default function ToDo(props: ToDoProps) {
             </Avatar>
             <div style={{ display: 'block' }}>
               <Typography variant='h6'>{assignment?.name}</Typography>
-              {`${localizedVal('Task in', localeCategory)} ${renderTaskId(type, getPConnect, showTodoList, assignment)} \u2022  ${localizedVal(
+              {`${localizedVal('Task in', localeCategory)} ${getID(assignment)} \u2022  ${localizedVal(
                 'Urgency',
                 localeCategory
               )}  ${getPriority(assignment)}`}
