@@ -2,9 +2,19 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { CircularProgress, IconButton, Menu, MenuItem, Button } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { getIconFromFileType, isFileUploadedToServer, useFileDownload, validateMaxSize } from '../../helpers/attachmentHelpers';
-
 import { Utils } from '../../helpers/utils';
+import {
+  clearFieldErrorMessages,
+  deleteAttachments,
+  getIconFromFileType,
+  getMappedValue,
+  insertAttachments,
+  useDeepMemo,
+  useFileDownload,
+  validateFileExtension
+} from './AttachmentUtils';
+import { validateMaxSize } from '../../helpers/attachmentShared';
+import type { PageInstructionOptions } from './Attachment.types';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
 import './Attachment.css';
@@ -12,77 +22,58 @@ import './Attachment.css';
 interface AttachmentProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on this component
   value: any;
-  allowMultiple: string;
+  allowMultiple: boolean | string;
   extensions: string;
+  editMode: string;
+  isTableFormatter: boolean;
 }
 
-const getAttachmentKey = (name, embeddedReference) => {
-  return `attachmentsList${embeddedReference}.${name}`;
-};
-
-const getCurrentAttachmentsList = (key, context) => {
-  return PCore.getStoreValue(`.${key}`, 'context_data', context) || [];
-};
-
-const updateAttachmentState = (pConn, key, attachments) => {
-  PCore.getStateUtils().updateState(pConn.getContextName(), key, attachments, {
-    pageReference: 'context_data',
-    isArrayDeepMerge: false
-  });
-};
-
 export default function Attachment(props: AttachmentProps) {
-  const { value, getPConnect, label, validatemessage, allowMultiple, extensions, displayMode, helperText } = props;
+  const { value, getPConnect, label, validatemessage, extensions, displayMode, helperText, editMode, isTableFormatter } = props;
   /* this is a temporary fix because required is supposed to be passed as a boolean and NOT as a string */
-  let { required, disabled } = props;
-  [required, disabled] = [required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
+  let { required, disabled, allowMultiple } = props;
+  [required, disabled, allowMultiple] = [required, disabled, allowMultiple].map(
+    prop => prop === true || (typeof prop === 'string' && prop === 'true')
+  );
   const pConn = getPConnect();
+  const localizationService = pConn.getLocalizationService();
 
   const actionSequencer = useMemo(() => PCore.getActionsSequencer(), []);
-  const caseID = PCore.getStoreValue('.pyID', 'caseInfo.content', pConn.getContextName());
+  const rawValue = pConn.getComponentConfig().value;
+  const isAttachmentAnnotationPresent = typeof rawValue === 'object' ? false : rawValue?.includes('@ATTACHMENT');
+  const { attachments, isOldAttachment } = isAttachmentAnnotationPresent ? value : PCore.getAttachmentUtils().prepareAttachmentData(value);
+
+  let valueRef = (pConn.getStateProps() as any).value;
+  valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
+
+  pConn.setReferenceList(`.${valueRef}`);
+
+  const isMultiAttachmentInInlineEditTable = isTableFormatter && allowMultiple && editMode === 'tableRows';
+
+  const [files, setFiles] = useState<any[]>(attachments);
+  const overrideLocalState = useRef(false);
+  const attachmentCount = useRef(attachments.length);
+  const filesWithError = useRef<any[]>([]);
+  const multiAttachmentsInInlineEdit = useRef([]);
+  const thumbnailURLs = useRef<any[]>([]);
+  const contextName = pConn.getContextName();
+  const onFileDownload = useFileDownload(contextName);
+
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'CosmosFields';
   const uploadMultipleFilesLabel = localizedVal('file_upload_text_multiple', localeCategory);
   const uploadSingleFileLabel = localizedVal('file_upload_text_one', localeCategory);
   const deleteIcon = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
   const srcImg = Utils.getImageSrc('document-doc', Utils.getSDKStaticConentUrl());
-  let valueRef = (pConn.getStateProps() as any).value;
-  valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const rawValue = pConn.getComponentConfig().value;
-  const isAttachmentAnnotationPresent = typeof rawValue === 'object' ? false : rawValue?.includes('@ATTACHMENT');
-  const { hasUploadedFiles, attachments, categoryName } = isAttachmentAnnotationPresent
-    ? value
-    : PCore.getAttachmentUtils().prepareAttachmentData(value);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [files, setFiles] = useState<any[]>(attachments);
-  const [filesWithError, setFilesWithError] = useState<any[]>([]);
   const [toggleUploadBegin, setToggleUploadBegin] = useState(false);
 
-  const context = pConn.getContextName();
-  const onFileDownload = useFileDownload(context);
-
-  let embeddedProperty = pConn
-    .getPageReference()
-    .replace(PCore.getConstants().CASE_INFO.CASE_INFO_CONTENT, '')
-    .replace(PCore.getConstants().DATA_INFO.DATA_INFO_CONTENT, '');
-
-  if (valueRef?.indexOf('.') > 0) {
-    embeddedProperty = valueRef.substring(0, valueRef.indexOf('.') + 1);
-  }
-
-  const resetAttachmentStoredState = () => {
-    PCore.getStateUtils().updateState(pConn.getContextName(), getAttachmentKey(valueRef, embeddedProperty), undefined, {
-      pageReference: 'context_data',
-      isArrayDeepMerge: false
-    });
-  };
-
   const deleteFile = useCallback(
-    file => {
+    (file, fileIndex) => {
       setAnchorEl(null);
 
       // reset the file input so that it will allow re-uploading the same file after deletion
@@ -90,84 +81,112 @@ export default function Attachment(props: AttachmentProps) {
         fileInputRef.current.value = ''; // Reset the input
       }
 
-      let attachmentsList: any[] = [];
-      let currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef, embeddedProperty), pConn.getContextName());
+      if (filesWithError.current.length > 0) {
+        filesWithError.current = filesWithError.current.filter(fileWithError => fileWithError.props.id !== file.props.id);
+        if (filesWithError.current.length === 0) {
+          clearFieldErrorMessages(pConn);
+        }
+      }
 
-      // If file to be deleted is the one added in previous stage i.e. for which a file instance is created in server
-      // no need to filter currentAttachmentList as we will get another entry of file in redux with delete & label
-      if (hasUploadedFiles && isFileUploadedToServer(file)) {
-        const updatedAttachments = files.map(f => {
-          if (f.responseProps && f.responseProps.pzInsKey === file.responseProps.pzInsKey) {
-            return { ...f, delete: true, label: valueRef };
-          }
-          return f;
+      if (file.inProgress) {
+        // @ts-ignore - Expected 1 arguments, but got 2.ts(2554)
+        PCore.getAttachmentUtils().cancelRequest(file.props.id, contextName);
+        actionSequencer.deRegisterBlockingAction(contextName).catch(() => {});
+        setFiles(localFiles => {
+          return localFiles.filter(localFile => localFile.props.id !== file.props.id);
         });
+      } else {
+        deleteAttachments([file], pConn, multiAttachmentsInInlineEdit.current, {
+          allowMultiple,
+          isOldAttachment,
+          isMultiAttachmentInInlineEditTable,
+          attachmentCount: attachmentCount.current,
+          deleteIndex: fileIndex
+        } as any);
+        // Filter out without deleted file and reset the file indexes
+        setFiles(localFiles => {
+          let tempLocalFiles = [...localFiles];
+          tempLocalFiles = tempLocalFiles.filter(localFile => localFile.props.id !== file.props.id);
+          tempLocalFiles.forEach(localFile => {
+            if (!localFile.props.error && !file.props.error) {
+              const updatedDeleteIndex =
+                localFile.responseProps.deleteIndex > fileIndex ? localFile.responseProps.deleteIndex - 1 : localFile.responseProps.deleteIndex;
 
-        // updating the redux store to help form-handler in passing the data to delete the file from server
-        updateAttachmentState(pConn, getAttachmentKey(valueRef, embeddedProperty), [...updatedAttachments]);
-        setFiles(current => {
-          const newlyAddedFiles = current.filter(f => !!f.ID);
-          const filesPostDelete = current.filter(f => isFileUploadedToServer(f) && f.responseProps?.ID !== file.responseProps?.ID);
-          attachmentsList = [...filesPostDelete, ...newlyAddedFiles];
-          return attachmentsList;
-        });
-      } //  if the file being deleted is the added in this stage  i.e. whose data is not yet created in server
-      else {
-        // filter newly added files in this stage, later the updated current stage files will be added to redux once files state is updated in below setFiles()
-        currentAttachmentList = currentAttachmentList.filter(f => !f.props.error && (f.delete || f.label !== valueRef));
-        setFiles(current => current.filter(f => f.ID !== file.ID));
-        updateAttachmentState(pConn, getAttachmentKey(valueRef, embeddedProperty), [...currentAttachmentList, ...attachmentsList]);
-        if (file.inProgress) {
-          // @ts-expect-error - 3rd parameter "responseEncoding" should be optional
-          PCore.getAttachmentUtils().cancelRequest(file.ID, pConn.getContextName());
-          actionSequencer.deRegisterBlockingAction(pConn.getContextName()).catch(error => {
-            console.log(error);
+              localFile.props.onDelete = () => deleteFile(localFile, updatedDeleteIndex);
+
+              localFile.responseProps.deleteIndex = updatedDeleteIndex;
+            }
           });
+          return tempLocalFiles;
+        });
+        if (!file.props.error) {
+          attachmentCount.current -= 1;
         }
       }
 
       setToggleUploadBegin(false);
-      setFilesWithError(prevFilesWithError => {
-        return prevFilesWithError.filter(f => f.ID !== file.ID);
-      });
     },
-    [valueRef, pConn, hasUploadedFiles, filesWithError, hasUploadedFiles, actionSequencer]
+    [pConn]
   );
 
-  const onUploadProgress = () => {};
+  const onUploadProgress = (id, ev) => {
+    const progress = Math.floor((ev.loaded / ev.total) * 100);
+    setFiles(localFiles => [
+      ...localFiles.map(localFile => {
+        if (localFile.props?.id === id) {
+          localFile.inProgress = true;
+          localFile.props.progress = progress;
+        }
+        return localFile;
+      })
+    ]);
+  };
 
-  const errorHandler = (isFetchCanceled, attachedFile) => {
+  const populateErrorAndUpdateRedux = file => {
+    const fieldName = (pConn.getStateProps() as any).value;
+    // set errors to property to block submit even on errors in file upload
+    PCore.getMessageManager().addMessages({
+      messages: [
+        {
+          type: 'error',
+          message: localizationService.getLocalizedText('Error with one or more files')
+        }
+      ],
+      property: fieldName,
+      pageReference: pConn.getPageReference(),
+      context: contextName
+    });
+    insertAttachments([file], pConn, multiAttachmentsInInlineEdit.current, {
+      allowMultiple,
+      isOldAttachment,
+      isMultiAttachmentInInlineEditTable,
+      attachmentCount: attachmentCount.current
+    } as any);
+  };
+
+  const errorHandler = (isFetchCanceled, file) => {
     return error => {
       if (!isFetchCanceled(error)) {
-        let uploadFailMsg = pConn.getLocalizedValue('Something went wrong', '', '');
+        let uploadFailMsg = localizationService.getLocalizedText('Something went wrong');
         if (error.response && error.response.data && error.response.data.errorDetails) {
-          uploadFailMsg = pConn.getLocalizedValue(error.response.data.errorDetails[0].localizedValue, '', '');
+          uploadFailMsg = localizationService.getLocalizedText(error.response.data.errorDetails[0].localizedValue);
         }
+
         setFiles(current => {
-          return current.map(f => {
-            if (f.ID === attachedFile.ID) {
-              f.props.meta = uploadFailMsg;
-              f.props.error = true;
-              f.props.onDelete = () => deleteFile(f);
-              f.props.icon = getIconFromFileType(f.type);
-              f.props.name = pConn.getLocalizedValue('Unable to upload file', '', '');
-              f.inProgress = false;
-              const fieldName = (pConn.getStateProps() as any).value;
-              // set errors to property to block submit even on errors in file upload
-              PCore.getMessageManager().addMessages({
-                messages: [
-                  {
-                    type: 'error',
-                    message: pConn.getLocalizedValue('Error with one or more files', '', '')
-                  }
-                ],
-                property: fieldName,
-                pageReference: pConn.getPageReference(),
-                context
-              });
-              delete f.props.progress;
+          return current.map((localFile, index) => {
+            if (localFile.props.id === file.props.id) {
+              localFile.props.meta = uploadFailMsg;
+              localFile.props.error = true;
+              localFile.props.onDelete = () => deleteFile(localFile, index);
+              localFile.props.icon = getIconFromFileType(localFile.type);
+              localFile.props.name = localizationService.getLocalizedText('Unable to upload file');
+              localFile.inProgress = false;
+              delete localFile.props.progress;
+              filesWithError.current.push(localFile);
+
+              populateErrorAndUpdateRedux(localFile);
             }
-            return f;
+            return localFile;
           });
         });
       }
@@ -175,50 +194,28 @@ export default function Attachment(props: AttachmentProps) {
     };
   };
 
-  const validateFileExtension = (fileObj, allowedExtensions) => {
-    if (!allowedExtensions) {
-      return true;
-    }
-    const allowedExtensionList = allowedExtensions
-      .toLowerCase()
-      .split(',')
-      .map(item => item.replaceAll('.', '').trim());
-    const extension = fileObj.name.split('.').pop().toLowerCase();
-    return allowedExtensionList.includes(extension);
-  };
-
-  const clearFieldErrorMessages = () => {
-    const fieldName = (pConn.getStateProps() as any).value;
-    PCore.getMessageManager().clearMessages({
-      type: PCore.getConstants().MESSAGES.MESSAGES_TYPE_ERROR,
-      property: fieldName,
-      pageReference: pConn.getPageReference(),
-      context
-    });
-  };
-
   const onFileAdded = event => {
     let addedFiles = Array.from(event.target.files);
-    addedFiles = allowMultiple === 'true' ? addedFiles : [addedFiles[0]];
+    addedFiles = allowMultiple ? addedFiles : [addedFiles[0]];
     const maxAttachmentSize = PCore.getEnvironmentInfo().getMaxAttachmentSize() || '5';
     const tempFilesToBeUploaded = [
       ...addedFiles.map((f: any, index) => {
         f.ID = `${new Date().getTime()}I${index}`;
-        f.inProgress = true;
         f.props = {
           type: f.type,
           name: f.name,
+          id: f.ID,
+          format: f.name.split('.').pop(),
           icon: getIconFromFileType(f.type),
-          onDelete: () => deleteFile(f)
+          onDelete: () => deleteFile(f, index),
+          thumbnail: window.URL.createObjectURL(f)
         };
         if (!validateMaxSize(f, maxAttachmentSize)) {
           f.props.error = true;
-          f.inProgress = false;
-          f.props.meta = pConn.getLocalizedValue(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`, '', '');
+          f.props.meta = localizationService.getLocalizedText(`File is too big. Max allowed size is ${maxAttachmentSize}MB.`);
         } else if (!validateFileExtension(f, extensions)) {
           f.props.error = true;
-          f.inProgress = false;
-          f.props.meta = `${pConn.getLocalizedValue('File has invalid extension. Allowed extensions are:', '', '')} ${extensions.replaceAll(
+          f.props.meta = `${localizationService.getLocalizedText('File has invalid extension. Allowed extensions are:')} ${extensions.replaceAll(
             '.',
             ''
           )}`;
@@ -229,22 +226,30 @@ export default function Attachment(props: AttachmentProps) {
             messages: [
               {
                 type: 'error',
-                message: pConn.getLocalizedValue('Error with one or more files', '', '')
+                message: localizationService.getLocalizedText('Error with one or more files')
               }
             ],
             property: fieldName,
             pageReference: pConn.getPageReference(),
-            context
+            context: contextName
           });
         }
         return f;
       })
     ];
+
     const tempFilesWithError = tempFilesToBeUploaded.filter(f => f.props.error);
     if (tempFilesWithError.length > 0) {
-      setFilesWithError(tempFilesWithError);
+      filesWithError.current = [...filesWithError.current, ...tempFilesWithError];
+
+      insertAttachments(tempFilesWithError, pConn, multiAttachmentsInInlineEdit.current, {
+        allowMultiple,
+        isOldAttachment,
+        isMultiAttachmentInInlineEditTable,
+        attachmentCount: attachmentCount.current
+      } as PageInstructionOptions);
     }
-    setFiles(current => (allowMultiple !== 'true' ? [...tempFilesToBeUploaded] : [...current, ...tempFilesToBeUploaded]));
+    setFiles(current => (!allowMultiple ? [...tempFilesToBeUploaded] : [...current, ...tempFilesToBeUploaded]));
     setToggleUploadBegin(true);
   };
 
@@ -253,108 +258,177 @@ export default function Attachment(props: AttachmentProps) {
       .filter(e => {
         const isFileUploaded = e.props && e.props.progress === 100;
         const fileHasError = e.props && e.props.error;
-        const isFileUploadedinLastStep = e.responseProps && e.responseProps.pzInsKey;
-        return !isFileUploaded && !fileHasError && !isFileUploadedinLastStep;
+        const isFileUploadedInLastStep = e.responseProps && e.responseProps.ID !== 'temp';
+        const isFileUploadInProgress = e.inProgress;
+        return !isFileUploadInProgress && !isFileUploaded && !fileHasError && !isFileUploadedInLastStep;
       })
-      .map(f =>
-        window.PCore.getAttachmentUtils().uploadAttachment(
-          f,
-          () => {
-            onUploadProgress();
+      .map(file =>
+        PCore.getAttachmentUtils().uploadAttachment(
+          file,
+          ev => {
+            onUploadProgress(file.props.id, ev);
           },
           isFetchCanceled => {
-            return errorHandler(isFetchCanceled, f);
+            return errorHandler(isFetchCanceled, file);
           },
-          pConn.getContextName()
+          contextName
         )
       );
+
+    // allow new files to be added when other files upload is still in progress
+    setToggleUploadBegin(false);
     Promise.allSettled(filesToBeUploaded)
       .then((fileResponses: any) => {
         fileResponses = fileResponses.filter(fr => fr.status !== 'rejected'); // in case of deleting an in progress file, promise gets cancelled but still enters then block
         if (fileResponses.length > 0) {
-          setFiles(current => {
-            const tempFilesUploaded = [...current];
-            tempFilesUploaded.forEach(f => {
-              const index = fileResponses.findIndex((fr: any) => fr.value.clientFileID === f.ID);
+          setFiles(localFiles => {
+            const tempFilesUploaded = [...localFiles];
+            tempFilesUploaded.forEach(localFile => {
+              // if attach field has multiple files & in bw any error files are present
+              // Example : files = [properFile1, errFile, errFile, properFile2]
+              // indexes for delete & preview should be for files [properFile1, properFile2] which is [1,2]
+              const index = fileResponses.findIndex(fileResponse => fileResponse.value.clientFileID === localFile.props.id);
               if (index >= 0) {
-                f.props.meta = pConn.getLocalizedValue('Uploaded successfully', '', '');
-                f.props.progress = 100;
-                f.inProgress = false;
-                f.handle = fileResponses[index].value.ID;
-                f.label = valueRef;
-                f.category = categoryName;
-                f.responseProps = {
-                  pzInsKey: 'temp',
-                  pyAttachName: f.props.name
+                fileResponses[index].value.thumbnail = localFile.props.thumbnail;
+                localFile.inProgress = false;
+                localFile.ID = fileResponses[index].value.ID;
+                localFile.props.meta = localizationService.getLocalizedText('Uploaded successfully');
+                localFile.props.progress = 100;
+                localFile.handle = fileResponses[index].value.ID;
+                localFile.label = valueRef;
+                localFile.responseProps = {
+                  pzInsKey: 'temp'
                 };
               }
             });
             return tempFilesUploaded;
           });
 
-          if (filesWithError.length === 0) {
-            clearFieldErrorMessages();
+          insertAttachments(fileResponses, pConn, multiAttachmentsInInlineEdit.current, {
+            allowMultiple,
+            isOldAttachment,
+            isMultiAttachmentInInlineEditTable,
+            attachmentCount: attachmentCount.current,
+            insert: true
+          } as any);
+          attachmentCount.current += fileResponses.length;
+
+          if (filesWithError.current.length === 0) {
+            clearFieldErrorMessages(pConn);
           }
         }
-        setToggleUploadBegin(false);
+        actionSequencer.deRegisterBlockingAction(contextName).catch(() => {});
       })
       .catch(error => {
         console.log(error);
         setToggleUploadBegin(false);
       });
-  }, [files, filesWithError]);
+  }, [files]);
 
   useEffect(() => {
     if (toggleUploadBegin && files.length > 0) {
-      uploadFiles();
+      actionSequencer.registerBlockingAction(contextName).then(() => {
+        uploadFiles();
+      });
     }
   }, [toggleUploadBegin]);
 
   useEffect(() => {
-    if (files.length > 0 && displayMode !== 'DISPLAY_ONLY') {
-      const currentAttachmentList = getCurrentAttachmentsList(getAttachmentKey(valueRef, embeddedProperty), pConn.getContextName());
-      // block duplicate files to redux store when added 1 after another to prevent multiple duplicates being added to the case on submit
-      const tempFiles = files.filter(f => currentAttachmentList.findIndex(fr => fr.ID === f.ID) === -1 && !f.inProgress && f.responseProps);
-
-      const updatedAttList = [...currentAttachmentList, ...tempFiles];
-      updateAttachmentState(pConn, getAttachmentKey(valueRef, embeddedProperty), updatedAttList);
-    }
-  }, [files]);
-
-  useEffect(() => {
-    if (filesWithError.length === 0) {
-      clearFieldErrorMessages();
+    if (filesWithError.current.length === 0) {
+      clearFieldErrorMessages(pConn);
     }
   }, [filesWithError]);
 
-  useEffect(() => {
-    let tempUploadedFiles = getCurrentAttachmentsList(getAttachmentKey(valueRef, embeddedProperty), pConn.getContextName());
-    tempUploadedFiles = tempUploadedFiles.filter(f => f.label === valueRef);
-    setFiles(current => {
-      return [
-        ...current.map(f => {
-          return f.responseProps.pzInsKey && !f.responseProps.pzInsKey.includes('temp')
-            ? {
-                ...f,
-                props: {
-                  ...f.props,
-                  onDelete: () => deleteFile(f)
-                }
-              }
-            : { ...f };
-        }),
-        ...tempUploadedFiles
-      ];
+  const memoizedAttachments = useDeepMemo(() => {
+    return attachments;
+  }, [attachments]);
+
+  // Prepares new structure as per Cosmos component
+  const transformAttachments = () => {
+    const transformedFiles = [...attachments];
+    let deleteIndex = -1;
+    transformedFiles.forEach(attachment => {
+      attachment.props.id = attachment.responseProps.ID;
+      attachment.props.format = attachment.props.name.split('.').pop();
+      if (attachment.props.error) {
+        attachment.responseProps.deleteIndex = deleteIndex;
+      } else {
+        deleteIndex += 1;
+        attachment.responseProps.deleteIndex = deleteIndex;
+      }
+      if (attachment.props.thumbnail) {
+        thumbnailURLs.current.push(attachment.props.thumbnail);
+      }
     });
+
+    return transformedFiles;
+  };
+
+  useEffect(() => {
+    const caseID = PCore.getStoreValue(`.${getMappedValue('pyID')}`, PCore.getResolvedConstantValue('caseInfo.content'), contextName);
     if (displayMode !== 'DISPLAY_ONLY') {
-      PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, resetAttachmentStoredState, caseID);
+      PCore.getPubSubUtils().subscribe(
+        PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION,
+        () => {
+          overrideLocalState.current = true;
+        },
+        caseID
+      );
     }
+
+    // When component mounts, only set local files state from redux.
+    const serverFiles = transformAttachments();
+    setFiles(serverFiles);
+    filesWithError.current = serverFiles.filter(file => file.props.error);
+
     return () => {
       if (displayMode !== 'DISPLAY_ONLY') {
         PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, caseID);
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (overrideLocalState.current) {
+      const serverFiles = transformAttachments();
+      overrideLocalState.current = false;
+      attachmentCount.current = attachments.length;
+      filesWithError.current = [];
+      setFiles(serverFiles);
+    } else {
+      // Determine whether refresh call has overridden any error files in redux, push error files back to redux from local state to perform client side validation during assignment submit
+      const errorFiles = attachments.filter(attachment => attachment.props.error);
+      if (errorFiles.length === 0 && filesWithError.current.length > 0) {
+        // Check if local file state contains error files and push those to redux
+        const uniqueKey = getMappedValue('pzInsKey');
+        const transformedErrorFiles = filesWithError.current.map(errorFile => {
+          const filename = errorFile.props.name;
+          return {
+            [uniqueKey]: errorFile.props.id,
+            FileName: filename,
+            Category: '',
+            FileExtension: filename.split('.').pop() ?? filename,
+            error: errorFile.props.error || null
+          };
+        });
+        let key = '';
+        let updatedAttachments: any = [];
+        if (allowMultiple || isOldAttachment) {
+          key = isOldAttachment ? `${valueRef}.pxResults` : valueRef;
+          const existingAttachments = PCore.getStoreValue(`.${key}`, pConn.getPageReference(), pConn.getContextName()) || [];
+          updatedAttachments = [...existingAttachments, ...transformedErrorFiles];
+        } else {
+          key = valueRef;
+          updatedAttachments = transformedErrorFiles[0];
+        }
+        PCore.getStateUtils().updateState(pConn.getContextName(), key, updatedAttachments, {
+          pageReference: pConn.getPageReference(),
+          isArrayDeepMerge: false,
+          removePropertyFromChangedList: true
+        });
+      }
+    }
+  }, [memoizedAttachments]);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -376,13 +450,13 @@ export default function Attachment(props: AttachmentProps) {
             id={valueRef}
             name='upload-photo'
             type='file'
-            multiple={allowMultiple === 'true'}
+            multiple={allowMultiple}
             required={required}
             disabled={disabled}
             onChange={onFileAdded}
           />
           <Button style={{ textTransform: 'none' }} variant='outlined' color='primary' component='span'>
-            {allowMultiple === 'true'
+            {allowMultiple
               ? uploadMultipleFilesLabel === 'file_upload_text_multiple'
                 ? 'Choose files'
                 : uploadMultipleFilesLabel
@@ -416,7 +490,7 @@ export default function Attachment(props: AttachmentProps) {
               </div>
               <div className='psdk-utility-action'>
                 {item.ID && (
-                  <button type='button' className='psdk-utility-button' aria-label='Delete Attachment' onClick={() => deleteFile(item)}>
+                  <button type='button' className='psdk-utility-button' aria-label='Delete Attachment' onClick={() => deleteFile(item, index)}>
                     <img className='psdk-utility-card-action-svg-icon' src={deleteIcon} />
                   </button>
                 )}
@@ -443,7 +517,7 @@ export default function Attachment(props: AttachmentProps) {
                       >
                         Download
                       </MenuItem>
-                      <MenuItem style={{ fontSize: '14px' }} key='delete' onClick={() => deleteFile(item)}>
+                      <MenuItem style={{ fontSize: '14px' }} key='delete' onClick={() => deleteFile(item, index)}>
                         Delete
                       </MenuItem>
                     </Menu>
@@ -459,7 +533,7 @@ export default function Attachment(props: AttachmentProps) {
   return (
     <div className='file-upload-container'>
       <span className={`label ${required ? 'file-label' : ''}`}>{label}</span>
-      {((files.length === 0 && allowMultiple !== 'true') || allowMultiple === 'true') && <section>{content}</section>}
+      {((files.length === 0 && !allowMultiple) || allowMultiple) && <section>{content}</section>}
       {validatemessage !== '' ? <span className='file-error'>{validatemessage}</span> : <span style={{ fontSize: '14px' }}>{helperText}</span>}
       {files && files.length > 0 && <section>{fileDisplay}</section>}
     </div>
