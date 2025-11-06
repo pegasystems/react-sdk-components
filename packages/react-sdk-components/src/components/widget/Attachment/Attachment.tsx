@@ -11,9 +11,9 @@ import {
   insertAttachments,
   useDeepMemo,
   useFileDownload,
-  validateFileExtension,
-  validateMaxSize
+  validateFileExtension
 } from './AttachmentUtils';
+import { validateMaxSize } from '../../helpers/attachmentShared';
 import type { PageInstructionOptions } from './Attachment.types';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 

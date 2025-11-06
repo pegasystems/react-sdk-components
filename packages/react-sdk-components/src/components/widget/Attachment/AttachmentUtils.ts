@@ -4,19 +4,12 @@ import equal from 'fast-deep-equal';
 
 import type { FileObject, PageInstructionOptions, ReduxAttachments } from './Attachment.types';
 
-const megabyteSize = 1048576;
-
 export const isContentBinary = (headers: Record<string, string>) => {
   return headers && headers['content-transfer-encoding'] === 'binary';
 };
 
 export const isContentBase64 = (headers: Record<string, string>) => {
   return headers && headers['content-transfer-encoding'] === 'base64';
-};
-
-export const validateMaxSize = (fileObj: Record<string, number>, maxSizeInMB: string) => {
-  const fileSize = (fileObj.size / megabyteSize).toFixed(2);
-  return parseFloat(fileSize) < parseFloat(maxSizeInMB);
 };
 
 export const validateFileExtension = (fileObj: Record<string, string>, allowedExtensions: string) => {

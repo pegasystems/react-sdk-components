@@ -10,7 +10,7 @@ import './FileUtility.css';
 import { IconButton, Menu, MenuItem, Button, CircularProgress, Card } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { validateMaxSize } from '../../../helpers/attachmentHelpers';
+import { validateMaxSize } from '../../../helpers/attachmentShared';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../../types/PConnProps';
 
