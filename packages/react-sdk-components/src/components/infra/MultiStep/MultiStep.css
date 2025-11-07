@@ -158,14 +158,12 @@ mat-horizontal-stepper {
 }
 
 .psdk-horizontal-step-header {
-  overflow: hidden;
   outline: none;
   cursor: pointer;
   position: relative;
   box-sizing: content-box;
   display: flex;
   height: 72px;
-  overflow: hidden;
   align-items: center;
 }
 
