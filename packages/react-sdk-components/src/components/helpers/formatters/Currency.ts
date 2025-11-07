@@ -73,5 +73,5 @@ export default {
   'Decimal-Auto': (value, options) => NumberFormatter(value, { ...options, decPlaces: Number.isInteger(value) ? 0 : 2 }),
   Integer: (value, options) => NumberFormatter(value, { ...options, decPlaces: 0 }),
   Percentage: (value, options) => SymbolFormatter(value, { ...options, symbol: '%' }),
-  isValidValue: value => isValidValue(value)
+  isValidValue
 };
