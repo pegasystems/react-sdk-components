@@ -2,10 +2,6 @@ import { Link } from '@mui/material';
 
 import { Utils } from '../../helpers/utils';
 
-export const getResolvedConstantValue = (pConnect, key) => {
-  return pConnect.getValue(PCore.getResolvedConstantValue(key)) || pConnect.getValue(key);
-};
-
 export const resolveReferencedPConnect = pConnect => {
   if (!pConnect || !pConnect.meta) return undefined;
   const type = pConnect?._type ?? undefined;

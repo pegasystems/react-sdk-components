@@ -56,10 +56,10 @@ test.describe('E2E test', () => {
     firstNameInput = caseSummary.locator('input').first();
     await expect(firstNameInput).toHaveValue('John');
 
-    lastNameInput = caseSummary.locator('input').nth(2);
+    lastNameInput = caseSummary.locator('input').nth(1);
     await expect(lastNameInput).toHaveValue('Doe');
 
-    emailInput = caseSummary.locator('input').nth(3);
+    emailInput = caseSummary.locator('input').nth(2);
     await expect(emailInput).toHaveValue('john@doe.com');
 
     const streetInput = page.locator('input[data-test-id="D61EBDD8A0C0CD57C22455E9F0918C65"]');

@@ -7,15 +7,17 @@ import download from 'downloadjs';
 // import SummaryList from '../../SummaryList';
 // import ActionButtonsForFileUtil from '../ActionButtonsForFileUtil';
 import './FileUtility.css';
-import { IconButton, Menu, MenuItem, Button, CircularProgress, Card } from '@mui/material';
+import { IconButton, Menu, MenuItem, Button, CircularProgress, Card, debounce } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { validateMaxSize } from '../../../helpers/attachmentHelpers';
+import { validateMaxSize } from '../../../helpers/attachmentShared';
+import { getResolvedConstantValue } from '../../../helpers/object-utils';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../../types/PConnProps';
 
 interface FileUtilityProps extends PConnProps {
   // If any, enter additional props that only exist on this component
+  caseId?: string;
 }
 
 export default function FileUtility(props: FileUtilityProps) {
@@ -23,8 +25,9 @@ export default function FileUtility(props: FileUtilityProps) {
   const SummaryList = getComponentFromMap('SummaryList');
   const ActionButtonsForFileUtil = getComponentFromMap('ActionButtonsForFileUtil');
 
-  const { getPConnect } = props;
+  const { getPConnect, caseId } = props;
   const thePConn = getPConnect();
+  const caseID = caseId ?? getResolvedConstantValue(thePConn, PCore.getConstants().CASE_INFO.CASE_INFO_ID);
   const required = true;
   const listTemp = {
     data: [],
@@ -210,7 +213,6 @@ export default function FileUtility(props: FileUtilityProps) {
 
   const getAttachments = () => {
     const attachmentUtils = PCore.getAttachmentUtils();
-    const caseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID, ''); // 2nd arg empty string until typedef marked correctly
 
     if (caseID && caseID !== '') {
       const attPromise = attachmentUtils.getCaseAttachments(caseID, thePConn.getContextName());
@@ -245,24 +247,31 @@ export default function FileUtility(props: FileUtilityProps) {
     }
   };
 
+  const debouncedGetAttachments = debounce(getAttachments, 1000);
+
   useEffect(() => {
-    getAttachments();
+    debouncedGetAttachments();
   }, []);
 
   useEffect(() => {
-    PCore.getPubSubUtils().subscribe(
-      (PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
-      getAttachments,
-      'caseAttachmentsUpdateFromCaseview'
-    );
+    const attachSubObject = {
+      matcher: 'ATTACHMENTS',
+      criteria: {
+        ID: caseID
+      }
+    };
+    const attachSubId = PCore.getMessagingServiceManager().subscribe(attachSubObject, debouncedGetAttachments, getPConnect().getContextName());
 
-    return () => {
-      PCore.getPubSubUtils().unsubscribe(
-        (PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW,
-        'caseAttachmentsUpdateFromCaseview'
-      );
+    return function cleanup() {
+      PCore.getMessagingServiceManager().unsubscribe(attachSubId);
     };
   }, []);
+
+  useEffect(() => {
+    thePConn.registerAdditionalProps({
+      lastRefreshTime: `@P ${PCore.getConstants().SUMMARY_OF_ATTACHMENTS_LAST_REFRESH_TIME}`
+    });
+  }, [thePConn]);
 
   function setNewFiles(arFiles) {
     let index = 0;
