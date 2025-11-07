@@ -1,10 +1,14 @@
 import { getLocale } from './common';
 import CurrencyMap from './CurrencyMap';
 
+const isValidValue = value => {
+  return value !== null && value !== undefined && value !== '';
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function NumberFormatter(value, { locale = 'en-US', decPlaces = 2, style = '', currency = 'USD' } = {}): string {
   const currentLocale: string | undefined = getLocale(locale);
-  if (value !== null && value !== undefined) {
+  if (isValidValue(value)) {
     return Number(value).toLocaleString(currentLocale, { minimumFractionDigits: decPlaces, maximumFractionDigits: decPlaces });
   }
   return value;
@@ -16,7 +20,7 @@ function CurrencyFormatter(
 ): string {
   const currentLocale: string | undefined = getLocale(locale);
   let formattedValue: string = value;
-  if (value !== null && value !== undefined && value !== '') {
+  if (isValidValue(value)) {
     formattedValue = NumberFormatter(value, { locale: currentLocale, decPlaces, style, currency });
 
     // For currency other than EUR, we need to determine the country code from currency code
@@ -55,7 +59,7 @@ function CurrencyFormatter(
 
 function SymbolFormatter(value, { symbol = '$', suffix = true, locale = 'en-US' } = {}): string {
   let formattedValue: string = value;
-  if (value !== null && value !== undefined) {
+  if (isValidValue(value)) {
     formattedValue = NumberFormatter(value, { locale });
     return suffix ? `${formattedValue}${symbol}` : `${symbol}${formattedValue}`;
   }
@@ -68,5 +72,6 @@ export default {
   Decimal: (value, options) => NumberFormatter(value, options),
   'Decimal-Auto': (value, options) => NumberFormatter(value, { ...options, decPlaces: Number.isInteger(value) ? 0 : 2 }),
   Integer: (value, options) => NumberFormatter(value, { ...options, decPlaces: 0 }),
-  Percentage: (value, options) => SymbolFormatter(value, { ...options, symbol: '%' })
+  Percentage: (value, options) => SymbolFormatter(value, { ...options, symbol: '%' }),
+  isValidValue
 };
