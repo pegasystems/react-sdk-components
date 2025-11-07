@@ -1,4 +1,4 @@
-import { Link } from '@mui/material';
+import { FormControl, FormLabel, Link } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 import type { PConnFieldProps } from '../../../types/PConnProps';
@@ -53,6 +53,7 @@ interface SemanticLinkProps extends PConnFieldProps {
 export default function SemanticLink(props: SemanticLinkProps) {
   const {
     text,
+    label,
     resourcePayload = {},
     resourceParams = {},
     getPConnect,
@@ -201,8 +202,15 @@ export default function SemanticLink(props: SemanticLinkProps) {
   }
 
   return (
-    <Link component='button' {...linkComponentProps} {...restProps} onClick={openLinkClick} data-testid={testId}>
-      {text}
-    </Link>
+    <FormControl variant='standard' sx={{ display: 'flex', flexDirection: 'row' }}>
+      <FormLabel sx={{ marginRight: '2rem' }}>{label}</FormLabel>
+      {text ? (
+        <Link component='button' {...linkComponentProps} {...restProps} onClick={openLinkClick} data-testid={testId}>
+          {text}
+        </Link>
+      ) : (
+        '---'
+      )}
+    </FormControl>
   );
 }
