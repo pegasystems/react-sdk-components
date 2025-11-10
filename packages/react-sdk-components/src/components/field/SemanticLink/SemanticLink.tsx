@@ -202,7 +202,7 @@ export default function SemanticLink(props: SemanticLinkProps) {
 
   return (
     <Link component='button' {...linkComponentProps} {...restProps} onClick={openLinkClick} data-testid={testId}>
-      {text}
+      {text || '--'}
     </Link>
   );
 }
