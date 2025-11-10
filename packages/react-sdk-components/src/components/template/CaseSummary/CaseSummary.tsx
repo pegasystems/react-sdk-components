@@ -3,6 +3,8 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseSummaryProps extends PConnProps {
+  arPrimaryFields: any[];
+  arSecondaryFields: any[];
   // If any, enter additional props that only exist on this component
 }
 
@@ -11,17 +13,15 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
   const CaseSummaryFields = getComponentFromMap('CaseSummaryFields');
 
   const { getPConnect, children } = props;
+  let { arPrimaryFields = [], arSecondaryFields = [] } = props;
 
-  const thePConn = getPConnect();
-  const theConfigProps: any = thePConn.getConfigProps();
-  // const { status, showStatus } = theConfigProps;
-  const status = theConfigProps.status;
-  const showStatus = theConfigProps.showStatus;
+  const thePConn = getPConnect && getPConnect();
+  const theConfigProps: any = thePConn?.getConfigProps();
+
+  const status = theConfigProps?.status;
+  const showStatus = theConfigProps?.showStatus;
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'ModalContainer';
-
-  let arPrimaryFields: any[] = [];
-  let arSecondaryFields: any[] = [];
 
   function prepareComponentInCaseSummary(pConnectMeta, getPConnect) {
     const { config, children } = pConnectMeta;
@@ -54,22 +54,24 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
     return summaryFieldChildren ? convertChildrenToSummaryData(summaryFieldChildren?.getChildren()) : undefined;
   }
 
-  for (const child of children as ReactElement[]) {
-    const childPConn = (child as ReactElement).props.getPConnect();
-    const childPConnData = childPConn.resolveConfigProps(childPConn.getRawMetadata());
-    if (childPConnData.name.toLowerCase() === 'primary fields') {
-      arPrimaryFields = childPConnData.children;
-      arPrimaryFields.forEach(field => {
-        if (field.config?.value && typeof field.config?.value === 'string') {
-          field.config.value = localizedVal(field.config.value, localeCategory);
-        }
-      });
-    } else if (childPConnData.name.toLowerCase() === 'secondary fields') {
-      const secondarySummaryFields = prepareCaseSummaryData(childPConn);
-      arSecondaryFields = childPConnData.children;
-      arSecondaryFields.forEach((field, index) => {
-        field.config.displayLabel = secondarySummaryFields[index]?.value?.props?.label;
-      });
+  if (arPrimaryFields.length === 0 && arSecondaryFields.length === 0) {
+    for (const child of children as ReactElement[]) {
+      const childPConn = (child as ReactElement).props.getPConnect();
+      const childPConnData = childPConn.resolveConfigProps(childPConn.getRawMetadata());
+      if (childPConnData.name.toLowerCase() === 'primary fields') {
+        arPrimaryFields = childPConnData.children;
+        arPrimaryFields.forEach(field => {
+          if (field.config?.value && typeof field.config?.value === 'string') {
+            field.config.value = localizedVal(field.config.value, localeCategory);
+          }
+        });
+      } else if (childPConnData.name.toLowerCase() === 'secondary fields') {
+        const secondarySummaryFields = prepareCaseSummaryData(childPConn);
+        arSecondaryFields = childPConnData.children;
+        arSecondaryFields.forEach((field, index) => {
+          field.config.displayLabel = secondarySummaryFields[index]?.value?.props?.label;
+        });
+      }
     }
   }
 

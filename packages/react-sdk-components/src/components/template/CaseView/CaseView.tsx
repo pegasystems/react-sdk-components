@@ -9,6 +9,7 @@ import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
+import { prepareCaseSummaryData } from '../utils';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -49,6 +50,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
   const VerticalTabs = getComponentFromMap('VerticalTabs');
   const DeferLoad = getComponentFromMap('DeferLoad');
+  const CaseSummary = getComponentFromMap('CaseSummary');
 
   const {
     getPConnect,
@@ -88,11 +90,16 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     return null;
   }
 
+  const theSummaryRegion = children && children[0];
+
+  const data = prepareCaseSummaryData(theSummaryRegion);
+  const primarySummaryFields = data.primarySummaryFields;
+  const secondarySummaryFields = data.secondarySummaryFields;
+
   const theStagesRegion = getChildRegionByName('stages');
   const theTodoRegion = getChildRegionByName('todo');
   const theUtilitiesRegion = getChildRegionByName('utilities');
   const theTabsRegion = getChildRegionByName('tabs');
-  const theSummaryRegion = getChildRegionByName('summary');
 
   let iconForCaseType = caseTypeIcon ? caseTypeIcon.replace('pi pi-', '') : icon;
 
@@ -230,7 +237,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
               />
               {getActionButtonsHtml()}
               <Divider />
-              {theSummaryRegion}
+              <CaseSummary arPrimaryFields={primarySummaryFields} arSecondaryFields={secondarySummaryFields}></CaseSummary>
               <Divider />
               {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
             </Card>
