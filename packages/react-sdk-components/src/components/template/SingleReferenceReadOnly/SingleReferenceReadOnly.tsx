@@ -1,3 +1,4 @@
+import { FormControl, FormLabel } from '@mui/material';
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface SingleReferenceReadOnlyProps extends PConnProps {
@@ -59,5 +60,12 @@ export default function SingleReferenceReadOnly(props: SingleReferenceReadOnlyPr
     {}
   ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
 
-  return <>{component}</>;
+  return (
+    <>
+      <FormControl variant='standard' sx={{ display: 'flex', flexDirection: 'row' }}>
+        <FormLabel sx={{ marginRight: '2rem' }}>{label}</FormLabel>
+        {component}
+      </FormControl>
+    </>
+  );
 }

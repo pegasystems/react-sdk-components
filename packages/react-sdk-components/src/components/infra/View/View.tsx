@@ -56,7 +56,7 @@ export default function View(props: PropsWithChildren<ViewProps>) {
   const localeUtils = PCore.getLocaleUtils();
 
   const isEmbeddedDataView = mode === 'editable'; // would be better to check the reference child for `context` attribute if possible
-  if ((isEmbeddedDataView && showLabel === undefined) || (template === 'DataReference' && inheritedProps.showLabel === undefined)) {
+  if (isEmbeddedDataView && showLabel === undefined) {
     showLabel = true;
   }
 
