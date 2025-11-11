@@ -6,8 +6,8 @@ import { useTheme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { Utils } from '../../../components/helpers/utils';
-import type { PConnProps } from '../../../types/PConnProps';
+import { Utils } from '../../components/helpers/utils';
+import type { PConnProps } from '../../types/PConnProps';
 
 import './ToDo.css';
 
