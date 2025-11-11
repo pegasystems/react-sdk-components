@@ -101,7 +101,7 @@ import TextArea from './components/field/TextArea';
 import TextContent from './components/field/TextContent';
 import TextInput from './components/field/TextInput/TextInput';
 import Time from './components/field/Time';
-// import ToDo from './components/widget/ToDo';
+import ToDo from './components/widget/ToDo';
 import TwoColumn from './components/template/TwoColumn/TwoColumn';
 import TwoColumnPage from './components/template/TwoColumn/TwoColumnPage';
 import TwoColumnTab from './components/template/TwoColumn/TwoColumnTab';
@@ -116,7 +116,6 @@ import WideNarrowForm from './components/template/WideNarrow/WideNarrowForm';
 import WideNarrowPage from './components/template/WideNarrow/WideNarrowPage';
 import WssNavBar from './components/template/WssNavBar/WssNavBar';
 import WssQuickCreate from './components/designSystemExtension/WssQuickCreate';
-import ToDo from './samples/mediacoOverrides/ToDo';
 
 // pegaSdkComponentMap is the JSON object where we'll store the components that are
 // the default implementations provided by the SDK. These will be used if there isn't

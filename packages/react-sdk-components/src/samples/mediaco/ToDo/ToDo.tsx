@@ -1,8 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, CardContent, CardHeader, Avatar, Typography, Badge, List, ListItem, ListItemText } from '@mui/material';
-// import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
-// import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { useTheme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
@@ -82,12 +80,9 @@ function getID(assignment: any) {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2),
     paddingBottom: theme.spacing(1),
     borderRadius: '8px'
-    // borderLeft: '6px solid',
-    // borderLeftColor: theme.palette.primary.light
   },
   avatar: {
     backgroundColor: theme.palette.primary.light,
@@ -141,10 +136,6 @@ export default function ToDo(props: ToDoProps) {
   const currentUserInitials = Utils.getInitials(currentUser);
   const assignmentsSource = datasource?.source || myWorkList?.source;
 
-  // const [bShowMore, setBShowMore] = useState(true);
-  // const [showSnackbar, setShowSnackbar] = useState(false);
-  // const [snackbarMessage, setSnackbarMessage]: any = useState('');
-
   const [assignments, setAssignments] = useState<any[]>(initAssignments());
 
   const thePConn = getPConnect();
@@ -153,8 +144,6 @@ export default function ToDo(props: ToDoProps) {
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Todo';
-  // const showlessLocalizedValue = localizedVal('show_less', 'CosmosFields');
-  // const showMoreLocalizedValue = localizedVal('show_more', 'CosmosFields');
   const canPerform = assignments?.[0]?.canPerform === 'true' || assignments?.[0]?.canPerform === true;
   const [count, setCount] = useState(0);
 
@@ -200,34 +189,8 @@ export default function ToDo(props: ToDoProps) {
 
   function showToast(message: string) {
     const theMessage = `Assignment: ${message}`;
-
     console.error(theMessage);
-    // setSnackbarMessage(message);
-    // setShowSnackbar(true);
   }
-
-  // function handleSnackbarClose(event: React.SyntheticEvent<any> | Event, reason?: string) {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-  //   setShowSnackbar(false);
-  // }
-
-  // function _showMore() {
-  //   setBShowMore(false);
-  //   if (type === CONSTS.WORKLIST && count && count > assignments.length && !assignmentsSource) {
-  //     fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, count, false, context).then(response => {
-  //       setAssignments(response.data);
-  //     });
-  //   } else {
-  //     setAssignments(assignmentsSource);
-  //   }
-  // }
-
-  // function _showLess() {
-  //   setBShowMore(true);
-  //   setAssignments(assignments => assignments.slice(0, 3));
-  // }
 
   function clickGo(assignment) {
     const id = getAssignmentId(assignment);
@@ -335,17 +298,12 @@ export default function ToDo(props: ToDoProps) {
       </List>
     </>
   );
-  console.log('ToDo Rendered', assignments);
+
   return (
     <>
       {type === CONSTS.WORKLIST && assignments?.length > 0 && (
         <Card className={classes.root}>
-          {showTodoList && (
-            <CardHeader
-              title={<Typography variant='h6'>{headerText}&nbsp;&nbsp;&nbsp;</Typography>}
-              // avatar={<Avatar className={classes.avatar}>{currentUserInitials}</Avatar>}
-            />
-          )}
+          {showTodoList && <CardHeader title={<Typography variant='h6'>{headerText}&nbsp;&nbsp;&nbsp;</Typography>} />}
           <CardContent style={{ padding: 0 }}>
             <List>
               {assignments.map(assignment => (
@@ -354,9 +312,6 @@ export default function ToDo(props: ToDoProps) {
                   dense
                   onClick={() => clickGo(assignment)}
                   secondaryAction={
-                    // <IconButton onClick={() => clickGo(assignment)} size='large'>
-                    //   <ArrowForwardIosOutlinedIcon />
-                    // </IconButton>
                     <Button className={classes.getStartedButton} color='primary' variant='contained' onClick={() => clickGo(assignment)}>
                       Get started
                     </Button>
@@ -372,30 +327,6 @@ export default function ToDo(props: ToDoProps) {
 
       {type === CONSTS.TODO && !isConfirm && <Card className={classes.todoWrapper}>{toDoContent}</Card>}
       {type === CONSTS.TODO && isConfirm && <>{toDoContent}</>}
-
-      {/* {getCount() > 3 && (
-        <Box display='flex' justifyContent='center'>
-          {bShowMore ? (
-            <Button color='primary' onClick={_showMore}>
-              {showMoreLocalizedValue === 'show_more' ? 'Show more' : showMoreLocalizedValue}
-            </Button>
-          ) : (
-            <Button onClick={_showLess}>{showlessLocalizedValue === 'show_less' ? 'Show less' : showlessLocalizedValue}</Button>
-          )}
-        </Box>
-      )} */}
-
-      {/* <Snackbar
-        open={showSnackbar}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        action={
-          <IconButton size='small' aria-label='close' color='inherit' onClick={handleSnackbarClose}>
-            <CloseIcon fontSize='small' />
-          </IconButton>
-        }
-      /> */}
     </>
   );
 }
