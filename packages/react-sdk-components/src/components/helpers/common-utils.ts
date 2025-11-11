@@ -9,8 +9,7 @@ export function isEmptyObject(obj: object): boolean {
  * @returns The localized string or the key itself if no translation is found
  */
 export function getGenericFieldsLocalizedValue(path: string, key: string): string {
-  const GENERIC_BUNDLE_KEY = PCore.getLocaleUtils().GENERIC_BUNDLE_KEY;
-  const localeStore = PCore.getLocaleUtils().localeStore[GENERIC_BUNDLE_KEY];
+  const localeStore = PCore.getLocaleUtils().localeStore;
 
   if (!localeStore) return key;
 

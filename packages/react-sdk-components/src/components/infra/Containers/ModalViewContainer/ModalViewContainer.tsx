@@ -131,7 +131,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
   const [cancelAlertProps, setCancelAlertProps] = useState({});
   const [isMultiRecordData, setMultiRecordData] = useState(false);
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
-  const localeCategory = 'Data Object';
+  const localeCategory = 'ModalContainer';
 
   const ERROR_WHILE_RENDERING = 'ERROR_WHILE_RENDERING';
 
@@ -255,7 +255,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         const headingValue =
           isDataObject || isMultiRecord
             ? getModalHeading(dataObjectAction)
-            : determineModalHeaderByAction(actionName, caseTypeName, ID, `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase());
+            : determineModalHeaderByAction(actionName, caseTypeName, ID, pConnect?.getCaseLocaleReference());
 
         let arChildrenAsReact: any[] = [];
 

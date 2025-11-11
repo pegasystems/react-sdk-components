@@ -244,7 +244,7 @@ export default function ToDo(props: ToDoProps) {
     if (isDesktop) {
       return (
         <>
-          {localizedVal('Task in', localeCategory)}
+          {localizedVal('In', localeCategory)}
           {renderTaskId(type, getPConnect, showTodoList, assignment)}
           {type === CONSTS.WORKLIST && assignment.status ? `\u2022 ` : undefined}
           {type === CONSTS.WORKLIST && assignment.status ? <span className='psdk-todo-assignment-status'>{assignment.status}</span> : undefined}
@@ -281,7 +281,7 @@ export default function ToDo(props: ToDoProps) {
             </Avatar>
             <div style={{ display: 'block' }}>
               <Typography variant='h6'>{assignment?.name}</Typography>
-              {`${localizedVal('Task in', localeCategory)} ${renderTaskId(type, getPConnect, showTodoList, assignment)} \u2022  ${localizedVal(
+              {`${localizedVal('In', localeCategory)} ${renderTaskId(type, getPConnect, showTodoList, assignment)} \u2022  ${localizedVal(
                 'Urgency',
                 localeCategory
               )}  ${getPriority(assignment)}`}

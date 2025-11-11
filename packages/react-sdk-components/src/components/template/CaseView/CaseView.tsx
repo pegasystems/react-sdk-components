@@ -9,7 +9,6 @@ import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnProps } from '../../../types/PConnProps';
-import { prepareCaseSummaryData } from '../utils';
 
 interface CaseViewProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -50,7 +49,6 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
   const VerticalTabs = getComponentFromMap('VerticalTabs');
   const DeferLoad = getComponentFromMap('DeferLoad');
-  const CaseSummary = getComponentFromMap('CaseSummary');
 
   const {
     getPConnect,
@@ -73,7 +71,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'CaseView';
-  const localeKey = `${caseTypeID}!CASE!${caseTypeName}`.toUpperCase();
+  const localeKey = thePConn?.getCaseLocaleReference();
   /**
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
@@ -90,12 +88,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     return null;
   }
 
-  const theSummaryRegion = children && children[0];
-
-  const data = prepareCaseSummaryData(theSummaryRegion);
-  const primarySummaryFields = data.primarySummaryFields;
-  const secondarySummaryFields = data.secondarySummaryFields;
-
+  const theSummaryRegion = getChildRegionByName('summary');
   const theStagesRegion = getChildRegionByName('stages');
   const theTodoRegion = getChildRegionByName('todo');
   const theUtilitiesRegion = getChildRegionByName('utilities');
@@ -237,7 +230,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
               />
               {getActionButtonsHtml()}
               <Divider />
-              <CaseSummary arPrimaryFields={primarySummaryFields} arSecondaryFields={secondarySummaryFields}></CaseSummary>
+              {theSummaryRegion}
               <Divider />
               {vertTabInfo.length > 1 && <VerticalTabs tabconfig={vertTabInfo} />}
             </Card>

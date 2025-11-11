@@ -57,7 +57,7 @@ export default function Stages(props: StagesProps) {
 
   const { getPConnect, stages } = props;
   const pConn = getPConnect();
-  const key = `${pConn.getCaseInfo().getClassName()}!CASE!${pConn.getCaseInfo().getName()}`.toUpperCase();
+  const key = getPConnect()?.getCaseLocaleReference();
 
   const filteredStages = getFilteredStages(stages);
   const currentStageID = pConn.getValue(PCore.getConstants().CASE_INFO.STAGEID, ''); // 2nd arg empty string until typedef allows optional
