@@ -199,7 +199,8 @@ export function resolveReferenceFields(
         ...preset,
         config: {
           ...preset.config,
-          displayMode: 'DISPLAY_ONLY'
+          displayMode: 'DISPLAY_ONLY',
+          contextName: pConnect.getContextName()
         }
       },
       useCustomContext: item

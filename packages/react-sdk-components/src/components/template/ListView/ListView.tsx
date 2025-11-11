@@ -1212,7 +1212,7 @@ export default function ListView(props: ListViewProps) {
                 </TableBody>
               </Table>
               {(!arRows || arRows.length === 0) && (
-                <div className='no-records'>{getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}</div>
+                <div className='no-records'>{getGenericFieldsLocalizedValue('COSMOSFIELDS.lists', 'No records found.')}</div>
               )}
             </TableContainer>
           )}

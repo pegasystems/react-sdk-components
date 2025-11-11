@@ -180,7 +180,9 @@ export default function ToDo(props: ToDoProps) {
   };
 
   const getAssignmentName = assignment => {
-    return type === CONSTS.TODO ? assignment.name : assignment.stepName;
+    return type === CONSTS.TODO
+      ? localizedVal(assignment.name, '', PCore.getLocaleUtils().getCaseLocaleReference(assignment.classname))
+      : localizedVal(assignment.stepName, '', PCore.getLocaleUtils().getCaseLocaleReference(assignment.classname));
   };
 
   function showToast(message: string) {
@@ -263,13 +265,16 @@ export default function ToDo(props: ToDoProps) {
   };
 
   const getListItemComponent = assignment => {
+    const caseLocaleRef = PCore.getLocaleUtils().getCaseLocaleReference(assignment.classname);
     if (isDesktop) {
       return (
         <>
-          {localizedVal('Task in', localeCategory)}
+          {localizedVal('In', localeCategory)}
           {renderTaskId(type, getPConnect, showTodoList, assignment)}
           {type === CONSTS.WORKLIST && assignment.status ? `\u2022 ` : undefined}
-          {type === CONSTS.WORKLIST && assignment.status ? <span className='psdk-todo-assignment-status'>{assignment.status}</span> : undefined}
+          {type === CONSTS.WORKLIST && assignment.status ? (
+            <span className='psdk-todo-assignment-status'>{localizedVal(assignment.status, '', caseLocaleRef)}</span>
+          ) : undefined}
           {` \u2022  ${localizedVal('Urgency', localeCategory)}  ${getPriority(assignment)}`}
         </>
       );
@@ -302,8 +307,8 @@ export default function ToDo(props: ToDoProps) {
               {currentUserInitials}
             </Avatar>
             <div style={{ display: 'block' }}>
-              <Typography variant='h6'>{assignment?.name}</Typography>
-              {`${localizedVal('Task in', localeCategory)} ${getID(assignment)} \u2022  ${localizedVal(
+              <Typography variant='h6'>{localizedVal(assignment?.name, localeCategory)}</Typography>
+              {`${localizedVal('In', localeCategory)} ${getID(assignment)} \u2022  ${localizedVal(
                 'Urgency',
                 localeCategory
               )}  ${getPriority(assignment)}`}

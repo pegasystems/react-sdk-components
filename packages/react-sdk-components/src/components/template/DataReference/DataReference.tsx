@@ -88,8 +88,7 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
   let firstChildPConnect;
 
   const localizedPlaceholderOption = placeholder => {
-    const { GENERIC_BUNDLE_KEY } = PCore.getLocaleUtils?.() ?? {};
-    const localizedDefaultPlaceholder = pConn.getLocalizedValue('select_placeholder_default', 'CosmosFields', GENERIC_BUNDLE_KEY);
+    const localizedDefaultPlaceholder = pConn.getLocalizedValue('select_placeholder_default', '', 'CosmosFields');
     // If we have a placeholder, push that option in the list of items
     if (placeholder === 'Select...' && localizedDefaultPlaceholder !== 'select_placeholder_default') {
       return localizedDefaultPlaceholder;

@@ -715,7 +715,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         </Table>
         {((readOnlyMode && (!rowData || rowData?.length === 0)) || (editableMode && (!referenceList || referenceList?.length === 0))) && (
           <div className='no-records' id='no-records'>
-            {getGenericFieldsLocalizedValue('CosmosFields.fields.lists', 'No records found.')}
+            {getGenericFieldsLocalizedValue('COSMOSFIELDS.lists', 'No records found.')}
           </div>
         )}
       </TableContainer>

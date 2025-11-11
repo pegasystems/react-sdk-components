@@ -96,7 +96,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'Messages';
 
-  const key = `${thePConn.getCaseInfo().getClassName()}!CASE!${thePConn.getCaseInfo().getName()}`.toUpperCase();
+  const key = getPConnect()?.getCaseLocaleReference();
   const classes = useStyles();
 
   function getBuildName(): string {
@@ -218,7 +218,7 @@ export const FlowContainer = (props: FlowContainerProps) => {
               <CardHeader
                 id='assignment-header'
                 title={<Typography variant='h6'>{localizedVal(containerName, undefined, key)}</Typography>}
-                subheader={`${localizedVal('Task in', 'Todo')} ${caseId} \u2022 ${localizedVal('Priority', 'Todo')} ${urgency}`}
+                subheader={`${localizedVal('In', 'Todo')} ${caseId} \u2022 ${localizedVal('Priority', 'Todo')} ${urgency}`}
                 avatar={<Avatar className={`${classes.avatar} psdk-avatar`}>{operatorInitials}</Avatar>}
               />
               {displayPageMessages()}
