@@ -96,6 +96,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(0)
   },
   dlgContent: {
+    paddingTop: `${theme.spacing(1)} !important`,
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     marginTop: theme.spacing(0),
@@ -309,7 +310,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
 
   return (
     <>
-      <Dialog open={bShowModal} aria-labelledby='form-dialog-title'>
+      <Dialog open={bShowModal} aria-labelledby='form-dialog-title' maxWidth={false}>
         <DialogTitle id='form-dialog-title' className={`${classes.dlgTitle} psdk-dialog-title`}>
           {title}
         </DialogTitle>
