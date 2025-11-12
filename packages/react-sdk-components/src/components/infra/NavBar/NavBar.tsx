@@ -133,9 +133,19 @@ export default function NavBar(props: NavBarProps) {
   const portalLogoImage = Utils.getIconPath(Utils.getSDKStaticConentUrl()).concat('pzpega-logo-mark.svg');
   const portalOperator = PCore.getEnvironmentInfo().getOperatorName();
   const portalApp = PCore.getEnvironmentInfo().getApplicationLabel();
-
+  // @ts-ignore
+  const localeReference = PCore.getLocaleUtils().getPortalLocaleReference() || pConn.getValue('.pyLocaleReference');
   useEffect(() => {
-    setNavPages(JSON.parse(JSON.stringify(pages)));
+    const updatedPages = pages.map((page: any) => {
+      const destinationObject: any = {};
+      pConn.resolveConfigProps(
+        { defaultHeading: page.pyDefaultHeading || page.pyLabel, localeReference: page.pyLocalizationReference },
+        destinationObject
+      );
+      const name = localeUtils.getLocaleValue(destinationObject.defaultHeading, '', destinationObject.localeReference || localeReference);
+      return { ...page, name };
+    });
+    setNavPages(updatedPages);
   }, [pages]);
 
   function navPanelButtonClick(oPageData: any) {
@@ -249,7 +259,7 @@ export default function NavBar(props: NavBarProps) {
         {navPages.map(page => (
           <ListItemButton onClick={() => navPanelButtonClick(page)} key={page.pyLabel}>
             <ListItemIcon>{iconMap[page.pxPageViewIcon]}</ListItemIcon>
-            <ListItemText primary={localeUtils.getLocaleValue(page.pyLabel, '', localeUtils.getCaseLocaleReference(page.pyClassName))} />
+            <ListItemText primary={page.name} />
           </ListItemButton>
         ))}
       </List>

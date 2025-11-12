@@ -33,8 +33,8 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
 
   const actionsAPI = thePConn.getActionsApi();
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localizationService = thePConn.getLocalizationService();
   const localeCategory = 'Assignment';
-  const localeReference = getPConnect()?.getCaseLocaleReference();
 
   // store off bound functions to above pointers
   const finishAssignment = actionsAPI.finishAssignment.bind(actionsAPI);
@@ -76,7 +76,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   function getStepsInfo(steps, formedSteps: any = []) {
     steps.forEach(step => {
       if (step.name) {
-        step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, localeReference);
+        step.name = localizationService.getLocalizedText(step.name);
       }
       if (step.steps) {
         formedSteps = getStepsInfo(step.steps, formedSteps);

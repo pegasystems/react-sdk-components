@@ -57,14 +57,13 @@ export default function Stages(props: StagesProps) {
 
   const { getPConnect, stages } = props;
   const pConn = getPConnect();
-  const key = getPConnect()?.getCaseLocaleReference();
-
+  const localizationService = pConn.getLocalizationService();
   const filteredStages = getFilteredStages(stages);
   const currentStageID = pConn.getValue(PCore.getConstants().CASE_INFO.STAGEID, ''); // 2nd arg empty string until typedef allows optional
   const stagesObj = filteredStages.map((stage, index, arr) => {
     const theID = stage.ID || stage.id;
     return {
-      name: PCore.getLocaleUtils().getLocaleValue(stage.name, undefined, key),
+      name: localizationService.getLocalizedText(stage.name),
       id: theID,
       complete: stage.visited_status === 'completed',
       current: theID === currentStageID,

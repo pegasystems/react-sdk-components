@@ -70,8 +70,9 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const editAction = availableActions.find(action => action.ID === 'pyUpdateCaseDetails');
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  const localizationService = thePConn.getLocalizationService();
   const localeCategory = 'CaseView';
-  const localeKey = thePConn?.getCaseLocaleReference();
+
   /**
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
@@ -214,7 +215,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
                 className={classes.caseViewHeader}
                 title={
                   <Typography variant='h6' component='div' id='case-name'>
-                    {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
+                    {localizationService.getLocalizedText(header)}
                   </Typography>
                 }
                 subheader={
