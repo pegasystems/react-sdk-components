@@ -38,6 +38,11 @@ export default function Reference(props: ReferenceProps) {
     pageReference: context && context.startsWith('@CLASS') ? '' : context
   });
 
+  if (referenceConfig.inheritedProps && referenceConfig.inheritedProps.length > 0) {
+    const inheritedProps = pConnect.getInheritedProps();
+    referenceConfig.inheritedProps = Object.keys(inheritedProps).map(prop => ({ prop, value: inheritedProps[prop] }));
+  }
+
   viewComponent.props.getPConnect().setInheritedConfig({
     ...referenceConfig,
     readOnly,
