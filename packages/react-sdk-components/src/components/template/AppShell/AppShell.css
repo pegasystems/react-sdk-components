@@ -33,7 +33,3 @@
 .progress-spinner {
   text-align: center;
 }
-
-::ng-deep snack-bar-container.snackbar-newline {
-  white-space: pre-line;
-}
