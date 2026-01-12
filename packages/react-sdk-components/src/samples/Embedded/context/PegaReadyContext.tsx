@@ -33,6 +33,8 @@ interface PegaContextProps {
   rootPConnect?: typeof PConnect; // Function to get Pega Connect object, if available
   createCase: (mashupCaseType: string, options: CaseOptions) => Promise<void>;
   PegaContainer: React.FC;
+  language: string;
+  setLanguage: (lang: string) => void;
 }
 
 declare const myLoadMashup: any;
@@ -52,11 +54,14 @@ export const PegaReadyProvider: React.FC<React.PropsWithChildren<PegaReadyProvid
   }>({});
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [language, setLanguage] = useState<string>('en-US');
 
   const startMashup = async () => {
     try {
       PCore.onPCoreReady(async renderObj => {
         console.log(`PCore ready!`);
+
+        await PCore.getLocaleUtils().loadLocaleResources(['fr-CA', 'th-TH']);
 
         const theComponentMap = await getSdkComponentMap(localSdkComponentMap);
         console.log(`SdkComponentMap initialized`, theComponentMap);
@@ -131,7 +136,7 @@ export const PegaReadyProvider: React.FC<React.PropsWithChildren<PegaReadyProvid
   };
 
   return (
-    <PegaContext.Provider value={{ isPegaReady, rootPConnect, createCase, PegaContainer }}>
+    <PegaContext.Provider value={{ isPegaReady, rootPConnect, createCase, PegaContainer, language, setLanguage }}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />

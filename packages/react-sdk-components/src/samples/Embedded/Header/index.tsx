@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { makeStyles } from '@mui/styles';
+import LanguageToggle from '../../../components/LanguageToggle';
+import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -156,7 +158,10 @@ export default function Header() {
               </a>
             </li>
             <li>
-              <a href='/' className='profile-link' aria-label='User Profile'>
+              <LanguageToggle />
+            </li>
+            <li>
+              <a onClick={() => logout()} className='profile-link' aria-label='User Profile'>
                 <img src='./assets/img/UserProfile.png' alt='User Profile' className={classes.profileAvatar} />
               </a>
             </li>
