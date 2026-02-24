@@ -88,8 +88,9 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   }
 
   const scrollId = window.location.href.includes('embedded') ? '#pega-part-of-page' : '#portal';
+  const currentAssignmentViewName = getPConnect().getCaseInfo().getCurrentAssignmentViewName();
   useScrolltoTop(scrollId, children);
-  useFocusFirstField('Assignment', children);
+  useFocusFirstField('Assignment', currentAssignmentViewName);
 
   useEffect(() => {
     if (children) {
