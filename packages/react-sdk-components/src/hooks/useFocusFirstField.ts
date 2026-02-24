@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
  */
 const useFocusFirstField = (id, children) => {
   // Track the unique identity (id or name) of the first field we focused
-  const lastFirstFieldIdentifier = useRef(null);
+  const prevFirstFieldId = useRef(null);
 
   useEffect(() => {
     const assignment = document.getElementById(id);
@@ -20,7 +20,7 @@ const useFocusFirstField = (id, children) => {
         const currentIdentifier = firstElement.id || firstElement.name || firstElement;
 
         // If the first field's identity has changed, it means we navigated to a new view
-        if (lastFirstFieldIdentifier.current !== currentIdentifier) {
+        if (prevFirstFieldId.current !== currentIdentifier) {
           // Use setTimeout to defer focus slightly.
           // This ensures that after a "Submit" click, React has fully committed the
           // new DOM and the browser's native click events have finished resolving.
@@ -28,13 +28,13 @@ const useFocusFirstField = (id, children) => {
             firstElement.focus();
           }, 0);
 
-          // Update the ref. Now, if the user adds/edits a record in THIS view,
+          // Update the ref. Now, if the user adds/edits a record in this view,
           // the identifier will match, and the hook will safely do nothing.
-          lastFirstFieldIdentifier.current = currentIdentifier;
+          prevFirstFieldId.current = currentIdentifier;
         }
       } else {
         // If the new view is read-only (no inputs found), reset the tracker
-        lastFirstFieldIdentifier.current = null;
+        prevFirstFieldId.current = null;
       }
     }
   }, [id, children]);
