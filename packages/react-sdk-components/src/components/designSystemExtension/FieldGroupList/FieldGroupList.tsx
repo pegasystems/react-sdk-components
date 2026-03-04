@@ -24,7 +24,7 @@ export default function FieldGroupList(props: FieldGroupListProps) {
       <Grid2 style={{ width: '100%' }}>
         <Grid2 container spacing={1}>
           {props.items.map(item => (
-            <Grid2 style={{ width: '100%' }}>
+            <Grid2 key={item.name} style={{ width: '100%' }}>
               <b>{item.name}</b>
               {props.onDelete && (
                 <button
