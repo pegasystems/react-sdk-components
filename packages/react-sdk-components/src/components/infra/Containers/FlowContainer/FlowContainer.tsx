@@ -22,11 +22,10 @@ interface FlowContainerProps extends PConnProps {
   activeContainerItemID: string;
 }
 
-//
-// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
-// Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
-// is totally at your own risk.
-//
+/**
+ * WARNING: This file is part of the infrastructure component responsible for working with Redux and managing the creation and update of Redux containers and PConnect.
+ * You may override Material components within this component if needed, but do not modify any container-related logic. Changing this logic can lead to unexpected behavior.
+ */
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -13,6 +13,11 @@ import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_ma
 import { getBanners } from '../../../helpers/case-utils';
 import type { PConnProps } from '../../../../types/PConnProps';
 
+/**
+ * WARNING: This file is part of the infrastructure component responsible for working with Redux and managing the creation and update of Redux containers and PConnect.
+ * You may override Material components within this component if needed, but do not modify any container-related logic. Changing this logic can lead to unexpected behavior.
+ */
+
 interface ModalViewContainerProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   loadingInfo?: string;
