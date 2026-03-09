@@ -13,6 +13,7 @@ interface DeferLoadProps extends PConnProps {
   isTab: boolean;
   deferLoadId: string;
   lastUpdateCaseTime: any;
+  template?: string;
 }
 
 /**
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function DeferLoad(props: DeferLoadProps) {
-  const { getPConnect, name, deferLoadId, isTab, lastUpdateCaseTime } = props;
+  const { getPConnect, name, deferLoadId, isTab, lastUpdateCaseTime, template } = props;
   const [content, setContent] = useState<any>(null);
   const [isLoading, setLoading] = useState(true);
   const [currentLoadedAssignment, setCurrentLoadedAssignment] = useState('');
@@ -74,7 +75,7 @@ export default function DeferLoad(props: DeferLoadProps) {
     updateData: isContainerPreview
   });
 
-  const onResponse = data => {
+  const onResponse = (data: any, isEditable = false) => {
     setLoading(false);
     if (deferLoadId) {
       PCore.getDeferLoadManager().start(
@@ -91,11 +92,16 @@ export default function DeferLoad(props: DeferLoadProps) {
         meta: data,
         options: {
           context: pConnect.getContextName(),
-          pageReference: pConnect.getPageReference()
+          pageReference: pConnect.getPageReference(),
+          target: pConnect.getTarget(),
+          hasForm: true,
+          viewName: (pConnect as any).viewName
         }
       };
       const configObject = PCore.createPConnect(config);
-      configObject.getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
+      if (!isEditable) {
+        configObject.getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
+      }
       setContent(createElement(createPConnectComponent(), configObject));
       if (deferLoadId) {
         PCore.getDeferLoadManager().stop(deferLoadId, getPConnect().getContextName());
@@ -131,6 +137,18 @@ export default function DeferLoad(props: DeferLoadProps) {
         .then(data => {
           onResponse(data);
         });
+    } else if (template === 'HierarchicalForm') {
+      // HierarchicalForm tabs should resolve as view references in the case view context (read-only),
+      // not via refreshCaseView which would return them in the assignment editing context.
+      const root = {
+        config: {
+          context: pConnect.getPageReference(),
+          name,
+          type: 'view'
+        },
+        type: 'reference'
+      };
+      onResponse(root, true);
     } else {
       getPConnect()
         .getActionsApi()
