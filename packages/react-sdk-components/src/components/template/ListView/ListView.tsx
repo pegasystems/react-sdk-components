@@ -60,6 +60,7 @@ interface ListViewProps extends PConnProps {
   viewName?: string;
   showRecords?: boolean;
   displayAs?: string;
+  localeReference?: string;
 }
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -89,7 +90,8 @@ export default function ListView(props: ListViewProps) {
     viewName,
     readonlyContextList: selectedValues,
     value,
-    displayAs
+    displayAs,
+    localeReference
   } = props;
   let { showRecords } = props;
   const ref = useRef({}).current;
@@ -560,6 +562,7 @@ export default function ListView(props: ListViewProps) {
     const selectParams: any = [];
 
     myColumns.forEach(column => {
+      column.label = PCore.getLocaleUtils().getLocaleValue(column.label, localeReference);
       selectParams.push({
         field: column.id
       });
