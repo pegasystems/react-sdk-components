@@ -594,7 +594,6 @@ export default function ListView(props: ListViewProps) {
       setRows(myRows);
       setColumns(myColumns);
 
-      // Initialize selectedRowSet from readonlyContextList (selectedValues), mirroring Angular's pre-selection logic
       if (selectionMode === SELECTION_MODE.MULTI && selectedValues?.length > 0) {
         const readonlyIds = new Set<string>(selectedValues.map((element: any) => element[rowID]));
         const initialSet = new Set<string>();
