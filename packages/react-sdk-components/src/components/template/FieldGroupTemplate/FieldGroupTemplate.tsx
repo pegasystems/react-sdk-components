@@ -94,8 +94,8 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     return (
       <FieldGroupList
         items={MemoisedChildren}
-        onAdd={allowAdd !== false && allowAddEdit !== false ? addFieldGroupItem : undefined}
-        onDelete={allowDelete !== false && allowAddEdit !== false ? deleteFieldGroupItem : undefined}
+        onAdd={allowAdd ? addFieldGroupItem : undefined}
+        onDelete={allowDelete ? deleteFieldGroupItem : undefined}
       />
     );
   }
