@@ -79,7 +79,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
         pConn.getListActions().deleteEntry(index);
       }
     };
-    if (referenceList.length === 0 && allowAdd !== false && allowAddEdit !== false) {
+    if (referenceList.length === 0 && allowAdd) {
       addFieldGroupItem();
     }
 
