@@ -26,7 +26,7 @@ interface ViewProps extends PConnProps {
  * You may override Material components within this component if needed, but do not modify any container-related logic. Changing this logic can lead to unexpected behavior.
  */
 
-const FORMTEMPLATES = ['OneColumn', 'TwoColumn', 'DefaultForm', 'WideNarrow', 'NarrowWide'];
+const FORMTEMPLATES = ['OneColumn', 'TwoColumn', 'DefaultForm', 'WideNarrow', 'NarrowWide', 'HierarchicalForm'];
 const NO_HEADER_TEMPLATES = [
   'SubTabs',
   'SimpleTable',
