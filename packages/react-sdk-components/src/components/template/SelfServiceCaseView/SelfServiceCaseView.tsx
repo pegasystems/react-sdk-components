@@ -29,6 +29,16 @@ const useStyles = makeStyles(theme => ({
   },
   caseViewIconImage: {
     filter: 'var(--svg-color)'
+  },
+  selfServiceCaseViewHeader: {
+    margin: '10px 8px 0px 8px',
+    height: '50px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.getContrastText(theme.palette.primary.light),
+    padding: '0 8px'
   }
 }));
 
@@ -86,11 +96,15 @@ export default function SelfServiceCaseView(props) {
     return false;
   };
 
+  const showSummary = bShowSummaryRegion && (primarySummaryFields.length > 0 || secondarySummaryFields.length > 0);
+  const showUtilities = bShowUtilitiesRegion && isUtilitiesRegionNotEmpty();
+  const centerSize = 12 - (showSummary ? 3 : 0) - (showUtilities ? 3 : 0);
+
   return (
     <div>
-      {bShowCaseActions && (
-        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', margin: '10px' }}>
-          <div>{PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}</div>
+      <div className={classes.selfServiceCaseViewHeader}>
+        <div>{PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}</div>
+        {bShowCaseActions && (
           <CaseViewActionsMenu
             getPConnect={getPConnect}
             availableActions={availableActions}
@@ -98,12 +112,12 @@ export default function SelfServiceCaseView(props) {
             caseTypeName={caseTypeName}
             caseTypeID={caseTypeID}
           />
-        </div>
-      )}
+        )}
+      </div>
       <div>
         <Grid2 container>
-          <Grid2 size={{ xs: 3 }}>
-            {bShowSummaryRegion && (primarySummaryFields.length > 0 || secondarySummaryFields.length > 0) && (
+          {showSummary && (
+            <Grid2 size={{ xs: 3 }}>
               <div>
                 <Card className={classes.root}>
                   <CardHeader
@@ -129,15 +143,15 @@ export default function SelfServiceCaseView(props) {
                   <Divider />
                 </Card>
               </div>
-            )}
-          </Grid2>
+            </Grid2>
+          )}
 
-          <Grid2 size={{ xs: 6 }}>
+          <Grid2 size={{ xs: centerSize }}>
             {bShowCaseLifecycle && renderedRegions.stages}
             {renderedRegions.todo}
           </Grid2>
 
-          {bShowUtilitiesRegion && isUtilitiesRegionNotEmpty() && <Grid2 size={{ xs: 3 }}>{renderedRegions.utilities}</Grid2>}
+          {showUtilities && <Grid2 size={{ xs: 3 }}>{renderedRegions.utilities}</Grid2>}
         </Grid2>
       </div>
     </div>
