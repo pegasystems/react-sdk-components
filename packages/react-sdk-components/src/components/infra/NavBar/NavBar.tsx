@@ -148,15 +148,31 @@ export default function NavBar(props: NavBarProps) {
     setNavPages(updatedPages);
   }, [pages]);
 
+  function executeNavAction(action: any, errorMessage: string) {
+    try {
+      Promise.resolve(action()).catch(error => {
+        // User cancelling the native dirty-check popup can reject with undefined; keep current page without logging noise.
+        if (error == null) return;
+        console.error(errorMessage, error);
+      });
+    } catch (error) {
+      console.error(errorMessage, error);
+    }
+  }
+
   function navPanelButtonClick(oPageData: any) {
     const { pyClassName, pyRuleName } = oPageData;
 
-    pConn
-      .getActionsApi()
-      .showPage(pyRuleName, pyClassName)
-      .then(() => {
-        console.log(`${localizedVal('showPage completed', localeCategory)}`);
-      });
+    executeNavAction(
+      () =>
+        pConn
+          .getActionsApi()
+          .showPage(pyRuleName, pyClassName)
+          .then(() => {
+            console.log(`${localizedVal('showPage completed', localeCategory)}`);
+          }),
+      'Failed to navigate to page from NavBar.'
+    );
   }
 
   function navPanelCreateCaseType(sCaseType: string, sFlowType: string) {
@@ -166,12 +182,16 @@ export default function NavBar(props: NavBarProps) {
       flowType: sFlowType || 'pyStartCase'
     };
 
-    pConn
-      .getActionsApi()
-      .createWork(sCaseType, actionInfo)
-      .then(() => {
-        console.log(`${localizedVal('createWork completed', localeCategory)}`);
-      });
+    executeNavAction(
+      () =>
+        pConn
+          .getActionsApi()
+          .createWork(sCaseType, actionInfo)
+          .then(() => {
+            console.log(`${localizedVal('createWork completed', localeCategory)}`);
+          }),
+      'Failed to create case from NavBar.'
+    );
   }
 
   // Toggle showing the Operator buttons
