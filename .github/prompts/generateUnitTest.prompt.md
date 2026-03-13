@@ -13,7 +13,7 @@ You are writing unit tests for the React SDK Components. Follow these rules stri
 - Use **Jest** + **React Testing Library**.
 - Import from `@testing-library/react` for `render`, `screen`, `fireEvent`, `waitFor`.
 - Import `userEvent` from `@testing-library/user-event`.
-- Test file naming: `index.test.tsx` inside a directory matching the component's category structure.
+- Test file naming: `<ComponentName>.test.tsx` inside a directory matching the component's category structure.
 
 ## Rules
 
@@ -39,7 +39,7 @@ Before generating tests:
 
 Read [the TextInput component source](packages/react-sdk-components/src/components/field/TextInput/TextInput.tsx) to understand a typical component structure with imports to mock.
 
-Read [the TextInput test](packages/react-sdk-components/tests/unit/components/field/TextInput/index.test.tsx) to understand the established testing pattern: mocking `getComponentFromMap`, `handleEvent`, `getPConnect`/actions, and the AAA test structure.
+Read [the TextInput test](packages/react-sdk-components/tests/unit/components/field/TextInput/TextInput.test.tsx) to understand the established testing pattern: mocking `getComponentFromMap`, `handleEvent`, `getPConnect`/actions, and the AAA test structure.
 
 ## Verification
 
