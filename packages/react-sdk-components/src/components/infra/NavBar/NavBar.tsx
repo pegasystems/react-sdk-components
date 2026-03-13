@@ -150,12 +150,14 @@ export default function NavBar(props: NavBarProps) {
 
   function navPanelButtonClick(oPageData: any) {
     const { pyClassName, pyRuleName } = oPageData;
-
     pConn
       .getActionsApi()
       .showPage(pyRuleName, pyClassName)
       .then(() => {
         console.log(`${localizedVal('showPage completed', localeCategory)}`);
+      })
+      .catch(error => {
+        console.error('Failed to navigate to page from NavBar', error);
       });
   }
 
@@ -165,12 +167,14 @@ export default function NavBar(props: NavBarProps) {
       containerName: 'primary',
       flowType: sFlowType || 'pyStartCase'
     };
-
     pConn
       .getActionsApi()
       .createWork(sCaseType, actionInfo)
       .then(() => {
         console.log(`${localizedVal('createWork completed', localeCategory)}`);
+      })
+      .catch(error => {
+        console.error('Failed to create case from NavBar', error);
       });
   }
 
