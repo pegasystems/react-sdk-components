@@ -127,7 +127,7 @@ export function useHierarchicalForm(props: PropsWithChildren<HierarchicalFormPro
     [tabData, currentTabId]
   );
 
-  const tabItems = useMemo(() => tabData?.filter((tab: any) => tab.visibility()) ?? [], [tabData]);
+  const tabItems = useMemo(() => tabData?.filter((tab: any) => tab.visibility()) ?? [], [tabData, tabVisibilityStr]);
 
   const tabsRef = useRef(tabItems);
   tabsRef.current = tabItems;
