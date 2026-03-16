@@ -315,7 +315,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
 
   return (
     <>
-      <Dialog open={bShowModal} aria-labelledby='form-dialog-title' maxWidth={false}>
+      <Dialog open={bShowModal} aria-labelledby='form-dialog-title' maxWidth='sm' fullWidth>
         <DialogTitle id='form-dialog-title' className={`${classes.dlgTitle} psdk-dialog-title`}>
           {title}
         </DialogTitle>

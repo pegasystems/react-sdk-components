@@ -1,6 +1,5 @@
 import { Avatar, Card, CardHeader, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import Grid2 from '@mui/material/Grid2';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { prepareCaseSummaryData, filterUtilities } from '../utils';
 import { Utils } from '../../helpers/utils';
@@ -29,6 +28,16 @@ const useStyles = makeStyles(theme => ({
   },
   caseViewIconImage: {
     filter: 'var(--svg-color)'
+  },
+  selfServiceCaseViewHeader: {
+    margin: '10px 8px 0px 8px',
+    height: '50px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.getContrastText(theme.palette.primary.light),
+    padding: '0 8px'
   }
 }));
 
@@ -86,11 +95,14 @@ export default function SelfServiceCaseView(props) {
     return false;
   };
 
+  const showSummary = bShowSummaryRegion && (primarySummaryFields.length > 0 || secondarySummaryFields.length > 0);
+  const showUtilities = bShowUtilitiesRegion && isUtilitiesRegionNotEmpty();
+
   return (
     <div>
-      {bShowCaseActions && (
-        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', margin: '10px' }}>
-          <div>{PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}</div>
+      <div className={classes.selfServiceCaseViewHeader}>
+        <div>{PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}</div>
+        {bShowCaseActions && (
           <CaseViewActionsMenu
             getPConnect={getPConnect}
             availableActions={availableActions}
@@ -98,47 +110,43 @@ export default function SelfServiceCaseView(props) {
             caseTypeName={caseTypeName}
             caseTypeID={caseTypeID}
           />
+        )}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        {showSummary && (
+          <div style={{ flex: '0 0 25%' }}>
+            <Card className={classes.root}>
+              <CardHeader
+                className={classes.caseViewHeader}
+                title={
+                  <Typography variant='h6' component='div' id='case-name'>
+                    {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
+                  </Typography>
+                }
+                subheader={
+                  <Typography variant='body1' component='div' id='caseId'>
+                    {subheader}
+                  </Typography>
+                }
+                avatar={
+                  <Avatar className={classes.caseViewIconBox} variant='square'>
+                    <img src={svgCase} className={classes.caseViewIconImage} />
+                  </Avatar>
+                }
+              />
+              <Divider />
+              <CaseSummary arPrimaryFields={primarySummaryFields} arSecondaryFields={secondarySummaryFields}></CaseSummary>
+              <Divider />
+            </Card>
+          </div>
+        )}
+
+        <div style={{ flex: 1 }}>
+          {bShowCaseLifecycle && renderedRegions.stages}
+          {renderedRegions.todo}
         </div>
-      )}
-      <div>
-        <Grid2 container>
-          <Grid2 size={{ xs: 3 }}>
-            {bShowSummaryRegion && (primarySummaryFields.length > 0 || secondarySummaryFields.length > 0) && (
-              <div>
-                <Card className={classes.root}>
-                  <CardHeader
-                    className={classes.caseViewHeader}
-                    title={
-                      <Typography variant='h6' component='div' id='case-name'>
-                        {PCore.getLocaleUtils().getLocaleValue(header, '', localeKey)}
-                      </Typography>
-                    }
-                    subheader={
-                      <Typography variant='body1' component='div' id='caseId'>
-                        {subheader}
-                      </Typography>
-                    }
-                    avatar={
-                      <Avatar className={classes.caseViewIconBox} variant='square'>
-                        <img src={svgCase} className={classes.caseViewIconImage} />
-                      </Avatar>
-                    }
-                  />
-                  <Divider />
-                  <CaseSummary arPrimaryFields={primarySummaryFields} arSecondaryFields={secondarySummaryFields}></CaseSummary>
-                  <Divider />
-                </Card>
-              </div>
-            )}
-          </Grid2>
 
-          <Grid2 size={{ xs: 6 }}>
-            {bShowCaseLifecycle && renderedRegions.stages}
-            {renderedRegions.todo}
-          </Grid2>
-
-          {bShowUtilitiesRegion && isUtilitiesRegionNotEmpty() && <Grid2 size={{ xs: 3 }}>{renderedRegions.utilities}</Grid2>}
-        </Grid2>
+        {showUtilities && <div style={{ flex: '0 0 25%' }}>{renderedRegions.utilities}</div>}
       </div>
     </div>
   );

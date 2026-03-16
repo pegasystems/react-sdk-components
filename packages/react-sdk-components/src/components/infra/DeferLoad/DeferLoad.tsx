@@ -138,8 +138,6 @@ export default function DeferLoad(props: DeferLoadProps) {
           onResponse(data);
         });
     } else if (template === 'HierarchicalForm') {
-      // HierarchicalForm tabs should resolve as view references in the case view context (read-only),
-      // not via refreshCaseView which would return them in the assignment editing context.
       const root = {
         config: {
           context: pConnect.getPageReference(),
