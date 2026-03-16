@@ -60,6 +60,7 @@ interface ListViewProps extends PConnProps {
   viewName?: string;
   showRecords?: boolean;
   displayAs?: string;
+  localeReference?: string;
 }
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -89,7 +90,8 @@ export default function ListView(props: ListViewProps) {
     viewName,
     readonlyContextList: selectedValues,
     value,
-    displayAs
+    displayAs,
+    localeReference
   } = props;
   let { showRecords } = props;
   const ref = useRef({}).current;
@@ -134,6 +136,9 @@ export default function ListView(props: ListViewProps) {
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const [selectedValue, setSelectedValue] = useState(value);
+
+  // Tracks selected row keys for multi-select mode (mirrors Angular's SelectionModel)
+  const [selectedRowSet, setSelectedRowSet] = useState<Set<string>>(new Set());
 
   // This basically will hold the list of all current filters
   const filters = useRef({});
@@ -208,6 +213,7 @@ export default function ListView(props: ListViewProps) {
               getPConnect().getListActions().setSelectedRows({});
             } else {
               getPConnect().getListActions().clearSelectedRows();
+              setSelectedRowSet(new Set());
             }
           }
         }
@@ -560,6 +566,7 @@ export default function ListView(props: ListViewProps) {
     const selectParams: any = [];
 
     myColumns.forEach(column => {
+      column.label = PCore.getLocaleUtils().getLocaleValue(column.label, localeReference);
       selectParams.push({
         field: column.id
       });
@@ -586,6 +593,17 @@ export default function ListView(props: ListViewProps) {
     if (bCallSetRowsColumns) {
       setRows(myRows);
       setColumns(myColumns);
+
+      if (selectionMode === SELECTION_MODE.MULTI && selectedValues?.length > 0) {
+        const readonlyIds = new Set<string>(selectedValues.map((element: any) => element[rowID]));
+        const initialSet = new Set<string>();
+        myRows?.forEach(row => {
+          if (readonlyIds.has(row[rowID])) {
+            initialSet.add(row[rowID]);
+          }
+        });
+        setSelectedRowSet(initialSet);
+      }
     }
 
     return () => {
@@ -1013,22 +1031,57 @@ export default function ListView(props: ListViewProps) {
     setSelectedValue(value);
   };
 
-  const onCheckboxClick = event => {
-    const value = event?.target?.value;
-    const checked = event?.target?.checked;
+  const getSelectedValue = (row: any, checked: boolean) => {
+    const rowValue = row[rowID];
     const reqObj: any = {};
     if (compositeKeys?.length > 1) {
-      const index = response.findIndex(element => element[rowID] === value);
+      const index = response.findIndex(element => element[rowID] === rowValue);
       const selectedRow = response[index];
       compositeKeys.forEach(element => {
         reqObj[element] = selectedRow[element];
       });
       reqObj.$selected = checked;
     } else {
-      reqObj[rowID] = value;
+      reqObj[rowID] = rowValue;
       reqObj.$selected = checked;
     }
-    getPConnect()?.getListActions()?.setSelectedRows([reqObj]);
+    return reqObj;
+  };
+
+  const onCheckboxClick = (row: any) => {
+    const rowKey = row[rowID];
+    const newSet = new Set(selectedRowSet);
+    if (newSet.has(rowKey)) {
+      newSet.delete(rowKey);
+    } else {
+      newSet.add(rowKey);
+    }
+    setSelectedRowSet(newSet);
+    const checked = newSet.has(rowKey);
+    const requiredValue = getSelectedValue(row, checked);
+    getPConnect()?.getListActions()?.setSelectedRows([requiredValue]);
+  };
+
+  const isAllSelected = (): boolean => {
+    const numSelected = selectedRowSet.size;
+    const numRows = arRows?.length || 0;
+    return numRows > 0 && numSelected === numRows;
+  };
+
+  const toggleAllRows = () => {
+    if (isAllSelected()) {
+      setSelectedRowSet(new Set());
+      getPConnect()?.getListActions()?.clearSelectedRows();
+      return;
+    }
+    if (selectedRowSet.size > 0 && !isAllSelected()) {
+      getPConnect()?.getListActions()?.clearSelectedRows();
+    }
+    const newSet = new Set<string>();
+    arRows.forEach(row => newSet.add(row[rowID]));
+    setSelectedRowSet(newSet);
+    const requiredValues = arRows.map(row => getSelectedValue(row, true));
+    getPConnect()?.getListActions()?.setSelectedRows(requiredValues);
   };
 
   const processColumnValue = (column, value) => {
@@ -1151,7 +1204,16 @@ export default function ListView(props: ListViewProps) {
               <Table>
                 <TableHead>
                   <TableRow>
-                    {(selectionMode === SELECTION_MODE.SINGLE || selectionMode === SELECTION_MODE.MULTI) && <TableCell />}
+                    {selectionMode === SELECTION_MODE.SINGLE && <TableCell padding='checkbox' />}
+                    {selectionMode === SELECTION_MODE.MULTI && (
+                      <TableCell padding='checkbox'>
+                        <Checkbox
+                          indeterminate={selectedRowSet.size > 0 && !isAllSelected()}
+                          checked={arRows?.length > 0 && isAllSelected()}
+                          onChange={toggleAllRows}
+                        />
+                      </TableCell>
+                    )}
                     {arColumns.map(column => {
                       return (
                         <TableCell className={classes.cell} key={column.id} sortDirection={orderBy === column.id ? order : false}>
@@ -1179,7 +1241,7 @@ export default function ListView(props: ListViewProps) {
                         return (
                           <TableRow key={row[rowID]}>
                             {selectionMode === SELECTION_MODE.SINGLE && (
-                              <TableCell>
+                              <TableCell padding='checkbox'>
                                 <Radio
                                   onChange={handleChange}
                                   value={row[rowID]}
@@ -1190,12 +1252,8 @@ export default function ListView(props: ListViewProps) {
                               </TableCell>
                             )}
                             {selectionMode === SELECTION_MODE.MULTI && (
-                              <TableCell>
-                                <Checkbox
-                                  onChange={onCheckboxClick}
-                                  checked={selectedValues.some(selectedValue => selectedValue[rowID] === row[rowID])}
-                                  value={row[rowID]}
-                                />
+                              <TableCell padding='checkbox'>
+                                <Checkbox onChange={() => onCheckboxClick(row)} checked={selectedRowSet.has(row[rowID])} />
                               </TableCell>
                             )}
                             {arColumns.map(column => {

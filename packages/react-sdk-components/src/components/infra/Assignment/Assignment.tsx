@@ -5,6 +5,8 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { useFocusFirstField, useScrolltoTop } from '../../../hooks';
+import AlertBanner from '../../designSystemExtension/AlertBanner/AlertBanner';
+import { useValidationBanner } from './useValidationBanner';
 
 import type { PConnProps } from '../../../types/PConnProps';
 
@@ -23,6 +25,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   const MultiStep = getComponentFromMap('MultiStep');
 
   const { getPConnect, children, itemKey = '', isInModal = false, banners = [] } = props;
+  const validationMessages = useValidationBanner(itemKey);
   const thePConn = getPConnect();
 
   const [bHasNavigation, setHasNavigation] = useState(false);
@@ -311,6 +314,11 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
 
   return (
     <div id='Assignment'>
+      {validationMessages.length > 0 && (
+        <div style={{ marginBottom: '1rem' }}>
+          <AlertBanner id={`validation-banner-${itemKey}`} variant='urgent' messages={validationMessages} />
+        </div>
+      )}
       {banners}
       {bHasNavigation ? (
         <>
