@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { type PropsWithChildren, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -28,9 +28,10 @@ import { Utils } from '../../../helpers/utils';
 import { getReferenceList } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
 import { getGenericFieldsLocalizedValue } from '../../../helpers/common-utils';
-import { buildFieldsForTable, filterData, getContext } from '../../../helpers/simpleTableHelpers';
+import { buildFieldsForTable, filterData, getConfigFields, getContext } from '../../../helpers/simpleTableHelpers';
 import type { PConnProps } from '../../../../types/PConnProps';
 import { format } from '../../../helpers/formatters';
+import { initializeColumns } from '../../ListView/utils';
 
 interface SimpleTableManualProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -190,6 +191,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const bUseSeparateViewForEdit = editModeConfig ? editModeConfig.useSeparateViewForEdit : useSeparateViewForEdit;
   const editView = editModeConfig ? editModeConfig.editView : viewForEditModal;
 
+  const configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
+
   const fieldsWithPropNames = rawFields.map((field, index) => {
     return { ...resolvedFields[index], propName: field.config.value.replace('@P .', '') };
   });
@@ -207,10 +210,15 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   //  Constellation DX Components do). It will also have the "label", and "meta" contains the original,
   //  unchanged config info. For now, much of the info here is carried over from
   //  Constellation DX Components.
-  const fieldDefs = buildFieldsForTable(rawFields, getPConnect(), showDeleteButton, {
-    primaryFieldsViewIndex,
-    fields: resolvedFields
-  });
+
+  const fieldDefs = useMemo(
+    () =>
+      isDisplayModeEnabled || readOnlyMode
+        ? initializeColumns(configFields, undefined)
+        : // For inline edit table
+          buildFieldsForTable(rawFields, getPConnect(), showDeleteButton, { primaryFieldsViewIndex, fields: resolvedFields }),
+    []
+  );
 
   useLayoutEffect(() => {
     if (allowEditingInModal) {

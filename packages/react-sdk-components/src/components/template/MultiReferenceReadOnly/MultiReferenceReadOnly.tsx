@@ -4,11 +4,26 @@ interface MultiReferenceReadOnlyProps extends PConnProps {
   config: { referenceList: any; readonlyContextList: any };
   label: string;
   hideLabel: boolean;
+  displayMode?: any;
+  displayAs?: any;
 }
 
 export default function MultiReferenceReadOnly(props: MultiReferenceReadOnlyProps) {
-  const { getPConnect, label = '', hideLabel = false, config } = props;
+  const { getPConnect, label = '', hideLabel = false, config, displayMode, displayAs } = props;
   const { referenceList, readonlyContextList } = config;
+
+  if (['readonlyMulti', 'combobox', 'checkboxgroup'].includes(displayAs)) {
+    return getPConnect().createComponent({
+      type: 'SimpleTableSelectReadonly',
+      config: {
+        ...config,
+        displayMode,
+        label,
+        hideLabel,
+        displayAs
+      }
+    } as any);
+  }
 
   // When referenceList does not contain selected values, it should be replaced with readonlyContextList while calling SimpleTableManual
   let readonlyContextObject;

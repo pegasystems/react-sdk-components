@@ -68,6 +68,7 @@ import NarrowWideDetails from './components/template/NarrowWide/NarrowWideDetail
 import NarrowWideForm from './components/template/NarrowWide/NarrowWideForm';
 import NarrowWidePage from './components/template/NarrowWide/NarrowWidePage';
 import NavBar from './components/infra/NavBar';
+import ObjectPage from './components/template/ObjectPage';
 import ObjectReference from './components/field/ObjectReference';
 import OneColumn from './components/template/OneColumn/OneColumn';
 import OneColumnPage from './components/template/OneColumn/OneColumnPage';
@@ -93,6 +94,7 @@ import SelectableCard from './components/field/SelectableCard';
 import SimpleTable from './components/template/SimpleTable/SimpleTable';
 import SimpleTableManual from './components/template/SimpleTable/SimpleTableManual';
 import SimpleTableSelect from './components/template/SimpleTable/SimpleTableSelect';
+import SimpleTableSelectReadonly from './components/template/SimpleTable/SimpleTableSelectReadonly';
 import SingleReferenceReadOnly from './components/template/SingleReferenceReadOnly';
 import Stages from './components/infra/Stages';
 import SubTabs from './components/template/SubTabs';
@@ -191,6 +193,7 @@ const pegaSdkComponentMap = {
   NarrowWideForm,
   NarrowWidePage,
   NavBar,
+  ObjectPage,
   ObjectReference,
   OneColumn,
   OneColumnPage,
@@ -216,6 +219,7 @@ const pegaSdkComponentMap = {
   SimpleTable,
   SimpleTableManual,
   SimpleTableSelect,
+  SimpleTableSelectReadonly,
   SingleReferenceReadOnly,
   Stages,
   SubTabs,
