@@ -27,6 +27,7 @@ export default function HierarchicalForm(props: PropsWithChildren<HierarchicalFo
                 return (
                   <Tab
                     key={tab.id}
+                    sx={{ textTransform: 'none' }}
                     label={
                       tab.errors ? (
                         <Tooltip title={`${tabLabel} has errors`} placement='top'>
