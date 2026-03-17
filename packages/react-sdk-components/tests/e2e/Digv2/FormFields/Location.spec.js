@@ -36,7 +36,8 @@ test.describe('E2E test for Location component', () => {
 
     await page.locator('button:has-text("submit")').click();
 
-    await expect(page.locator('div[role="alert"] >> text="Cannot be blank"')).toBeVisible();
+    const validationError = page.getByText('Cannot be blank', { exact: true });
+    await expect(validationError).toBeVisible();
     /** Required field test */
     const requiredLocationField = page.locator('input[data-test-id="5d234240d150ee2ad896ca0be0e01fd3"]');
     await requiredLocationField.type('Hitech City, Hyderabad');
