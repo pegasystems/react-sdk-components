@@ -12,14 +12,9 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
   // Get emitted components from map (so we can get any override that may exist)
   const CaseSummaryFields = getComponentFromMap('CaseSummaryFields');
 
-  const { getPConnect, children } = props;
+  const { children } = props;
   let { arPrimaryFields = [], arSecondaryFields = [] } = props;
 
-  const thePConn = getPConnect && getPConnect();
-  const theConfigProps: any = thePConn?.getConfigProps();
-
-  const status = theConfigProps?.status;
-  const showStatus = theConfigProps?.showStatus;
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'ModalContainer';
 
@@ -77,7 +72,7 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
 
   return (
     <div id='CaseSummary'>
-      <CaseSummaryFields status={status} showStatus={showStatus} theFields={arPrimaryFields} />
+      <CaseSummaryFields theFields={arPrimaryFields} />
       <CaseSummaryFields theFields={arSecondaryFields} />
     </div>
   );
