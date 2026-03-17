@@ -11,7 +11,7 @@ on:
   pull_request:
     branches:
       - master
-      - 'release/**'  
+      - 'release/**'
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [22.x]
 
     steps:
       - uses: actions/checkout@v2
