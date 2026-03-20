@@ -51,9 +51,7 @@ try {
     const componentsTgzPath = path.join(componentsPackagePath, componentsTgzFile);
     const componentTargetTgzPath = path.join(sdkProjectRootPath, componentsTgzFile);
 
-    const existingTgzInSDK = fs
-      .readdirSync(sdkProjectRootPath)
-      .find(file => file.endsWith('.tgz') && file.indexOf('pega-react-sdk-components') > -1);
+    const existingTgzInSDK = fs.readdirSync(sdkProjectRootPath).find(file => file.endsWith('.tgz') && file.indexOf('pega-react-sdk-components') > -1);
 
     if (existingTgzInSDK) {
       console.log(`---- Removing old package: ${existingTgzInSDK} ----`);
