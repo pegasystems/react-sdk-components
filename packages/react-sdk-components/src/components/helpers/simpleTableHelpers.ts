@@ -333,120 +333,72 @@ export function createPConnect(contextName, referenceList, pageReference): any {
   return getPConnect();
 }
 
+// Returns true if the item should be KEPT for a Date/DateTime/Time operator.
+// Because filterValue is in milliseconds, equality uses a ±60 s window.
+function applyDateTimeOperator(value: any, filterValue: any, operator: string): boolean {
+  switch (operator) {
+    case 'notequal':
+      if (value !== null && filterValue !== null) {
+        // strip milliseconds before comparing
+        const diff = value / 1000 - filterValue / 1000;
+        return diff < 0 || diff >= 60;
+      }
+      return true;
+    case 'equal':
+      if (value !== null && filterValue !== null) {
+        return value / 1000 === filterValue / 1000;
+      }
+      return true;
+    case 'after':
+      return value >= filterValue;
+    case 'before':
+      return value <= filterValue;
+    case 'null':
+      return value === null;
+    case 'notnull':
+      return value !== null;
+    default:
+      return true;
+  }
+}
+
+// Returns true if the item should be KEPT for a plain-string operator.
+function applyStringOperator(value: string, filterValue: string, operator: string): boolean {
+  switch (operator) {
+    case 'contains':
+      return value.includes(filterValue);
+    case 'equals':
+      return value === filterValue;
+    case 'startswith':
+      return value.startsWith(filterValue);
+    default:
+      return true;
+  }
+}
+
+// Returns true if the item should be KEPT against a single filter descriptor.
+function applyFilterObj(item: any, filterObj: any): boolean {
+  const { type, ref, containsFilter, containsFilterValue } = filterObj;
+
+  if (type === 'Date' || type === 'DateTime' || type === 'Time') {
+    // NOTE: the || (not &&) in the value condition preserves original behaviour
+    const value = item[ref] !== null || item[ref] !== '' ? Utils.getSeconds(item[ref]) : null;
+    const fv = containsFilterValue !== null && containsFilterValue !== '' ? Utils.getSeconds(containsFilterValue) : null;
+    return applyDateTimeOperator(value, fv, containsFilter);
+  }
+
+  return applyStringOperator(item[ref].toLowerCase(), containsFilterValue.toLowerCase(), containsFilter);
+}
+
 export const filterData = filterByColumns => {
   return function filteringData(item) {
-    let bKeep = true;
     for (const filterObj of filterByColumns) {
-      if (filterObj.containsFilterValue !== '' || filterObj.containsFilter === 'null' || filterObj.containsFilter === 'notnull') {
-        let value: any;
-        let filterValue: any;
-
-        switch (filterObj.type) {
-          case 'Date':
-          case 'DateTime':
-          case 'Time':
-            value = item[filterObj.ref] !== null || item[filterObj.ref] !== '' ? Utils.getSeconds(item[filterObj.ref]) : null;
-            filterValue =
-              filterObj.containsFilterValue !== null && filterObj.containsFilterValue !== '' ? Utils.getSeconds(filterObj.containsFilterValue) : null;
-
-            switch (filterObj.containsFilter) {
-              case 'notequal':
-                // becasue filterValue is in minutes, need to have a range of less than 60 secons
-
-                if (value !== null && filterValue !== null) {
-                  // get rid of milliseconds
-                  value /= 1000;
-                  filterValue /= 1000;
-
-                  const diff = value - filterValue;
-                  if (diff >= 0 && diff < 60) {
-                    bKeep = false;
-                  }
-                }
-
-                break;
-
-              case 'equal':
-                // becasue filterValue is in minutes, need to have a range of less than 60 secons
-
-                if (value !== null && filterValue !== null) {
-                  // get rid of milliseconds
-                  value /= 1000;
-                  filterValue /= 1000;
-
-                  const diff = value - filterValue;
-                  if (diff !== 0) {
-                    bKeep = false;
-                  }
-                }
-
-                break;
-
-              case 'after':
-                if (value < filterValue) {
-                  bKeep = false;
-                }
-                break;
-
-              case 'before':
-                if (value > filterValue) {
-                  bKeep = false;
-                }
-                break;
-
-              case 'null':
-                if (value !== null) {
-                  bKeep = false;
-                }
-                break;
-
-              case 'notnull':
-                if (value === null) {
-                  bKeep = false;
-                }
-                break;
-
-              default:
-                break;
-            }
-            break;
-
-          default:
-            value = item[filterObj.ref].toLowerCase();
-            filterValue = filterObj.containsFilterValue.toLowerCase();
-
-            switch (filterObj.containsFilter) {
-              case 'contains':
-                if (value.indexOf(filterValue) < 0) {
-                  bKeep = false;
-                }
-                break;
-
-              case 'equals':
-                if (value !== filterValue) {
-                  bKeep = false;
-                }
-                break;
-
-              case 'startswith':
-                if (value.indexOf(filterValue) !== 0) {
-                  bKeep = false;
-                }
-                break;
-
-              default:
-                break;
-            }
-
-            break;
-        }
-      }
-
-      // if don't keep stop filtering
-      if (!bKeep) {
-        break;
+      const { containsFilterValue, containsFilter } = filterObj;
+      const isActive = containsFilterValue !== '' || containsFilter === 'null' || containsFilter === 'notnull';
+      if (isActive && !applyFilterObj(item, filterObj)) {
+        return false;
       }
     }
-    return bKeep;
+    return true;
   };
 };
