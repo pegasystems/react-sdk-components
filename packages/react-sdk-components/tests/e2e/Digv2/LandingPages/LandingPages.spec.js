@@ -55,7 +55,7 @@ test.describe('E2E test', () => {
     await viewTemplatesCase.click();
 
     /** Click on the `Home` landing page */
-    const homeLandingPage = page.locator('div[role="button"]:has-text("Home")');
+    const homeLandingPage = page.locator('div[role="button"]:has-text("DigV2")');
     await homeLandingPage.click();
 
     /** Test whether Home has loaded as expected */

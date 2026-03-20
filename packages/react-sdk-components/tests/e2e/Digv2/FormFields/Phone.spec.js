@@ -110,6 +110,7 @@ test.describe('E2E test', () => {
     /** Entering a valid Phone number */
     await editablePhoneInput.click();
     await editablePhoneInput.clear();
+    await editablePhoneInput.blur();
     await countrySelector.click();
     await page.locator('text=United States+1 >> nth=0').click();
     await common.enterPhoneNumber(editablePhone, '6175551212');
