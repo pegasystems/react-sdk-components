@@ -39,6 +39,7 @@
     "start-dev-https": "webpack serve --server-type https --mode=development",
     "start-prod": "http-server ./dist --port 3502 --ext html -c-1 --gzip --brotli --cors --proxy http://localhost:3502?",
     "start-prod-https": "http-server ./dist --port 3502 --ext html -c-1 --gzip --brotli --cors --ssl --cert ./keys/sdk-r.crt --key ./keys/sdk-r.key --proxy https://localhost:3502?",
+    "create_and_install_sdk_packages": "node scripts/update-dependencies.js",
     "test": "node scripts/playwright-message.js && playwright test --project=chromium MediaCo/portal MediaCo/embedded",
     "test:headed": "playwright test --headed --project=chromium MediaCo/portal MediaCo/embedded",
     "test-report": "playwright show-report tests/playwright-report",
