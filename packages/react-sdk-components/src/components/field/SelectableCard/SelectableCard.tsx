@@ -33,6 +33,15 @@ export default function SelectableCard(props) {
   const cardDataSource = readOnly || displayMode === 'DISPLAY_ONLY' ? readOnlyList || [] : dataSource?.source;
   const imageDescriptionKey = showImageDescription ? imageDescription : undefined;
 
+  const handleCardClick = event => {
+    if (disabled || readOnly) return;
+    // If the click landed on or inside a label/input, native behavior already handles it.
+    if (event.target.closest?.('label, input')) return;
+    // Find the radio/checkbox input inside this card and click it programmatically.
+    const input = event.currentTarget.querySelector('input[type="radio"], input[type="checkbox"]');
+    if (input) input.click();
+  };
+
   let radioItemSelected = false;
 
   return (
@@ -75,7 +84,12 @@ export default function SelectableCard(props) {
 
         const component = (
           <div key={item[recordKey]} style={{ paddingTop: '15px' }}>
-            <Card className={className} style={{ display: 'flex', flexDirection: 'column', height: '100%' }} data-testid={testId}>
+            <Card
+              className={className}
+              style={{ display: 'flex', flexDirection: 'column', height: '100%', cursor: disabled || readOnly ? 'default' : 'pointer' }}
+              data-testid={testId}
+              onClick={handleCardClick}
+            >
               <CardContent
                 style={{
                   ...((imagePosition === 'inline-start' || imagePosition === 'inline-end') && { display: 'flex', height: '100%' }),
@@ -118,7 +132,7 @@ export default function SelectableCard(props) {
                           onBlur={onBlur}
                           onClick={onClick}
                           onKeyDown={onKeyDown}
-                          disabled={disabled}
+                          disabled={disabled || readOnly}
                           {...additionalProps}
                         />
                       }
@@ -135,7 +149,7 @@ export default function SelectableCard(props) {
                           onBlur={onBlur}
                           onClick={onClick}
                           onKeyDown={onKeyDown}
-                          disabled={disabled}
+                          disabled={disabled || readOnly}
                           {...additionalProps}
                         />
                       }
