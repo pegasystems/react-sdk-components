@@ -18,7 +18,7 @@ test.describe('E2E test', () => {
     await expect(worklist).toBeVisible();
 
     /** Creating a Complex Fields case-type */
-    const complexFieldsCase = page.locator('div[role="button"]:has-text("Complex Fields")');
+    const complexFieldsCase = page.locator('div[role="button"] >> text="Complex Fields"');
     await complexFieldsCase.click();
 
     /** Selecting Embedded Data from the Category dropdown */
