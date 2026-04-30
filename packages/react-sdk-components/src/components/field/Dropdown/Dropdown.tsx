@@ -149,6 +149,10 @@ export default function Dropdown(props: DropdownProps) {
           };
           optionsData.push(obj);
         });
+        optionsData.unshift({
+          key: placeholder,
+          value: thePConn.getLocalizedValue(placeholder, '', '')
+        });
         setOptions(optionsData);
       });
     }
