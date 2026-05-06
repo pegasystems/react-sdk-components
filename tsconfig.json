@@ -6,6 +6,8 @@
     // Copied from SDK-R - JEA
     "experimentalDecorators": true,
     "strict": true,
+    "verbatimModuleSyntax": false,
+    "esModuleInterop": true,
     "sourceMap": true,
     "module": "ES2022",
     "target": "ES2022",
@@ -24,7 +26,7 @@
     // Override with only specific types for other configurations.
 
     "typeRoots": ["node_modules/@types", "node_modules/@pega"],
-    "types": ["jest", "@testing-library/jest-dom", "pcore-pconnect-typedefs"],
+    "types": ["jest", "@testing-library/jest-dom", "pcore-pconnect-typedefs", "node"],
 
     "noEmit": false, // JEA - was false
     "incremental": true,

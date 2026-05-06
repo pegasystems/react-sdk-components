@@ -1,4 +1,3 @@
-// eslint-disable-next-line strict
 module.exports = {
   testEnvironment: 'jsdom',
   roots: ['<rootDir>/packages/react-sdk-components/tests/unit/'],
@@ -7,5 +6,9 @@ module.exports = {
     '^.+\\.(t|j)sx?$': 'ts-jest'
   },
   setupFilesAfterEnv: ['<rootDir>/packages/react-sdk-components/tests/setupTests.js'],
-  coverageDirectory: 'tests/coverage'
+  moduleNameMapper: {
+    '\\.css$': 'identity-obj-proxy' // Mock CSS imports
+  },
+  coverageDirectory: 'tests/coverage',
+  watchman: false
 };
