@@ -105,11 +105,11 @@ export default function Multiselect(props) {
   );
 
   const displayFieldMeta = listType !== 'associated' ? getDisplayFieldsMetaData(dataConfig.columns) : null;
-  const getCaseListBasedOnParamsDebounced: any = useRef();
+  const getCaseListBasedOnParamsDebounced: any = useRef(null);
   const pConn = getPConnect();
   const contextName = pConn.getContextName();
   const listActions = pConn.getListActions();
-  const dataApiObj: any = useRef();
+  const dataApiObj: any = useRef(null);
 
   // main search function trigger
   const getCaseListBasedOnParams = async (searchText, group, selectedRows, currentItemsTree, isTriggeredFromSearch = false) => {

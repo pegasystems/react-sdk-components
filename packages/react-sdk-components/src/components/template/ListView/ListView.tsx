@@ -95,7 +95,7 @@ export default function ListView(props: ListViewProps) {
   } = props;
   let { showRecords } = props;
   const ref = useRef({}).current;
-  const cosmosTableRef = useRef();
+  const cosmosTableRef = useRef<any>(null);
   // List component context
   const [listContext, setListContext] = useState<any>({});
   const { meta } = listContext;
@@ -145,7 +145,7 @@ export default function ListView(props: ListViewProps) {
 
   // Will contain the list of columns specific for an instance
   const columnList: any = useRef([]);
-  const filterPayload: any = useRef();
+  const filterPayload: any = useRef(null);
   // Will be sent in the dashboardFilterPayload
   let selectParam: any[] = [];
 

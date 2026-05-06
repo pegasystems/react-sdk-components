@@ -12,7 +12,7 @@ export const setVisibilityForList = (c11nEnv, visibility) => {
 };
 
 const useDeepMemo = (memoFn, key) => {
-  const ref: any = useRef();
+  const ref: any = useRef(null);
   if (!ref.current || !equal(key, ref.current.key)) {
     ref.current = { key, value: memoFn() };
   }

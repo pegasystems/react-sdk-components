@@ -5,7 +5,7 @@ import { useRef, useState, type Ref, type MutableRefObject, type RefObject } fro
  * @param refs The ref or refs to consolidate.
  * @returns ref:: The consolidated ref.
  */
-const useConsolidatedRef = <T>(...refs: (Ref<T> | undefined)[]): RefObject<T> => {
+const useConsolidatedRef = <T>(...refs: (Ref<T> | undefined)[]): RefObject<T | null> => {
   const targetRef: MutableRefObject<T | null> = useRef<T>(null);
 
   const [refProxy] = useState(() =>

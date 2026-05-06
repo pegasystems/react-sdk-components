@@ -32,7 +32,7 @@ interface PegaContextProps {
   isPegaReady: boolean;
   rootPConnect?: typeof PConnect; // Function to get Pega Connect object, if available
   createCase: (mashupCaseType: string, options: CaseOptions) => Promise<void>;
-  PegaContainer: React.FC;
+  PegaContainer: React.FC<React.PropsWithChildren>;
 }
 
 declare const myLoadMashup: any;
