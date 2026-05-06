@@ -1,5 +1,6 @@
+import { useLayoutEffect } from 'react';
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
-
+import { getFieldMeta } from '../../DataReference/utils';
 import type { PConnProps } from '../../../../types/PConnProps';
 
 interface SimpleTableSelectProps extends PConnProps {
@@ -13,76 +14,72 @@ interface SimpleTableSelectProps extends PConnProps {
   parameters: any;
   readonlyContextList: object[] | string;
   dataRelationshipContext: string;
+  defaultRowHeight: string | number;
+  showPromotedFilters: boolean;
+  displayAs: string;
+  contextPage: object;
+  toggleFieldVisibility: boolean;
 }
 
-const isSelfReferencedProperty = (param, referenceProp) => {
-  const [, parentPropName] = param.split('.');
-  return parentPropName === referenceProp;
-};
-
-/**
- * SimpleTable react component
- * @param {*} props - props
- */
-export default function SimpleTableSelect(props: SimpleTableSelectProps) {
+function SelectableTable(props: SimpleTableSelectProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const ListView = getComponentFromMap('ListView');
-  const SimpleTable = getComponentFromMap('SimpleTable');
   const PromotedFilters = getComponentFromMap('PromotedFilters');
 
-  const { label, getPConnect, renderMode = '', showLabel = true, viewName = '', parameters, dataRelationshipContext = null } = props;
+  const {
+    label,
+    getPConnect,
+    showLabel = true,
+    viewName = '',
+    parameters,
+    dataRelationshipContext = null,
+    referenceList,
+    showPromotedFilters,
+    displayAs,
+    readonlyContextList,
+    contextPage,
+    toggleFieldVisibility
+  } = props;
+
+  const pConn = getPConnect();
 
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
   if (propsToUse.showLabel === false) {
     propsToUse.label = '';
   }
 
-  const pConn = getPConnect();
+  const { compositeKeys, fieldMetadata } = getFieldMeta(getPConnect, dataRelationshipContext);
+  const { pageClass } = fieldMetadata;
+
   const { MULTI } = PCore.getConstants().LIST_SELECTION_MODE;
   const { selectionMode, selectionList } = pConn.getConfigProps() as any;
   const isMultiSelectMode = selectionMode === MULTI;
 
-  if (isMultiSelectMode && renderMode === 'ReadOnly') {
-    return <SimpleTable {...props} showLabel={propsToUse.showLabel} />;
-  }
-
-  const pageReference = pConn.getPageReference();
-  let referenceProp = isMultiSelectMode ? selectionList.substring(1) : pageReference.substring(pageReference.lastIndexOf('.') + 1);
-  // Replace here to use the context name instead
-  let contextPageReference: string | null = null;
-  if (props.dataRelationshipContext !== null && selectionMode === 'single') {
-    referenceProp = dataRelationshipContext;
-    contextPageReference = pageReference.concat('.').concat(referenceProp);
-  }
-
-  // Need to get this written so typedefs work
-  const { datasource: { parameters: fieldParameters = {} } = {}, pageClass } = isMultiSelectMode
-    ? pConn.getFieldMetadata(`@P .${referenceProp}`)
-    : pConn.getCurrentPageFieldMetadata(contextPageReference);
-
-  const compositeKeys: any[] = [];
-  Object.values(fieldParameters).forEach((param: any) => {
-    if (isSelfReferencedProperty(param, referenceProp)) {
-      compositeKeys.push(param.substring(param.lastIndexOf('.') + 1));
+  useLayoutEffect(() => {
+    if (isMultiSelectMode) {
+      // register selectionList in c11nEnv stateProps for client side validation
+      pConn.setStateProps({ selectionList });
+      pConn.getListActions().initDefaultPageInstructions(selectionList, compositeKeys);
     }
-  });
+  }, []);
 
-  // setting default row height for select table
-  const defaultRowHeight = '2';
-
-  const additionalTableConfig = {
-    rowDensity: false,
-    enableFreezeColumns: false,
-    autoSizeColumns: false,
-    resetColumnWidths: false,
+  const additionalTableConfig: any = {
+    rowDensity: displayAs === 'table' || displayAs === 'advancedSearch',
+    enableFreezeColumns: displayAs === 'table' || displayAs === 'advancedSearch',
+    autoSizeColumns: displayAs === 'table' || displayAs === 'advancedSearch',
+    resetColumnWidths: displayAs === 'table' || displayAs === 'advancedSearch',
     defaultFieldDef: {
-      showMenu: false,
-      noContextMenu: true,
-      grouping: false
+      aggregation: false
     },
-    itemKey: '$key',
-    defaultRowHeight
+    itemKey: '$key'
   };
+
+  const searchFields = (pConn as any).getRawConfigProps?.()?.searchFields ?? [];
+  let selectedValues: any = isMultiSelectMode ? readonlyContextList : contextPage;
+
+  if (displayAs === 'advancedSearch') {
+    selectedValues = null;
+  }
 
   const listViewProps = {
     ...props,
@@ -90,23 +87,23 @@ export default function SimpleTableSelect(props: SimpleTableSelectProps) {
     personalization: false,
     grouping: false,
     expandGroups: false,
-    reorderFields: false,
     showHeaderIcons: false,
     editing: false,
     globalSearch: true,
-    toggleFieldVisibility: false,
+    toggleFieldVisibility: (displayAs === 'table' || displayAs === 'advancedSearch') && toggleFieldVisibility,
     basicMode: true,
     additionalTableConfig,
     compositeKeys,
     viewName,
-    parameters
+    parameters,
+    searchFields,
+    selectedValues,
+    isAdvancedSearchAndSelect: displayAs === 'advancedSearch'
   };
 
   const filters = (getPConnect().getRawMetadata() as any).config.promotedFilters ?? [];
 
-  const isSearchable = filters.length > 0;
-
-  if (isSearchable) {
+  if (showPromotedFilters && filters.length > 0) {
     return (
       <PromotedFilters
         getPConnect={getPConnect}
@@ -115,8 +112,26 @@ export default function SimpleTableSelect(props: SimpleTableSelectProps) {
         listViewProps={listViewProps}
         pageClass={pageClass}
         parameters={parameters}
+        referenceList={referenceList}
       />
     );
   }
   return <ListView {...listViewProps} />;
+}
+
+export default function SimpleTableSelect(props: SimpleTableSelectProps) {
+  const SimpleTableManual = getComponentFromMap('SimpleTableManual');
+
+  const { getPConnect, renderMode = '' } = props;
+
+  const pConn = getPConnect();
+  const { MULTI } = PCore.getConstants().LIST_SELECTION_MODE;
+  const { selectionMode } = pConn.getConfigProps() as any;
+  const isMultiSelectMode = selectionMode === MULTI;
+
+  if (isMultiSelectMode && renderMode === 'ReadOnly') {
+    return <SimpleTableManual {...props} />;
+  }
+
+  return <SelectableTable {...props} />;
 }

@@ -620,15 +620,25 @@ export function initializeColumns(fields: any[] = [], getMappedProperty: any = n
   });
 }
 
-export const getItemKey = fields => {
+export function getMappedKey(key) {
+  // @ts-ignore
+  const qualifiedKey = PCore.getNameSpaceUtils().getDefaultQualifiedName(key);
+  const mappedKey = PCore.getEnvironmentInfo().getKeyMapping(qualifiedKey);
+  if (!mappedKey) {
+    return qualifiedKey;
+  }
+  return mappedKey;
+}
+
+export function getItemKey(fields) {
   let itemKey;
   if (fields.findIndex(field => field.id === 'pyGUID') > -1) {
     itemKey = 'pyGUID';
   } else {
-    itemKey = 'pzInsKey';
+    itemKey = getMappedKey('pzInsKey');
   }
   return itemKey;
-};
+}
 
 export function preparePatchQueryFields(fields, isDataObject = false, classID = '') {
   const queryFields: any[] = [];

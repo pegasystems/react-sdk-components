@@ -41,9 +41,8 @@ const checkIfSelectionsExist = getPConnect => {
 };
 
 const SearchForm = props => {
-  const { children, getPConnect, searchSelectCacheKey } = props;
-
-  const deferLoadedTabs = children[2];
+  const { children, getPConnect, searchSelectCacheKey, type } = props;
+  const deferLoadedTabs = type === 'ObjectReference' ? { props: { getPConnect } } : children[2];
   const cache: any = PCore.getNavigationUtils().getComponentCache(searchSelectCacheKey) ?? {};
   const { selectedCategory } = cache;
   const firstTabId = getFirstVisibleTabId(deferLoadedTabs, selectedCategory);
