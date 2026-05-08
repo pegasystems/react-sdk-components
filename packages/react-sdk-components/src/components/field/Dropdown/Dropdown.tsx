@@ -94,6 +94,11 @@ export default function Dropdown(props: DropdownProps) {
   const className = thePConn.getCaseInfo().getClassName();
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
+  const getPlaceholderOption = () => ({
+    key: placeholder,
+    value: thePConn.getLocalizedValue(placeholder)
+  });
+
   if (!isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)
     setDatasource(datasource);
@@ -128,10 +133,7 @@ export default function Dropdown(props: DropdownProps) {
     if (theDatasource) {
       const list = Utils.getOptionList(props, getPConnect().getDataObject('')); // 1st arg empty string until typedef marked correctly
       const optionsList = [...list];
-      optionsList.unshift({
-        key: placeholder,
-        value: thePConn.getLocalizedValue(placeholder, '', '')
-      }); // 2nd and 3rd args empty string until typedef marked correctly
+      optionsList.unshift(getPlaceholderOption());
       setOptions(optionsList);
     }
   }, [theDatasource]);
@@ -141,6 +143,7 @@ export default function Dropdown(props: DropdownProps) {
       getDataPage(datasource, parameters, context).then((results: any) => {
         const optionsData: any[] = [];
         const displayColumn = getDisplayFieldsMetaData(columns);
+        optionsData.push(getPlaceholderOption());
         results?.forEach(element => {
           const val = element[displayColumn.primary]?.toString();
           const obj = {
