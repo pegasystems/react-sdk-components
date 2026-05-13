@@ -40,8 +40,8 @@
   },
   "peerDependencies": {
     "@pega/auth": "~0.2",
-    "react": "^17.0 || ^18.0 || ^19.0",
-    "react-dom": "^17.0 || ^18.0 || ^19.0"
+    "react": "^18.0 || ^19.0",
+    "react-dom": "^18.0 || ^19.0"
   },
   "author": "Pegasystems",
   "license": "SEE LICENCE IN LICENSE"
