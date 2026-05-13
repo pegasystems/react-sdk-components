@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { forwardRef, type PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { TextField } from '@mui/material';
 import { debounce } from 'throttle-debounce';
 import DatePicker from 'react-datepicker';
@@ -104,15 +104,15 @@ export default function DashboardFilter(props: PropsWithChildren<DashboardFilter
     dateRangeChangeHandler({ start, end });
   };
 
-  type TextProps = React.HTMLProps<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
+  type TextProps = React.HTMLProps<HTMLInputElement>;
 
   const label = metadata.config.label.substring(3);
 
-  const CustomDateInput = ({ value, onClick, ref }: TextProps) => (
-    <TextField label={label} variant='outlined' fullWidth value={value} size='small' onClick={onClick} ref={ref as any}>
+  const CustomDateInput = forwardRef<HTMLInputElement, TextProps>(({ value, onClick }, ref: any) => (
+    <TextField label={label} variant='outlined' fullWidth value={value} size='small' onClick={onClick} ref={ref}>
       {value}
     </TextField>
-  );
+  ));
 
   return (
     <>

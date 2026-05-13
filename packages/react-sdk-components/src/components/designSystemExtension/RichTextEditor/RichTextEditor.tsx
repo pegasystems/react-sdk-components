@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { FormControl, FormHelperText, InputLabel, useTheme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -29,8 +29,7 @@ interface RichTextEditorProps {
   onChange: React.EventHandler<any>;
 }
 
-function RichTextEditor(props: RichTextEditorProps & { ref?: React.Ref<any> }) {
-  const { ref } = props;
+const RichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
   const theme = useTheme();
   const classes = useStyles();
   const uid = useUID();
@@ -147,6 +146,6 @@ function RichTextEditor(props: RichTextEditorProps & { ref?: React.Ref<any> }) {
       {info && <FormHelperText>{info}</FormHelperText>}
     </FormControl>
   );
-}
+});
 
 export default RichTextEditor;
