@@ -66,15 +66,16 @@ export default function Attachment(props: AttachmentProps) {
   const deleteIcon = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
   const srcImg = Utils.getImageSrc('document-doc', Utils.getSDKStaticConentUrl());
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [menuOpenIndex, setMenuOpenIndex] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [toggleUploadBegin, setToggleUploadBegin] = useState(false);
 
   const deleteFile = useCallback(
     (file, fileIndex) => {
-      setAnchorEl(null);
+      setMenuAnchorEl(null);
+      setMenuOpenIndex(null);
 
       // reset the file input so that it will allow re-uploading the same file after deletion
       if (fileInputRef.current) {
@@ -426,16 +427,23 @@ export default function Attachment(props: AttachmentProps) {
           isArrayDeepMerge: false,
           removePropertyFromChangedList: true
         });
+      } else {
+        const serverFiles = transformAttachments();
+        attachmentCount.current = attachments.length;
+        filesWithError.current = [];
+        setFiles(serverFiles);
       }
     }
   }, [memoizedAttachments]);
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (event, index) => {
+    setMenuAnchorEl(event.currentTarget);
+    setMenuOpenIndex(index);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setMenuAnchorEl(null);
+    setMenuOpenIndex(null);
   };
 
   const content = (
@@ -498,20 +506,27 @@ export default function Attachment(props: AttachmentProps) {
                   <div>
                     <IconButton
                       id='setting-button'
-                      aria-controls={open ? 'file-menu' : undefined}
-                      aria-expanded={open ? 'true' : undefined}
+                      aria-controls={menuOpenIndex === index ? 'file-menu' : undefined}
+                      aria-expanded={menuOpenIndex === index ? 'true' : undefined}
                       aria-haspopup='true'
-                      onClick={handleClick}
+                      onClick={event => handleClick(event, index)}
                       size='large'
                     >
                       <MoreVertIcon />
                     </IconButton>
-                    <Menu style={{ marginTop: '3rem' }} id='file-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                    <Menu
+                      style={{ marginTop: '3rem' }}
+                      id='file-menu'
+                      anchorEl={menuAnchorEl}
+                      keepMounted
+                      open={menuOpenIndex === index}
+                      onClose={handleClose}
+                    >
                       <MenuItem
                         style={{ fontSize: '14px' }}
                         key='download'
                         onClick={() => {
-                          setAnchorEl(null);
+                          handleClose();
                           onFileDownload(item.responseProps ? item.responseProps : {});
                         }}
                       >
