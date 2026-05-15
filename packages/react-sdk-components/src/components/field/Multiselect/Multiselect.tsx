@@ -44,13 +44,32 @@ export default function Multiselect(props) {
       }
     ];
     let secondaryColumns: any = [];
-    if (secondaryFields) {
-      secondaryColumns = secondaryFields.map(secondaryField => ({
-        value: secondaryField,
+    // Read columnsFormatter from raw (unresolved) metadata to get field property paths
+    // (e.g. "@P .pyLabel") instead of resolved data values (e.g. "New Complex Fields").
+    // This matches Constellation's approach: pConn.getRawMetadata()?.config?.columnsFormatter
+    const columnsFormatter = (getPConnect().getRawMetadata()?.config as any)?.columnsFormatter;
+    const secondaryFieldsFromFormatter = columnsFormatter
+      ? columnsFormatter
+          .map(item => {
+            const property = item?.config?.value;
+            if (typeof property === 'string') {
+              if (property.startsWith('@USER ')) return property.substring(6);
+              if (property.startsWith('@P ')) return property.substring(3);
+              return property;
+            }
+            return undefined;
+          })
+          .filter(Boolean)
+      : undefined;
+    const updatedSecondaryFields = secondaryFieldsFromFormatter || secondaryFields;
+    if (updatedSecondaryFields) {
+      secondaryColumns = updatedSecondaryFields.map(secondaryField => ({
+        value: typeof secondaryField === 'string' ? secondaryField : undefined,
         display: 'true',
         secondary: 'true',
         useForSearch: 'true'
       }));
+      secondaryColumns = secondaryColumns.filter(col => col.value);
     } else {
       secondaryColumns = [
         {

@@ -56,6 +56,7 @@ interface ListViewProps extends PConnProps {
   compositeKeys?: any;
   showDynamicFields?: boolean;
   readonlyContextList?: any;
+  selectedValues?: any;
   value: any;
   viewName?: string;
   showRecords?: boolean;
@@ -88,11 +89,14 @@ export default function ListView(props: ListViewProps) {
     compositeKeys,
     showDynamicFields,
     viewName,
-    readonlyContextList: selectedValues,
+    readonlyContextList,
+    selectedValues: selectedValuesProp,
     value,
     displayAs,
     localeReference
   } = props;
+  // Use selectedValues prop (passed from SimpleTableSelect) with fallback to readonlyContextList
+  const selectedValues = selectedValuesProp ?? readonlyContextList;
   let { showRecords } = props;
   const ref = useRef({}).current;
   const cosmosTableRef = useRef<any>(null);

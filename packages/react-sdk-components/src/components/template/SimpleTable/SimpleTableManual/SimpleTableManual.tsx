@@ -55,6 +55,7 @@ interface SimpleTableManualProps extends PConnProps {
   viewForEditModal: any;
   validatemessage?: string;
   required?: boolean;
+  targetClassLabel?: string;
 }
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -128,10 +129,11 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     useSeparateViewForEdit,
     viewForEditModal,
     required,
-    validatemessage
+    validatemessage,
+    targetClassLabel
   } = props;
   const pConn = getPConnect();
-  const [rowData, setRowData] = useState([]);
+  const [rowData, setRowData] = useState<Record<string, any>[]>([]);
   const [elements, setElementsData] = useState([]);
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof any>('');
@@ -190,7 +192,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const defaultView = editModeConfig ? editModeConfig.defaultView : viewForAddAndEditModal;
   const bUseSeparateViewForEdit = editModeConfig ? editModeConfig.useSeparateViewForEdit : useSeparateViewForEdit;
   const editView = editModeConfig ? editModeConfig.editView : viewForEditModal;
-
+  const editType = editModeConfig?.editType;
+  const defaultActionId = editType === 'action' ? editModeConfig?.defaultAction : undefined;
+  const editActionId = editType === 'action' && editModeConfig?.useSeparateActionForEdit ? editModeConfig?.editAction : editModeConfig?.defaultAction;
   const configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
 
   const fieldsWithPropNames = rawFields.map((field, index) => {
@@ -238,6 +242,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     return field.name ? field.name : field.cellRenderer;
   });
 
+  const dataColumns = displayedColumns.filter(col => col !== 'DeleteIcon');
+
   const getFormattedValue = (val, key) => {
     const rawField = fieldsWithPropNames.find(item => item.propName === key);
     let options = {};
@@ -270,7 +276,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (!data) return {};
 
     return data.map(item => {
-      return displayedColumns.reduce((dataForRow, colKey) => {
+      return dataColumns.reduce((dataForRow, colKey) => {
         dataForRow[colKey] = getRowValue(item, colKey);
         return dataForRow;
       }, {});
@@ -279,7 +285,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   function generateRowsData() {
     // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
-    if (!referenceList.length && dataPageName) {
+    if (dataPageName) {
       getDataPage(dataPageName, parameters, context)
         .then(listData => {
           const data = formatRowsData(listData);
@@ -296,7 +302,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       const data: any = [];
       for (const row of referenceList) {
         const dataForRow: object = {};
-        for (const col of displayedColumns) {
+        for (const col of dataColumns) {
           const colKey: string = col;
           const theVal = getRowValue(row, colKey);
           dataForRow[colKey] = theVal || '';
@@ -324,11 +330,18 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   // console.log(JSON.stringify(rowData));
 
   const addRecord = () => {
-    if (allowEditingInModal && defaultView) {
-      pConn
-        .getActionsApi()
+    if (allowEditingInModal && (defaultView || defaultActionId)) {
+      pConn.getActionsApi().openEmbeddedDataModal(
+        defaultView,
         // @ts-expect-error
-        .openEmbeddedDataModal(defaultView, pConn, referenceListStr, referenceList.length, PCore.getConstants().RESOURCE_STATUS.CREATE);
+        pConn,
+        referenceListStr,
+        referenceList.length,
+        PCore.getConstants().RESOURCE_STATUS.CREATE,
+        targetClassLabel,
+        editType,
+        defaultActionId
+      );
     } else {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
     }
@@ -341,16 +354,17 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const editRecord = () => {
     setEditAnchorEl(null);
     if (typeof selectedRowIndex.current === 'number') {
-      pConn
-        .getActionsApi()
+      pConn.getActionsApi().openEmbeddedDataModal(
+        bUseSeparateViewForEdit ? editView : defaultView,
         // @ts-expect-error
-        .openEmbeddedDataModal(
-          bUseSeparateViewForEdit ? editView : defaultView,
-          pConn,
-          referenceListStr,
-          selectedRowIndex.current,
-          PCore.getConstants().RESOURCE_STATUS.UPDATE
-        );
+        pConn,
+        referenceListStr,
+        selectedRowIndex.current,
+        PCore.getConstants().RESOURCE_STATUS.UPDATE,
+        targetClassLabel,
+        editType,
+        editActionId
+      );
     }
   };
 
@@ -434,12 +448,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       if (order !== 0) return order;
       return a[1] - b[1];
     });
-
-    const newElements = new Array(stabilizedThis.length);
-    stabilizedThis.forEach((el, index) => {
-      newElements[index] = elements[el[1]];
-    });
-    return newElements;
+    return stabilizedThis.map(el => el[0]);
   }
 
   function _menuClick(event, columnId: string, columnType: string, labelValue: string) {
@@ -691,11 +700,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 .map((row, index) => {
                   return (
                     <TableRow key={index}>
-                      {row.map((item, childIndex) => {
-                        const theColKey = displayedColumns[childIndex];
+                      {Object.keys(row).map(colKey => {
                         return (
-                          <TableCell key={theColKey} className={classes.tableCell}>
-                            {item}
+                          <TableCell key={colKey} className={classes.tableCell}>
+                            {row[colKey] || '---'}
                           </TableCell>
                         );
                       })}

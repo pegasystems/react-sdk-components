@@ -42,6 +42,7 @@ import DetailsTwoColumn from './components/template/Details/DetailsTwoColumn/Det
 import Dropdown from './components/field/Dropdown';
 import DynamicTabs from './components/template/Details/DynamicTabs';
 import Email from './components/field/Email/Email';
+import EmbeddedDataMulti from './components/field/EmbeddedDataMulti';
 import ErrorBoundary from './components/infra/ErrorBoundary';
 import FieldGroup from './components/designSystemExtension/FieldGroup';
 import FieldGroupList from './components/designSystemExtension/FieldGroupList';
@@ -167,6 +168,7 @@ const pegaSdkComponentMap = {
   Dropdown,
   DynamicTabs,
   Email,
+  EmbeddedDataMulti,
   ErrorBoundary,
   FieldGroup,
   FieldGroupList,
