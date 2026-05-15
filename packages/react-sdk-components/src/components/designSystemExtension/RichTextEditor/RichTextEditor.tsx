@@ -29,7 +29,7 @@ interface RichTextEditorProps {
   onChange: React.EventHandler<any>;
 }
 
-const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorProps, ref) {
+const RichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
   const theme = useTheme();
   const classes = useStyles();
   const uid = useUID();

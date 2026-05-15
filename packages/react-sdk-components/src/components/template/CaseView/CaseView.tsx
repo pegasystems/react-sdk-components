@@ -79,8 +79,8 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
    */
   function getChildRegionByName(inName: string): any {
     for (const child of children as ReactElement[]) {
-      const theMetadataType: string = (child as ReactElement).props.getPConnect().getRawMetadata().type?.toLowerCase();
-      const theMetadataName: string = (child as ReactElement).props.getPConnect().getRawMetadata().name?.toLowerCase();
+      const theMetadataType: string = (child as ReactElement<any>).props.getPConnect().getRawMetadata().type?.toLowerCase();
+      const theMetadataName: string = (child as ReactElement<any>).props.getPConnect().getRawMetadata().name?.toLowerCase();
       if (theMetadataType === 'region' && theMetadataName === inName) {
         return child;
       }

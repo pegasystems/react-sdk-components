@@ -51,7 +51,7 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
 
   if (arPrimaryFields.length === 0 && arSecondaryFields.length === 0) {
     for (const child of children as ReactElement[]) {
-      const childPConn = (child as ReactElement).props.getPConnect();
+      const childPConn = (child as ReactElement<any>).props.getPConnect();
       const childPConnData = childPConn.resolveConfigProps(childPConn.getRawMetadata());
       if (childPConnData.name.toLowerCase() === 'primary fields') {
         arPrimaryFields = childPConnData.children;

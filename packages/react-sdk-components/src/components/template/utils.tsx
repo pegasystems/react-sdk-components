@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { isValidElement } from 'react';
 
 export function prepareCaseSummaryData(caseSummaryRegion, portalSpecificVisibilityChecker?) {
@@ -45,7 +45,7 @@ export function prepareCaseSummaryData(caseSummaryRegion, portalSpecificVisibili
 export const filterUtilities = (utils: ReactNode) => {
   let utilsMeta;
   if (isValidElement(utils)) {
-    const pConnect = utils.props.getPConnect();
+    const pConnect = (utils as ReactElement<any>).props.getPConnect();
     utilsMeta = pConnect.getRawMetadata?.();
     if (!utilsMeta?.children?.length) return;
     utilsMeta = {
