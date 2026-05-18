@@ -515,9 +515,10 @@ export default function Attachment(props: AttachmentProps) {
                       <MoreVertIcon />
                     </IconButton>
                     <Menu
-                      style={{ marginTop: '3rem' }}
                       id='file-menu'
                       anchorEl={menuAnchorEl}
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                       keepMounted
                       open={menuOpenIndex === index}
                       onClose={handleClose}
