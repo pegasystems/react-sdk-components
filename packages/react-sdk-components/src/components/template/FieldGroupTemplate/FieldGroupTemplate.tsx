@@ -15,6 +15,7 @@ interface FieldGroupTemplateProps extends PConnProps {
   displayMode?: string;
   fieldHeader?: string;
   allowTableEdit: boolean;
+  allowActions?: any;
 }
 
 export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
@@ -31,6 +32,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     heading = '',
     displayMode,
     fieldHeader,
+    allowActions,
     allowTableEdit: allowAddEdit
   } = props;
   const pConn = getPConnect();
@@ -39,6 +41,11 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
   const pageReference = `${pConn.getPageReference()}${resolvedList}`;
   const isReadonlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY';
   const HEADING = heading ?? 'Row';
+
+  const hasAllowActions = Object.keys(allowActions ?? {}).length > 0;
+  const { allowAdd: actionAdd, allowDelete: actionDelete } = allowActions ?? {};
+  const allowAdd = hasAllowActions ? (actionAdd ?? true) : (allowAddEdit ?? true);
+  const allowDelete = hasAllowActions ? (actionDelete ?? true) : (allowAddEdit ?? true);
 
   useLayoutEffect(() => {
     if (!isReadonlyMode) {
@@ -73,7 +80,7 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
         pConn.getListActions().deleteEntry(index);
       }
     };
-    if (referenceList.length === 0 && allowAddEdit !== false) {
+    if (referenceList.length === 0 && allowAdd) {
       addFieldGroupItem();
     }
 
@@ -88,8 +95,8 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     return (
       <FieldGroupList
         items={MemoisedChildren}
-        onAdd={allowAddEdit !== false ? addFieldGroupItem : undefined}
-        onDelete={allowAddEdit !== false ? deleteFieldGroupItem : undefined}
+        onAdd={allowAdd ? addFieldGroupItem : undefined}
+        onDelete={allowDelete ? deleteFieldGroupItem : undefined}
       />
     );
   }
