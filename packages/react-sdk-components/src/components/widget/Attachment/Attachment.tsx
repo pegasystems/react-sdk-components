@@ -99,7 +99,7 @@ export default function Attachment(props: AttachmentProps) {
 
       // If file to be deleted is the one added in previous stage i.e. for which a file instance is created in server
       // no need to filter currentAttachmentList as we will get another entry of file in redux with delete & label
-      if (hasUploadedFiles && isFileUploadedToServer(file) && file.responseProps?.ID) {
+      if (hasUploadedFiles && isFileUploadedToServer(file)) {
         // Use currentAttachmentList (fresh from store) instead of files (stale closure)
         // to preserve delete markers set by previous deletions in the same session
         const updatedAttachments = currentAttachmentList.map(f => {
@@ -112,7 +112,7 @@ export default function Attachment(props: AttachmentProps) {
         // updating the redux store to help form-handler in passing the data to delete the file from server
         updateAttachmentState(pConn, getAttachmentKey(valueRef, embeddedProperty), [...updatedAttachments]);
         setFiles(current => {
-          const newlyAddedFiles = current.filter(f => !!f.ID && f.ID !== file.ID);
+          const newlyAddedFiles = current.filter(f => !!f.ID);
           const filesPostDelete = current.filter(f => isFileUploadedToServer(f) && f.responseProps?.ID !== file.responseProps?.ID);
           attachmentsList = [...filesPostDelete, ...newlyAddedFiles];
           return attachmentsList;
@@ -291,7 +291,7 @@ export default function Attachment(props: AttachmentProps) {
                 f.label = valueRef;
                 f.category = categoryName;
                 f.responseProps = {
-                  pzInsKey: 'temp',
+                  ID: 'temp',
                   pyAttachName: f.props.name
                 };
               }
@@ -443,9 +443,10 @@ export default function Attachment(props: AttachmentProps) {
                       <MoreVertIcon />
                     </IconButton>
                     <Menu
-                      style={{ marginTop: '3rem' }}
                       id='file-menu'
                       anchorEl={menuAnchorEl}
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                       keepMounted
                       open={menuOpenIndex === index}
                       onClose={handleClose}
