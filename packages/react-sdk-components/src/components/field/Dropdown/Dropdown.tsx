@@ -7,6 +7,7 @@ import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import { useDeepMemo } from '../Multiselect/utils';
 
 interface IOption {
   key: string;
@@ -124,6 +125,10 @@ export default function Dropdown(props: DropdownProps) {
   }
   columns = preProcessColumns(columns);
 
+  const memoizedParameters = useDeepMemo(() => {
+    return parameters;
+  }, [parameters]);
+
   useEffect(() => {
     if (theDatasource) {
       const list = Utils.getOptionList(props, getPConnect().getDataObject('')); // 1st arg empty string until typedef marked correctly
@@ -156,7 +161,7 @@ export default function Dropdown(props: DropdownProps) {
         setOptions(optionsData);
       });
     }
-  }, []);
+  }, [memoizedParameters]);
 
   const metaData = Array.isArray(fieldMetadata) ? fieldMetadata.filter(field => field?.classID === className)[0] : fieldMetadata;
 

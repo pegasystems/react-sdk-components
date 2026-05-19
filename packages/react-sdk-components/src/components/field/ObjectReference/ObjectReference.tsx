@@ -296,6 +296,15 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     return getPConnect().createComponent({
       type: 'SimpleTableSelect',
       config: {
+        ...(mode === 'single'
+          ? {
+              selectionKey: rawViewMetadata.config.value,
+              value: rawViewMetadata.config.value,
+              contextPage: rawViewMetadata.config.contextPage
+            }
+          : {
+              readonlyContextList: rawViewMetadata.config.pagelistValue
+            }),
         dataRelationshipContext: contextPageValue,
         defaultRowHeight: rawViewMetadata.config.defaultRowHeight,
         displayAs: tableDisplayAs,
@@ -466,6 +475,52 @@ export default function ObjectReference(props: ObjectReferenceProps) {
     return getPConnect().createComponent(componentMeta);
   };
 
+  const buildEmbeddedInsightTableChild = (rawConfig: any, referenceType: string, propsToUse: any) => {
+    const insightModel = propsToUse.insightModel;
+    const insightColumns: any[] = insightModel?.query?.columns ?? [];
+
+    const columnChildren = insightColumns
+      .filter((col: any) => col.type === 'column' && col.field)
+      .map((col: any) => ({
+        type: 'TextInput',
+        config: {
+          value: `@P .${col.field.fieldID}`,
+          label: col.field.name || col.field.fieldID
+        }
+      }));
+
+    const presets = [
+      {
+        children: [{ children: columnChildren, name: 'Columns', type: 'Region' }],
+        config: {},
+        id: 'P_',
+        label: '',
+        name: 'presets',
+        template: 'Table'
+      }
+    ];
+    console.log('Building EmbeddedInsightTable child with config', rawConfig);
+    const componentMeta = {
+      type: 'SimpleTableManual',
+      config: {
+        contextClass: rawConfig.targetObjectClass,
+        presets,
+        label: propsToUse.label,
+        readonlyContextList: rawConfig.pagelistValue,
+        referenceList: rawConfig.pagelistValue,
+        renderMode: 'ReadOnly',
+        dataPageName: rawConfig.referenceList,
+        fieldMetadata: {
+          datasource: {
+            parameters: rawConfig.parameters ?? {}
+          }
+        }
+      }
+    };
+
+    return getPConnect().createComponent(componentMeta);
+  };
+
   const recreatedFirstChild = useMemo(() => {
     const type = rawViewMetadata.config.componentType;
 
@@ -495,6 +550,11 @@ export default function ObjectReference(props: ObjectReferenceProps) {
 
     if (type === 'Cards') {
       return buildCardsChild();
+    }
+
+    // EmbeddedInsightTable type
+    if (type === 'EmbeddedInsightTable') {
+      return buildEmbeddedInsightTableChild(rawViewMetadata.config, referenceType, propsToUse);
     }
 
     if (type === 'CheckboxGroup') {

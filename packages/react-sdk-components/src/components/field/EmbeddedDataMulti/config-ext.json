@@ -1,0 +1,7 @@
+{
+  "name": "EmbeddedDataMulti",
+  "description": "Embedded Data Multi",
+  "type": "Field",
+  "subtype": "EMBEDDEDDATA",
+  "properties": []
+}
