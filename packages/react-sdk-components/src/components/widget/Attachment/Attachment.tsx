@@ -361,6 +361,7 @@ export default function Attachment(props: AttachmentProps) {
       if (displayMode !== 'DISPLAY_ONLY') {
         PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, caseID);
       }
+      resetAttachmentStoredState();
     };
   }, []);
 
