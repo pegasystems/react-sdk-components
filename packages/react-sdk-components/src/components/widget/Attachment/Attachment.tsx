@@ -51,8 +51,8 @@ export default function Attachment(props: AttachmentProps) {
   const srcImg = Utils.getImageSrc('document-doc', Utils.getSDKStaticConentUrl());
   let valueRef = (pConn.getStateProps() as any).value;
   valueRef = valueRef.indexOf('.') === 0 ? valueRef.substring(1) : valueRef;
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [menuOpenIndex, setMenuOpenIndex] = useState<number | null>(null);
 
   const rawValue = pConn.getComponentConfig().value;
   const isAttachmentAnnotationPresent = typeof rawValue === 'object' ? false : rawValue?.includes('@ATTACHMENT');
@@ -86,7 +86,8 @@ export default function Attachment(props: AttachmentProps) {
 
   const deleteFile = useCallback(
     file => {
-      setAnchorEl(null);
+      setMenuAnchorEl(null);
+      setMenuOpenIndex(null);
 
       // reset the file input so that it will allow re-uploading the same file after deletion
       if (fileInputRef.current) {
@@ -99,8 +100,10 @@ export default function Attachment(props: AttachmentProps) {
       // If file to be deleted is the one added in previous stage i.e. for which a file instance is created in server
       // no need to filter currentAttachmentList as we will get another entry of file in redux with delete & label
       if (hasUploadedFiles && isFileUploadedToServer(file)) {
-        const updatedAttachments = files.map(f => {
-          if (f.responseProps && f.responseProps.pzInsKey === file.responseProps.pzInsKey) {
+        // Use currentAttachmentList (fresh from store) instead of files (stale closure)
+        // to preserve delete markers set by previous deletions in the same session
+        const updatedAttachments = currentAttachmentList.map(f => {
+          if (f.responseProps && f.responseProps.ID === file.responseProps.ID) {
             return { ...f, delete: true, label: valueRef };
           }
           return f;
@@ -257,7 +260,7 @@ export default function Attachment(props: AttachmentProps) {
       .filter(e => {
         const isFileUploaded = e.props && e.props.progress === 100;
         const fileHasError = e.props && e.props.error;
-        const isFileUploadedinLastStep = e.responseProps && e.responseProps.pzInsKey;
+        const isFileUploadedinLastStep = e.responseProps && (e.responseProps.pzInsKey || e.responseProps.ID);
         return !isFileUploaded && !fileHasError && !isFileUploadedinLastStep;
       })
       .map(f =>
@@ -288,7 +291,7 @@ export default function Attachment(props: AttachmentProps) {
                 f.label = valueRef;
                 f.category = categoryName;
                 f.responseProps = {
-                  pzInsKey: 'temp',
+                  ID: 'temp',
                   pyAttachName: f.props.name
                 };
               }
@@ -361,12 +364,14 @@ export default function Attachment(props: AttachmentProps) {
     };
   }, []);
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (event, index) => {
+    setMenuAnchorEl(event.currentTarget);
+    setMenuOpenIndex(index);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setMenuAnchorEl(null);
+    setMenuOpenIndex(null);
   };
 
   const content = (
@@ -429,20 +434,28 @@ export default function Attachment(props: AttachmentProps) {
                   <div>
                     <IconButton
                       id='setting-button'
-                      aria-controls={open ? 'file-menu' : undefined}
-                      aria-expanded={open ? 'true' : undefined}
+                      aria-controls={menuOpenIndex === index ? 'file-menu' : undefined}
+                      aria-expanded={menuOpenIndex === index ? 'true' : undefined}
                       aria-haspopup='true'
-                      onClick={handleClick}
+                      onClick={event => handleClick(event, index)}
                       size='large'
                     >
                       <MoreVertIcon />
                     </IconButton>
-                    <Menu style={{ marginTop: '3rem' }} id='file-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                    <Menu
+                      id='file-menu'
+                      anchorEl={menuAnchorEl}
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                      keepMounted
+                      open={menuOpenIndex === index}
+                      onClose={handleClose}
+                    >
                       <MenuItem
                         style={{ fontSize: '14px' }}
                         key='download'
                         onClick={() => {
-                          setAnchorEl(null);
+                          handleClose();
                           onFileDownload(item.responseProps ? item.responseProps : {});
                         }}
                       >
