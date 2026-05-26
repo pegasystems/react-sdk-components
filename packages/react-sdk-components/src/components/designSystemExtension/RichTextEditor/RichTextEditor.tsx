@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { FormControl, FormHelperText, InputLabel } from '@mui/material';
+import { FormControl, FormHelperText, FormLabel } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 import { useAfterInitialEffect, useConsolidatedRef, useUID } from '../../../hooks';
@@ -108,11 +108,11 @@ const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorP
   }
 
   return (
-    <FormControl variant='standard' data-test-id={testId} error={error} required={required}>
+    <FormControl variant='standard' data-test-id={testId} error={error} required={required} fullWidth>
       {!labelHidden && (
-        <InputLabel id='demo-simple-select-error-label' className={classes.fieldLabel}>
+        <FormLabel htmlFor={id} className={classes.fieldLabel}>
           {label}
-        </InputLabel>
+        </FormLabel>
       )}
       {richTextComponent}
       {info && <FormHelperText>{info}</FormHelperText>}
