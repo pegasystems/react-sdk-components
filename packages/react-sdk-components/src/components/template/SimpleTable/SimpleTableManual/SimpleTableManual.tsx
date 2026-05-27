@@ -521,10 +521,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   function filterSortGroupBy() {
     // get original data set
-    let theData: any = myRows.slice();
+    let theData: any = myRows?.slice();
 
     // last filter config data is global
-    theData = theData.filter(filterData(filterByColumns));
+    theData = theData?.filter(filterData(filterByColumns));
 
     // move data to array and then sort
     setRowData(theData);
@@ -586,7 +586,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   }
 
   function results() {
-    const len = editableMode ? elements.length : rowData.length;
+    const len = editableMode ? elements?.length : rowData?.length;
 
     return len ? (
       <span style={{ fontSize: '0.9em', opacity: '0.7' }}>
