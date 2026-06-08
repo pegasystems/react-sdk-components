@@ -226,7 +226,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         .getListActions()
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
-          fieldDefs.filter(item => item.name).map(item => item.name)
+          // Temporary filter for attachments to align with constellation payload behavior.
+          fieldDefs.filter(item => item.name && item.meta?.type !== 'Attachment').map(item => item.name)
         );
     } else {
       // @ts-expect-error - An argument for 'fields' was not provided
