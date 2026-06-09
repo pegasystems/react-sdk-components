@@ -656,7 +656,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 const theKey = `row-${index}`;
                 return (
                   <TableRow key={theKey}>
-                    {row.map((item, childIndex) => {
+                    {row?.map((item, childIndex) => {
                       const theColKey = `data-${index}-${childIndex}`;
                       return (
                         <TableCell key={theColKey} className={classes.tableCell}>
@@ -689,7 +689,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                   return (
                     // eslint-disable-next-line react/no-array-index-key
                     <TableRow key={index}>
-                      {row.map((item, childIndex) => {
+                      {row?.map((item, childIndex) => {
                         const theColKey = displayedColumns[childIndex];
                         return (
                           <TableCell key={theColKey} className={classes.tableCell}>
