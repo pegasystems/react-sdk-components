@@ -344,22 +344,26 @@ export default function Attachment(props: AttachmentProps) {
     return attachments;
   }, [attachments]);
 
-  // Prepares new structure as per Cosmos component
+  // Prepares new structure as per Cosmos component (immutable - does not mutate source)
   const transformAttachments = () => {
-    const transformedFiles = [...attachments];
     let deleteIndex = -1;
-    transformedFiles.forEach(attachment => {
-      attachment.props.id = attachment.responseProps.ID;
-      attachment.props.format = attachment.props.name.split('.').pop();
-      if (attachment.props.error) {
-        attachment.responseProps.deleteIndex = deleteIndex;
+    const transformedFiles = attachments.map(attachment => {
+      const newProps = {
+        ...attachment.props,
+        id: attachment.responseProps.ID,
+        format: attachment.props.name.split('.').pop()
+      };
+      const newResponseProps = { ...attachment.responseProps };
+      if (newProps.error) {
+        newResponseProps.deleteIndex = deleteIndex;
       } else {
         deleteIndex += 1;
-        attachment.responseProps.deleteIndex = deleteIndex;
+        newResponseProps.deleteIndex = deleteIndex;
       }
-      if (attachment.props.thumbnail) {
-        thumbnailURLs.current.push(attachment.props.thumbnail);
+      if (newProps.thumbnail) {
+        thumbnailURLs.current.push(newProps.thumbnail);
       }
+      return { ...attachment, props: newProps, responseProps: newResponseProps };
     });
 
     return transformedFiles;
@@ -427,11 +431,15 @@ export default function Attachment(props: AttachmentProps) {
           isArrayDeepMerge: false,
           removePropertyFromChangedList: true
         });
-      } else {
-        const serverFiles = transformAttachments();
-        attachmentCount.current = attachments.length;
-        filesWithError.current = [];
-        setFiles(serverFiles);
+      } else if (filesWithError.current.length === 0) {
+        // Sync local state from server when attachments genuinely changed (e.g., table remount after modal submit)
+        const hasActiveUpload = files.some(f => f.inProgress);
+        if (!hasActiveUpload) {
+          const serverFiles = transformAttachments();
+          attachmentCount.current = attachments.length;
+          filesWithError.current = [];
+          setFiles(serverFiles);
+        }
       }
     }
   }, [memoizedAttachments]);
