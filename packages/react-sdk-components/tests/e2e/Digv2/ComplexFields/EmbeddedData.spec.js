@@ -438,12 +438,12 @@ test.describe('E2E test', () => {
 
     const table = page.locator('div[id="simple-table-manual"]');
     let tableCell = table.locator('tbody >> tr >> td >> nth=0');
-    await expect(await tableCell.textContent()).toBe('---');
+    await expect(await tableCell.textContent()).toBe('Global St');
 
     await page.locator('span:has-text("Street")').click();
 
     tableCell = table.locator('tbody >> tr >> td >> nth=0');
-    await expect(await tableCell.textContent()).toBe('Main St');
+    await expect(await tableCell.textContent()).toBe('---');
 
     /** Submitting the case */
     await page.locator('button:has-text("submit")').click();
