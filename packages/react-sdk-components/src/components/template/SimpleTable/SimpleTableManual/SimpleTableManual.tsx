@@ -252,7 +252,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     const refKeys: string[] = inColKey?.split('.');
     let valBuilder = inRowData;
     for (const key of refKeys) {
-      valBuilder = valBuilder[key] ? valBuilder[key] : valBuilder;
+      valBuilder = valBuilder[key] !== undefined ? valBuilder[key] : valBuilder;
     }
     return getFormattedValue(valBuilder, inColKey);
   }
