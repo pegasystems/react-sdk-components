@@ -103,7 +103,7 @@ const connectRedux = (component, c11nEnv) => {
         }
 
         // For CaseSummary, we need to compare changes in
-        //  primaryFields and secondary Fields
+        //  primary Fields and secondary Fields
         if (next.template === 'CaseSummary') {
           for (const key of Object.keys(prev)) {
             if (!PCore.isDeepEqual(next[key], prev[key])) {
@@ -111,7 +111,7 @@ const connectRedux = (component, c11nEnv) => {
             }
           }
         }
-        
+
         /* TODO For some rawConfig we are not getting routingInfo under allStateProps */
         return !routingInfoCompare(next, prev);
       }
