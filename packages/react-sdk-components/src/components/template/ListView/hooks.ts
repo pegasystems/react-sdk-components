@@ -22,6 +22,7 @@ export default function useInit(props) {
   const runtimeParams = PCore.getRuntimeParamsAPI().getRuntimeParams();
 
   let selectionCountThreshold;
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     let isCompStillMounted = true; // react hooks cleanup function will toggle this flag and use it before setting a state variable
 
@@ -94,4 +95,5 @@ export default function useInit(props) {
       isCompStillMounted = false;
     };
   }, []);
+  /* eslint-enable react-hooks/exhaustive-deps */
 }

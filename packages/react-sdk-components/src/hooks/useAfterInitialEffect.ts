@@ -11,6 +11,7 @@ const useAfterInitialEffect = (cb: EffectCallback, dependencies: DependencyList)
   useEffect(() => {
     if (ref.current) return cb();
     ref.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 };
 

@@ -16,6 +16,7 @@ const useFocusFirstField = (id, children) => {
         editableElements[0].focus();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children]);
 };
 
