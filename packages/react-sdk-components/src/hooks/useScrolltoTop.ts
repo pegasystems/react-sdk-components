@@ -8,6 +8,7 @@ const useScrolltoTop = (id, children) => {
   useEffect(() => {
     const scrollElement = document.querySelector(id);
     scrollElement?.scrollIntoView();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children]);
 };
 

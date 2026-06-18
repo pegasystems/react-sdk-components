@@ -53,7 +53,10 @@ module.exports = (env, argv) => {
         },
         {
           from: './node_modules/tinymce',
-          to: './tinymce'
+          to: './tinymce',
+          globOptions: {
+            ignore: ['**/*.d.ts', '**/*.d.ts.map']
+          }
         },
         {
           from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
