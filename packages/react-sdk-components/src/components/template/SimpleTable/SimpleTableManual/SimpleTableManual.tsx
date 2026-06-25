@@ -261,8 +261,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     // See what data (if any) we have to display
     const refKeys: string[] = inColKey?.split('.');
     let valBuilder = inRowData;
+    let index = 0;
     for (const key of refKeys) {
-      valBuilder = valBuilder[key] !== undefined ? valBuilder[key] : valBuilder;
+      index += 1;
+      valBuilder = valBuilder[key] !== undefined || index === refKeys.length ? valBuilder[key] : valBuilder;
     }
     return getFormattedValue(valBuilder, inColKey);
   }
