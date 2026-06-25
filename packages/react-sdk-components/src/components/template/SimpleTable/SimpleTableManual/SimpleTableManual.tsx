@@ -272,11 +272,13 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const formatRowsData = data => {
     if (!data) return {};
 
-    return data.map(item => {
-      return displayedColumns.reduce((dataForRow, colKey) => {
-        dataForRow[colKey] = getRowValue(item, colKey);
-        return dataForRow;
-      }, {});
+    return data.map((item, idx) => {
+      const dataForRow = displayedColumns.reduce((acc, colKey) => {
+        acc[colKey] = getRowValue(item, colKey);
+        return acc;
+      }, {} as any);
+      dataForRow.__originalIndex = idx;
+      return dataForRow;
     });
   };
 
@@ -297,16 +299,19 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       //  in the table. So, iterate over referenceList to create the dataRows that
       //  we're using as the table's dataSource
       const data: any = [];
-      for (const row of referenceList) {
-        const dataForRow: object = {};
+      referenceList.forEach((row, idx) => {
+        const dataForRow: any = {};
         for (const col of displayedColumns) {
           const colKey: string = col;
           const theVal = getRowValue(row, colKey);
           dataForRow[colKey] = theVal || '';
         }
+        // Preserve the original position so stableSort can look up the right
+        // entry in `elements` even after filtering shrinks rowData.
+        dataForRow.__originalIndex = idx;
         data.push(dataForRow);
         myRows = data;
-      }
+      });
       setRowData(data);
     }
   }
@@ -440,7 +445,11 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
     const newElements = new Array(stabilizedThis.length);
     stabilizedThis.forEach((el, index) => {
-      newElements[index] = elements[el[1]];
+      // Use the original index recorded on the row (set in generateRowsData)
+      // so that filtering (which shrinks rowData but not `elements`) still maps
+      // each surviving row to the correct rendered cells.
+      const originalIndex = (el[0] as any)?.__originalIndex ?? el[1];
+      newElements[index] = elements[originalIndex];
     });
     return newElements;
   }
