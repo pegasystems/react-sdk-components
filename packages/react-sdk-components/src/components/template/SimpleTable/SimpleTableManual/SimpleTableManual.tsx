@@ -311,7 +311,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         // entry in `elements` even after filtering shrinks rowData.
         dataForRow.__originalIndex = idx;
         data.push(dataForRow);
-      }
+      });
       myRowsRef.current = data;
       setRowData(data);
     }
