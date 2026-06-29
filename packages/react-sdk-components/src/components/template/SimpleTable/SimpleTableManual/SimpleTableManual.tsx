@@ -439,7 +439,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
     const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
     stabilizedThis.sort((a, b) => {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const order = comparator(a[0], b[0]);
       if (order !== 0) return order;
       return a[1] - b[1];
@@ -694,7 +693,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
               stableSort(rowData, getComparator(order, orderBy)).map((row: any, displayIndex) => {
                 const originalIndex = row.__originalIndex;
                 return (
-                  // eslint-disable-next-line react/no-array-index-key
                   <TableRow key={displayIndex}>
                     {(elements as any[])[originalIndex]?.map((item, childIndex) => {
                       const theColKey = displayedColumns[childIndex];
