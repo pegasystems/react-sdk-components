@@ -101,9 +101,6 @@ let menuColumnId = '';
 let menuColumnType = '';
 let menuColumnLabel = '';
 
-const filterByColumns: any[] = [];
-let myRows: any[];
-
 export default function SimpleTableManual(props: PropsWithChildren<SimpleTableManualProps>) {
   const classes = useStyles();
   const {
@@ -148,6 +145,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const [displayDialogDateFilter, setDisplayDialogDateFilter] = useState<string>('notequal');
   const [displayDialogDateValue, setDisplayDialogDateValue] = useState<string>('');
   const selectedRowIndex: any = useRef(null);
+  const myRowsRef = useRef<any[]>([]);
+  const filterByColumnsRef = useRef<any[]>([]);
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'SimpleTable';
   const parameters = fieldMetadata?.datasource?.parameters;
@@ -283,12 +282,14 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   };
 
   function generateRowsData() {
+    myRowsRef.current = [];
+
     // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (!referenceList.length && dataPageName) {
       getDataPage(dataPageName, parameters, context)
         .then(listData => {
           const data = formatRowsData(listData);
-          myRows = data;
+          myRowsRef.current = data || [];
           setRowData(data);
         })
         .catch(e => {
@@ -310,8 +311,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         // entry in `elements` even after filtering shrinks rowData.
         dataForRow.__originalIndex = idx;
         data.push(dataForRow);
-        myRows = data;
       });
+      myRowsRef.current = data;
       setRowData(data);
     }
   }
@@ -477,7 +478,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
     let bFound = false;
 
-    for (const filterObj of filterByColumns) {
+    for (const filterObj of filterByColumnsRef.current) {
       if (filterObj.ref === menuColumnId) {
         setFilterBy(menuColumnLabel);
         if (filterObj.type === 'Date' || filterObj.type === 'DateTime' || filterObj.type === 'Time') {
@@ -543,10 +544,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   function filterSortGroupBy() {
     // get original data set
-    let theData: any = myRows.slice();
+    let theData: any = myRowsRef.current?.slice();
 
     // last filter config data is global
-    theData = theData.filter(filterData(filterByColumns));
+    theData = theData?.filter(filterData(filterByColumnsRef.current));
 
     // move data to array and then sort
     setRowData(theData);
@@ -554,7 +555,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   function updateFilterWithInfo() {
     let bFound = false;
-    for (const filterObj of filterByColumns) {
+    for (const filterObj of filterByColumnsRef.current) {
       if (filterObj.ref === menuColumnId) {
         filterObj.type = filterType;
         if (containsDateOrTime) {
@@ -582,7 +583,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         filterObj.containsFilterValue = displayDialogContainsValue;
       }
 
-      filterByColumns.push(filterObj);
+      filterByColumnsRef.current.push(filterObj);
     }
   }
 
@@ -594,7 +595,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   }
 
   function _showFilteredIcon(columnId) {
-    for (const filterObj of filterByColumns) {
+    for (const filterObj of filterByColumnsRef.current) {
       if (filterObj.ref === columnId) {
         if (filterObj.containsFilterValue !== '') {
           return true;
@@ -607,7 +608,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   }
 
   function results() {
-    const len = editableMode ? elements.length : rowData.length;
+    const len = editableMode ? elements?.length : rowData?.length;
 
     return len ? (
       <span style={{ fontSize: '0.9em', opacity: '0.7' }}>
@@ -671,7 +672,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 const theKey = `row-${index}`;
                 return (
                   <TableRow key={theKey}>
-                    {row.map((item, childIndex) => {
+                    {row?.map((item, childIndex) => {
                       const theColKey = `data-${index}-${childIndex}`;
                       return (
                         <TableCell key={theColKey} className={classes.tableCell}>
@@ -703,7 +704,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 .map((row, index) => {
                   return (
                     <TableRow key={index}>
-                      {row.map((item, childIndex) => {
+                      {row?.map((item, childIndex) => {
                         const theColKey = displayedColumns[childIndex];
                         return (
                           <TableCell key={theColKey} className={classes.tableCell}>
@@ -733,7 +734,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 })}
           </TableBody>
         </Table>
-        {((readOnlyMode && (!rowData || rowData?.length === 0)) || (editableMode && (!referenceList || referenceList?.length === 0))) && (
+        {((readOnlyMode && (!rowData || rowData?.length === 0)) ||
+          (editableMode && (!referenceList || referenceList?.length === 0)) ||
+          (allowEditingInModal && (!rowData || rowData?.length === 0))) && (
           <div className='no-records' id='no-records'>
             {getGenericFieldsLocalizedValue('COSMOSFIELDS.lists', 'No records found.')}
           </div>
