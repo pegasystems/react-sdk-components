@@ -102,9 +102,6 @@ let menuColumnId = '';
 let menuColumnType = '';
 let menuColumnLabel = '';
 
-const filterByColumns: any[] = [];
-let myRows: any[];
-
 export default function SimpleTableManual(props: PropsWithChildren<SimpleTableManualProps>) {
   const classes = useStyles();
   const {
@@ -133,7 +130,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     targetClassLabel
   } = props;
   const pConn = getPConnect();
-  const [rowData, setRowData] = useState<Record<string, any>[]>([]);
+  const [rowData, setRowData] = useState([]);
   const [elements, setElementsData] = useState([]);
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof any>('');
@@ -150,6 +147,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const [displayDialogDateFilter, setDisplayDialogDateFilter] = useState<string>('notequal');
   const [displayDialogDateValue, setDisplayDialogDateValue] = useState<string>('');
   const selectedRowIndex: any = useRef(null);
+  const myRowsRef = useRef<any[]>([]);
+  const filterByColumnsRef = useRef<any[]>([]);
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'SimpleTable';
   const parameters = fieldMetadata?.datasource?.parameters;
@@ -202,7 +201,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   });
 
   useEffect(() => {
-    buildElementsForTable();
+    if (!(readOnlyMode && dataPageName)) {
+      buildElementsForTable();
+    }
     if (readOnlyMode || allowEditingInModal) {
       generateRowsData();
     }
@@ -230,7 +231,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         .getListActions()
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
-          fieldDefs.filter(item => item.name).map(item => item.name)
+          // Temporary filter for attachments to align with constellation payload behavior.
+          fieldDefs.filter(item => item.name && item.meta?.type !== 'Attachment').map(item => item.name)
         );
     } else {
       // @ts-expect-error - An argument for 'fields' was not provided
@@ -241,8 +243,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const displayedColumns = fieldDefs.map(field => {
     return field.name ? field.name : field.cellRenderer;
   });
-
-  const dataColumns = displayedColumns.filter(col => col !== 'DeleteIcon');
 
   const getFormattedValue = (val, key) => {
     const rawField = fieldsWithPropNames.find(item => item.propName === key);
@@ -266,8 +266,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     // See what data (if any) we have to display
     const refKeys: string[] = inColKey?.split('.');
     let valBuilder = inRowData;
+    let index = 0;
     for (const key of refKeys) {
-      valBuilder = valBuilder[key] ? valBuilder[key] : valBuilder;
+      index += 1;
+      valBuilder = valBuilder[key] !== undefined || index === refKeys.length ? valBuilder[key] : valBuilder;
     }
     return getFormattedValue(valBuilder, inColKey);
   }
@@ -275,22 +277,29 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const formatRowsData = data => {
     if (!data) return {};
 
-    return data.map(item => {
-      return dataColumns.reduce((dataForRow, colKey) => {
-        dataForRow[colKey] = getRowValue(item, colKey);
-        return dataForRow;
-      }, {});
+    return data.map((item, idx) => {
+      const dataForRow = displayedColumns.reduce((acc, colKey) => {
+        acc[colKey] = getRowValue(item, colKey);
+        return acc;
+      }, {} as any);
+      dataForRow.__originalIndex = idx;
+      return dataForRow;
     });
   };
 
   function generateRowsData() {
+    myRowsRef.current = [];
     // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (dataPageName) {
       getDataPage(dataPageName, parameters, context)
         .then(listData => {
           const data = formatRowsData(listData);
-          myRows = data;
+          myRowsRef.current = data || [];
           setRowData(data);
+          // Build elements from fetched data since referenceList may be empty for data page tables
+          if (readOnlyMode) {
+            buildElementsFromData(listData as any[]);
+          }
         })
         .catch(e => {
           console.log(e);
@@ -300,16 +309,19 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       //  in the table. So, iterate over referenceList to create the dataRows that
       //  we're using as the table's dataSource
       const data: any = [];
-      for (const row of referenceList) {
-        const dataForRow: object = {};
-        for (const col of dataColumns) {
+      referenceList.forEach((row, idx) => {
+        const dataForRow: any = {};
+        for (const col of displayedColumns) {
           const colKey: string = col;
           const theVal = getRowValue(row, colKey);
           dataForRow[colKey] = theVal || '';
         }
+        // Preserve the original position so stableSort can look up the right
+        // entry in `elements` even after filtering shrinks rowData.
+        dataForRow.__originalIndex = idx;
         data.push(dataForRow);
-        myRows = data;
-      }
+      });
+      myRowsRef.current = data;
       setRowData(data);
     }
   }
@@ -390,17 +402,34 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           const pageReferenceValue = isDatapage
             ? `${referenceListData}[${index}]`
             : `${pConn.getPageReference()}${referenceListData.substring(referenceListData.lastIndexOf('.'))}[${index}]`;
+          const isDisplayOnly = readOnlyMode || allowEditingInModal;
           const config = {
             meta: item,
             options: {
               context,
               pageReference: pageReferenceValue,
               referenceList: referenceListData,
-              hasForm: true
+              hasForm: !isDisplayOnly
             }
           };
           const view = PCore.createPConnect(config);
           data.push(createElement(createPConnectComponent(), view));
+        }
+      });
+      eleData.push(data);
+    });
+    setElementsData(eleData);
+  }
+
+  function buildElementsFromData(listData: any[]) {
+    const eleData: any = [];
+    listData.forEach((element, index) => {
+      const data: any = [];
+      rawFields.forEach(item => {
+        if (!item.config.hide) {
+          const propName = item.config.value.replace('@P .', '');
+          const val = getRowValue(element, propName);
+          data.push(createElement('span', { key: `${index}-${propName}` }, val ?? '---'));
         }
       });
       eleData.push(data);
@@ -448,7 +477,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       if (order !== 0) return order;
       return a[1] - b[1];
     });
-    return stabilizedThis.map(el => el[0]);
+    return stabilizedThis.map(([el]) => el);
   }
 
   function _menuClick(event, columnId: string, columnType: string, labelValue: string) {
@@ -474,7 +503,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
     let bFound = false;
 
-    for (const filterObj of filterByColumns) {
+    for (const filterObj of filterByColumnsRef.current) {
       if (filterObj.ref === menuColumnId) {
         setFilterBy(menuColumnLabel);
         if (filterObj.type === 'Date' || filterObj.type === 'DateTime' || filterObj.type === 'Time') {
@@ -540,10 +569,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   function filterSortGroupBy() {
     // get original data set
-    let theData: any = myRows.slice();
+    let theData: any = myRowsRef.current?.slice();
 
     // last filter config data is global
-    theData = theData.filter(filterData(filterByColumns));
+    theData = theData?.filter(filterData(filterByColumnsRef.current));
 
     // move data to array and then sort
     setRowData(theData);
@@ -551,7 +580,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   function updateFilterWithInfo() {
     let bFound = false;
-    for (const filterObj of filterByColumns) {
+    for (const filterObj of filterByColumnsRef.current) {
       if (filterObj.ref === menuColumnId) {
         filterObj.type = filterType;
         if (containsDateOrTime) {
@@ -579,7 +608,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         filterObj.containsFilterValue = displayDialogContainsValue;
       }
 
-      filterByColumns.push(filterObj);
+      filterByColumnsRef.current.push(filterObj);
     }
   }
 
@@ -591,7 +620,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   }
 
   function _showFilteredIcon(columnId) {
-    for (const filterObj of filterByColumns) {
+    for (const filterObj of filterByColumnsRef.current) {
       if (filterObj.ref === columnId) {
         if (filterObj.containsFilterValue !== '') {
           return true;
@@ -604,7 +633,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   }
 
   function results() {
-    const len = editableMode ? elements.length : rowData.length;
+    const len = editableMode ? elements?.length : rowData?.length;
 
     return len ? (
       <span style={{ fontSize: '0.9em', opacity: '0.7' }}>
@@ -668,7 +697,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 const theKey = `row-${index}`;
                 return (
                   <TableRow key={theKey}>
-                    {row.map((item, childIndex) => {
+                    {row?.map((item, childIndex) => {
                       const theColKey = `data-${index}-${childIndex}`;
                       return (
                         <TableCell key={theColKey} className={classes.tableCell}>
@@ -695,41 +724,43 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
             {(readOnlyMode || allowEditingInModal) &&
               rowData &&
               rowData.length > 0 &&
-              stableSort(rowData, getComparator(order, orderBy))
-                .slice(0)
-                .map((row, index) => {
-                  return (
-                    <TableRow key={index}>
-                      {Object.keys(row).map(colKey => {
-                        return (
-                          <TableCell key={colKey} className={classes.tableCell}>
-                            {row[colKey] || '---'}
-                          </TableCell>
-                        );
-                      })}
-                      {showDeleteButton && (
-                        <TableCell key='DeleteIcon' className={classes.tableCell}>
-                          <div>
-                            <MoreIcon
-                              id='table-edit-menu-icon'
-                              className={classes.moreIcon}
-                              onClick={event => {
-                                editMenuClick(event, index);
-                              }}
-                            />
-                            <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
-                              <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
-                              <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
-                            </Menu>
-                          </div>
+              stableSort(rowData, getComparator(order, orderBy)).map((row: any, displayIndex) => {
+                const originalIndex = row.__originalIndex;
+                return (
+                  <TableRow key={displayIndex}>
+                    {(elements as any[])[originalIndex]?.map((item, childIndex) => {
+                      const theColKey = displayedColumns[childIndex];
+                      return (
+                        <TableCell key={theColKey} className={classes.tableCell}>
+                          {item}
                         </TableCell>
-                      )}
-                    </TableRow>
-                  );
-                })}
+                      );
+                    })}
+                    {showDeleteButton && (
+                      <TableCell key='DeleteIcon' className={classes.tableCell}>
+                        <div>
+                          <MoreIcon
+                            id='table-edit-menu-icon'
+                            className={classes.moreIcon}
+                            onClick={event => {
+                              editMenuClick(event, originalIndex);
+                            }}
+                          />
+                          <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
+                            <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
+                            <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
+                          </Menu>
+                        </div>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
-        {((readOnlyMode && (!rowData || rowData?.length === 0)) || (editableMode && (!referenceList || referenceList?.length === 0))) && (
+        {((readOnlyMode && (!rowData || rowData?.length === 0)) ||
+          (editableMode && (!referenceList || referenceList?.length === 0)) ||
+          (allowEditingInModal && (!rowData || rowData?.length === 0))) && (
           <div className='no-records' id='no-records'>
             {getGenericFieldsLocalizedValue('COSMOSFIELDS.lists', 'No records found.')}
           </div>
