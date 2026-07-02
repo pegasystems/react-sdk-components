@@ -55,6 +55,7 @@ interface SimpleTableManualProps extends PConnProps {
   viewForEditModal: any;
   validatemessage?: string;
   required?: boolean;
+  targetClassLabel?: string;
 }
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -125,7 +126,8 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     useSeparateViewForEdit,
     viewForEditModal,
     required,
-    validatemessage
+    validatemessage,
+    targetClassLabel
   } = props;
   const pConn = getPConnect();
   const [rowData, setRowData] = useState([]);
@@ -153,6 +155,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const { referenceListStr } = getContext(getPConnect());
   const label = labelProp || propertyLabel;
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
+
   if (propsToUse.showLabel === false) {
     propsToUse.label = '';
   }
@@ -169,7 +172,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   //  We need to use the prop name as the "glue" to tie the table dataSource, displayColumns and data together.
   //  So, in the code below, we'll use the unresolved config.value (but replacing the space with an underscore to keep things happy)
   const rawMetadata: any = getPConnect().getRawMetadata();
-
   // get raw config since @P and other annotations are processed and don't appear in the resolved config.
   //  Destructure "raw" children into array var: "rawFields"
   //  NOTE: when config.listType == "associated", the property can be found in either
@@ -189,7 +191,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const defaultView = editModeConfig ? editModeConfig.defaultView : viewForAddAndEditModal;
   const bUseSeparateViewForEdit = editModeConfig ? editModeConfig.useSeparateViewForEdit : useSeparateViewForEdit;
   const editView = editModeConfig ? editModeConfig.editView : viewForEditModal;
-
+  const editType = editModeConfig?.editType;
+  const defaultActionId = editType === 'action' ? editModeConfig?.defaultAction : undefined;
+  const editActionId = editType === 'action' && editModeConfig?.useSeparateActionForEdit ? editModeConfig?.editAction : editModeConfig?.defaultAction;
   const configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
 
   const fieldsWithPropNames = rawFields.map((field, index) => {
@@ -333,11 +337,21 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   // console.log(JSON.stringify(rowData));
 
   const addRecord = () => {
-    if (allowEditingInModal && defaultView) {
+    if (allowEditingInModal && (defaultView || defaultActionId)) {
       pConn
         .getActionsApi()
-        // @ts-expect-error
-        .openEmbeddedDataModal(defaultView, pConn, referenceListStr, referenceList.length, PCore.getConstants().RESOURCE_STATUS.CREATE);
+
+        .openEmbeddedDataModal(
+          defaultView,
+          // @ts-expect-error
+          pConn,
+          referenceListStr,
+          referenceList.length,
+          PCore.getConstants().RESOURCE_STATUS.CREATE,
+          targetClassLabel,
+          editType,
+          defaultActionId
+        );
     } else {
       pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
     }
@@ -352,13 +366,17 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     if (typeof selectedRowIndex.current === 'number') {
       pConn
         .getActionsApi()
-        // @ts-expect-error
+
         .openEmbeddedDataModal(
           bUseSeparateViewForEdit ? editView : defaultView,
+          // @ts-expect-error
           pConn,
           referenceListStr,
           selectedRowIndex.current,
-          PCore.getConstants().RESOURCE_STATUS.UPDATE
+          PCore.getConstants().RESOURCE_STATUS.UPDATE,
+          targetClassLabel,
+          editType,
+          editActionId
         );
     }
   };
