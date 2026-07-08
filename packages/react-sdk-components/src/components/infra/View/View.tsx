@@ -50,14 +50,19 @@ export default function View(props: PropsWithChildren<ViewProps>) {
   // Putting this logic here instead of copy/paste in every Form template index.js
 
   const inheritedProps: any = getPConnect().getInheritedProps(); // try to remove any when getInheritedProps typedefs are fixed
-  label = inheritedProps.label || label;
-  showLabel = inheritedProps.showLabel || showLabel;
-  const localeUtils = PCore.getLocaleUtils();
 
   const isEmbeddedDataView = mode === 'editable'; // would be better to check the reference child for `context` attribute if possible
-  if (isEmbeddedDataView && showLabel === undefined) {
-    showLabel = true;
+
+  // Only apply inherited label settings for embedded data views (per 8.6 design)
+  if (isEmbeddedDataView) {
+    label = inheritedProps.label || label;
+    showLabel = inheritedProps.showLabel || showLabel;
+    if (showLabel === undefined) {
+      showLabel = true;
+    }
   }
+
+  const localeUtils = PCore.getLocaleUtils();
 
   useEffect(() => {
     // Get the localized application label
@@ -141,7 +146,7 @@ export default function View(props: PropsWithChildren<ViewProps>) {
 
     return (
       <div className='grid-column'>
-        {showLabel && !NO_HEADER_TEMPLATES.includes(template) && (
+        {isEmbeddedDataView && showLabel && !NO_HEADER_TEMPLATES.includes(template) && (
           <div className='template-title-container'>
             <span>{label}</span>
           </div>
