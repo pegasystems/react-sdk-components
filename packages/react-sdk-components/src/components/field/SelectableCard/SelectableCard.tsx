@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Radio, Checkbox, FormControlLabel, Card, CardContent, Typography } from '@mui/material';
 import { resolveReferenceFields } from './utils';
 
@@ -42,7 +43,13 @@ export default function SelectableCard(props) {
     if (input) input.click();
   };
 
-  let radioItemSelected = false;
+  const radioItemSelected = type === 'radio' && (cardDataSource || []).some(item => radioBtnValue === item[recordKey]);
+
+  useEffect(() => {
+    if (type === 'radio' && setIsRadioCardSelected) {
+      setIsRadioCardSelected(radioItemSelected);
+    }
+  }, [radioItemSelected, type, setIsRadioCardSelected]);
 
   return (
     <>
@@ -176,14 +183,8 @@ export default function SelectableCard(props) {
           </div>
         );
 
-        if (type === 'radio' && radioBtnValue === item[recordKey]) {
-          radioItemSelected = true;
-        }
-
         return component;
       })}
-
-      {type === 'radio' && setIsRadioCardSelected && setIsRadioCardSelected(radioItemSelected)}
     </>
   );
 }
