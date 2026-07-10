@@ -217,7 +217,7 @@ export const updateFieldLabels = (fields, configFields, primaryFieldsViewIndex, 
         let label = configFields[i].config?.label;
         if (isFLProperty(label)) {
           label = getFieldLabel(configFields[i].config);
-        } else if (label.startsWith('@')) {
+        } else if (label?.startsWith('@')) {
           label = label.substring(3);
         }
         if (pConnect) {
