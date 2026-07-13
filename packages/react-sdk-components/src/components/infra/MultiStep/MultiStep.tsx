@@ -10,7 +10,7 @@ interface MultiStepProps extends PConnProps {
   itemKey: string;
   actionButtons: any[];
   onButtonPress: any;
-  bIsVertical: boolean;
+  stepIndicator?: 'horizontal' | 'vertical' | 'vertical-start';
   arNavigationSteps: any;
 }
 
@@ -19,7 +19,9 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
   const AssignmentCard = getComponentFromMap('AssignmentCard');
 
   const { getPConnect, children, itemKey = '', actionButtons, onButtonPress } = props;
-  const { bIsVertical, arNavigationSteps } = props;
+  const { stepIndicator = 'horizontal', arNavigationSteps } = props;
+
+  const isVertical = stepIndicator === 'vertical' || stepIndicator === 'vertical-start';
 
   let currentStep = arNavigationSteps.find(({ visited_status: vs }) => vs === 'current');
   if (!currentStep) {
@@ -56,59 +58,28 @@ export default function MultiStep(props: PropsWithChildren<MultiStepProps>) {
 
   return (
     <div>
-      {bIsVertical ? (
-        <div className='psdk-vertical-stepper'>
-          {arNavigationSteps.map((mainStep, index) => {
-            return (
-              <React.Fragment key={mainStep.actionID}>
-                <div className='psdk-vertical-step'>
-                  <div className={`psdk-vertical-step-header ${mainStep.visited_status}`}>
-                    <div className={`psdk-vertical-step-icon`}>
-                      <div className='psdk-vertical-step-icon-content'>
-                        <span>{index + 1}</span>
-                      </div>
+      {isVertical ? (
+        <div className={`psdk-vertical-stepper-container ${stepIndicator === 'vertical-start' ? 'stepper-start' : 'stepper-end'}`}>
+          <div className='psdk-stepper-rail'>
+            {arNavigationSteps.map((mainStep, index) => (
+              <div key={mainStep.actionID} className='psdk-vertical-step'>
+                <div className={`psdk-vertical-step-header ${mainStep.visited_status}`}>
+                  <div className='psdk-vertical-step-icon'>
+                    <div className='psdk-vertical-step-icon-content'>
+                      <span>{index + 1}</span>
                     </div>
-                    <div className='psdk-vertical-step-label'>{mainStep.visited_status === 'current' && mainStep.name}</div>
                   </div>
-                  <div className={_getVBodyClass(index)}>
-                    {mainStep?.steps && (
-                      <ul
-                        style={{
-                          paddingInlineStart: '0rem',
-                          marginLeft: '-7px'
-                        }}
-                      >
-                        {mainStep.steps.forEach(subStep => {
-                          <li className='psdk-sub-step-list'>
-                            <div style={{ display: 'inline-flex' }}>
-                              {subStep.visited_status === 'current' && <img className='psdk-current-svg-icon' src='{svgCurrent}' />}
-                              {subStep.visited_status !== 'current' && <img className='psdk-not-current-svg-icon' src='{svgNotCurrent}' />}
-                              {subStep.visited_status === 'current' && <label className='psdk-sub-step-current'>{subStep.name}</label>}
-                              {subStep.visited_status !== 'current' && <label className='psdk-sub-step-not-current'>{subStep.name}</label>}
-                            </div>
-                            {subStep.visited_status === 'current' && (
-                              <div>
-                                <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
-                                  {children}
-                                </AssignmentCard>
-                              </div>
-                            )}
-                          </li>;
-                        })}
-                      </ul>
-                    )}
-                    {!mainStep?.steps && mainStep.visited_status === 'current' && (
-                      <div style={{ paddingLeft: 20 }}>
-                        <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
-                          {children}
-                        </AssignmentCard>
-                      </div>
-                    )}
-                  </div>
+                  <div className='psdk-vertical-step-label'>{mainStep.name}</div>
                 </div>
-              </React.Fragment>
-            );
-          })}
+                {!isLastStep(index) && <div className={_getVBodyClass(index)} />}
+              </div>
+            ))}
+          </div>
+          <div className='psdk-stepper-content'>
+            <AssignmentCard getPConnect={getPConnect} itemKey={itemKey} actionButtons={actionButtons} onButtonPress={buttonPress}>
+              {children}
+            </AssignmentCard>
+          </div>
         </div>
       ) : (
         <div className='psdk-horizontal-stepper'>
