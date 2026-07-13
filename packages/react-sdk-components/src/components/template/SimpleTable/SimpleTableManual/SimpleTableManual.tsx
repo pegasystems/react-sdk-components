@@ -461,16 +461,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       if (order !== 0) return order;
       return a[1] - b[1];
     });
-
-    const newElements = new Array(stabilizedThis.length);
-    stabilizedThis.forEach((el, index) => {
-      // Use the original index recorded on the row (set in generateRowsData)
-      // so that filtering (which shrinks rowData but not `elements`) still maps
-      // each surviving row to the correct rendered cells.
-      const originalIndex = (el[0] as any)?.__originalIndex ?? el[1];
-      newElements[index] = elements[originalIndex];
-    });
-    return newElements;
+    return stabilizedThis.map(([el]) => el);
   }
 
   function _menuClick(event, columnId: string, columnType: string, labelValue: string) {
@@ -717,39 +708,38 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
             {(readOnlyMode || allowEditingInModal) &&
               rowData &&
               rowData.length > 0 &&
-              stableSort(rowData, getComparator(order, orderBy))
-                .slice(0)
-                .map((row, index) => {
-                  return (
-                    <TableRow key={index}>
-                      {row?.map((item, childIndex) => {
-                        const theColKey = displayedColumns[childIndex];
-                        return (
-                          <TableCell key={theColKey} className={classes.tableCell}>
-                            {item}
-                          </TableCell>
-                        );
-                      })}
-                      {showDeleteButton && (
-                        <TableCell key='DeleteIcon' className={classes.tableCell}>
-                          <div>
-                            <MoreIcon
-                              id='table-edit-menu-icon'
-                              className={classes.moreIcon}
-                              onClick={event => {
-                                editMenuClick(event, index);
-                              }}
-                            />
-                            <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
-                              <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
-                              <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
-                            </Menu>
-                          </div>
+              stableSort(rowData, getComparator(order, orderBy)).map((row: any, displayIndex) => {
+                const originalIndex = row.__originalIndex;
+                return (
+                  <TableRow key={displayIndex}>
+                    {(elements as any[])[originalIndex]?.map((item, childIndex) => {
+                      const theColKey = displayedColumns[childIndex];
+                      return (
+                        <TableCell key={theColKey} className={classes.tableCell}>
+                          {item}
                         </TableCell>
-                      )}
-                    </TableRow>
-                  );
-                })}
+                      );
+                    })}
+                    {showDeleteButton && (
+                      <TableCell key='DeleteIcon' className={classes.tableCell}>
+                        <div>
+                          <MoreIcon
+                            id='table-edit-menu-icon'
+                            className={classes.moreIcon}
+                            onClick={event => {
+                              editMenuClick(event, originalIndex);
+                            }}
+                          />
+                          <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
+                            <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
+                            <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
+                          </Menu>
+                        </div>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
         {((readOnlyMode && (!rowData || rowData?.length === 0)) ||
