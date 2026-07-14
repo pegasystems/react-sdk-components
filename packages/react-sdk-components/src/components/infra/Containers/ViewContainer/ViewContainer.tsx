@@ -153,13 +153,15 @@ export default function ViewContainer(props: ViewContainerProps) {
         const latestItem = items[key];
         const rootView = latestItem.view;
         const { context, name: viewName } = rootView.config;
+        const target = key.substring(0, key.lastIndexOf('_'));
         const config: any = { meta: rootView };
         config.options = {
           context: latestItem.context,
           pageReference: context || getPConnect().getPageReference(),
           containerName: getPConnect().getContainerName(),
-          containerItemName: key,
-          hasForm: viewName === CREATE_DETAILS_VIEW_NAME
+          containerItemID: key,
+          hasForm: viewName === CREATE_DETAILS_VIEW_NAME,
+          target
         };
         const configObject: any = PCore.createPConnect(config);
 
