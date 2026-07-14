@@ -56,7 +56,8 @@ const iconMap = {
   'pi pi-tablet': <TabletAndroidOutlineIcon fontSize='large' />,
   'pi pi-ambulance': <AirportShuttleOutlinedIcon fontSize='large' />,
   'pi pi-ink-solid': <EditOutlinedIcon fontSize='large' />,
-  'pi pi-columns': <HomeOutlinedIcon fontSize='large' />
+  'pi pi-columns': <HomeOutlinedIcon fontSize='large' />,
+  'case-solid': <WorkOutlineIcon fontSize='large' />
 };
 
 const drawerWidth = 300;

@@ -114,9 +114,12 @@ const SUPPORTED_FIELD_TYPES = [
 export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex) => {
   let primaryFields: any = [];
   let configFields: any = [];
+  const safeRawFields = rawFields || [];
 
   if (primaryFieldsViewIndex > -1) {
-    let primaryFieldVMD: any = PCore.getMetadataUtils().resolveView(PRIMARY_FIELDS);
+    // @ts-ignore
+    const qualifiedName = PCore.getNameSpaceUtils().getDefaultQualifiedName(PRIMARY_FIELDS);
+    let primaryFieldVMD: any = PCore.getMetadataUtils().resolveView(qualifiedName);
     if (Array.isArray(primaryFieldVMD)) {
       primaryFieldVMD = primaryFieldVMD.find(primaryFieldView => primaryFieldView.classID === contextClass);
       primaryFields = primaryFieldVMD?.children?.[0]?.children || [];
@@ -129,7 +132,7 @@ export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex)
     }
   }
 
-  configFields = [...rawFields.slice(0, primaryFieldsViewIndex), ...primaryFields, ...rawFields.slice(primaryFieldsViewIndex + 1)];
+  configFields = [...safeRawFields.slice(0, primaryFieldsViewIndex), ...primaryFields, ...safeRawFields.slice(primaryFieldsViewIndex + 1)];
   // filter duplicate fields after combining raw fields and primary fields
   return configFields.filter((field, index) => configFields.findIndex(_field => field.config?.value === _field.config?.value) === index);
 };
@@ -198,9 +201,11 @@ export function getFieldLabel(fieldConfig) {
 export const updateFieldLabels = (fields, configFields, primaryFieldsViewIndex, pConnect, options) => {
   const labelsOfFields: any = [];
   const { columnsRawConfig = [] } = options;
+  // @ts-ignore
+  const qualifiedPrimaryFields = PCore.getNameSpaceUtils().getDefaultQualifiedName(PRIMARY_FIELDS);
   fields.forEach((field, idx) => {
     const rawColumnConfig = columnsRawConfig[idx]?.config;
-    if (field.config.value === PRIMARY_FIELDS) {
+    if (field.config.value === PRIMARY_FIELDS || field.config.value === qualifiedPrimaryFields) {
       labelsOfFields.push('');
     } else if (isFLProperty(rawColumnConfig?.label ?? rawColumnConfig?.caption)) {
       labelsOfFields.push(getFieldLabel(rawColumnConfig) || field.config.label || field.config.caption);
@@ -217,7 +222,7 @@ export const updateFieldLabels = (fields, configFields, primaryFieldsViewIndex, 
         let label = configFields[i].config?.label;
         if (isFLProperty(label)) {
           label = getFieldLabel(configFields[i].config);
-        } else if (label.startsWith('@')) {
+        } else if (label?.startsWith('@')) {
           label = label.substring(3);
         }
         if (pConnect) {
@@ -242,12 +247,19 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, op
   });
 
   const fieldDefs = configFields.map((field, index) => {
+    let name = field.config.value;
+    if (name.startsWith('@')) {
+      name = name.substring(name.indexOf(' ') + 1);
+    }
+    if (name.startsWith('.')) {
+      name = name.substring(1);
+    }
     return {
       type: 'text',
       label: fieldsLabels[index],
       fillAvailableSpace: !!field.config.fillAvailableSpace,
       id: `${index}`,
-      name: field.config.value.substr(4),
+      name,
       cellRenderer: TABLE_CELL,
       sort: false,
       noContextMenu: true,
@@ -256,7 +268,7 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, op
         ...field
       },
       // BUG-615253: Workaround for autosize in table with lazy loading components
-      width: getFieldWidth(field, fields[index].config.label)
+      width: getFieldWidth(field, fieldsLabels[index])
     };
   });
 

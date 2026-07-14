@@ -212,6 +212,15 @@ class PConnect extends Component {
       this.c11nEnv.removeFormField();
       setVisibilityForList(this.c11nEnv, false);
     }
+    // Remove the component's field node from the context tree on unmount.
+    // Without this, field references (e.g. Dropdowns, AutoComplete) from a previous
+    // step persist in ContextTreeManager.rootNodes.references and get incorrectly
+    // included in subsequent step submission payloads, causing 400 errors.
+    try {
+      this.c11nEnv.removeNode();
+    } catch {
+      // Ignore if already removed
+    }
   }
 
   /*

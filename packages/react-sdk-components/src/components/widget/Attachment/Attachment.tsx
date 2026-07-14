@@ -344,22 +344,26 @@ export default function Attachment(props: AttachmentProps) {
     return attachments;
   }, [attachments]);
 
-  // Prepares new structure as per Cosmos component
+  // Prepares new structure as per Cosmos component (immutable - does not mutate source)
   const transformAttachments = () => {
-    const transformedFiles = [...attachments];
     let deleteIndex = -1;
-    transformedFiles.forEach(attachment => {
-      attachment.props.id = attachment.responseProps.ID;
-      attachment.props.format = attachment.props.name.split('.').pop();
-      if (attachment.props.error) {
-        attachment.responseProps.deleteIndex = deleteIndex;
+    const transformedFiles = attachments.map(attachment => {
+      const newProps = {
+        ...attachment.props,
+        id: attachment.responseProps.ID,
+        format: attachment.props.name.split('.').pop()
+      };
+      const newResponseProps = { ...attachment.responseProps };
+      if (newProps.error) {
+        newResponseProps.deleteIndex = deleteIndex;
       } else {
         deleteIndex += 1;
-        attachment.responseProps.deleteIndex = deleteIndex;
+        newResponseProps.deleteIndex = deleteIndex;
       }
-      if (attachment.props.thumbnail) {
-        thumbnailURLs.current.push(attachment.props.thumbnail);
+      if (newProps.thumbnail) {
+        thumbnailURLs.current.push(newProps.thumbnail);
       }
+      return { ...attachment, props: newProps, responseProps: newResponseProps };
     });
 
     return transformedFiles;
@@ -427,12 +431,15 @@ export default function Attachment(props: AttachmentProps) {
           isArrayDeepMerge: false,
           removePropertyFromChangedList: true
         });
-      } else {
-        const serverFiles = transformAttachments();
-        // overrideLocalState.current = false;
-        attachmentCount.current = attachments.length;
-        filesWithError.current = [];
-        setFiles(serverFiles);
+      } else if (filesWithError.current.length === 0) {
+        // Sync local state from server when attachments genuinely changed (e.g., table remount after modal submit)
+        const hasActiveUpload = files.some(f => f.inProgress);
+        if (!hasActiveUpload) {
+          const serverFiles = transformAttachments();
+          attachmentCount.current = attachments.length;
+          filesWithError.current = [];
+          setFiles(serverFiles);
+        }
       }
     }
   }, [memoizedAttachments]);
@@ -546,6 +553,70 @@ export default function Attachment(props: AttachmentProps) {
         })}
     </div>
   );
+
+  const displayOnlyFileDisplay = (
+    <div>
+      {files &&
+        files.length > 0 &&
+        files.map((item, index) => {
+          return (
+            <div key={index} className='psdk-utility-card'>
+              <div className='psdk-utility-card-icon'>
+                <img className='psdk-utility-card-svg-icon' src={srcImg} />
+              </div>
+              <div className='psdk-utility-card-main'>
+                <div className='psdk-utility-card-main-primary-label'>{item.props.name}</div>
+                {item.props.meta && <div style={{ color: item.props.error ? 'red' : undefined }}>{item.props.meta}</div>}
+              </div>
+              <div className='psdk-utility-action'>
+                <div>
+                  <IconButton
+                    id='setting-button'
+                    aria-controls={menuOpenIndex === index ? 'file-menu' : undefined}
+                    aria-expanded={menuOpenIndex === index ? 'true' : undefined}
+                    aria-haspopup='true'
+                    onClick={event => handleClick(event, index)}
+                    size='large'
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id='file-menu'
+                    anchorEl={menuAnchorEl}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    keepMounted
+                    open={menuOpenIndex === index}
+                    onClose={handleClose}
+                  >
+                    <MenuItem
+                      style={{ fontSize: '14px' }}
+                      key='download'
+                      onClick={() => {
+                        handleClose();
+                        onFileDownload(item.responseProps ? item.responseProps : {});
+                      }}
+                    >
+                      Download
+                    </MenuItem>
+                  </Menu>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+    </div>
+  );
+
+  if (displayMode === 'DISPLAY_ONLY') {
+    return (
+      <div className='file-upload-container'>
+        <span className={`label ${required ? 'file-label' : ''}`}>{label}</span>
+        {validatemessage !== '' ? <span className='file-error'>{validatemessage}</span> : <span style={{ fontSize: '14px' }}>{helperText}</span>}
+        {files && files.length > 0 ? <section>{displayOnlyFileDisplay}</section> : <span>---</span>}
+      </div>
+    );
+  }
 
   return (
     <div className='file-upload-container'>

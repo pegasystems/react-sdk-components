@@ -30,7 +30,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
 
   const [bHasNavigation, setHasNavigation] = useState(false);
   const [actionButtons, setActionButtons] = useState([]);
-  const [bIsVertical, setIsVertical] = useState(false);
+  const [stepIndicator, setStepIndicator] = useState<'horizontal' | 'vertical' | 'vertical-start'>('horizontal');
   const [arCurrentStepIndicies, setArCurrentStepIndicies] = useState<any[]>([]);
   const [arNavigationSteps, setArNavigationSteps] = useState<any[]>([]);
 
@@ -128,9 +128,15 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
         return;
       }
 
-      // set vertical navigation
-      const isVerticalTemplate = navigation.template?.toLowerCase() === 'vertical';
-      setIsVertical(isVerticalTemplate);
+      // set navigation mode
+      const navTemplate = navigation.template?.toLowerCase();
+      if (navTemplate === 'vertical') {
+        setStepIndicator('vertical');
+      } else if (navTemplate === 'vertical-left') {
+        setStepIndicator('vertical-start');
+      } else {
+        setStepIndicator('horizontal');
+      }
 
       if (navigation.steps) {
         const steps = JSON.parse(JSON.stringify(navigation.steps));
@@ -301,10 +307,12 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     refreshProps.forEach(prop => {
       PCore.getRefreshManager().registerForRefresh(
         'PROP_CHANGE',
-        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, '', pageReference, {
-          ...refreshOptions,
-          refreshFor: prop[0]
-        }),
+        matchedPath => {
+          thePConn.getActionsApi().refreshCaseView(caseKey, '', pageReference, {
+            ...refreshOptions,
+            refreshFor: matchedPath || prop[0]
+          });
+        },
         `${pageReference}.${prop[1]}`,
         `${context}/${pageReference}`,
         context
@@ -327,7 +335,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
             itemKey={itemKey}
             actionButtons={actionButtons}
             onButtonPress={buttonPress}
-            bIsVertical={bIsVertical}
+            stepIndicator={stepIndicator}
             arCurrentStepIndicies={arCurrentStepIndicies}
             arNavigationSteps={arNavigationSteps}
           >

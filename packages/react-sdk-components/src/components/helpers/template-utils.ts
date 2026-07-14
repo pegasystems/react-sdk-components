@@ -61,6 +61,11 @@ export function getInstructions(pConnect, instructions: string = 'casestep'): st
     return undefined;
   }
 
+  // Handle instructions as object (returned from paragraph processing)
+  if (typeof instructions === 'object' && instructions !== null) {
+    return (instructions as any).htmlContent;
+  }
+
   // If the annotation wasn't processed correctly, don't return any instruction text
   if (instructions?.startsWith('@PARAGRAPH')) {
     return undefined;
