@@ -4,9 +4,15 @@ import { TextField } from '@mui/material';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 interface IntegerProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Integer here
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Integer(props: IntegerProps) {
@@ -21,20 +27,29 @@ export default function Integer(props: IntegerProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     readOnly,
     testId,
     helperText,
     displayMode,
     hideLabel,
-    placeholder
+    placeholder,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
 
-  const helperTextToDisplay = validatemessage || helperText;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   const [inputValue, setInputValue] = useState('');
 

@@ -5,6 +5,7 @@ import Utils from '../../helpers/utils';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 // Can't use RadioButtonProps until getLocaleRuleNameFromKeys is NOT private
 interface RadioButtonsProps extends PConnFieldProps {
@@ -18,6 +19,11 @@ interface RadioButtonsProps extends PConnFieldProps {
   imageSize?: string;
   showImageDescription?: boolean;
   datasource?: any;
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function RadioButtons(props: RadioButtonsProps) {
@@ -32,7 +38,6 @@ export default function RadioButtons(props: RadioButtonsProps) {
     readOnly,
     validatemessage,
     helperText,
-    status,
     required,
     inline,
     displayMode,
@@ -44,7 +49,9 @@ export default function RadioButtons(props: RadioButtonsProps) {
     datasource,
     imagePosition,
     imageSize,
-    showImageDescription
+    showImageDescription,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
   const [theSelectedButton, setSelectedButton] = useState(value);
 
@@ -52,8 +59,17 @@ export default function RadioButtons(props: RadioButtonsProps) {
   const theConfigProps = thePConn.getConfigProps();
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
   const className = thePConn.getCaseInfo().getClassName();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   let configProperty = (thePConn.getRawMetadata() as any)?.config?.value || '';
   configProperty = configProperty.startsWith('@P') ? configProperty.substring(3) : configProperty;

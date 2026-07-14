@@ -6,6 +6,7 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../helpers/instructions-utils';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on Checkbox here
@@ -28,6 +29,11 @@ interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   showImageDescription: string;
   renderMode: string;
   image: string;
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 const useStyles = makeStyles(() => ({
@@ -57,7 +63,6 @@ export default function CheckboxComponent(props: CheckboxProps) {
     testId,
     required,
     disabled,
-    status,
     helperText,
     validatemessage,
     displayMode,
@@ -78,17 +83,28 @@ export default function CheckboxComponent(props: CheckboxProps) {
     imageSize,
     showImageDescription,
     renderMode,
-    image
+    image,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
   const readOnlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY' || readOnly;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [theSelectedButton, setSelectedButton] = useState(value);
   const classes = useStyles();
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   const [checked, setChecked] = useState<any>(false);
   useEffect(() => {

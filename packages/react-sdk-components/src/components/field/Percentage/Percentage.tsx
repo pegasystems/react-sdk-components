@@ -6,6 +6,7 @@ import type { PConnFieldProps } from '../../../types/PConnProps';
 import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-utils';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
+import useStatus from '../../../hooks/useStatus';
 
 /* Using react-number-format component here, since it allows formatting decimal values,
 as per the locale.
@@ -15,6 +16,11 @@ interface PercentageProps extends PConnFieldProps {
   currencyISOCode?: string;
   showGroupSeparators?: string;
   decimalPrecision?: number;
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Percentage(props: PercentageProps) {
@@ -28,7 +34,6 @@ export default function Percentage(props: PercentageProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     // onChange,
     // onBlur,
     readOnly,
@@ -39,7 +44,9 @@ export default function Percentage(props: PercentageProps) {
     hideLabel,
     placeholder,
     showGroupSeparators,
-    decimalPrecision
+    decimalPrecision,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
 
   const [values, setValues] = useState(value.toString());
@@ -47,7 +54,16 @@ export default function Percentage(props: PercentageProps) {
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   const theCurrencyOptions = getCurrencyOptions(currencyISOCode);
   const formattedValue = format(value, pConn.getComponentName()?.toLowerCase(), theCurrencyOptions);

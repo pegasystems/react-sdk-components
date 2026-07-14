@@ -4,9 +4,15 @@ import { MuiTelInput } from 'mui-tel-input';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
+import useStatus from '../../../hooks/useStatus';
 
 interface PhoneProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Phone here
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Phone(props: PhoneProps) {
@@ -20,14 +26,15 @@ export default function Phone(props: PhoneProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     onChange,
     readOnly,
     testId,
     helperText,
     displayMode,
     hideLabel,
-    placeholder
+    placeholder,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
 
   const pConn = getPConnect();
@@ -37,7 +44,16 @@ export default function Phone(props: PhoneProps) {
   const [inputValue, setInputValue] = useState(value);
   useEffect(() => setInputValue(value), [value]);
 
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   let testProp = {};
 

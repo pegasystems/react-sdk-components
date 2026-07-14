@@ -4,9 +4,15 @@ import { TextField } from '@mui/material';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 interface URLComponentProps extends PConnFieldProps {
   // If any, enter additional props that only exist on URLComponent here
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 // NOTE: that we had to change the name from URL to URLComponent
@@ -24,21 +30,31 @@ export default function URLComponent(props: URLComponentProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     readOnly,
     testId,
     helperText,
     displayMode,
     hideLabel,
-    placeholder
+    placeholder,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
 
   const [inputValue, setInputValue] = useState('');
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   useEffect(() => {
     setInputValue(value);

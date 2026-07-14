@@ -6,6 +6,7 @@ import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { getCurrencyCharacters, getCurrencyOptions } from './currency-utils';
+import useStatus from '../../../hooks/useStatus';
 
 /* Using react-number-format component here, since it allows formatting decimal values,
 as per the locale.
@@ -14,6 +15,11 @@ interface CurrrencyProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Currency here
   currencyISOCode?: string;
   allowDecimals: boolean;
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Currency(props: CurrrencyProps) {
@@ -27,7 +33,6 @@ export default function Currency(props: CurrrencyProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     /* onChange, onBlur, */
     readOnly,
     testId,
@@ -36,14 +41,25 @@ export default function Currency(props: CurrrencyProps) {
     hideLabel,
     currencyISOCode = 'USD',
     placeholder,
-    allowDecimals
+    allowDecimals,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
   const [values, setValues] = useState(value.toString());
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   const testProps: any = { 'data-test-id': testId };
 

@@ -7,6 +7,7 @@ import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 // Will return the date string in YYYY-MM-DD format which we'll be POSTing to the server
 function getFormattedDate(date) {
@@ -15,6 +16,11 @@ function getFormattedDate(date) {
 
 interface DateProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Date here
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Date(props: DateProps) {
@@ -22,14 +28,37 @@ export default function Date(props: DateProps) {
   const TextInput = getComponentFromMap('TextInput');
   const FieldValueList = getComponentFromMap('FieldValueList');
 
-  const { getPConnect, label, required, disabled, value, validatemessage, status, readOnly, testId, helperText, displayMode, hideLabel } = props;
+  const {
+    getPConnect,
+    label,
+    required,
+    disabled,
+    value,
+    validatemessage,
+    readOnly,
+    testId,
+    helperText,
+    displayMode,
+    hideLabel,
+    showFieldMessage,
+    messageConfig = {}
+  } = props;
 
   const [dateValue, setDateValue] = useState<Dayjs | null>(value ? dayjs(value) : null);
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   // Start with default dateFormatInfo
   const dateFormatInfo = dateFormatInfoDefault;

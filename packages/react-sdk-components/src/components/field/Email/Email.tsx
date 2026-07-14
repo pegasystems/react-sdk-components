@@ -5,9 +5,15 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
+import useStatus from '../../../hooks/useStatus';
 
 interface EmailProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Date here
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Email(props: EmailProps) {
@@ -22,20 +28,29 @@ export default function Email(props: EmailProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     readOnly,
     testId,
     helperText,
     displayMode,
     hideLabel,
-    placeholder
+    placeholder,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
 
-  const helperTextToDisplay = validatemessage || helperText;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   const [inputValue, setInputValue] = useState('');
 

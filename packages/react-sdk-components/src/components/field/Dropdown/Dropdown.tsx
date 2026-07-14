@@ -8,6 +8,7 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import { useDeepMemo } from '../Multiselect/utils';
+import useStatus from '../../../hooks/useStatus';
 
 interface IOption {
   key: string;
@@ -57,6 +58,11 @@ interface DropdownProps extends PConnFieldProps {
   datasourceMetadata?: any;
   parameters?: any;
   columns: any[];
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Dropdown(props: DropdownProps) {
@@ -70,7 +76,6 @@ export default function Dropdown(props: DropdownProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     readOnly,
     testId,
     helperText,
@@ -79,7 +84,9 @@ export default function Dropdown(props: DropdownProps) {
     datasourceMetadata,
     hideLabel,
     onRecordChange,
-    fieldMetadata
+    fieldMetadata,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
   let { placeholder = '' } = props;
   const context = getPConnect().getContextName();
@@ -87,13 +94,22 @@ export default function Dropdown(props: DropdownProps) {
   placeholder = placeholder || 'Select...';
   const [options, setOptions] = useState<IOption[]>([]);
   const [theDatasource, setDatasource] = useState<any[] | null>(null);
-  const helperTextToDisplay = validatemessage || helperText;
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
   const className = thePConn.getCaseInfo().getClassName();
   const refName = propName?.slice(propName.lastIndexOf('.') + 1);
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, setStatus] = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   if (!isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)
