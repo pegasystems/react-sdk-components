@@ -307,10 +307,12 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
     refreshProps.forEach(prop => {
       PCore.getRefreshManager().registerForRefresh(
         'PROP_CHANGE',
-        thePConn.getActionsApi().refreshCaseView.bind(thePConn.getActionsApi(), caseKey, '', pageReference, {
-          ...refreshOptions,
-          refreshFor: prop[0]
-        }),
+        matchedPath => {
+          thePConn.getActionsApi().refreshCaseView(caseKey, '', pageReference, {
+            ...refreshOptions,
+            refreshFor: matchedPath || prop[0]
+          });
+        },
         `${pageReference}.${prop[1]}`,
         `${context}/${pageReference}`,
         context

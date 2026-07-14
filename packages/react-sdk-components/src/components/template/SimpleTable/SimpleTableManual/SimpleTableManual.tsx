@@ -56,6 +56,7 @@ interface SimpleTableManualProps extends PConnProps {
   validatemessage?: string;
   required?: boolean;
   targetClassLabel?: string;
+  uniqueField?: string;
 }
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -127,8 +128,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     viewForEditModal,
     required,
     validatemessage,
-    targetClassLabel
+    targetClassLabel,
+    uniqueField
   } = props;
+  const normalizedUniqueField = uniqueField?.charAt(0) === '.' ? uniqueField.substring(1) : uniqueField;
   const pConn = getPConnect();
   const [rowData, setRowData] = useState([]);
   const [elements, setElementsData] = useState([]);
@@ -155,6 +158,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const { referenceListStr } = getContext(getPConnect());
   const label = labelProp || propertyLabel;
   const propsToUse = { label, showLabel, ...getPConnect().getInheritedProps() };
+
   if (propsToUse.showLabel === false) {
     propsToUse.label = '';
   }
@@ -165,13 +169,17 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const menuIconOverride$ = Utils.getImageSrc('trash', Utils.getSDKStaticConentUrl());
 
   const resolvedFields = children?.[0]?.children || presets?.[0].children?.[0].children;
-  const primaryFieldsViewIndex = resolvedFields.findIndex(field => field.config.value === 'pyPrimaryFields');
+  // @ts-ignore
+  const qualifiedPrimaryFields = PCore.getNameSpaceUtils().getDefaultQualifiedName('pyPrimaryFields');
+  const primaryFieldsViewIndex = resolvedFields?.findIndex(field => {
+    const value = field.config.value;
+    return value === 'pyPrimaryFields' || value === qualifiedPrimaryFields;
+  });
   // NOTE: props has each child.config with datasource and value undefined
   //  but getRawMetadata() has each child.config with datasource and value showing their unresolved values (ex: "@P thePropName")
   //  We need to use the prop name as the "glue" to tie the table dataSource, displayColumns and data together.
   //  So, in the code below, we'll use the unresolved config.value (but replacing the space with an underscore to keep things happy)
   const rawMetadata: any = getPConnect().getRawMetadata();
-
   // get raw config since @P and other annotations are processed and don't appear in the resolved config.
   //  Destructure "raw" children into array var: "rawFields"
   //  NOTE: when config.listType == "associated", the property can be found in either
@@ -196,14 +204,19 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const editActionId = editType === 'action' && editModeConfig?.useSeparateActionForEdit ? editModeConfig?.editAction : editModeConfig?.defaultAction;
   const configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
 
-  const fieldsWithPropNames = rawFields.map((field, index) => {
-    return { ...resolvedFields[index], propName: field.config.value.replace('@P .', '') };
+  const fieldsWithPropNames = configFields.map(field => {
+    let propName = field.config.value;
+    if (propName.startsWith('@')) {
+      propName = propName.substring(propName.indexOf(' ') + 1);
+    }
+    if (propName.startsWith('.')) {
+      propName = propName.substring(1);
+    }
+    return { ...field, propName };
   });
 
   useEffect(() => {
-    if (!(readOnlyMode && dataPageName)) {
-      buildElementsForTable();
-    }
+    buildElementsForTable();
     if (readOnlyMode || allowEditingInModal) {
       generateRowsData();
     }
@@ -221,7 +234,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       isDisplayModeEnabled || readOnlyMode
         ? initializeColumns(configFields, undefined)
         : // For inline edit table
-          buildFieldsForTable(rawFields, getPConnect(), showDeleteButton, { primaryFieldsViewIndex, fields: resolvedFields }),
+          buildFieldsForTable(configFields, getPConnect(), showDeleteButton, { primaryFieldsViewIndex, fields: resolvedFields }),
     []
   );
 
@@ -232,11 +245,11 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
           // Temporary filter for attachments to align with constellation payload behavior.
-          fieldDefs.filter(item => item.name && item.meta?.type !== 'Attachment').map(item => item.name)
+          fieldDefs.filter(item => item.id && item.meta?.type !== 'Attachment').map(item => item.id)
         );
     } else {
-      // @ts-expect-error - An argument for 'fields' was not provided
-      getPConnect().getListActions().initDefaultPageInstructions(getPConnect().getReferenceList());
+      // @ts-ignore - fields param is optional, uniqueField passed as 3rd arg for page instructions
+      getPConnect().getListActions().initDefaultPageInstructions(getPConnect().getReferenceList(), undefined, uniqueField);
     }
   }, []);
 
@@ -289,17 +302,14 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   function generateRowsData() {
     myRowsRef.current = [];
+
     // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
-    if (dataPageName) {
+    if (!referenceList.length && dataPageName) {
       getDataPage(dataPageName, parameters, context)
         .then(listData => {
           const data = formatRowsData(listData);
           myRowsRef.current = data || [];
           setRowData(data);
-          // Build elements from fetched data since referenceList may be empty for data page tables
-          if (readOnlyMode) {
-            buildElementsFromData(listData as any[]);
-          }
         })
         .catch(e => {
           console.log(e);
@@ -343,19 +353,26 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   const addRecord = () => {
     if (allowEditingInModal && (defaultView || defaultActionId)) {
-      pConn.getActionsApi().openEmbeddedDataModal(
-        defaultView,
-        // @ts-expect-error
-        pConn,
-        referenceListStr,
-        referenceList.length,
-        PCore.getConstants().RESOURCE_STATUS.CREATE,
-        targetClassLabel,
-        editType,
-        defaultActionId
-      );
+      pConn
+        .getActionsApi()
+
+        .openEmbeddedDataModal(
+          defaultView,
+          // @ts-expect-error
+          pConn,
+          referenceListStr,
+          referenceList.length,
+          PCore.getConstants().RESOURCE_STATUS.CREATE,
+          targetClassLabel,
+          editType,
+          defaultActionId
+        );
     } else {
-      pConn.getListActions().insert({ classID: contextClass }, referenceList.length);
+      const payload: any = { classID: contextClass };
+      if (normalizedUniqueField) {
+        payload[normalizedUniqueField] = crypto.randomUUID();
+      }
+      pConn.getListActions().insert(payload, referenceList.length);
     }
 
     getPConnect().clearErrorMessages({
@@ -366,17 +383,20 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const editRecord = () => {
     setEditAnchorEl(null);
     if (typeof selectedRowIndex.current === 'number') {
-      pConn.getActionsApi().openEmbeddedDataModal(
-        bUseSeparateViewForEdit ? editView : defaultView,
-        // @ts-expect-error
-        pConn,
-        referenceListStr,
-        selectedRowIndex.current,
-        PCore.getConstants().RESOURCE_STATUS.UPDATE,
-        targetClassLabel,
-        editType,
-        editActionId
-      );
+      pConn
+        .getActionsApi()
+
+        .openEmbeddedDataModal(
+          bUseSeparateViewForEdit ? editView : defaultView,
+          // @ts-expect-error
+          pConn,
+          referenceListStr,
+          selectedRowIndex.current,
+          PCore.getConstants().RESOURCE_STATUS.UPDATE,
+          targetClassLabel,
+          editType,
+          editActionId
+        );
     }
   };
 
@@ -393,7 +413,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     const eleData: any = [];
     referenceList.forEach((element, index) => {
       const data: any = [];
-      rawFields.forEach(item => {
+      configFields.forEach(item => {
         // removing label field from config to hide title in the table cell
         if (!item.config.hide) {
           item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'DISPLAY_ONLY' : undefined } };
@@ -402,34 +422,17 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           const pageReferenceValue = isDatapage
             ? `${referenceListData}[${index}]`
             : `${pConn.getPageReference()}${referenceListData.substring(referenceListData.lastIndexOf('.'))}[${index}]`;
-          const isDisplayOnly = readOnlyMode || allowEditingInModal;
           const config = {
             meta: item,
             options: {
               context,
               pageReference: pageReferenceValue,
               referenceList: referenceListData,
-              hasForm: !isDisplayOnly
+              hasForm: true
             }
           };
           const view = PCore.createPConnect(config);
           data.push(createElement(createPConnectComponent(), view));
-        }
-      });
-      eleData.push(data);
-    });
-    setElementsData(eleData);
-  }
-
-  function buildElementsFromData(listData: any[]) {
-    const eleData: any = [];
-    listData.forEach((element, index) => {
-      const data: any = [];
-      rawFields.forEach(item => {
-        if (!item.config.hide) {
-          const propName = item.config.value.replace('@P .', '');
-          const val = getRowValue(element, propName);
-          data.push(createElement('span', { key: `${index}-${propName}` }, val ?? '---'));
         }
       });
       eleData.push(data);
@@ -640,6 +643,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         {len} result{len > 1 ? 's' : ''}
       </span>
     ) : null;
+  }
+
+  if (!rawFields) {
+    return null;
   }
 
   return (
