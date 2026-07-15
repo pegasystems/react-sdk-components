@@ -5,9 +5,15 @@ import dayjs from 'dayjs';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 interface TimeProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Time here
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Time(props: TimeProps) {
@@ -15,11 +21,33 @@ export default function Time(props: TimeProps) {
   const FieldValueList = getComponentFromMap('FieldValueList');
   const TextInput = getComponentFromMap('TextInput');
 
-  const { getPConnect, label, required, disabled, value = '', validatemessage, status, readOnly, helperText, displayMode, hideLabel, testId } = props;
-  const helperTextToDisplay = validatemessage || helperText;
+  const {
+    getPConnect,
+    label,
+    required,
+    disabled,
+    value = '',
+    validatemessage,
+    readOnly,
+    helperText,
+    displayMode,
+    hideLabel,
+    testId,
+    showFieldMessage,
+    messageConfig = {}
+  } = props;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
+
+  const status = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
   if (displayMode === 'DISPLAY_ONLY') {
     return <FieldValueList name={hideLabel ? '' : label} value={value} />;
   }

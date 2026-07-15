@@ -4,10 +4,16 @@ import { TextField } from '@mui/material';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 interface TextInputProps extends PConnFieldProps {
   // If any, enter additional props that only exist on TextInput here
   fieldMetadata?: any;
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -21,7 +27,6 @@ export default function TextInput(props: TextInputProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     /* onChange, onBlur */
     readOnly,
     testId,
@@ -29,14 +34,23 @@ export default function TextInput(props: TextInputProps) {
     helperText,
     displayMode,
     hideLabel,
-    placeholder
+    placeholder,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
 
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
 
-  const helperTextToDisplay = validatemessage || helperText;
+  const status = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   const [inputValue, setInputValue] = useState('');
   const maxLength = fieldMetadata?.maxLength;

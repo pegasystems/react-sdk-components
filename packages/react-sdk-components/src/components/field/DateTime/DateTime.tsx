@@ -7,9 +7,15 @@ import { format } from '../../helpers/formatters';
 import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-format-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 interface DateTimeProps extends PConnFieldProps {
   // If any, enter additional props that only exist on DateTime here
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function DateTime(props: DateTimeProps) {
@@ -17,7 +23,21 @@ export default function DateTime(props: DateTimeProps) {
   const TextInput = getComponentFromMap('TextInput');
   const FieldValueList = getComponentFromMap('FieldValueList');
 
-  const { getPConnect, label, required, disabled, value = '', validatemessage, status, readOnly, testId, helperText, displayMode, hideLabel } = props;
+  const {
+    getPConnect,
+    label,
+    required,
+    disabled,
+    value = '',
+    validatemessage,
+    readOnly,
+    testId,
+    helperText,
+    displayMode,
+    hideLabel,
+    showFieldMessage,
+    messageConfig = {}
+  } = props;
 
   const environmentInfo = PCore.getEnvironmentInfo();
   const timezone = environmentInfo && environmentInfo.getTimeZone();
@@ -27,7 +47,15 @@ export default function DateTime(props: DateTimeProps) {
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
+
+  const status = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   // Start with default dateFormatInfo
   const dateFormatInfo = dateFormatInfoDefault;

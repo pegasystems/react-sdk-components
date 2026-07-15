@@ -6,6 +6,7 @@ import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 /* Using react-number-format component here, since it allows formatting decimal values,
 as per the locale.
@@ -17,6 +18,11 @@ interface DecimalProps extends PConnFieldProps {
   decimalPrecision?: number;
   showGroupSeparators?: boolean;
   formatter?: string;
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function Decimal(props: DecimalProps) {
@@ -30,7 +36,6 @@ export default function Decimal(props: DecimalProps) {
     disabled,
     value = '',
     validatemessage,
-    status,
     /* onChange, onBlur, */
     readOnly,
     helperText,
@@ -41,7 +46,9 @@ export default function Decimal(props: DecimalProps) {
     showGroupSeparators,
     testId,
     placeholder,
-    formatter
+    formatter,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
 
   const [values, setValues] = useState(value.toString());
@@ -49,7 +56,15 @@ export default function Decimal(props: DecimalProps) {
   const pConn = getPConnect();
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
+
+  const status = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   const theSymbols = getCurrencyCharacters(currencyISOCode);
   const theCurrDec = theSymbols.theDecimalIndicator;
