@@ -12,11 +12,8 @@ export interface FormStatusProps {
 
 export type Status = 'error' | 'warning' | 'pending' | 'success' | undefined;
 
-const useStatus = ({ showFieldMessage, messageVisibility, validatemessage, readOnly }: FormStatusProps = {}): [
-  Status,
-  Dispatch<SetStateAction<Status>>
-] => {
-  const [status, setStatus] = useState<Status>();
+const useStatus = ({ showFieldMessage, messageVisibility, validatemessage, readOnly }: FormStatusProps = {}): Status => {
+  const [status, setStatus] = useState<any>();
 
   useEffect(() => {
     if (validatemessage) {
@@ -28,7 +25,7 @@ const useStatus = ({ showFieldMessage, messageVisibility, validatemessage, readO
     }
   }, [validatemessage, messageVisibility, readOnly, showFieldMessage]);
 
-  return [status, setStatus];
+  return status;
 };
 
 export default useStatus;

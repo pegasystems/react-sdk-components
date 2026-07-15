@@ -45,7 +45,7 @@ export default function TextInput(props: TextInputProps) {
   const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
   const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
 
-  const [status] = useStatus({
+  const status = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,

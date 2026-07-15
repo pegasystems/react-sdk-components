@@ -53,7 +53,7 @@ export default function Currency(props: CurrrencyProps) {
   const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
   const [values, setValues] = useState(value.toString());
 
-  const [status] = useStatus({
+  const status = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,

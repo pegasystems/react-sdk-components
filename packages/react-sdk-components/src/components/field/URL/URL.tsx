@@ -48,7 +48,7 @@ export default function URLComponent(props: URLComponentProps) {
   const actions = pConn.getActionsApi();
   const propName = (pConn.getStateProps() as any).value;
 
-  const [status] = useStatus({
+  const status = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,

@@ -63,7 +63,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
   const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
   const className = thePConn.getCaseInfo().getClassName();
 
-  const [status] = useStatus({
+  const status = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,

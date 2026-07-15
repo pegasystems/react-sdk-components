@@ -98,7 +98,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
 
-  const [status] = useStatus({
+  const status = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,

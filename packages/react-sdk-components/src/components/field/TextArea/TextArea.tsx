@@ -44,7 +44,7 @@ export default function TextArea(props: TextAreaProps) {
   const propName = (pConn.getStateProps() as any).value;
   const maxLength = fieldMetadata?.maxLength;
 
-  const [status] = useStatus({
+  const status = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,
