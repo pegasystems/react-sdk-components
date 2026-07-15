@@ -98,8 +98,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [status, setStatus] = useStatus({
+  const [status] = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,

@@ -63,8 +63,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
   const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
   const className = thePConn.getCaseInfo().getClassName();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [status, setStatus] = useStatus({
+  const [status] = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,

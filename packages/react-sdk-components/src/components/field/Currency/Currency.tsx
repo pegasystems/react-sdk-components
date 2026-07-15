@@ -53,8 +53,7 @@ export default function Currency(props: CurrrencyProps) {
   const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
   const [values, setValues] = useState(value.toString());
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [status, setStatus] = useStatus({
+  const [status] = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,

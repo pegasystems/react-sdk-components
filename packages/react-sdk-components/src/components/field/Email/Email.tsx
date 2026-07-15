@@ -44,8 +44,7 @@ export default function Email(props: EmailProps) {
   const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
   const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [status, setStatus] = useStatus({
+  const [status] = useStatus({
     showFieldMessage,
     messageVisibility: messageConfig.visibility,
     validatemessage,
