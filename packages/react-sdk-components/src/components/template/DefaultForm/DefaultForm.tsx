@@ -77,10 +77,7 @@ export default function DefaultForm(props: PropsWithChildren<DefaultFormProps>) 
   const { getPConnect, NumCols = '1' } = props;
   // When instructions is an object (banner), extract htmlContent directly.
   // When it is a string token ('casestep', 'none', or paragraph html), delegate to the helper.
-  const instructions =
-    typeof props.instructions === 'object'
-      ? props.instructions?.htmlContent
-      : getInstructions(getPConnect(), props.instructions);
+  const instructions = typeof props.instructions === 'object' ? props.instructions?.htmlContent : getInstructions(getPConnect(), props.instructions);
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
   // Extract banner-related properties from the raw instructions prop
@@ -152,4 +149,3 @@ export default function DefaultForm(props: PropsWithChildren<DefaultFormProps>) 
     </>
   );
 }
-
