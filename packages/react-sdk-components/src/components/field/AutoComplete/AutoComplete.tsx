@@ -8,6 +8,7 @@ import { getDataPage } from '../../helpers/data_page';
 import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
+import useStatus from '../../../hooks/useStatus';
 
 interface IOption {
   key: string;
@@ -49,6 +50,11 @@ interface AutoCompleteProps extends PConnFieldProps {
   parameters?: any;
   datasource: any;
   columns: any[];
+  showFieldMessage?: boolean;
+  messageConfig?: {
+    content?: string;
+    visibility?: boolean;
+  };
 }
 
 export default function AutoComplete(props: AutoCompleteProps) {
@@ -68,10 +74,11 @@ export default function AutoComplete(props: AutoCompleteProps) {
     displayMode,
     deferDatasource,
     datasourceMetadata,
-    status,
     helperText,
     hideLabel,
-    onRecordChange
+    onRecordChange,
+    showFieldMessage,
+    messageConfig = {}
   } = props;
 
   const context = getPConnect().getContextName();
@@ -80,11 +87,19 @@ export default function AutoComplete(props: AutoCompleteProps) {
   const [options, setOptions] = useState<IOption[]>([]);
   const [theDatasource, setDatasource] = useState(null);
   let selectedValue: any = '';
-  const helperTextToDisplay = validatemessage || helperText;
+  const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
+  const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
 
   const thePConn = getPConnect();
   const actionsApi = thePConn.getActionsApi();
   const propName = (thePConn.getStateProps() as any).value;
+
+  const status = useStatus({
+    showFieldMessage,
+    messageVisibility: messageConfig.visibility,
+    validatemessage,
+    readOnly
+  });
 
   if (!isDeepEqual(datasource, theDatasource)) {
     // inbound datasource is different, so update theDatasource (to trigger useEffect)
