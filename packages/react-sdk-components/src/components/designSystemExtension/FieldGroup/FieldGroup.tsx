@@ -9,7 +9,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
   name?: string;
-  collapsible?: boolean;
+  collapseOnLoad?: 'none' | 'expanded' | 'collapsed';
   instructions?: string;
 }
 
@@ -40,9 +40,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
-  const { children, name, collapsible = false, instructions } = props;
+  const { children, name, collapseOnLoad = 'none', instructions } = props;
+  const collapsible = collapseOnLoad !== 'none';
   const classes = useStyles(collapsible);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(collapseOnLoad === 'collapsed');
 
   const descAndChildren = (
     <Grid2 container>
