@@ -1,16 +1,20 @@
-import { type PropsWithChildren, useState } from 'react';
+import { type PropsWithChildren } from 'react';
 import Grid2 from '@mui/material/Grid2';
 import makeStyles from '@mui/styles/makeStyles';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import useCollapsibleState from '../../../hooks/useCollapsibleState';
 
 // FieldGroupProps is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
-  name?: string;
+  heading?: string;
   collapseOnLoad?: 'none' | 'expanded' | 'collapsed';
   instructions?: string;
+  defaultCollapsed?: any;
+  showHeading?: any;
+  collapsible?: any;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -32,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     gap: '5px',
-    cursor: collapsible => (collapsible ? 'pointer' : 'auto')
+    cursor: isCollapsibleMode => (isCollapsibleMode ? 'pointer' : 'auto')
   },
   instructionText: {
     padding: '5px 0'
@@ -40,10 +44,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
-  const { children, name, collapseOnLoad = 'none', instructions } = props;
-  const collapsible = collapseOnLoad !== 'none';
-  const classes = useStyles(collapsible);
-  const [collapsed, setCollapsed] = useState(collapseOnLoad === 'collapsed');
+  const { children, heading, collapseOnLoad = 'none', instructions, defaultCollapsed, showHeading, collapsible } = props;
+  const { isCollapsibleMode, collapsed, setCollapsed } = useCollapsibleState(collapseOnLoad, collapsible, defaultCollapsed, showHeading);
+  const classes = useStyles(isCollapsibleMode);
 
   const descAndChildren = (
     <Grid2 container>
@@ -58,16 +61,16 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
   return (
     <Grid2 container spacing={4} justifyContent='space-between'>
       <Grid2 style={{ width: '100%' }}>
-        {name && (
+        {heading && (
           <div className={classes.fieldMargin}>
-            {collapsible ? (
+            {isCollapsibleMode ? (
               <span id='field-group-header' className={classes.fieldGroupHeader} onClick={headerClickHandler}>
                 {collapsed ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />}
-                <b>{name}</b>
+                <b>{heading}</b>
               </span>
-            ) : (
-              <b>{name}</b>
-            )}
+            ) : showHeading ? (
+              <b>{heading}</b>
+            ) : null}
           </div>
         )}
         {instructions && instructions !== 'none' && (

@@ -14,7 +14,7 @@ interface GroupProps extends PConnFieldProps {
 
 export default function Group(props: GroupProps) {
   const FieldGroup = getComponentFromMap('FieldGroup');
-  const { children, heading, showHeading, instructions, collapseOnLoad = 'none', displayMode, type } = props;
+  const { children, displayMode, type } = props;
 
   const isReadOnly = displayMode === 'DISPLAY_ONLY';
 
@@ -32,9 +32,5 @@ export default function Group(props: GroupProps) {
 
   if (!children) return null;
 
-  return (
-    <FieldGroup name={showHeading ? heading : undefined} collapseOnLoad={collapseOnLoad} instructions={instructions}>
-      {content}
-    </FieldGroup>
-  );
+  return <FieldGroup {...props}>{content}</FieldGroup>;
 }
