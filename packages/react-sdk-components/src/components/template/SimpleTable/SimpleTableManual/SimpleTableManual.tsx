@@ -203,6 +203,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const defaultActionId = editType === 'action' ? editModeConfig?.defaultAction : undefined;
   const editActionId = editType === 'action' && editModeConfig?.useSeparateActionForEdit ? editModeConfig?.editAction : editModeConfig?.defaultAction;
   const configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
+  const addLabel = targetClassLabel ? localizedVal('Add {0}', 'SimpleTable').replace('{0}', targetClassLabel) : localizedVal('Add', 'SimpleTable');
 
   const fieldsWithPropNames = configFields.map(field => {
     let propName = field.config.value;
@@ -776,7 +777,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       {showAddRowButton && (
         <div style={{ fontSize: '1rem' }}>
           <Link style={{ cursor: 'pointer' }} onClick={addRecord} underline='hover'>
-            + {localizedVal('Add', localeCategory)}
+            + {localizedVal(addLabel, localeCategory)}
           </Link>
         </div>
       )}

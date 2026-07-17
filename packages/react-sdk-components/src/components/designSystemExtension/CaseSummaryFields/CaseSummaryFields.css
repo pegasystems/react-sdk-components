@@ -14,3 +14,17 @@
   padding: calc(2 * 0.5rem);
   grid-row-gap: calc(2 * 0.5rem);
 }
+
+.psdk-case-summary-fields .label {
+  font-size: 0.8rem;
+  color: #c0c0c0;
+}
+
+.psdk-case-summary-object-ref {
+  text-align: left;
+}
+
+.psdk-case-summary-object-ref-value * {
+  justify-content: flex-start;
+  text-align: left;
+}
