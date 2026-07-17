@@ -27,7 +27,7 @@ const LeftAlignVerticalTabs: any = withStyles((/* theme */) => ({
   }
 }))((props: LeftAlignVerticalTabsProps) => (
   <div>
-    <Tab {...props} />
+    <Tab style={{ textAlign: 'left' }} {...props} />
     <Divider />
   </div>
 ));
