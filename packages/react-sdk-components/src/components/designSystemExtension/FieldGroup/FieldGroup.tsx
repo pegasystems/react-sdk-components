@@ -8,10 +8,9 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 //  So, no need to extend PConnProps
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
-  heading?: string;
+  name?: string;
   instructions?: string;
   defaultCollapsed?: any;
-  showHeading?: any;
   collapsed?: any;
   onToggleCollapsed?: () => void;
   isCollapsibleMode?: boolean;
@@ -44,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
-  const { children, heading, instructions, collapsed, showHeading, isCollapsibleMode, onToggleCollapsed } = props;
+  const { children, name, instructions, collapsed, isCollapsibleMode, onToggleCollapsed } = props;
   const classes = useStyles(isCollapsibleMode);
 
   const descAndChildren = (
@@ -60,22 +59,27 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
   return (
     <Grid2 container spacing={4} justifyContent='space-between'>
       <Grid2 style={{ width: '100%' }}>
-        {heading && (
+        {name && (
           <div className={classes.fieldMargin}>
             {isCollapsibleMode ? (
               <span id='field-group-header' className={classes.fieldGroupHeader} onClick={headerClickHandler}>
                 {collapsed ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />}
-                <b>{heading}</b>
+                <b>{name}</b>
               </span>
-            ) : showHeading ? (
-              <b>{heading}</b>
-            ) : null}
+            ) : (
+              <b>{name}</b>
+            )}
           </div>
         )}
-        {instructions && instructions !== 'none' && (
-          <div key='instructions' className={classes.instructionText} dangerouslySetInnerHTML={{ __html: instructions }} />
+
+        {!collapsed && (
+          <>
+            {instructions && instructions !== 'none' && (
+              <div key='instructions' className={classes.instructionText} dangerouslySetInnerHTML={{ __html: instructions }} />
+            )}
+            {descAndChildren}
+          </>
         )}
-        {!collapsed && descAndChildren}
       </Grid2>
     </Grid2>
   );

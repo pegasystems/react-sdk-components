@@ -17,11 +17,23 @@ interface GroupProps extends PConnFieldProps {
 
 export default function Group(props: GroupProps) {
   const FieldGroup = getComponentFromMap('FieldGroup');
-  const { children, displayMode, type, defaultCollapsed, showHeading, collapsible, collapseOnLoad, heading } = props;
-  const { isCollapsibleMode, collapsed, setCollapsed } = useCollapsibleState(collapseOnLoad, collapsible, defaultCollapsed, showHeading);
+  const {
+    children,
+    displayMode,
+    type,
+    collapseOnLoad = 'none',
+    collapsible,
+    defaultCollapsed = false,
+    showHeading = true,
+    heading,
+    instructions
+  } = props;
   const isReadOnly = displayMode === 'DISPLAY_ONLY';
+  const { isCollapsibleMode, collapsed, setCollapsed } = useCollapsibleState(collapseOnLoad, collapsible, defaultCollapsed, showHeading);
 
   const onToggleCollapsed = () => {
+    if (collapsed === undefined) return;
+
     setCollapsed(current => !current);
   };
 
@@ -41,11 +53,11 @@ export default function Group(props: GroupProps) {
 
   return (
     <FieldGroup
+      name={showHeading ? heading : undefined}
       isCollapsibleMode={isCollapsibleMode}
       collapsed={collapsed}
       onToggleCollapsed={onToggleCollapsed}
-      showHeading={showHeading}
-      heading={heading}
+      instructions={instructions}
     >
       {content}
     </FieldGroup>
