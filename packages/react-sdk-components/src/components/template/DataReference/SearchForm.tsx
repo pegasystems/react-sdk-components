@@ -41,7 +41,7 @@ const checkIfSelectionsExist = getPConnect => {
 };
 
 const SearchForm = props => {
-  const { children, getPConnect, searchSelectCacheKey, type } = props;
+  const { children, getPConnect, searchSelectCacheKey, type, label } = props;
   const deferLoadedTabs = type === 'ObjectReference' ? { props: { getPConnect } } : children[2];
   const cache: any = PCore.getNavigationUtils().getComponentCache(searchSelectCacheKey) ?? {};
   const { selectedCategory } = cache;
@@ -113,7 +113,7 @@ const SearchForm = props => {
 
   return (
     <Box display='flex' flexDirection='column' gap={2}>
-      <Typography variant='h5'>{propsToUse.label}</Typography>
+      <Typography variant='h5'>{label ?? propsToUse.label}</Typography>
       {searchCategoriesComp}
       <TabContext value={currentTabId}>
         <Tabs style={{ display: 'none' }} value={currentTabId} onChange={(e, newValue) => setCurrentTabId(newValue)}>
