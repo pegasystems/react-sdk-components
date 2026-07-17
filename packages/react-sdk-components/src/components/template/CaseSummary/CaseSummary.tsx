@@ -65,6 +65,7 @@ export default function CaseSummary(props: PropsWithChildren<CaseSummaryProps>) 
         arSecondaryFields = childPConnData.children;
         arSecondaryFields.forEach((field, index) => {
           field.config.displayLabel = secondarySummaryFields[index]?.value?.props?.label;
+          field.getPConnect = secondarySummaryFields[index]?.value?.props?.getPConnect;
         });
       }
     }
