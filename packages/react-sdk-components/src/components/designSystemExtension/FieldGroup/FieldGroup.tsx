@@ -9,11 +9,9 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
   heading?: string;
-  collapseOnLoad?: 'none' | 'expanded' | 'collapsed';
   instructions?: string;
   defaultCollapsed?: any;
   showHeading?: any;
-  collapsible?: any;
   collapsed?: any;
   onToggleCollapsed?: () => void;
   isCollapsibleMode?: boolean;
