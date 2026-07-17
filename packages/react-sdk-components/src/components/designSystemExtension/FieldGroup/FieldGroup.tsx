@@ -3,7 +3,6 @@ import Grid2 from '@mui/material/Grid2';
 import makeStyles from '@mui/styles/makeStyles';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import useCollapsibleState from '../../../hooks/useCollapsibleState';
 
 // FieldGroupProps is one of the few components that does NOT have getPConnect.
 //  So, no need to extend PConnProps
@@ -15,6 +14,9 @@ interface FieldGroupProps {
   defaultCollapsed?: any;
   showHeading?: any;
   collapsible?: any;
+  collapsed?: any;
+  onToggleCollapsed?: () => void;
+  isCollapsibleMode?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -44,8 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
-  const { children, heading, collapseOnLoad = 'none', instructions, defaultCollapsed, showHeading, collapsible } = props;
-  const { isCollapsibleMode, collapsed, setCollapsed } = useCollapsibleState(collapseOnLoad, collapsible, defaultCollapsed, showHeading);
+  const { children, heading, instructions, collapsed, showHeading, isCollapsibleMode, onToggleCollapsed } = props;
   const classes = useStyles(isCollapsibleMode);
 
   const descAndChildren = (
@@ -55,7 +56,7 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
   );
 
   const headerClickHandler = () => {
-    setCollapsed(current => !current);
+    onToggleCollapsed?.();
   };
 
   return (

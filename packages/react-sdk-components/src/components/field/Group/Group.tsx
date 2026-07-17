@@ -1,6 +1,7 @@
 import { type ReactElement, useMemo } from 'react';
 import Grid2 from '@mui/material/Grid2';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import useCollapsibleState from '../../../hooks/useCollapsibleState';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 
 interface GroupProps extends PConnFieldProps {
@@ -8,15 +9,21 @@ interface GroupProps extends PConnFieldProps {
   heading: string;
   showHeading: boolean;
   instructions?: string;
-  collapseOnLoad?: 'none' | 'expanded' | 'collapsed';
+  collapseOnLoad?: any;
   type: string;
+  defaultCollapsed?: any;
+  collapsible?: any;
 }
 
 export default function Group(props: GroupProps) {
   const FieldGroup = getComponentFromMap('FieldGroup');
-  const { children, displayMode, type } = props;
-
+  const { children, displayMode, type, defaultCollapsed, showHeading, collapsible, collapseOnLoad, heading } = props;
+  const { isCollapsibleMode, collapsed, setCollapsed } = useCollapsibleState(collapseOnLoad, collapsible, defaultCollapsed, showHeading);
   const isReadOnly = displayMode === 'DISPLAY_ONLY';
+
+  const onToggleCollapsed = () => {
+    setCollapsed(current => !current);
+  };
 
   const content = useMemo(() => {
     return (
@@ -32,5 +39,15 @@ export default function Group(props: GroupProps) {
 
   if (!children) return null;
 
-  return <FieldGroup {...props}>{content}</FieldGroup>;
+  return (
+    <FieldGroup
+      isCollapsibleMode={isCollapsibleMode}
+      collapsed={collapsed}
+      onToggleCollapsed={onToggleCollapsed}
+      showHeading={showHeading}
+      heading={heading}
+    >
+      {content}
+    </FieldGroup>
+  );
 }
