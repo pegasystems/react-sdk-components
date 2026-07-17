@@ -1,6 +1,11 @@
-import { createElement, type PropsWithChildren } from 'react';
+import { createElement, useState, type PropsWithChildren } from 'react';
 
-import { getInstructions } from '../../helpers/template-utils';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
+
+import { getInstructions, getInstructionsType, getDismissBanner, mapInstructionsTypeToBannerVariant } from '../../helpers/template-utils';
 import createPConnectComponent from '../../../bridge/react_pconnect';
 import connectToState from '../../helpers/state-utils';
 
@@ -21,9 +26,21 @@ const Child = connectToState(mapStateToProps)(props => {
   return createElement(createPConnectComponent(), { ...rest, key, visibility });
 });
 
+const bannerIconMap = {
+  info: <InfoOutlinedIcon fontSize='small' />,
+  warning: <WarningAmberIcon fontSize='small' />,
+  success: <CheckCircleOutlineIcon fontSize='small' />
+};
+
 export default function DefaultForm(props: PropsWithChildren<DefaultFormProps>) {
   const { getPConnect, NumCols = '1' } = props;
   const instructions = getInstructions(getPConnect(), props.instructions);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  const instructionsType = getInstructionsType(props.instructions);
+  const isBanner = typeof props.instructions === 'object' && (props.instructions as any)?.isBanner;
+  const dismissBanner = getDismissBanner(props.instructions);
+  const bannerVariant = mapInstructionsTypeToBannerVariant(instructionsType);
 
   let divClass: string;
 
@@ -51,15 +68,34 @@ export default function DefaultForm(props: PropsWithChildren<DefaultFormProps>) 
   const arChildren = getPConnect().getChildren()[0].getPConnect().getChildren();
   const dfChildren = arChildren?.map(kid => <Child key={getKeyForMappedField(kid)} {...kid} />);
 
+  const renderInstructions = () => {
+    if (!instructions || bannerDismissed) return null;
+
+    if (isBanner) {
+      return (
+        <div className={`psdk-banner psdk-banner-${bannerVariant}`}>
+          <div className='psdk-banner-icon'>{bannerIconMap[bannerVariant]}</div>
+          <div className='psdk-banner-content' dangerouslySetInnerHTML={{ __html: instructions }} />
+          {dismissBanner && (
+            <button type='button' className='psdk-banner-dismiss' aria-label='Dismiss banner' onClick={() => setBannerDismissed(true)}>
+              <CloseIcon fontSize='small' />
+            </button>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className='psdk-default-form-instruction-text'>
+        {/* server performs sanitization method for instructions html content */}
+        <div key='instructions' id='instruction-text' dangerouslySetInnerHTML={{ __html: instructions }} />
+      </div>
+    );
+  };
+
   return (
     <>
-      {instructions && (
-        <div className='psdk-default-form-instruction-text'>
-          {/* server performs sanitization method for instructions html content */}
-          {}
-          <div key='instructions' id='instruction-text' dangerouslySetInnerHTML={{ __html: instructions }} />
-        </div>
-      )}
+      {renderInstructions()}
       <div className={divClass}>{dfChildren}</div>
     </>
   );
