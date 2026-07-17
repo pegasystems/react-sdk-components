@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useState } from 'react';
+import { type PropsWithChildren } from 'react';
 import Grid2 from '@mui/material/Grid2';
 import makeStyles from '@mui/styles/makeStyles';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -9,8 +9,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 interface FieldGroupProps {
   // If any, enter additional props that only exist on this component
   name?: string;
-  collapsible?: boolean;
   instructions?: string;
+  defaultCollapsed?: any;
+  collapsed?: any;
+  onToggleCollapsed?: () => void;
+  isCollapsibleMode?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -32,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     gap: '5px',
-    cursor: collapsible => (collapsible ? 'pointer' : 'auto')
+    cursor: isCollapsibleMode => (isCollapsibleMode ? 'pointer' : 'auto')
   },
   instructionText: {
     padding: '5px 0'
@@ -40,9 +43,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
-  const { children, name, collapsible = false, instructions } = props;
-  const classes = useStyles(collapsible);
-  const [collapsed, setCollapsed] = useState(false);
+  const { children, name, instructions, collapsed, isCollapsibleMode, onToggleCollapsed } = props;
+  const classes = useStyles(isCollapsibleMode);
 
   const descAndChildren = (
     <Grid2 container>
@@ -51,7 +53,7 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
   );
 
   const headerClickHandler = () => {
-    setCollapsed(current => !current);
+    onToggleCollapsed?.();
   };
 
   return (
@@ -59,7 +61,7 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
       <Grid2 style={{ width: '100%' }}>
         {name && (
           <div className={classes.fieldMargin}>
-            {collapsible ? (
+            {isCollapsibleMode ? (
               <span id='field-group-header' className={classes.fieldGroupHeader} onClick={headerClickHandler}>
                 {collapsed ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />}
                 <b>{name}</b>
@@ -69,10 +71,15 @@ export default function FieldGroup(props: PropsWithChildren<FieldGroupProps>) {
             )}
           </div>
         )}
-        {instructions && instructions !== 'none' && (
-          <div key='instructions' className={classes.instructionText} dangerouslySetInnerHTML={{ __html: instructions }} />
+
+        {!collapsed && (
+          <>
+            {instructions && instructions !== 'none' && (
+              <div key='instructions' className={classes.instructionText} dangerouslySetInnerHTML={{ __html: instructions }} />
+            )}
+            {descAndChildren}
+          </>
         )}
-        {!collapsed && descAndChildren}
       </Grid2>
     </Grid2>
   );
