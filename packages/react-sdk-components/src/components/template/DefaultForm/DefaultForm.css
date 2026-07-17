@@ -56,12 +56,6 @@
   color: var(--app-warning-color-dark);
 }
 
-.psdk-banner-error {
-  background-color: color-mix(in srgb, var(--app-error-dark-color) 12%, var(--app-form-bg-color));
-  border-color: var(--app-error-dark-color);
-  color: var(--app-error-dark-color);
-}
-
 .psdk-banner-success {
   background-color: color-mix(in srgb, var(--stepper-completed-bg-color) 12%, var(--app-form-bg-color));
   border-color: var(--stepper-completed-bg-color);

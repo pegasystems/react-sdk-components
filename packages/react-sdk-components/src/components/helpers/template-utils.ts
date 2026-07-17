@@ -79,3 +79,45 @@ export function getInstructions(pConnect, instructions: string = 'casestep'): st
   }
   return undefined;
 }
+
+/**
+ * Gets the message type for instructions to determine how they should be displayed.
+ * @param {string | object | undefined | null} instructions The instructions object (from paragraph processing)
+ * @returns {string | undefined} The message type from the instructions object (e.g., 'Caution', 'Information', 'Good'), or undefined if not available
+ */
+export function getInstructionsType(instructions): string | undefined {
+  if (typeof instructions === 'object' && instructions !== null) {
+    return (instructions as any).messageType;
+  }
+  return undefined;
+}
+
+/**
+ * Gets the dismissBanner flag from instructions to determine if the banner can be dismissed.
+ * @param {string | object | undefined | null} instructions The instructions object (from paragraph processing)
+ * @returns {boolean} Whether the banner can be dismissed
+ */
+export function getDismissBanner(instructions): boolean {
+  if (typeof instructions === 'object' && instructions !== null) {
+    return (instructions as any).dismissBanner || false;
+  }
+  return false;
+}
+
+/**
+ * Maps instructions type to banner variant for consistent styling
+ * @param {string | undefined} instructionsType - The type of instructions (Caution, Information, Good)
+ * @returns {'warning' | 'info' | 'success'} The corresponding banner variant
+ */
+export function mapInstructionsTypeToBannerVariant(instructionsType: string | undefined): 'warning' | 'info' | 'success' {
+  switch (instructionsType) {
+    case 'Caution':
+      return 'warning';
+    case 'Information':
+      return 'info';
+    case 'Good':
+      return 'success';
+    default:
+      return 'info';
+  }
+}
