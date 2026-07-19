@@ -73,7 +73,7 @@ export default function DateTime(props: DateTimeProps) {
     const formattedDateTime = format(props.value, 'datetime', {
       format: `${dateFormatInfo.dateFormatString} hh:mm a`
     });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant={(props as any).variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

@@ -48,10 +48,11 @@ function formatItemValue(value) {
 export default function FieldValueList(props: FieldValueListProps) {
   const { name, value, variant = 'inline', isHtml = false } = props;
   const classes = useStyles();
+  const isCompact = variant === 'inline-compact';
 
   function getGridItemLabel() {
     return (
-      <Grid2 size={{ xs: variant === 'stacked' ? 12 : 4 }} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
+      <Grid2 size={{ xs: variant === 'stacked' ? 12 : isCompact ? 'auto' : 4 }} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
         <Typography variant='body2' component='span' className={`${classes.fieldLabel}`}>
           {name}
         </Typography>
@@ -63,7 +64,10 @@ export default function FieldValueList(props: FieldValueListProps) {
     const formattedValue = formatItemValue(value);
 
     return (
-      <Grid2 size={{ xs: variant === 'stacked' || !name ? 12 : 8 }} className={variant === 'stacked' ? classes.noPaddingTop : ''}>
+      <Grid2
+        size={{ xs: variant === 'stacked' || !name ? 12 : isCompact ? 'grow' : 8 }}
+        className={variant === 'stacked' ? classes.noPaddingTop : ''}
+      >
         {isHtml ? (
           <div dangerouslySetInnerHTML={{ __html: formattedValue }} />
         ) : (
@@ -76,7 +80,7 @@ export default function FieldValueList(props: FieldValueListProps) {
   }
 
   return (
-    <Grid2 container spacing={4} justifyContent='space-between'>
+    <Grid2 container spacing={isCompact ? 1 : 4} justifyContent={isCompact ? undefined : 'space-between'}>
       {name ? getGridItemLabel() : null}
       {getGridItemValue()}
     </Grid2>

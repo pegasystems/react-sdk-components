@@ -75,7 +75,7 @@ export default function Date(props: DateProps) {
     const formattedDate = format(props.value, 'date', {
       format: dateFormatInfo.dateFormatString
     });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDate} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedDate} variant={(props as any).variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

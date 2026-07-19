@@ -195,6 +195,7 @@ export default function Dropdown(props: DropdownProps) {
         <FieldValueList
           name={hideLabel ? '' : label}
           value={thePConn.getLocalizedValue(val, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
+          variant={(props as any).variant}
         />
       );
     }

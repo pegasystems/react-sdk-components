@@ -78,7 +78,7 @@ export default function Percentage(props: PercentageProps) {
   }
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant={(props as any).variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

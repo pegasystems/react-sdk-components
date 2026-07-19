@@ -60,7 +60,7 @@ export default function URLComponent(props: URLComponentProps) {
   }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={(props as any).variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
