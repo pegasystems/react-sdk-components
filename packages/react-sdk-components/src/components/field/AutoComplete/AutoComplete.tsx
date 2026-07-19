@@ -291,7 +291,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
       inputValue={inputValue || selectedValue}
       onInputChange={handleInputValue}
       filterOptions={createFilterOptions<IOption>({
-        stringify: (option) => {
+        stringify: option => {
           const parts = [option.value || ''];
           if (option.secondaryRaw) {
             parts.push(...option.secondaryRaw);
