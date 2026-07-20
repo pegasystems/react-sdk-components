@@ -16,6 +16,7 @@ interface DateTimeProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function DateTime(props: DateTimeProps) {
@@ -73,7 +74,7 @@ export default function DateTime(props: DateTimeProps) {
     const formattedDateTime = format(props.value, 'datetime', {
       format: `${dateFormatInfo.dateFormatString} hh:mm a`
     });
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant={(props as any).variant} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedDateTime} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

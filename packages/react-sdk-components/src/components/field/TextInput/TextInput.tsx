@@ -14,6 +14,7 @@ interface TextInputProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -62,7 +63,7 @@ export default function TextInput(props: TextInputProps) {
   }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={(props as any).variant} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

@@ -20,6 +20,7 @@ interface CurrrencyProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function Currency(props: CurrrencyProps) {
@@ -85,7 +86,7 @@ export default function Currency(props: CurrrencyProps) {
   currencyProp = { prefix: theCurrSym, decimalSeparator: theCurrDec, thousandSeparator: theCurrSep };
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant={(props as any).variant} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

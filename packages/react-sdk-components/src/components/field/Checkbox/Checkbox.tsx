@@ -124,7 +124,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={caption} value={value ? trueLabel : falseLabel} variant={(props as any).variant} />;
+    return <FieldValueList name={caption} value={value ? trueLabel : falseLabel} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

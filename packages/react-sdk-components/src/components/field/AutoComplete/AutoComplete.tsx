@@ -70,6 +70,7 @@ interface AutoCompleteProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function AutoComplete(props: AutoCompleteProps) {
@@ -156,7 +157,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   }
 
   // Add secondary columns from columnsFormatter metadata
-  const columnsFormatter = (thePConn as any).getRawMetadata?.()?.config?.columnsFormatter;
+  const columnsFormatter = (thePConn.getRawMetadata?.()?.config as any)?.columnsFormatter;
   if (Array.isArray(columnsFormatter) && columnsFormatter.length > 0) {
     columnsFormatter.forEach(formatter => {
       if (formatter.config?.value) {
@@ -208,7 +209,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
                     },
                     useCustomContext: element
                   };
-                  const configObj = (PCore as any).createPConnect(fieldMeta);
+                  const configObj = PCore.createPConnect(fieldMeta);
                   const resolvedPConn = configObj.getPConnect();
                   const resolvedProps = resolvedPConn.resolveConfigProps(resolvedPConn.getConfigProps());
                   const Component = getComponentFromMap(formatter.type);
@@ -242,7 +243,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   }, []);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={(props as any).variant} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

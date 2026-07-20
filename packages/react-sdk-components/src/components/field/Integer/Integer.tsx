@@ -13,6 +13,7 @@ interface IntegerProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function Integer(props: IntegerProps) {
@@ -57,7 +58,7 @@ export default function Integer(props: IntegerProps) {
   }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={(props as any).variant} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
