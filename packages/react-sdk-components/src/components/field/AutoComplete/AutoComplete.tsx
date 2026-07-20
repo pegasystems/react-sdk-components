@@ -304,11 +304,11 @@ export default function AutoComplete(props: AutoCompleteProps) {
           <div>
             <span>{option.value}</span>
             {option.secondary && option.secondary.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                 {option.secondary.map((sec, i) => (
                   <span key={i} style={{ display: 'inline-flex', alignItems: 'center' }}>
-                    {i > 0 && <span style={{ margin: '0 4px' }}>{'\u00B7'}</span>}
                     {sec}
+                    {i < option.secondary!.length - 1 && <span style={{ margin: '0 4px' }}>{'\u00B7'}</span>}
                   </span>
                 ))}
               </div>
