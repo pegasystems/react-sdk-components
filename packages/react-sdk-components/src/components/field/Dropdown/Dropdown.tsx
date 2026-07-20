@@ -63,6 +63,7 @@ interface DropdownProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function Dropdown(props: DropdownProps) {
@@ -195,6 +196,7 @@ export default function Dropdown(props: DropdownProps) {
         <FieldValueList
           name={hideLabel ? '' : label}
           value={thePConn.getLocalizedValue(val, localePath, thePConn.getLocaleRuleNameFromKeys(localeClass, localeContext, localeName))}
+          variant={props.variant}
         />
       );
     }

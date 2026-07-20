@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import isDeepEqual from 'fast-deep-equal/react';
 
 import Utils from '../../helpers/utils';
@@ -13,6 +14,8 @@ import useStatus from '../../../hooks/useStatus';
 interface IOption {
   key: string;
   value: string;
+  secondary?: ReactNode[];
+  secondaryRaw?: string[];
 }
 
 const preProcessColumns = columnList => {
@@ -21,6 +24,18 @@ const preProcessColumns = columnList => {
     tempColObj.value = col.value && col.value.startsWith('.') ? col.value.substring(1) : col.value;
     return tempColObj;
   });
+};
+
+const getPropertyName = (rawValue: string): string => {
+  let propName;
+  if (rawValue.startsWith('@USER ')) {
+    propName = rawValue.substring(6).trim();
+  } else if (rawValue.startsWith('@P ')) {
+    propName = rawValue.substring(3).trim();
+  } else {
+    propName = rawValue.trim();
+  }
+  return propName.startsWith('.') ? propName.substring(1) : propName;
 };
 
 const getDisplayFieldsMetaData = columnList => {
@@ -55,6 +70,7 @@ interface AutoCompleteProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function AutoComplete(props: AutoCompleteProps) {
@@ -139,6 +155,22 @@ export default function AutoComplete(props: AutoCompleteProps) {
       }
     ];
   }
+
+  // Add secondary columns from columnsFormatter metadata
+  const columnsFormatter = (thePConn.getRawMetadata?.()?.config as any)?.columnsFormatter;
+  if (Array.isArray(columnsFormatter) && columnsFormatter.length > 0) {
+    columnsFormatter.forEach(formatter => {
+      if (formatter.config?.value) {
+        columns.push({
+          value: getPropertyName(formatter.config.value),
+          display: 'true',
+          useForSearch: true,
+          secondary: 'true'
+        });
+      }
+    });
+  }
+
   columns = preProcessColumns(columns);
 
   useEffect(() => {
@@ -154,9 +186,54 @@ export default function AutoComplete(props: AutoCompleteProps) {
         const displayColumn = getDisplayFieldsMetaData(columns);
         results?.forEach(element => {
           const val = element[displayColumn.primary]?.toString();
-          const obj = {
+          let secondaryNodes: ReactNode[] = [];
+          let secondaryRaw: string[] = [];
+
+          if (Array.isArray(columnsFormatter) && columnsFormatter.length > 0) {
+            columnsFormatter.forEach((formatter, idx) => {
+              if (formatter.config?.value) {
+                const propName = getPropertyName(formatter.config.value);
+                secondaryRaw.push(element[propName]?.toString() || '');
+
+                // Create PConnect for the field and render in DISPLAY_ONLY mode
+                try {
+                  const fieldMeta = {
+                    meta: {
+                      ...formatter,
+                      config: {
+                        ...formatter.config,
+                        displayMode: 'DISPLAY_ONLY',
+                        contextName: context,
+                        variant: 'inline-compact'
+                      }
+                    },
+                    useCustomContext: element
+                  };
+                  const configObj = PCore.createPConnect(fieldMeta);
+                  const resolvedPConn = configObj.getPConnect();
+                  const resolvedProps = resolvedPConn.resolveConfigProps(resolvedPConn.getConfigProps());
+                  const Component = getComponentFromMap(formatter.type);
+                  if (Component) {
+                    secondaryNodes.push(<Component key={idx} {...resolvedProps} getPConnect={() => resolvedPConn} displayMode='DISPLAY_ONLY' />);
+                  } else {
+                    secondaryNodes.push(element[propName]?.toString() || '');
+                  }
+                } catch {
+                  secondaryNodes.push(element[propName]?.toString() || '');
+                }
+              }
+            });
+          } else {
+            // Fallback to plain secondary columns
+            secondaryRaw = displayColumn.secondary.map(col => element[col]?.toString()).filter(Boolean);
+            secondaryNodes = [...secondaryRaw];
+          }
+
+          const obj: IOption = {
             key: element[displayColumn.key] || element.pyGUID,
-            value: val
+            value: val,
+            ...(secondaryNodes.length > 0 && { secondary: secondaryNodes }),
+            ...(secondaryRaw.length > 0 && { secondaryRaw })
           };
           optionsData.push(obj);
         });
@@ -166,7 +243,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   }, []);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
@@ -214,6 +291,32 @@ export default function AutoComplete(props: AutoCompleteProps) {
       value={selectedValue}
       inputValue={inputValue || selectedValue}
       onInputChange={handleInputValue}
+      filterOptions={createFilterOptions<IOption>({
+        stringify: option => {
+          const parts = [option.value || ''];
+          if (option.secondaryRaw) {
+            parts.push(...option.secondaryRaw);
+          }
+          return parts.join(' ');
+        }
+      })}
+      renderOption={(renderProps, option: IOption) => (
+        <li {...renderProps} key={option.key}>
+          <div>
+            <span>{option.value}</span>
+            {option.secondary && option.secondary.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                {option.secondary.map((sec, i) => (
+                  <span key={i} style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    {sec}
+                    {i < option.secondary!.length - 1 && <span style={{ margin: '0 4px' }}>{'\u00B7'}</span>}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </li>
+      )}
       renderInput={params => (
         <TextField
           {...params}

@@ -23,6 +23,7 @@ interface DecimalProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function Decimal(props: DecimalProps) {
@@ -91,7 +92,7 @@ export default function Decimal(props: DecimalProps) {
   }
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
