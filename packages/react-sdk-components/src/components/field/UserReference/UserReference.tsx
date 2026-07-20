@@ -97,7 +97,7 @@ const UserReference = (props: UserReferenceProps) => {
   let userReferenceComponent: any = null;
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={userName || ''} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

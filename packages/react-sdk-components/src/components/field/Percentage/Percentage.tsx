@@ -21,6 +21,7 @@ interface PercentageProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function Percentage(props: PercentageProps) {
@@ -78,7 +79,7 @@ export default function Percentage(props: PercentageProps) {
   }
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={formattedValue} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

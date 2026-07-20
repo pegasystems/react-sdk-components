@@ -13,6 +13,7 @@ interface PhoneProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function Phone(props: PhoneProps) {
@@ -61,7 +62,7 @@ export default function Phone(props: PhoneProps) {
   };
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {

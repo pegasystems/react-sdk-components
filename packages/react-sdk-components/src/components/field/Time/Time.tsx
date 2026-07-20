@@ -14,6 +14,7 @@ interface TimeProps extends PConnFieldProps {
     content?: string;
     visibility?: boolean;
   };
+  variant?: string;
 }
 
 export default function Time(props: TimeProps) {
@@ -49,7 +50,7 @@ export default function Time(props: TimeProps) {
     readOnly
   });
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : label} value={value} />;
+    return <FieldValueList name={hideLabel ? '' : label} value={value} variant={props.variant} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
