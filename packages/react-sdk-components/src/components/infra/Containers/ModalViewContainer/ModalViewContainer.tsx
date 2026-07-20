@@ -192,17 +192,22 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     }
   };
 
-  function getModalHeading(dataObjectAction) {
-    return dataObjectAction === PCore.getConstants().RESOURCE_STATUS.CREATE
-      ? localizedVal('Add Record', localeCategory)
-      : localizedVal('Edit Record', localeCategory);
+  function getModalHeading(dataObjectAction, actionName) {
+    switch (dataObjectAction) {
+      case PCore.getConstants().RESOURCE_STATUS.CREATE:
+        return localizedVal('Add Record', localeCategory);
+      case PCore.getConstants().RESOURCE_STATUS.OPEN_FLOW_ACTION:
+        return localizedVal(actionName, localeCategory);
+      default:
+        return localizedVal('Edit Record', localeCategory);
+    }
   }
 
-  function determineModalHeaderByAction(actionName, caseTypeName, ID, caseLocaleRef) {
+  function determineModalHeaderByAction(actionName, caseTypeName, caseLocaleRef) {
     if (actionName) {
       return localizedVal(actionName, localeCategory);
     }
-    return `${localizedVal('Create', localeCategory)} ${localizedVal(caseTypeName, undefined, caseLocaleRef)} (${ID})`;
+    return `${localizedVal('Create', localeCategory)} ${localizedVal(caseTypeName, undefined, caseLocaleRef)}`;
   }
 
   useEffect(() => {
@@ -256,11 +261,20 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         const ID = caseInfo.getBusinessID() || caseInfo.getID();
         const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
         const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
-        const isMultiRecord = routingInfo.items[latestItem.context].isMultiRecordData;
-        const headingValue =
-          isDataObject || isMultiRecord
-            ? getModalHeading(dataObjectAction)
-            : determineModalHeaderByAction(actionName, caseTypeName, ID, pConnect?.getCaseLocaleReference());
+        const isMultiRecordData = routingInfo.items[latestItem.context].isMultiRecordData;
+
+        const getHeadingValue = () => {
+          if (isMultiRecordData) {
+            return routingInfo.items[latestItem.context].heading;
+          }
+          if (isDataObject) {
+            if (actionName) {
+              return localizedVal(actionName, localeCategory);
+            }
+            return getModalHeading(dataObjectAction, actionName);
+          }
+          return determineModalHeaderByAction(actionName, caseTypeName, pConnect?.getCaseLocaleReference());
+        };
 
         let arChildrenAsReact: any[] = [];
 
@@ -289,8 +303,8 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         }
 
         if (arChildrenAsReact.length > 0) setArNewChildrenAsReact(arChildrenAsReact);
-        setMultiRecordData(isMultiRecord);
-        setTitle(headingValue);
+        setMultiRecordData(isMultiRecordData);
+        setTitle(getHeadingValue());
         setCreatedView({ configObject, latestItem });
         setItemKey(key);
         setShowModal(true);

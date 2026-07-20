@@ -32,3 +32,64 @@
   padding-top: 0.625rem;
   padding-bottom: 0.625rem;
 }
+
+/* Banner styles */
+.psdk-banner {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid;
+  gap: 0.75rem;
+}
+
+.psdk-banner-info {
+  background-color: color-mix(in srgb, var(--app-neutral-color) 12%, var(--app-form-bg-color));
+  border-color: var(--app-neutral-color);
+  color: var(--banner-text-color);
+}
+
+.psdk-banner-warning {
+  background-color: color-mix(in srgb, var(--app-warning-color-dark) 12%, var(--app-form-bg-color));
+  border-color: var(--app-warning-color-dark);
+  color: var(--app-warning-color-dark);
+}
+
+.psdk-banner-success {
+  background-color: color-mix(in srgb, var(--stepper-completed-bg-color) 12%, var(--app-form-bg-color));
+  border-color: var(--stepper-completed-bg-color);
+  color: var(--stepper-completed-bg-color);
+}
+
+.psdk-banner-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding-top: 0.125rem;
+}
+
+.psdk-banner-content {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.psdk-banner-content p {
+  margin: 0;
+}
+
+.psdk-banner-dismiss {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: inherit;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+}
+
+.psdk-banner-dismiss:hover {
+  opacity: 1;
+}

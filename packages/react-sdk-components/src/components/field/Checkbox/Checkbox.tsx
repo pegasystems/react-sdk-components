@@ -124,11 +124,11 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }, [value]);
 
   if (displayMode === 'DISPLAY_ONLY') {
-    return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} />;
+    return <FieldValueList name={caption} value={value ? trueLabel : falseLabel} />;
   }
 
   if (displayMode === 'STACKED_LARGE_VAL') {
-    return <FieldValueList name={hideLabel ? '' : caption} value={value ? trueLabel : falseLabel} variant='stacked' />;
+    return <FieldValueList name={caption} value={value ? trueLabel : falseLabel} variant='stacked' />;
   }
 
   const handleChange = event => {
