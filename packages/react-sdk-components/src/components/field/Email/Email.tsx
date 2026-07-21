@@ -6,6 +6,7 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 interface EmailProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Date here
@@ -106,6 +107,7 @@ export default function Email(props: EmailProps) {
           inputProps: { ...testProps }
         }
       }}
+      sx={getFieldSx(status)}
     />
   );
 }

@@ -9,6 +9,7 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import { useDeepMemo } from '../Multiselect/utils';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 interface IOption {
   key: string;
@@ -253,6 +254,7 @@ export default function Dropdown(props: DropdownProps) {
       slotProps={{
         input: { ...readOnlyProp, ...testProps }
       }}
+      sx={getFieldSx(status)}
     >
       {options.map((option: any) => (
         <MenuItem key={option.key} value={option.key}>

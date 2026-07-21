@@ -5,6 +5,7 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 interface IntegerProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Integer here
@@ -110,6 +111,7 @@ export default function Integer(props: IntegerProps) {
       slotProps={{
         htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', ...testProps }
       }}
+      sx={getFieldSx(status)}
     />
   );
 }

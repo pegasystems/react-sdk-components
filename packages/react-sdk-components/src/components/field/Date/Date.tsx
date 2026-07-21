@@ -8,6 +8,7 @@ import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-for
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 // Will return the date string in YYYY-MM-DD format which we'll be POSTing to the server
 function getFormattedDate(date) {
@@ -114,7 +115,8 @@ export default function Date(props: DateProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProps }
+          InputProps: { ...testProps },
+          sx: getFieldSx(status)
         }
       }}
       onChange={handleChange}

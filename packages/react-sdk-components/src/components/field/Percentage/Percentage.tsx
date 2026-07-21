@@ -7,6 +7,7 @@ import { getCurrencyCharacters, getCurrencyOptions } from '../Currency/currency-
 import handleEvent from '../../helpers/event-utils';
 import { format } from '../../helpers/formatters';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 /* Using react-number-format component here, since it allows formatting decimal values,
 as per the locale.
@@ -123,6 +124,7 @@ export default function Percentage(props: PercentageProps) {
       suffix='%'
       slotProps={{ input: { ...readOnlyProp, inputProps: { ...testProps } } }}
       customInput={TextField}
+      sx={getFieldSx(status)}
     />
   );
 }
