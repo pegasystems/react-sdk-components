@@ -4,10 +4,7 @@ import Button from '@mui/material/Button';
 import { Grid2, Divider } from '@mui/material';
 import type { PConnProps } from '../../../../../types/PConnProps';
 
-function getActionLabel(
-  action: string,
-  constants: { RESOURCE_STATUS: { UPDATE?: unknown; CREATE?: unknown; OPEN_FLOW_ACTION?: unknown } }
-) {
+function getActionLabel(action: string, constants: { RESOURCE_STATUS: { UPDATE?: unknown; CREATE?: unknown; OPEN_FLOW_ACTION?: unknown } }) {
   switch (action) {
     case constants.RESOURCE_STATUS.UPDATE:
       return 'Update';
@@ -48,6 +45,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function DataViewActionButtons(props: DataViewActionButtonsProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { getPConnect, context, classId, dataObjectAction, dataRecordKeys, actionID, closeActionsDialog } = props;
 
   const classes = useStyles();
@@ -57,10 +55,7 @@ export default function DataViewActionButtons(props: DataViewActionButtonsProps)
   const constants = PCore.getConstants();
   const [isLoading, setIsLoading] = useState(false);
 
-  const actionName = localizedVal(
-    getActionLabel(constants.RESOURCE_STATUS[dataObjectAction], constants),
-    localeCategory
-  );
+  const actionName = localizedVal(getActionLabel(constants.RESOURCE_STATUS[dataObjectAction], constants), localeCategory);
 
   function handleCancel() {
     actionsAPI.cancelDataObject(context);

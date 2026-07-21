@@ -11,7 +11,6 @@ import createPConnectComponent from '../../../../bridge/react_pconnect';
 // Need to get correct implementation from component map for Assignment and CancelAlert
 import { getComponentFromMap } from '../../../../bridge/helpers/sdk_component_map';
 import { getBanners } from '../../../helpers/case-utils';
-import DataViewActionButtons from './DataViewActionButtons/DataViewActionButtons';
 import type { PConnProps } from '../../../../types/PConnProps';
 
 /**
@@ -116,7 +115,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
   const Assignment = getComponentFromMap('Assignment');
   const CancelAlert = getComponentFromMap('CancelAlert');
   const ListViewActionButtons = getComponentFromMap('ListViewActionButtons');
-
+  const DataViewActionButtons = getComponentFromMap('DataViewActionButtons');
   const classes = useStyles();
 
   const modalCollection = useRef({});
