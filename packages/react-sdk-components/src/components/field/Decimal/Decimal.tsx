@@ -7,6 +7,7 @@ import { format } from '../../helpers/formatters';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 /* Using react-number-format component here, since it allows formatting decimal values,
 as per the locale.
@@ -133,6 +134,7 @@ export default function Decimal(props: DecimalProps) {
       decimalScale={readOnly && formatter === 'Currency' ? undefined : decimalPrecision}
       slotProps={{ input: { ...readOnlyProp, inputProps: { ...testProps } } }}
       customInput={TextField}
+      sx={getFieldSx(status)}
     />
   );
 }

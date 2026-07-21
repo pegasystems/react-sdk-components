@@ -327,7 +327,7 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
           <AlertBanner id={`validation-banner-${itemKey}`} variant='urgent' messages={validationMessages} />
         </div>
       )}
-      {banners}
+      {banners && banners.length > 0 && <div style={{ marginBottom: '1rem' }}>{banners}</div>}
       {bHasNavigation ? (
         <>
           <MultiStep

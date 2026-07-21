@@ -10,12 +10,14 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 interface IOption {
   key: string;
   value: string;
   secondary?: ReactNode[];
   secondaryRaw?: string[];
+  group?: string;
 }
 
 const preProcessColumns = columnList => {
@@ -171,6 +173,20 @@ export default function AutoComplete(props: AutoCompleteProps) {
     });
   }
 
+  // Read groupsFields from raw metadata for grouping support
+  const groupsFields = (thePConn.getRawMetadata?.()?.config as any)?.groupsFields;
+  const groupKeyFields: string[] = Array.isArray(groupsFields)
+    ? groupsFields.map((entry: any) => getPropertyName(entry?.config?.value || '')).filter(Boolean)
+    : [];
+  const isGrouped = groupKeyFields.length > 0;
+
+  // Ensure group fields are included in columns so they appear in the data page response
+  groupKeyFields.forEach(field => {
+    if (!columns.find(col => col.value === field || col.value === `.${field}`)) {
+      columns.push({ value: field, display: 'false', useForSearch: false });
+    }
+  });
+
   columns = preProcessColumns(columns);
 
   useEffect(() => {
@@ -233,10 +249,15 @@ export default function AutoComplete(props: AutoCompleteProps) {
             key: element[displayColumn.key] || element.pyGUID,
             value: val,
             ...(secondaryNodes.length > 0 && { secondary: secondaryNodes }),
-            ...(secondaryRaw.length > 0 && { secondaryRaw })
+            ...(secondaryRaw.length > 0 && { secondaryRaw }),
+            ...(isGrouped && { group: element[groupKeyFields[0]]?.toString() || '' })
           };
           optionsData.push(obj);
         });
+        // Sort options by group value so MUI renders groups contiguously
+        if (isGrouped) {
+          optionsData.sort((a, b) => (a.group || '').localeCompare(b.group || ''));
+        }
         setOptions(optionsData);
       });
     }
@@ -283,6 +304,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
       getOptionLabel={(option: IOption) => {
         return option.value ? option.value : '';
       }}
+      {...(isGrouped && { groupBy: (option: IOption) => option.group || '' })}
       isOptionEqualToValue={(option: any) => {
         return option.value ? option.value : '';
       }}
@@ -329,6 +351,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
           error={status === 'error'}
           label={label}
           data-test-id={testId}
+          sx={getFieldSx(status)}
         />
       )}
     />

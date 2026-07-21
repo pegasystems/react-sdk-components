@@ -59,6 +59,10 @@ export default function SelfServiceCaseView(props) {
     caseInfo: { availableActions = [], availableProcesses = [], caseTypeID = '', caseTypeName = '' }
   } = props;
   const pConnect = getPConnect();
+
+  const dataObjectActions: any = pConnect.getValue('.actions', 'dataInfo') || {};
+  const dataObjectAvailableActions: any[] = dataObjectActions.availableActions || [];
+  const dataObjectCreateCaseActions: any[] = dataObjectActions.availableCreateCaseActions || [];
   const [bShowCaseLifecycle, bShowSummaryRegion, bShowUtilitiesRegion, bShowCaseActions] = [
     showCaseLifecycle,
     showSummaryRegion,
@@ -107,6 +111,8 @@ export default function SelfServiceCaseView(props) {
             getPConnect={getPConnect}
             availableActions={availableActions}
             availableProcesses={availableProcesses}
+            dataObjectAvailableActions={dataObjectAvailableActions}
+            dataObjectCreateCaseActions={dataObjectCreateCaseActions}
             caseTypeName={caseTypeName}
             caseTypeID={caseTypeID}
           />

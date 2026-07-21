@@ -18,7 +18,7 @@ const useStatus = ({ showFieldMessage, messageVisibility, validatemessage, readO
     if (validatemessage) {
       setStatus('error');
     } else if (showFieldMessage && messageVisibility && !readOnly) {
-      setStatus('error');
+      setStatus('warning');
     } else {
       setStatus(undefined);
     }

@@ -23,6 +23,7 @@ interface ModalViewContainerProps extends PConnProps {
   loadingInfo?: string;
   routingInfo?: any;
   pageMessages?: string[];
+  httpMessages?: any[];
 }
 
 function isOpenModalAction(prevModalCollection, currentModalList) {
@@ -114,12 +115,12 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
   const Assignment = getComponentFromMap('Assignment');
   const CancelAlert = getComponentFromMap('CancelAlert');
   const ListViewActionButtons = getComponentFromMap('ListViewActionButtons');
-
+  const DataViewActionButtons = getComponentFromMap('DataViewActionButtons');
   const classes = useStyles();
 
   const modalCollection = useRef({});
   const routingInfoRef = useRef({});
-  const { getPConnect, routingInfo = null, pageMessages = [] } = props;
+  const { getPConnect, routingInfo = null, pageMessages = [], httpMessages = [] } = props;
   const pConn = getPConnect();
   const { acTertiary } = pConn.getConfigProps() as any;
   const {
@@ -135,6 +136,11 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
   const [itemKey, setItemKey] = useState('');
   const [cancelAlertProps, setCancelAlertProps] = useState({});
   const [isMultiRecordData, setMultiRecordData] = useState(false);
+  const [isDataObjectModal, setIsDataObjectModal] = useState(false);
+  const [dataRecordKeys, setDataRecordKeys] = useState('');
+  const [dataObjectActionID, setDataObjectActionID] = useState('');
+  const [dataObjectAction, setDataObjectAction] = useState('');
+  const [dataObjectClassId, setDataObjectClassId] = useState('');
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'ModalContainer';
 
@@ -262,6 +268,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
         const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
         const isMultiRecordData = routingInfo.items[latestItem.context].isMultiRecordData;
+        const actionID = routingInfo.items[latestItem.context].actionID;
 
         const getHeadingValue = () => {
           if (isMultiRecordData) {
@@ -304,6 +311,11 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
 
         if (arChildrenAsReact.length > 0) setArNewChildrenAsReact(arChildrenAsReact);
         setMultiRecordData(isMultiRecordData);
+        setIsDataObjectModal(isDataObject && !isMultiRecordData);
+        setDataRecordKeys(latestItem.key || '');
+        setDataObjectActionID(actionID || '');
+        setDataObjectAction(dataObjectAction || '');
+        setDataObjectClassId(pConnect.getValue('.classID') || '');
         setTitle(getHeadingValue());
         setCreatedView({ configObject, latestItem });
         setItemKey(key);
@@ -342,7 +354,8 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
                 isInModal
                 banners={getBanners({
                   target: itemKey,
-                  pageMessages
+                  pageMessages,
+                  httpMessages
                 })}
               >
                 {arNewChildrenAsReact}
@@ -355,6 +368,17 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
           <ListViewActionButtons
             getPConnect={createdView.configObject.getPConnect}
             context={createdView.latestItem.context}
+            closeActionsDialog={closeActionsDialog}
+          />
+        )}
+        {isDataObjectModal && (
+          <DataViewActionButtons
+            getPConnect={createdView.configObject.getPConnect}
+            context={createdView.latestItem.context}
+            classId={dataObjectClassId}
+            dataObjectAction={dataObjectAction}
+            dataRecordKeys={dataRecordKeys}
+            actionID={dataObjectActionID}
             closeActionsDialog={closeActionsDialog}
           />
         )}

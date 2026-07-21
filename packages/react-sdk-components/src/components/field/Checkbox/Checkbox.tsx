@@ -7,6 +7,7 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../helpers/instructions-utils';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFormControlSx } from '../../helpers/field-utils';
 
 interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on Checkbox here
@@ -269,7 +270,7 @@ export default function CheckboxComponent(props: CheckboxProps) {
   }
 
   return (
-    <FormControl variant='standard' required={required} error={status === 'error'}>
+    <FormControl variant='standard' required={required} error={status === 'error'} sx={getFormControlSx(status)}>
       {!hideLabel && <FormLabel component='legend'>{label}</FormLabel>}
       <FormGroup>{theCheckbox}</FormGroup>
       <FormHelperText>{helperTextToDisplay}</FormHelperText>

@@ -8,6 +8,7 @@ import { dateFormatInfoDefault, getDateFormatInfo } from '../../helpers/date-for
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 interface DateTimeProps extends PConnFieldProps {
   // If any, enter additional props that only exist on DateTime here
@@ -122,7 +123,8 @@ export default function DateTime(props: DateTimeProps) {
           error: status === 'error',
           helperText: helperTextToDisplay,
           size: 'small',
-          InputProps: { ...testProps }
+          InputProps: { ...testProps },
+          sx: getFieldSx(status)
         }
       }}
     />

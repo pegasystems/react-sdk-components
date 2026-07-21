@@ -5,6 +5,7 @@ import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import handleEvent from '../../helpers/event-utils';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 interface PhoneProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Phone here
@@ -92,6 +93,7 @@ export default function Phone(props: PhoneProps) {
             }
           }}
           disableDropdown={disableDropdown}
+          sx={getFieldSx(status)}
         />
       </div>
     );
@@ -124,6 +126,7 @@ export default function Phone(props: PhoneProps) {
       label={label}
       value={inputValue}
       slotProps={{ input: { ...testProp } }}
+      sx={getFieldSx(status)}
     />
   );
 }

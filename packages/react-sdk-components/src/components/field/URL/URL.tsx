@@ -5,6 +5,7 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 interface URLComponentProps extends PConnFieldProps {
   // If any, enter additional props that only exist on URLComponent here
@@ -100,6 +101,7 @@ export default function URLComponent(props: URLComponentProps) {
       slotProps={{
         input: { inputProps: { ...testProps } }
       }}
+      sx={getFieldSx(status)}
     />
   );
 }

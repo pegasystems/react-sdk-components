@@ -6,6 +6,7 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFormControlSx } from '../../helpers/field-utils';
 
 // Can't use RadioButtonProps until getLocaleRuleNameFromKeys is NOT private
 interface RadioButtonsProps extends PConnFieldProps {
@@ -149,7 +150,7 @@ export default function RadioButtons(props: RadioButtonsProps) {
   }
 
   return (
-    <FormControl variant='standard' error={status === 'error'} required={required}>
+    <FormControl variant='standard' error={status === 'error'} required={required} sx={getFormControlSx(status)}>
       <FormLabel component='legend'>{label}</FormLabel>
       <RadioGroup value={theSelectedButton} onChange={handleChange} onBlur={!readOnly ? handleBlur : undefined} row={inline}>
         {theOptions.map(theOption => {

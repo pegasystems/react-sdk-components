@@ -5,6 +5,7 @@ import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
+import { getFieldSx } from '../../helpers/field-utils';
 
 interface TextInputProps extends PConnFieldProps {
   // If any, enter additional props that only exist on TextInput here
@@ -102,6 +103,7 @@ export default function TextInput(props: TextInputProps) {
       slotProps={{
         input: { ...readOnlyProp, inputProps: { maxLength, ...testProps } }
       }}
+      sx={getFieldSx(status)}
     />
   );
 }
