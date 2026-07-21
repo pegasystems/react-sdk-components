@@ -128,23 +128,27 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     PUB_SUB_EVENTS: { EVENT_SHOW_CANCEL_ALERT }
   } = PCore.getConstants();
   const { subscribe, unsubscribe } = PCore.getPubSubUtils();
-  const [bShowModal, setShowModal] = useState(false);
   const [bShowCancelAlert, setShowCancelAlert] = useState(false);
-  const [createdView, setCreatedView] = useState<any>(null);
-  const [title, setTitle] = useState('');
-  const [arNewChildrenAsReact, setArNewChildrenAsReact] = useState<any[]>([]);
-  const [itemKey, setItemKey] = useState('');
   const [cancelAlertProps, setCancelAlertProps] = useState({});
-  const [isMultiRecordData, setMultiRecordData] = useState(false);
-  const [isDataObjectModal, setIsDataObjectModal] = useState(false);
-  const [dataRecordKeys, setDataRecordKeys] = useState('');
-  const [dataObjectActionID, setDataObjectActionID] = useState('');
-  const [dataObjectAction, setDataObjectAction] = useState('');
-  const [dataObjectClassId, setDataObjectClassId] = useState('');
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localeCategory = 'ModalContainer';
 
   const ERROR_WHILE_RENDERING = 'ERROR_WHILE_RENDERING';
+
+  // Stack of open modals — each entry represents one stacked modal
+  interface ModalEntry {
+    key: string;
+    title: string;
+    createdView: any;
+    arNewChildrenAsReact: any[];
+    isMultiRecordData: boolean;
+    isDataObjectModal: boolean;
+    dataRecordKeys: string;
+    dataObjectActionID: string;
+    dataObjectAction: string;
+    dataObjectClassId: string;
+  }
+  const [modalStack, setModalStack] = useState<ModalEntry[]>([]);
 
   function showAlert(payload) {
     const { latestItem } = getKeyAndLatestItem(routingInfoRef.current, pConn, { acTertiary });
@@ -186,7 +190,8 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
       const modifiedModalCollection = { ...tempModalCollection };
       delete modifiedModalCollection[closedModalKey];
       modalCollection.current = modifiedModalCollection;
-      setShowModal(false);
+      // Remove the closed modal from the stack
+      setModalStack(prev => prev.filter(entry => entry.key !== closedModalKey));
     }
   }
 
@@ -194,7 +199,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     setShowCancelAlert(false);
 
     if (dismissAllModals) {
-      setShowModal(false);
+      setModalStack([]);
     }
   };
 
@@ -258,7 +263,6 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         (isOpenModalAction(modalCollection.current, accessedOrder) || isUpdateModalAction(modalCollection.current, accessedOrder))
       ) {
         const { actionName } = latestItem;
-        // const { isDockable = false } = latestItem?.modalOptions || {};
         const configObject: any = getConfigObject(latestItem, null, false);
         const pConnect = configObject.getPConnect();
         const caseInfo: any = pConnect.getCaseInfo();
@@ -266,19 +270,19 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         const caseTypeName = caseInfo.getCaseTypeName();
         const ID = caseInfo.getBusinessID() || caseInfo.getID();
         const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
-        const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
-        const isMultiRecordData = routingInfo.items[latestItem.context].isMultiRecordData;
+        const dataObjAction = routingInfo.items[latestItem.context].resourceStatus;
+        const multiRecordData = routingInfo.items[latestItem.context].isMultiRecordData;
         const actionID = routingInfo.items[latestItem.context].actionID;
 
         const getHeadingValue = () => {
-          if (isMultiRecordData) {
+          if (multiRecordData) {
             return routingInfo.items[latestItem.context].heading;
           }
           if (isDataObject) {
             if (actionName) {
               return localizedVal(actionName, localeCategory);
             }
-            return getModalHeading(dataObjectAction, actionName);
+            return getModalHeading(dataObjAction, actionName);
           }
           return determineModalHeaderByAction(actionName, caseTypeName, pConnect?.getCaseLocaleReference());
         };
@@ -286,9 +290,6 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
         let arChildrenAsReact: any[] = [];
 
         if (pConnect.getComponentName() === 'reference') {
-          // Reference component doesn't have children. It can build the View we want.
-          // The Reference component getPConnect is in configObject
-
           arChildrenAsReact.push(
             createElement(createPConnectComponent(), {
               ...configObject,
@@ -296,11 +297,7 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
             })
           );
         } else {
-          // This is the 8.6 implementation. Leaving it in for reference for now.
-          // And create a similar array of the children as React components
-          // passed to Assignment component when rendered
           arChildrenAsReact = (pConnect.getChildren() as []).map((child: any) => {
-            // Use Case Summary ID as the React element's key
             const caseSummaryID = child.getPConnect().getCaseSummary().ID;
             return createElement(createPConnectComponent(), {
               ...child,
@@ -309,24 +306,26 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
           });
         }
 
-        if (arChildrenAsReact.length > 0) setArNewChildrenAsReact(arChildrenAsReact);
-        setMultiRecordData(isMultiRecordData);
-        setIsDataObjectModal(isDataObject && !isMultiRecordData);
-        setDataRecordKeys(latestItem.key || '');
-        setDataObjectActionID(actionID || '');
-        setDataObjectAction(dataObjectAction || '');
-        setDataObjectClassId(pConnect.getValue('.classID') || '');
-        setTitle(getHeadingValue());
-        setCreatedView({ configObject, latestItem });
-        setItemKey(key);
-        setShowModal(true);
+        const modalEntry: ModalEntry = {
+          key,
+          title: getHeadingValue(),
+          createdView: { configObject, latestItem },
+          arNewChildrenAsReact: arChildrenAsReact.length > 0 ? arChildrenAsReact : [],
+          isMultiRecordData: multiRecordData,
+          isDataObjectModal: isDataObject && !multiRecordData,
+          dataRecordKeys: latestItem.key || '',
+          dataObjectActionID: actionID || '',
+          dataObjectAction: dataObjAction || '',
+          dataObjectClassId: pConnect.getValue('.classID') || ''
+        };
 
-        // Update modal use case which happens when assignment in submitted in modal.
         if (isUpdateModalAction(modalCollection.current, accessedOrder)) {
-          // handleModalUpdate(key);
+          // Update existing modal in the stack
+          setModalStack(prev => prev.map(entry => (entry.key === key ? modalEntry : entry)));
         } else if (isOpenModalAction(modalCollection.current, accessedOrder)) {
-          // New modal open scenario
+          // Push new modal onto the stack
           handleModalOpen(key);
+          setModalStack(prev => [...prev, modalEntry]);
         }
       } else if (isCloseModalAction(modalCollection.current, accessedOrder)) {
         handleModalClose(accessedOrder);
@@ -334,55 +333,59 @@ export default function ModalViewContainer(props: ModalViewContainerProps) {
     }
   }, [routingInfo]);
 
-  function closeActionsDialog() {
-    // actionsDialog.current = true;
-    setShowModal(false);
+  function closeActionsDialog(modalKey?: string) {
+    if (modalKey) {
+      setModalStack(prev => prev.filter(entry => entry.key !== modalKey));
+    } else {
+      // Close the topmost modal
+      setModalStack(prev => prev.slice(0, -1));
+    }
   }
 
   return (
     <>
-      <Dialog open={bShowModal} aria-labelledby='form-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='form-dialog-title' className={`${classes.dlgTitle} psdk-dialog-title`}>
-          {title}
-        </DialogTitle>
-        <DialogContent className={`${classes.dlgContent} psdk-dialog-content`}>
-          {bShowModal ? (
+      {modalStack.map(modal => (
+        <Dialog key={modal.key} open aria-labelledby={`form-dialog-title-${modal.key}`} maxWidth='md' fullWidth>
+          <DialogTitle id={`form-dialog-title-${modal.key}`} className={`${classes.dlgTitle} psdk-dialog-title`}>
+            {modal.title}
+          </DialogTitle>
+          <DialogContent className={`${classes.dlgContent} psdk-dialog-content`}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Assignment
-                getPConnect={createdView.configObject.getPConnect}
-                itemKey={itemKey}
+                getPConnect={modal.createdView.configObject.getPConnect}
+                itemKey={modal.key}
                 isInModal
                 banners={getBanners({
-                  target: itemKey,
+                  target: modal.key,
                   pageMessages,
                   httpMessages
                 })}
               >
-                {arNewChildrenAsReact}
+                {modal.arNewChildrenAsReact}
               </Assignment>
             </LocalizationProvider>
-          ) : null}
-        </DialogContent>
+          </DialogContent>
 
-        {isMultiRecordData && (
-          <ListViewActionButtons
-            getPConnect={createdView.configObject.getPConnect}
-            context={createdView.latestItem.context}
-            closeActionsDialog={closeActionsDialog}
-          />
-        )}
-        {isDataObjectModal && (
-          <DataViewActionButtons
-            getPConnect={createdView.configObject.getPConnect}
-            context={createdView.latestItem.context}
-            classId={dataObjectClassId}
-            dataObjectAction={dataObjectAction}
-            dataRecordKeys={dataRecordKeys}
-            actionID={dataObjectActionID}
-            closeActionsDialog={closeActionsDialog}
-          />
-        )}
-      </Dialog>
+          {modal.isMultiRecordData && (
+            <ListViewActionButtons
+              getPConnect={modal.createdView.configObject.getPConnect}
+              context={modal.createdView.latestItem.context}
+              closeActionsDialog={() => closeActionsDialog(modal.key)}
+            />
+          )}
+          {modal.isDataObjectModal && (
+            <DataViewActionButtons
+              getPConnect={modal.createdView.configObject.getPConnect}
+              context={modal.createdView.latestItem.context}
+              classId={modal.dataObjectClassId}
+              dataObjectAction={modal.dataObjectAction}
+              dataRecordKeys={modal.dataRecordKeys}
+              actionID={modal.dataObjectActionID}
+              closeActionsDialog={() => closeActionsDialog(modal.key)}
+            />
+          )}
+        </Dialog>
+      ))}
       {bShowCancelAlert && <CancelAlert {...cancelAlertProps} dismiss={dismissCancelAlert} />}
     </>
   );
