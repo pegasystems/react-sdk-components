@@ -12,12 +12,23 @@ interface CaseViewActionsMenuProps extends PConnProps {
   // If any, enter additional props that only exist on this component
   availableActions: any[];
   availableProcesses: any[];
+  // Data object review actions (sourced from dataInfo.actions by the parent CaseView)
+  dataObjectAvailableActions?: any[];
+  dataObjectCreateCaseActions?: any[];
   caseTypeID: string;
   caseTypeName: string;
 }
 
 export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
-  const { getPConnect, availableActions, availableProcesses, caseTypeID, caseTypeName } = props;
+  const {
+    getPConnect,
+    availableActions,
+    availableProcesses,
+    dataObjectAvailableActions = [],
+    dataObjectCreateCaseActions = [],
+    caseTypeID,
+    caseTypeName
+  } = props;
   const thePConn = getPConnect();
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
@@ -77,6 +88,31 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     handleClose();
   }
 
+  function _dataObjectActionClick(action) {
+    const actionsAPI = thePConn.getActionsApi();
+    const openDataObjectAction = actionsAPI.openDataObjectAction.bind(actionsAPI);
+    const className = thePConn.getValue('.classID', 'dataInfo.content');
+    const dataRecord = thePConn.getValue('.content', 'dataInfo');
+    openDataObjectAction(className, dataRecord, action.ID, localizedVal(action.name, '', localeKey));
+    handleClose();
+  }
+
+  function _dataObjectCreateCaseClick(action) {
+    const actionsAPI = thePConn.getActionsApi();
+    const createWork = actionsAPI.createWork.bind(actionsAPI);
+    const targetDataReferenceField = action.targetDataReferenceField;
+    const field = targetDataReferenceField?.field;
+    const startingFields: any = {};
+    (targetDataReferenceField?.inputs || []).forEach(input => {
+      if (!startingFields[field]) {
+        startingFields[field] = {};
+      }
+      startingFields[field][input.linkedField] = thePConn.getValue(`.${input.linkedField}`, '');
+    });
+    createWork(action.ID, { startingFields });
+    handleClose();
+  }
+
   availableActions.forEach(action => {
     arMenuItems.push(
       <MenuItem key={action.ID} onClick={() => _actionMenuActionsClick(action)}>
@@ -93,12 +129,31 @@ export default function CaseViewActionsMenu(props: CaseViewActionsMenuProps) {
     );
   });
 
+  dataObjectAvailableActions.forEach(action => {
+    arMenuItems.push(
+      <MenuItem key={action.ID} onClick={() => _dataObjectActionClick(action)}>
+        {localizedVal(action.name, '', localeKey)}
+      </MenuItem>
+    );
+  });
+
+  dataObjectCreateCaseActions.forEach(action => {
+    arMenuItems.push(
+      <MenuItem key={action.ID} onClick={() => _dataObjectCreateCaseClick(action)}>
+        {localizedVal(action.name, '', localeKey)}
+      </MenuItem>
+    );
+  });
+
+  // Guard against opening an empty menu
+  const isMenuOpen = Boolean(anchorEl) && arMenuItems.length > 0;
+
   return (
     <>
-      <Button id='actions-menu' aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
+      <Button id='actions-menu' aria-controls='simple-menu' aria-haspopup='true' disabled={arMenuItems.length === 0} onClick={handleClick}>
         {localizedVal('Actions...', localeCategory)}
       </Button>
-      <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+      <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={isMenuOpen} onClose={handleClose}>
         {arMenuItems}
       </Menu>
       <Snackbar

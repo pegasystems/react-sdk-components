@@ -28,6 +28,7 @@ import Confirmation from './components/template/Confirmation';
 import Currency from './components/field/Currency';
 import DashboardFilter from './components/infra/DashboardFilter';
 import DataReference from './components/template/DataReference';
+import DataViewActionButtons from './components/infra/Containers/ModalViewContainer/DataViewActionButtons/DataViewActionButtons';
 import Date from './components/field/Date';
 import DateTime from './components/field/DateTime';
 import Decimal from './components/field/Decimal';
@@ -154,6 +155,7 @@ const pegaSdkComponentMap = {
   Currency,
   DashboardFilter,
   DataReference,
+  DataViewActionButtons,
   Date,
   DateTime,
   Decimal,
