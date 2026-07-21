@@ -67,6 +67,10 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
 
   const classes = useStyles();
 
+  const dataObjectActions: any = thePConn.getValue('.actions', 'dataInfo') || {};
+  const dataObjectAvailableActions: any[] = dataObjectActions.availableActions || [];
+  const dataObjectCreateCaseActions: any[] = dataObjectActions.availableCreateCaseActions || [];
+
   const editAction = availableActions.find(action => action.ID === 'pyUpdateCaseDetails');
 
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
@@ -194,6 +198,8 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
           getPConnect={getPConnect}
           availableActions={availableActions}
           availableProcesses={availableProcesses}
+          dataObjectAvailableActions={dataObjectAvailableActions}
+          dataObjectCreateCaseActions={dataObjectCreateCaseActions}
           caseTypeName={caseTypeName}
           caseTypeID={caseTypeID}
         />
