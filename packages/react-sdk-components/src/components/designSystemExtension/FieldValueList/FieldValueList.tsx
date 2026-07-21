@@ -54,7 +54,8 @@ export default function FieldValueList(props: FieldValueListProps) {
     return (
       <Grid2 size={{ xs: variant === 'stacked' ? 12 : isCompact ? 'auto' : 4 }} className={variant === 'stacked' ? classes.noPaddingBottom : ''}>
         <Typography variant='body2' component='span' className={`${classes.fieldLabel}`}>
-          {name}{isCompact ? ':' : ''}
+          {name}
+          {isCompact ? ':' : ''}
         </Typography>
       </Grid2>
     );
