@@ -7,7 +7,6 @@ import isDeepEqual from 'fast-deep-equal/react';
 
 import Utils from '../../helpers/utils';
 import { getDataPage } from '../../helpers/data_page';
-import handleEvent from '../../helpers/event-utils';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
 import type { PConnFieldProps } from '../../../types/PConnProps';
 import useStatus from '../../../hooks/useStatus';
@@ -117,7 +116,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState<IOption[]>([]);
   const [theDatasource, setDatasource] = useState(null);
-  let selectedValue: any = '';
+  let selectedValue: any = null;
   const eligibleForFieldWarning = showFieldMessage && messageConfig.visibility && !readOnly;
   const helperTextToDisplay = validatemessage || (eligibleForFieldWarning ? messageConfig.content : helperText);
 
@@ -296,16 +295,32 @@ export default function AutoComplete(props: AutoCompleteProps) {
     }
   }
 
+  useEffect(() => {
+    setInputValue(selectedValue || '');
+  }, [selectedValue]);
+
   const handleChange = (event: object, newValue) => {
     const val = newValue ? newValue.key : '';
-    handleEvent(actionsApi, 'changeNblur', propName, val);
+    if (!newValue) {
+      setInputValue('');
+    }
+    actionsApi.updateFieldValue(propName, val);
+    const changePromise = (actionsApi as any).triggerFieldChange(propName, val);
     if (onRecordChange) {
-      onRecordChange(event);
+      if (changePromise && changePromise.then) {
+        changePromise.then(() => {
+          onRecordChange({ ...event, id: val });
+        });
+      } else {
+        onRecordChange({ ...event, id: val });
+      }
     }
   };
 
-  const handleInputValue = (event, newInputValue) => {
-    setInputValue(newInputValue);
+  const handleInputValue = (event, newInputValue, reason) => {
+    if (reason === 'selectOption') {
+      setInputValue(newInputValue);
+    }
   };
 
   // Sets values for all columns that have setProperty defined (mirrors setValuesToOtherAdditionalFields in constellation-frontend)
@@ -480,7 +495,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
       fullWidth
       onChange={handleChange}
       value={selectedValue}
-      inputValue={inputValue || selectedValue}
+      inputValue={inputValue}
       onInputChange={handleInputValue}
       filterOptions={createFilterOptions<IOption>({
         stringify: option => {
