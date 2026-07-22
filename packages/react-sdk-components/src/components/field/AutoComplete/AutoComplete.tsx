@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import { TextField } from '@mui/material';
+import { TextField, Paper, Button, Divider } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import isDeepEqual from 'fast-deep-equal/react';
 
@@ -73,6 +74,13 @@ interface AutoCompleteProps extends PConnFieldProps {
     visibility?: boolean;
   };
   variant?: string;
+  showCreateNew?: boolean;
+  onCreateNew?: () => void;
+  createNewLabel?: string;
+  createNewRecord?: () => Promise<unknown>;
+  contextClass?: string;
+  referenceType?: string;
+  allowCreatingRecords?: boolean;
 }
 
 export default function AutoComplete(props: AutoCompleteProps) {
@@ -96,7 +104,12 @@ export default function AutoComplete(props: AutoCompleteProps) {
     hideLabel,
     onRecordChange,
     showFieldMessage,
-    messageConfig = {}
+    messageConfig = {},
+    onCreateNew,
+    createNewLabel = 'Create new',
+    createNewRecord,
+    contextClass,
+    referenceType
   } = props;
 
   const context = getPConnect().getContextName();
@@ -195,70 +208,73 @@ export default function AutoComplete(props: AutoCompleteProps) {
     }
   }, [theDatasource]);
 
+  // Builds options with primary + secondary data from datapage results
+  const buildOptionsFromResults = (results: any[]): IOption[] => {
+    const optionsData: IOption[] = [];
+    const displayColumn = getDisplayFieldsMetaData(columns);
+    results?.forEach(element => {
+      const val = element[displayColumn.primary]?.toString() || '';
+      let secondaryNodes: ReactNode[] = [];
+      let secondaryRaw: string[] = [];
+
+      if (Array.isArray(columnsFormatter) && columnsFormatter.length > 0) {
+        columnsFormatter.forEach((formatter, idx) => {
+          if (formatter.config?.value) {
+            const fmtPropName = getPropertyName(formatter.config.value);
+            secondaryRaw.push(element[fmtPropName]?.toString() || '');
+
+            try {
+              const fieldMeta = {
+                meta: {
+                  ...formatter,
+                  config: {
+                    ...formatter.config,
+                    displayMode: 'DISPLAY_ONLY',
+                    contextName: context,
+                    variant: 'inline-compact'
+                  }
+                },
+                useCustomContext: element
+              };
+              const configObj = PCore.createPConnect(fieldMeta);
+              const resolvedPConn = configObj.getPConnect();
+              const resolvedProps = resolvedPConn.resolveConfigProps(resolvedPConn.getConfigProps());
+              const Component = getComponentFromMap(formatter.type);
+              if (Component) {
+                secondaryNodes.push(<Component key={idx} {...resolvedProps} getPConnect={() => resolvedPConn} displayMode='DISPLAY_ONLY' />);
+              } else {
+                secondaryNodes.push(element[fmtPropName]?.toString() || '');
+              }
+            } catch {
+              secondaryNodes.push(element[fmtPropName]?.toString() || '');
+            }
+          }
+        });
+      } else {
+        secondaryRaw = displayColumn.secondary.map(col => element[col]?.toString()).filter(Boolean);
+        secondaryNodes = [...secondaryRaw];
+      }
+
+      const obj: IOption = {
+        key: String(element[displayColumn.key] ?? element.pyGUID ?? ''),
+        value: val,
+        ...(secondaryNodes.length > 0 && { secondary: secondaryNodes }),
+        ...(secondaryRaw.length > 0 && { secondaryRaw }),
+        ...(isGrouped && { group: element[groupKeyFields[0]]?.toString() || '' })
+      };
+      optionsData.push(obj);
+    });
+    // Sort options by group value so MUI renders groups contiguously
+    if (isGrouped) {
+      optionsData.sort((a, b) => (a.group || '').localeCompare(b.group || ''));
+    }
+    return optionsData;
+  };
+
   useEffect(() => {
     if (!displayMode && listType !== 'associated') {
       getDataPage(datasource, parameters, context).then((results: any) => {
-        const optionsData: any[] = [];
-        const displayColumn = getDisplayFieldsMetaData(columns);
-        results?.forEach(element => {
-          const val = element[displayColumn.primary]?.toString();
-          let secondaryNodes: ReactNode[] = [];
-          let secondaryRaw: string[] = [];
-
-          if (Array.isArray(columnsFormatter) && columnsFormatter.length > 0) {
-            columnsFormatter.forEach((formatter, idx) => {
-              if (formatter.config?.value) {
-                const propName = getPropertyName(formatter.config.value);
-                secondaryRaw.push(element[propName]?.toString() || '');
-
-                // Create PConnect for the field and render in DISPLAY_ONLY mode
-                try {
-                  const fieldMeta = {
-                    meta: {
-                      ...formatter,
-                      config: {
-                        ...formatter.config,
-                        displayMode: 'DISPLAY_ONLY',
-                        contextName: context,
-                        variant: 'inline-compact'
-                      }
-                    },
-                    useCustomContext: element
-                  };
-                  const configObj = PCore.createPConnect(fieldMeta);
-                  const resolvedPConn = configObj.getPConnect();
-                  const resolvedProps = resolvedPConn.resolveConfigProps(resolvedPConn.getConfigProps());
-                  const Component = getComponentFromMap(formatter.type);
-                  if (Component) {
-                    secondaryNodes.push(<Component key={idx} {...resolvedProps} getPConnect={() => resolvedPConn} displayMode='DISPLAY_ONLY' />);
-                  } else {
-                    secondaryNodes.push(element[propName]?.toString() || '');
-                  }
-                } catch {
-                  secondaryNodes.push(element[propName]?.toString() || '');
-                }
-              }
-            });
-          } else {
-            // Fallback to plain secondary columns
-            secondaryRaw = displayColumn.secondary.map(col => element[col]?.toString()).filter(Boolean);
-            secondaryNodes = [...secondaryRaw];
-          }
-
-          const obj: IOption = {
-            key: element[displayColumn.key] || element.pyGUID,
-            value: val,
-            ...(secondaryNodes.length > 0 && { secondary: secondaryNodes }),
-            ...(secondaryRaw.length > 0 && { secondaryRaw }),
-            ...(isGrouped && { group: element[groupKeyFields[0]]?.toString() || '' })
-          };
-          optionsData.push(obj);
-        });
-        // Sort options by group value so MUI renders groups contiguously
-        if (isGrouped) {
-          optionsData.sort((a, b) => (a.group || '').localeCompare(b.group || ''));
-        }
-        setOptions(optionsData);
+        setOptions(buildOptionsFromResults(results));
       });
     }
   }, []);
@@ -292,6 +308,158 @@ export default function AutoComplete(props: AutoCompleteProps) {
     setInputValue(newInputValue);
   };
 
+  // Sets values for all columns that have setProperty defined (mirrors setValuesToOtherAdditionalFields in constellation-frontend)
+  const setValuesToAdditionalFields = (record: Record<string, unknown>) => {
+    const setPropertyList = columns
+      .filter(col => col.setProperty)
+      .map(col => ({
+        source: col.value,
+        target: col.setProperty,
+        key: col.key,
+        primary: col.primary
+      }));
+
+    if (setPropertyList.length > 0) {
+      setPropertyList.forEach(prop => {
+        let valueToSet: string;
+        if (prop.key === 'true') {
+          valueToSet = record[prop.source]?.toString() || (record as any).pyGUID || '';
+        } else {
+          valueToSet = record[prop.source]?.toString() || '';
+        }
+
+        if (prop.target === 'Associated property') {
+          handleEvent(actionsApi, 'changeNblur', propName, valueToSet);
+        } else {
+          const target = typeof prop.target === 'string' ? prop.target : '';
+          const targetProp = target.startsWith('.') ? target : `.${target}`;
+          actionsApi.updateFieldValue(targetProp, valueToSet, { associatedProperty: propName });
+          actionsApi.triggerFieldChange(targetProp, valueToSet);
+        }
+      });
+    }
+  };
+
+  // Re-fetches the options list (equivalent to initializeList in constellation-frontend)
+  const refreshOptionsList = () => {
+    if (!displayMode && listType !== 'associated') {
+      getDataPage(datasource, parameters, context).then((results: any) => {
+        setOptions(buildOptionsFromResults(results));
+      });
+    }
+  };
+
+  const createNewButtonHandler = () => {
+    if (onCreateNew) {
+      onCreateNew();
+      return;
+    }
+
+    if (!contextClass) return;
+
+    const normalizedReferenceType = typeof referenceType === 'string' ? referenceType.toLowerCase() : '';
+    const isDataReference = normalizedReferenceType === 'data';
+    const { CREATE_STAGE_DONE } = PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS;
+    const DATA_OBJECT_CREATED = (PCore.getConstants().PUB_SUB_EVENTS as any).DATA_EVENTS?.DATA_OBJECT_CREATED;
+    const eventType = isDataReference && DATA_OBJECT_CREATED ? DATA_OBJECT_CREATED : CREATE_STAGE_DONE;
+
+    const createNewCallback = isDataReference
+      ? (data: { classId?: string; data?: { responseData?: Record<string, unknown> } }) => {
+          // Clear contexted cache before re-fetching
+          PCore.getDataApi().clearContextedCache(context);
+
+          const responseData = data?.data?.responseData;
+          if (responseData) {
+            // Set all mapped property values from the newly created record
+            setValuesToAdditionalFields(responseData);
+            const displayColumn = getDisplayFieldsMetaData(columns);
+            if (onRecordChange) {
+              const newKey = responseData[displayColumn.key]?.toString() || (responseData as any).pyGUID;
+              onRecordChange({ id: newKey });
+            }
+          }
+
+          // Refresh the options list
+          refreshOptionsList();
+          PCore.getPubSubUtils().unsubscribe(eventType, contextClass);
+        }
+      : (data: { caseId?: string; caseType?: string; ID?: string }) => {
+          // Clear contexted cache before re-fetching
+          PCore.getDataApi().clearContextedCache(context);
+
+          const newCaseId = data.caseId?.split(' ').pop();
+          if (data.caseType === contextClass) {
+            const selectKey = data.ID || newCaseId;
+
+            if (selectKey && listType !== 'associated' && datasource) {
+              // Re-fetch data to find the newly created record and set all mapped properties
+              getDataPage(datasource, parameters, context).then((results: any) => {
+                setOptions(buildOptionsFromResults(results));
+
+                // Find the newly created record by ID or caseId and set all properties
+                const displayColumn = getDisplayFieldsMetaData(columns);
+                const newRecord = results?.find((el: any) => el.ID === data.ID || (el[displayColumn.key] || el.pyGUID) === selectKey);
+                if (newRecord) {
+                  setValuesToAdditionalFields(newRecord);
+                } else {
+                  // Fallback: just set the key value
+                  handleEvent(actionsApi, 'changeNblur', propName, selectKey);
+                }
+                if (onRecordChange) {
+                  onRecordChange({ id: selectKey });
+                }
+              });
+            }
+            PCore.getPubSubUtils().unsubscribe(eventType, contextClass);
+          }
+        };
+
+    // Build the create action if createNewRecord prop is not provided
+    const triggerCreate = createNewRecord
+      ? createNewRecord()
+      : isDataReference
+        ? getPConnect().getActionsApi().showDataObjectCreateView(contextClass)
+        : thePConn.getActionsApi().createWork(contextClass, {
+            openCaseViewAfterCreate: false,
+            startingFields: {}
+          });
+
+    Promise.resolve(triggerCreate).then(() => {
+      PCore.getPubSubUtils().subscribe(eventType, createNewCallback, contextClass);
+      // Re-initialize the list (equivalent to initializeList() in constellation-frontend)
+      refreshOptionsList();
+    });
+  };
+
+  const showCreateButton = props.allowCreatingRecords === true;
+
+  const CustomPaper = useCallback(
+    (paperProps: React.HTMLAttributes<HTMLElement>) => {
+      return (
+        <Paper {...paperProps}>
+          {paperProps.children}
+          {showCreateButton && (
+            <>
+              <Divider />
+              <Button
+                fullWidth
+                startIcon={<AddIcon />}
+                onMouseDown={event => {
+                  event.preventDefault();
+                }}
+                onClick={createNewButtonHandler}
+                sx={{ justifyContent: 'flex-start', textTransform: 'none', py: 1, px: 2 }}
+              >
+                {createNewLabel}
+              </Button>
+            </>
+          )}
+        </Paper>
+      );
+    },
+    [showCreateButton, createNewButtonHandler, createNewLabel]
+  );
+
   if (readOnly) {
     const theValAsString = options?.find(opt => opt.key === value)?.value;
     return <TextInput {...props} value={theValAsString} />;
@@ -300,6 +468,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
   //  key/value structure to what Autocomplete expects
   return (
     <Autocomplete
+      slots={{ paper: CustomPaper }}
       options={options}
       getOptionLabel={(option: IOption) => {
         return option.value ? option.value : '';
