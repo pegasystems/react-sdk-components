@@ -213,7 +213,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
     const optionsData: IOption[] = [];
     const displayColumn = getDisplayFieldsMetaData(columns);
     results?.forEach(element => {
-      const val = element[displayColumn.primary]?.toString();
+      const val = element[displayColumn.primary]?.toString() || '';
       let secondaryNodes: ReactNode[] = [];
       let secondaryRaw: string[] = [];
 
@@ -256,7 +256,7 @@ export default function AutoComplete(props: AutoCompleteProps) {
       }
 
       const obj: IOption = {
-        key: element[displayColumn.key] || element.pyGUID,
+        key: String(element[displayColumn.key] ?? element.pyGUID ?? ''),
         value: val,
         ...(secondaryNodes.length > 0 && { secondary: secondaryNodes }),
         ...(secondaryRaw.length > 0 && { secondaryRaw }),
@@ -331,7 +331,8 @@ export default function AutoComplete(props: AutoCompleteProps) {
         if (prop.target === 'Associated property') {
           handleEvent(actionsApi, 'changeNblur', propName, valueToSet);
         } else {
-          const targetProp = prop.target.startsWith('.') ? prop.target : `.${prop.target}`;
+          const target = typeof prop.target === 'string' ? prop.target : '';
+          const targetProp = target.startsWith('.') ? target : `.${target}`;
           actionsApi.updateFieldValue(targetProp, valueToSet, { associatedProperty: propName });
           actionsApi.triggerFieldChange(targetProp, valueToSet);
         }
@@ -356,7 +357,8 @@ export default function AutoComplete(props: AutoCompleteProps) {
 
     if (!contextClass) return;
 
-    const isDataReference = referenceType?.toLowerCase() === 'data';
+    const normalizedReferenceType = typeof referenceType === 'string' ? referenceType.toLowerCase() : '';
+    const isDataReference = normalizedReferenceType === 'data';
     const { CREATE_STAGE_DONE } = PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS;
     const DATA_OBJECT_CREATED = (PCore.getConstants().PUB_SUB_EVENTS as any).DATA_EVENTS?.DATA_OBJECT_CREATED;
     const eventType = isDataReference && DATA_OBJECT_CREATED ? DATA_OBJECT_CREATED : CREATE_STAGE_DONE;
