@@ -206,7 +206,22 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
           .refreshCaseView(caseKey, viewName, pgRef, refreshOptions)
           .catch(() => {});
       }
-    } else if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
+    } else if (hasAssociatedViewConfigured || allowImplicitRefresh) {
+      const pageReference = pConn.getPageReference();
+      let pgRef: any = null;
+      if (pageReference.startsWith('objectInfo')) {
+        pgRef = pageReference.replace('objectInfo.content', '');
+      } else {
+        pgRef = pageReference.replace('caseInfo.content', '');
+      }
+      const viewName = rawViewMetadata.name;
+      getPConnect()
+        .getActionsApi()
+        .refreshCaseView(caseKey, viewName, pgRef, refreshOptions)
+        .catch(() => {});
+    }
+
+    if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
       (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then(caseResponse => {
         const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
         let curr = {};
