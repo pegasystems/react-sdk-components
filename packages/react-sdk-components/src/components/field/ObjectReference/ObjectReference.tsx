@@ -35,7 +35,6 @@ interface ObjectReferenceProps extends Omit<PConnFieldProps, 'value'> {
 }
 
 export default function ObjectReference(props: ObjectReferenceProps) {
-  console.log('Rendering ObjectReference with props', props);
   const {
     getPConnect,
     children,
