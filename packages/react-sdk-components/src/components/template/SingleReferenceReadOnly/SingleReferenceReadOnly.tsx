@@ -1,4 +1,5 @@
-import { FormControl, FormLabel } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
+import Typography from '@mui/material/Typography';
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface SingleReferenceReadOnlyProps extends PConnProps {
@@ -61,11 +62,17 @@ export default function SingleReferenceReadOnly(props: SingleReferenceReadOnlyPr
   ); // 2nd, 3rd, and 4th args empty string/object/null until typedef marked correctly as optional
 
   return (
-    <>
-      <FormControl variant='standard' sx={{ display: 'flex', flexDirection: 'row' }}>
-        <FormLabel sx={{ marginRight: '2rem' }}>{label}</FormLabel>
+    <Grid2 container spacing={4} justifyContent='space-between'>
+      {!hideLabel && (
+        <Grid2 size={{ xs: 4 }}>
+          <Typography variant='body2' component='span' sx={{ fontWeight: 400, color: 'text.secondary' }}>
+            {label}
+          </Typography>
+        </Grid2>
+      )}
+      <Grid2 size={{ xs: hideLabel ? 12 : 8 }}>
         {component}
-      </FormControl>
-    </>
+      </Grid2>
+    </Grid2>
   );
 }

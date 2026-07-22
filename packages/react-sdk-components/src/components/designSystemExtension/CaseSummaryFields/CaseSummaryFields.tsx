@@ -24,6 +24,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const Operator = getComponentFromMap('Operator');
   const ObjectReference = getComponentFromMap('ObjectReference');
+  const Reference = getComponentFromMap('reference');
   const { status, showStatus, theFields } = props;
 
   const [theFieldsToRender, setFieldsToRender] = useState([]);
@@ -218,6 +219,17 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
             <label className='label'>{field.config.displayLabel}</label>
             <div className='psdk-case-summary-object-ref-value'>
               <ObjectReference {...field.config} getPConnect={field.getPConnect} />
+            </div>
+          </div>
+        );
+
+      case 'reference':
+        return (
+          // <Reference {...field.config} getPConnect={field.getPConnect} displayMode='DISPLAY_ONLY' />
+          <div className='psdk-case-summary-object-ref'>
+            <label className='label'>{field.config.displayLabel}</label>
+            <div className='psdk-case-summary-object-ref-value'>
+              <Reference {...field.config} getPConnect={field.getPConnect} displayMode='DISPLAY_ONLY'/>
             </div>
           </div>
         );
