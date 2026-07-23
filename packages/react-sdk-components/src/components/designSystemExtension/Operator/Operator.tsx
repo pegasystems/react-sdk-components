@@ -20,6 +20,7 @@ interface OperatorProps extends PConnProps {
   updateLabel: string;
   updateOperator: { userName: string; userId: string };
   displayLabel?: any;
+  displayMode?: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -30,6 +31,13 @@ const useStyles = makeStyles(theme => ({
   popover: {
     padding: theme.spacing(1),
     margin: theme.spacing(1)
+  },
+  fieldLabel: {
+    fontWeight: 400,
+    color: theme.palette.text.secondary
+  },
+  fieldValue: {
+    color: theme.palette.text.primary
   }
 }));
 
@@ -184,6 +192,45 @@ export default function Operator(props: OperatorProps) {
   }
 
   // End of popover-related
+
+  const { displayMode } = props;
+
+  if (displayMode === 'DISPLAY_ONLY') {
+    return (
+      <>
+        <Grid2 container spacing={4} justifyContent='space-between'>
+          <Grid2 size={{ xs: 4 }}>
+            <Typography variant='body2' component='span' className={classes.fieldLabel}>
+              {caseOpLabel}
+            </Typography>
+          </Grid2>
+          <Grid2 size={{ xs: 8 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'baseline' }}>
+              <Typography variant='body2' component='span' className={classes.fieldValue} onClick={showOperatorDetails} sx={{ cursor: 'pointer' }}>
+                {caseOpName}
+              </Typography>
+              <Typography variant='caption' component='span' sx={{ color: 'text.secondary' }}>
+                {Utils.generateDateTime(caseTime, 'DateTime-Since')}
+              </Typography>
+            </div>
+          </Grid2>
+        </Grid2>
+        <Popover
+          id={popoverId}
+          open={popoverOpen}
+          anchorEl={popoverAnchorEl}
+          onClose={handlePopoverClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+          slotProps={{
+            paper: { style: { maxWidth: '45ch' } }
+          }}
+        >
+          {getPopoverGrid()}
+        </Popover>
+      </>
+    );
+  }
 
   return (
     <>

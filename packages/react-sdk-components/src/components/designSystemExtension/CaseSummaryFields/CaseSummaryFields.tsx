@@ -18,13 +18,16 @@ interface CaseSummaryFieldsProps {
   status?: string;
   showStatus?: boolean;
   theFields: any[] | any | never;
+  variant?: 'primary' | 'secondary';
 }
 
 export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
   // Get emitted components from map (so we can get any override that may exist)
   const Operator = getComponentFromMap('Operator');
   const ObjectReference = getComponentFromMap('ObjectReference');
-  const { status, showStatus, theFields } = props;
+  const Reference = getComponentFromMap('reference');
+  const FieldValueList = getComponentFromMap('FieldValueList');
+  const { status, showStatus, theFields, variant = 'primary' } = props;
 
   const [theFieldsToRender, setFieldsToRender] = useState([]);
   const [theFieldsAsGridItems, setFieldsAsGridItems] = useState<any[]>([]);
@@ -222,6 +225,9 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
           </div>
         );
 
+      case 'reference':
+        return <Reference {...field.config} getPConnect={field.getPConnect} displayMode='DISPLAY_ONLY' />;
+
       default:
         return (
           <span>
@@ -231,14 +237,50 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
     }
   }
 
+  function renderSecondaryField(field: any) {
+    const fieldTypeLower = field.type.toLowerCase();
+
+    if (fieldTypeLower === 'caseoperator') {
+      return <Operator {...field.config} displayMode='DISPLAY_ONLY' />;
+    }
+
+    // ObjectReference: render label from CaseSummaryFields, value from component
+    if (fieldTypeLower === 'objectreference') {
+      const name = field.config.label || field.config.displayLabel || '';
+      const value = field.getPConnect ? (
+        <ObjectReference {...field.config} getPConnect={field.getPConnect} displayMode='DISPLAY_ONLY' hideLabel />
+      ) : (
+        (field.config.value ?? '---')
+      );
+
+      return <FieldValueList name={name} value={value} variant='inline' />;
+    }
+
+    if (!field.getPConnect) {
+      // Fallback if no getPConnect — render using FieldValueList directly
+      const name = field.config.label || field.config.displayLabel || '';
+      const value = field.config.value ?? '---';
+      return <FieldValueList name={name} value={value} variant='inline' />;
+    }
+
+    const pConnect = field.getPConnect();
+    return pConnect.createComponent({
+      type: field.type,
+      config: {
+        ...field.config,
+        displayMode: 'DISPLAY_ONLY'
+      }
+    });
+  }
+
   // Whenever theFieldsToRender changes, update theFieldsAsGridItems that's used during render
   useEffect(() => {
     const arGridItems = theFieldsToRender?.map((field: any) => {
       // display the field when either visibility property doesn't exist or is true(if exists)
       if (field.config.visibility === undefined || field.config.visibility === true) {
         return (
-          <Grid2 size={{ xs: 6 }} key={field.config.label}>
-            {getFieldValue(field)}
+          <Grid2 size={{ xs: variant === 'secondary' ? 12 : 6 }} key={field.config.label}>
+            {variant === 'secondary' ? renderSecondaryField(field) : getFieldValue(field)}
           </Grid2>
         );
       }
@@ -246,7 +288,7 @@ export default function CaseSummaryFields(props: CaseSummaryFieldsProps) {
       return null;
     });
     setFieldsAsGridItems(arGridItems);
-  }, [theFieldsToRender]);
+  }, [theFieldsToRender, variant]);
 
   const theFieldsModifiable = theFields;
 
