@@ -70,9 +70,7 @@ export default function SingleReferenceReadOnly(props: SingleReferenceReadOnlyPr
           </Typography>
         </Grid2>
       )}
-      <Grid2 size={{ xs: hideLabel ? 12 : 8 }}>
-        {component}
-      </Grid2>
+      <Grid2 size={{ xs: hideLabel ? 12 : 8 }}>{component}</Grid2>
     </Grid2>
   );
 }
