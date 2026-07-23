@@ -141,6 +141,10 @@ export default function ListView(props: ListViewProps) {
 
   const [selectedValue, setSelectedValue] = useState(value);
 
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
+
   // Tracks selected row keys for multi-select mode (mirrors Angular's SelectionModel)
   const [selectedRowSet, setSelectedRowSet] = useState<Set<string>>(new Set());
 
