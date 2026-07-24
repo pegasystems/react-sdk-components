@@ -316,6 +316,7 @@ export default function ObjectReference(props: ObjectReferenceProps) {
         referenceList: rawViewMetadata.config.referenceList,
         referenceType,
         rowHeader: rawViewMetadata.config.rowHeader,
+        parameters: rawViewMetadata.config.parameters,
         selectionList: contextPageValue,
         selectionMode: mode,
         showPromotedFilters: false,
