@@ -217,7 +217,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   });
 
   useEffect(() => {
-    buildElementsForTable();
+    if (!(readOnlyMode && dataPageName)) {
+      buildElementsForTable();
+    }
     if (readOnlyMode || allowEditingInModal) {
       generateRowsData();
     }
@@ -303,7 +305,6 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   function generateRowsData() {
     myRowsRef.current = [];
-
     // if referenceList is empty and dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (!referenceList.length && dataPageName) {
       getDataPage(dataPageName, parameters, context)
@@ -311,6 +312,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           const data = formatRowsData(listData);
           myRowsRef.current = data || [];
           setRowData(data);
+          // Build elements from fetched data since referenceList may be empty for data page tables
+          if (readOnlyMode) {
+            buildElementsFromData(listData as any[]);
+          }
         })
         .catch(e => {
           console.log(e);
@@ -423,17 +428,34 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           const pageReferenceValue = isDatapage
             ? `${referenceListData}[${index}]`
             : `${pConn.getPageReference()}${referenceListData.substring(referenceListData.lastIndexOf('.'))}[${index}]`;
+          const isDisplayOnly = readOnlyMode || allowEditingInModal;
           const config = {
             meta: item,
             options: {
               context,
               pageReference: pageReferenceValue,
               referenceList: referenceListData,
-              hasForm: true
+              hasForm: !isDisplayOnly
             }
           };
           const view = PCore.createPConnect(config);
           data.push(createElement(createPConnectComponent(), view));
+        }
+      });
+      eleData.push(data);
+    });
+    setElementsData(eleData);
+  }
+
+  function buildElementsFromData(listData: any[]) {
+    const eleData: any = [];
+    listData.forEach((element, index) => {
+      const data: any = [];
+      rawFields.forEach(item => {
+        if (!item.config.hide) {
+          const propName = item.config.value.replace('@P .', '');
+          const val = getRowValue(element, propName);
+          data.push(createElement('span', { key: `${index}-${propName}` }, val ?? '---'));
         }
       });
       eleData.push(data);
