@@ -505,12 +505,12 @@ export default function Attachment(props: AttachmentProps) {
                 {item.props.meta && <div style={{ color: item.props.error ? 'red' : undefined }}>{item.props.meta}</div>}
               </div>
               <div className='psdk-utility-action'>
-                {item.ID && (
+                {(item.ID || item.responseProps?.localAttachment) && (
                   <button type='button' className='psdk-utility-button' aria-label='Delete Attachment' onClick={() => deleteFile(item, index)}>
                     <img className='psdk-utility-card-action-svg-icon' src={deleteIcon} />
                   </button>
                 )}
-                {!item.ID && (
+                {!item.ID && !item.responseProps?.localAttachment && (
                   <div>
                     <IconButton
                       id='setting-button'
