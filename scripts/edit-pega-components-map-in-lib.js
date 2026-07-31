@@ -7,9 +7,8 @@
 
 'use strict';
 
-const replaceInFile = require('replace-in-file');
-
-const editPegaComponentsMapInLib = function () {
+const editPegaComponentsMapInLib = async function () {
+  const { replaceInFileSync } = await import('replace-in-file');
   console.log(`in editPegaComponentsMapInLib`);
 
   const compDtsFileToEdit = 'packages/react-sdk-components/lib/sdk-pega-component-map.d.ts';
@@ -25,7 +24,7 @@ const editPegaComponentsMapInLib = function () {
   };
 
   try {
-    const results = replaceInFile.sync(options);
+    const results = replaceInFileSync(options);
     results.map(theResults => {
       const { hasChanged, file, numMatches, numReplacements } = theResults;
       // console.log(`replacement results: ${JSON.stringify(results[0])}`);

@@ -6,7 +6,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const replaceInFile = require('replace-in-file');
 const overrideConstants = require('./override-constants');
 
 // overridesPkgDir is path where the files in the package are
@@ -466,7 +465,7 @@ const processImportLine = function (inMatch, filePath) {
  * and updates those to the appropriate @pega/react-sdk-components path
  * (ex: import FieldValueList from '@pega/react-sdk-components/lib/components/designSystemExtension/FieldValueList';)
  */
-const processOverrideFile = function (filePath) {
+const processOverrideFile = function (filePath, replaceInFileSync) {
   // trim off the directory info from the string to make it shorter
   console.log(`\nProcessing override file: ${filePath.slice(overridesLibDir.length)}`);
 
@@ -479,7 +478,7 @@ const processOverrideFile = function (filePath) {
     countMatches: true
   };
 
-  const theResults = replaceInFile.sync(options);
+  const theResults = replaceInFileSync(options);
 
   const { hasChanged, file } = theResults[0];
   // console.log(`replacement results: ${JSON.stringify(results[0])}`);
@@ -493,11 +492,12 @@ const processOverrideFile = function (filePath) {
 
 const processSdkOverrides = async () => {
   console.log(`in processSdkOverrides`);
+  const { replaceInFileSync } = await import('replace-in-file');
   iPathReplacements = 0;
   iMayNeedPathReplacement = 0;
   const allFilesInDir = getAllFilesInDir(overridesLibDir, []);
   allFilesInDir.forEach(file => {
-    processOverrideFile(file);
+    processOverrideFile(file, replaceInFileSync);
   });
   console.log(`Processed ${allFilesInDir.length} files in ${overridesPkgDir}`);
   console.log(`  paths replaced: ${iPathReplacements}`);
