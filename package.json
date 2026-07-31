@@ -46,7 +46,7 @@
     "test-jest": "jest --watchAll",
     "test-jest-coverage": "jest --watchAll --coverage",
     "_comment_internal_SDK_scripts": "The following commands are for internal use and are intended to be called only from public scripts above",
-    "_internal-copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html"
+    "_internal-copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html && shx cp dist/index.html dist/tabs.html"
   },
   "author": "Pegasystems",
   "license": "SEE LICENSE IN LICENSE",

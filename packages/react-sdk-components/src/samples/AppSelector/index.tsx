@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router';
 
 import Embedded from '../Embedded';
 import FullPortal from '../FullPortal';
+import Tabs from '../Tabs';
 
 // NOTE: You should update this to be the same value that's in
 //  the src/index.html <base href="value"> to allow the React Router
@@ -23,6 +24,8 @@ const AppSelector = () => {
         <Route path={`${baseURL}embedded.html`} element={<Embedded />} />
         <Route path={`${baseURL}portal`} element={<FullPortal />} />
         <Route path={`${baseURL}portal.html`} element={<FullPortal />} />
+        <Route path={`${baseURL}tabs`} element={<Tabs />} />
+        <Route path={`${baseURL}tabs.html`} element={<Tabs />} />
         <Route path={`${baseURL}prweb/*`} element={<FullPortal />} />
         <Route path='*' element={<Embedded />} />
       </Routes>

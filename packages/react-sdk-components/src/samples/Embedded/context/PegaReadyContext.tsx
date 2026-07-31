@@ -46,10 +46,7 @@ interface PegaReadyProviderProps {
 export const PegaReadyProvider: React.FC<React.PropsWithChildren<PegaReadyProviderProps>> = ({ children, theme }) => {
   const { isAuthenticated } = usePegaAuth();
   const [isPegaReady, setIsPegaReady] = useState<boolean>(false);
-  const [rootProps, setRootProps] = useState<{
-    getPConnect?: () => typeof PConnect;
-    [key: string]: any;
-  }>({});
+  const [rootProps, setRootProps] = useState<Record<string, any> | null>(null);
 
   const [loading, setLoading] = useState<boolean>(false);
 
