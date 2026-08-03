@@ -68,11 +68,15 @@ const UserReference = (props: UserReferenceProps) => {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(userId).then((res: any) => {
-          if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
-            setUserName(res.data.pyOperatorInfo.pyUserName);
-          }
-        });
+        getOperatorDetails(userId)
+          .then((res: any) => {
+            if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
+              setUserName(res.data.pyOperatorInfo.pyUserName);
+            }
+          })
+          .catch(e => {
+            console.error(e);
+          });
       }
     } else if (displayAs === DROPDOWN_LIST) {
       const queryPayload = {

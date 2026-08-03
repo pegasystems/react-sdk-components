@@ -78,7 +78,6 @@ let sortColumnId: any;
 const filterByColumns: any[] = [];
 
 export default function ListView(props: ListViewProps) {
-  console.log('ListView props', props);
   const { getPConnect, bInForm = true } = props;
   const {
     globalSearch,
@@ -562,70 +561,74 @@ export default function ListView(props: ListViewProps) {
 
   async function fetchDataFromServer(overrideParams?: any) {
     let bCallSetRowsColumns = true;
-    const { fieldDefs, itemKey, patchQueryFields } = meta;
-    let listFields = fieldDefs ? buildSelect(fieldDefs, undefined, patchQueryFields, compositeKeys) : [];
-    listFields = addItemKeyInSelect(fieldDefs, itemKey, listFields, compositeKeys);
-    const workListJSON = await fetchAllData(listFields, overrideParams);
+    try {
+      const { fieldDefs, itemKey, patchQueryFields } = meta;
+      let listFields = fieldDefs ? buildSelect(fieldDefs, undefined, patchQueryFields, compositeKeys) : [];
+      listFields = addItemKeyInSelect(fieldDefs, itemKey, listFields, compositeKeys);
+      const workListJSON = await fetchAllData(listFields, overrideParams);
 
-    // this is an unresovled version of this.fields$, need unresolved, so can get the property reference
-    const columnFields = componentConfig.presets[0].children[0].children;
+      // this is an unresovled version of this.fields$, need unresolved, so can get the property reference
+      const columnFields = componentConfig.presets[0].children[0].children;
 
-    const tableDataResults = !bInForm ? workListJSON.data.data : workListJSON.data;
+      const tableDataResults = !bInForm ? workListJSON.data.data : workListJSON.data;
 
-    const myColumns = getHeaderCells(columnFields, fieldDefs);
+      const myColumns = getHeaderCells(columnFields, fieldDefs);
 
-    const selectParams: any = [];
+      const selectParams: any = [];
 
-    myColumns.forEach(column => {
-      column.label = PCore.getLocaleUtils().getLocaleValue(column.label, localeReference);
-      selectParams.push({
-        field: column.id
-      });
-    });
-
-    const colList: any = [];
-
-    selectParams.forEach(col => {
-      colList.push(col.field);
-    });
-
-    columnList.current = colList;
-
-    setResponse(tableDataResults);
-
-    const usingDataResults = getUsingData(tableDataResults);
-
-    // store globally, so can be searched, filtered, etc.
-    myRows = usingDataResults;
-
-    setRowsData(myRows);
-    // At this point, if we have data ready to render and haven't been asked
-    //  to NOT call setRows and setColumns, call them
-    if (bCallSetRowsColumns) {
-      setRows(myRows);
-      setColumns(myColumns);
-
-      if (selectionMode === SELECTION_MODE.MULTI && selectedValues?.length > 0) {
-        const readonlyIds = new Set<string>(selectedValues.map((element: any) => element[rowID]));
-        const initialSet = new Set<string>();
-        myRows?.forEach(row => {
-          if (readonlyIds.has(row[rowID])) {
-            initialSet.add(row[rowID]);
-          }
+      myColumns.forEach(column => {
+        column.label = PCore.getLocaleUtils().getLocaleValue(column.label, localeReference);
+        selectParams.push({
+          field: column.id
         });
-        setSelectedRowSet(initialSet);
-      }
-    }
+      });
 
-    return () => {
-      // Inspired by https://juliangaramendy.dev/blog/use-promise-subscription
-      // The useEffect closure lets us have access to the bCallSetRowsColumns
-      //  variable inside the useEffect and inside the "then" clause of the
-      //  workListData promise
-      //  So, if this cleanup code gets run before the promise .then is called,
-      //  we can avoid calling the useState setters which would otherwise show a warning
-      bCallSetRowsColumns = false;
-    };
+      const colList: any = [];
+
+      selectParams.forEach(col => {
+        colList.push(col.field);
+      });
+
+      columnList.current = colList;
+
+      setResponse(tableDataResults);
+
+      const usingDataResults = getUsingData(tableDataResults);
+
+      // store globally, so can be searched, filtered, etc.
+      myRows = usingDataResults;
+
+      setRowsData(myRows);
+      // At this point, if we have data ready to render and haven't been asked
+      //  to NOT call setRows and setColumns, call them
+      if (bCallSetRowsColumns) {
+        setRows(myRows);
+        setColumns(myColumns);
+
+        if (selectionMode === SELECTION_MODE.MULTI && selectedValues?.length > 0) {
+          const readonlyIds = new Set<string>(selectedValues.map((element: any) => element[rowID]));
+          const initialSet = new Set<string>();
+          myRows?.forEach(row => {
+            if (readonlyIds.has(row[rowID])) {
+              initialSet.add(row[rowID]);
+            }
+          });
+          setSelectedRowSet(initialSet);
+        }
+      }
+
+      return () => {
+        // Inspired by https://juliangaramendy.dev/blog/use-promise-subscription
+        // The useEffect closure lets us have access to the bCallSetRowsColumns
+        //  variable inside the useEffect and inside the "then" clause of the
+        //  workListData promise
+        //  So, if this cleanup code gets run before the promise .then is called,
+        //  we can avoid calling the useState setters which would otherwise show a warning
+        bCallSetRowsColumns = false;
+      };
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function prepareFilters(data) {

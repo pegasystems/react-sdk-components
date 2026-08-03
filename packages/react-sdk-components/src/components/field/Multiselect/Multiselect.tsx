@@ -181,6 +181,9 @@ export default function Multiselect(props) {
           if (!isGroupData) {
             getCaseListBasedOnParamsDebounced.current(inputValue ?? '', '', [...selectedItems], [...itemsTree]);
           }
+        })
+        .catch(e => {
+          console.error(e);
         });
     }
   }, [dataConfig, listType, dataConfig.columns, inputValue, dataConfig.groupColumnsConfig, showSecondaryInSearchOnly]);

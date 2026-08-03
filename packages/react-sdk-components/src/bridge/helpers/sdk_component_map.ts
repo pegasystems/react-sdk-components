@@ -130,19 +130,23 @@ export async function getSdkComponentMap(inLocalComponentMap = {}) {
     let idNextCheck;
     if (!SdkComponentMap && !SdkComponentMapCreateInProgress) {
       SdkComponentMapCreateInProgress = true;
-      createSdkComponentMap(inLocalComponentMap).then(theComponentMap => {
-        // debugger;
-        // Key initialization of SdkComponentMap
-        SdkComponentMap = theComponentMap;
-        SdkComponentMapCreateInProgress = false;
+      createSdkComponentMap(inLocalComponentMap)
+        .then(theComponentMap => {
+          // debugger;
+          // Key initialization of SdkComponentMap
+          SdkComponentMap = theComponentMap;
+          SdkComponentMapCreateInProgress = false;
 
-        console.log(`getSdkComponentMap: created SdkComponentMap singleton`);
-        // Create and dispatch the SdkConfigAccessReady event
-        //  Not used anyplace yet but putting it in place in case we need it.
-        const event = new CustomEvent('SdkComponentMapReady', {});
-        document.dispatchEvent(event);
-        return resolve(SdkComponentMap /* .sdkComponentMap */);
-      });
+          console.log(`getSdkComponentMap: created SdkComponentMap singleton`);
+          // Create and dispatch the SdkConfigAccessReady event
+          //  Not used anyplace yet but putting it in place in case we need it.
+          const event = new CustomEvent('SdkComponentMapReady', {});
+          document.dispatchEvent(event);
+          return resolve(SdkComponentMap /* .sdkComponentMap */);
+        })
+        .catch(e => {
+          console.error(e);
+        });
     } else {
       const fnCheckForConfig = () => {
         if (SdkComponentMap) {

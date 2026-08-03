@@ -160,23 +160,27 @@ export default function Dropdown(props: DropdownProps) {
 
   useEffect(() => {
     if (listType !== 'associated' && typeof datasource === 'string') {
-      getDataPage(datasource, parameters, context).then((results: any) => {
-        const optionsData: any[] = [];
-        const displayColumn = getDisplayFieldsMetaData(columns);
-        results?.forEach(element => {
-          const val = element[displayColumn.primary]?.toString();
-          const obj = {
-            key: element[displayColumn.key] || element.pyGUID,
-            value: val
-          };
-          optionsData.push(obj);
+      getDataPage(datasource, parameters, context)
+        .then((results: any) => {
+          const optionsData: any[] = [];
+          const displayColumn = getDisplayFieldsMetaData(columns);
+          results?.forEach(element => {
+            const val = element[displayColumn.primary]?.toString();
+            const obj = {
+              key: element[displayColumn.key] || element.pyGUID,
+              value: val
+            };
+            optionsData.push(obj);
+          });
+          optionsData.unshift({
+            key: placeholder,
+            value: thePConn.getLocalizedValue(placeholder, '', '')
+          });
+          setOptions(optionsData);
+        })
+        .catch(e => {
+          console.error(e);
         });
-        optionsData.unshift({
-          key: placeholder,
-          value: thePConn.getLocalizedValue(placeholder, '', '')
-        });
-        setOptions(optionsData);
-      });
     }
   }, [memoizedParameters]);
 

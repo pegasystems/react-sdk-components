@@ -273,9 +273,13 @@ export default function AutoComplete(props: AutoCompleteProps) {
 
   useEffect(() => {
     if (!displayMode && listType !== 'associated') {
-      getDataPage(datasource, parameters, context).then((results: any) => {
-        setOptions(buildOptionsFromResults(results));
-      });
+      getDataPage(datasource, parameters, context)
+        .then((results: any) => {
+          setOptions(buildOptionsFromResults(results));
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, []);
 
@@ -309,9 +313,13 @@ export default function AutoComplete(props: AutoCompleteProps) {
     const changePromise = (actionsApi as any).triggerFieldChange(propName, val);
     if (onRecordChange) {
       if (changePromise && changePromise.then) {
-        changePromise.then(() => {
-          onRecordChange({ ...event, id: val });
-        });
+        changePromise
+          .then(() => {
+            onRecordChange({ ...event, id: val });
+          })
+          .catch(e => {
+            console.error(e);
+          });
       } else {
         onRecordChange({ ...event, id: val });
       }
@@ -359,9 +367,13 @@ export default function AutoComplete(props: AutoCompleteProps) {
   // Re-fetches the options list (equivalent to initializeList in constellation-frontend)
   const refreshOptionsList = () => {
     if (!displayMode && listType !== 'associated') {
-      getDataPage(datasource, parameters, context).then((results: any) => {
-        setOptions(buildOptionsFromResults(results));
-      });
+      getDataPage(datasource, parameters, context)
+        .then((results: any) => {
+          setOptions(buildOptionsFromResults(results));
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   };
 
@@ -409,22 +421,26 @@ export default function AutoComplete(props: AutoCompleteProps) {
 
             if (selectKey && listType !== 'associated' && datasource) {
               // Re-fetch data to find the newly created record and set all mapped properties
-              getDataPage(datasource, parameters, context).then((results: any) => {
-                setOptions(buildOptionsFromResults(results));
+              getDataPage(datasource, parameters, context)
+                .then((results: any) => {
+                  setOptions(buildOptionsFromResults(results));
 
-                // Find the newly created record by ID or caseId and set all properties
-                const displayColumn = getDisplayFieldsMetaData(columns);
-                const newRecord = results?.find((el: any) => el.ID === data.ID || (el[displayColumn.key] || el.pyGUID) === selectKey);
-                if (newRecord) {
-                  setValuesToAdditionalFields(newRecord);
-                } else {
-                  // Fallback: just set the key value
-                  handleEvent(actionsApi, 'changeNblur', propName, selectKey);
-                }
-                if (onRecordChange) {
-                  onRecordChange({ id: selectKey });
-                }
-              });
+                  // Find the newly created record by ID or caseId and set all properties
+                  const displayColumn = getDisplayFieldsMetaData(columns);
+                  const newRecord = results?.find((el: any) => el.ID === data.ID || (el[displayColumn.key] || el.pyGUID) === selectKey);
+                  if (newRecord) {
+                    setValuesToAdditionalFields(newRecord);
+                  } else {
+                    // Fallback: just set the key value
+                    handleEvent(actionsApi, 'changeNblur', propName, selectKey);
+                  }
+                  if (onRecordChange) {
+                    onRecordChange({ id: selectKey });
+                  }
+                })
+                .catch(e => {
+                  console.error(e);
+                });
             }
             PCore.getPubSubUtils().unsubscribe(eventType, contextClass);
           }
@@ -440,11 +456,15 @@ export default function AutoComplete(props: AutoCompleteProps) {
             startingFields: {}
           });
 
-    Promise.resolve(triggerCreate).then(() => {
-      PCore.getPubSubUtils().subscribe(eventType, createNewCallback, contextClass);
-      // Re-initialize the list (equivalent to initializeList() in constellation-frontend)
-      refreshOptionsList();
-    });
+    Promise.resolve(triggerCreate)
+      .then(() => {
+        PCore.getPubSubUtils().subscribe(eventType, createNewCallback, contextClass);
+        // Re-initialize the list (equivalent to initializeList() in constellation-frontend)
+        refreshOptionsList();
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   const showCreateButton = props.allowCreatingRecords === true;

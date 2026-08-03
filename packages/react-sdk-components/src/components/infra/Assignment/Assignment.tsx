@@ -164,9 +164,14 @@ export default function Assignment(props: PropsWithChildren<AssignmentProps>) {
   }
 
   function onSaveActionSuccess(data) {
-    actionsAPI.cancelAssignment(itemKey, false).then(() => {
-      PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CREATE_STAGE_SAVED, data);
-    });
+    actionsAPI
+      .cancelAssignment(itemKey, false)
+      .then(() => {
+        PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CREATE_STAGE_SAVED, data);
+      })
+      .catch(e => {
+        console.error(e);
+      });
   }
 
   function buttonPress(sAction: string, sButtonType: string) {

@@ -222,41 +222,49 @@ export default function DataReference(props: PropsWithChildren<DataReferenceProp
     }
 
     if (propValue && canBeChangedInReviewMode && isDisplayModeEnabled) {
-      (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>).then(caseResponse => {
-        const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
-        let curr = {};
-        const commitData = curr;
+      (PCore.getDataApiUtils().getCaseEditLock(caseKey, '') as Promise<any>)
+        .then(caseResponse => {
+          const pageTokens = pConn.getPageReference().replace('caseInfo.content', '').split('.');
+          let curr = {};
+          const commitData = curr;
 
-        pageTokens.forEach(el => {
-          if (el !== '') {
-            curr[el] = {};
-            curr = curr[el];
-          }
-        });
+          pageTokens.forEach(el => {
+            if (el !== '') {
+              curr[el] = {};
+              curr = curr[el];
+            }
+          });
 
-        // expecting format like {Customer: {pyID:"C-100"}}
-        const propArr = propName.split('.');
-        propArr.forEach((element, idx) => {
-          if (idx + 1 === propArr.length) {
-            curr[element] = propValue;
-          } else {
-            curr[element] = {};
-            curr = curr[element];
-          }
-        });
+          // expecting format like {Customer: {pyID:"C-100"}}
+          const propArr = propName.split('.');
+          propArr.forEach((element, idx) => {
+            if (idx + 1 === propArr.length) {
+              curr[element] = propValue;
+            } else {
+              curr[element] = {};
+              curr = curr[element];
+            }
+          });
 
-        (
-          PCore.getDataApiUtils().updateCaseEditFieldsData(
-            caseKey,
-            { [caseKey]: commitData },
-            caseResponse.headers.etag,
-            pConn.getContextName()
-          ) as Promise<any>
-        ).then(response => {
-          PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
-          PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
+          (
+            PCore.getDataApiUtils().updateCaseEditFieldsData(
+              caseKey,
+              { [caseKey]: commitData },
+              caseResponse.headers.etag,
+              pConn.getContextName()
+            ) as Promise<any>
+          )
+            .then(response => {
+              PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
+              PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
+            })
+            .catch(e => {
+              console.error(e);
+            });
+        })
+        .catch(e => {
+          console.error(e);
         });
-      });
     }
   };
 
