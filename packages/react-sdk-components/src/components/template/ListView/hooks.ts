@@ -1,6 +1,69 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { getContext, readContextResponse } from './utils';
+
+/**
+ * Hook that subscribes to parameter field changes and triggers a data re-fetch
+ * when the parameters change. This mirrors the useCascadeAndUpdate hook from
+ * the constellation-frontend codebase.
+ */
+export function useCascadeAndUpdate({ getPConnect, listContext, referenceList, parameters, fetchDataFromServer }) {
+  const isParametersOverride = !!parameters;
+  const fetchRef = useRef(fetchDataFromServer);
+  fetchRef.current = fetchDataFromServer;
+
+  useEffect(() => {
+    if (Object.keys(listContext).length === 0) return;
+
+    const fieldChangeCallback = () => {
+      if (listContext.meta) {
+        // Resolve fresh parameters at callback time since the subscription fires
+        // before React re-renders with updated props
+        const { parameters: freshParams } = getPConnect().getConfigProps();
+        fetchRef.current(freshParams);
+      }
+    };
+
+    const rawViewParameters = getPConnect().getComponentConfig?.()?.parameters;
+    const subscriptionId = crypto.randomUUID();
+
+    const overriddenParamFields: string[] = [];
+
+    // Collect overridden parameter fields that are property references
+    if (rawViewParameters && isParametersOverride) {
+      Object.keys(rawViewParameters).forEach(paramKey => {
+        const paramField = rawViewParameters[paramKey];
+        if (PCore.getAnnotationUtils().isProperty(paramField)) {
+          overriddenParamFields.push(`.${PCore.getAnnotationUtils().getPropertyName(paramField)}`);
+        }
+      });
+    }
+
+    // Subscribe to parameter field changes when parameters are overridden on the view
+    if (overriddenParamFields.length !== 0) {
+      PCore.getDataPageUtils().subscribeToUpdate(
+        referenceList,
+        overriddenParamFields,
+        getPConnect().getContextName(),
+        getPConnect().getPageReference(),
+        fieldChangeCallback,
+        `${subscriptionId}-override-params`
+      );
+    }
+
+    return function cleanup() {
+      if (overriddenParamFields.length !== 0) {
+        PCore.getDataPageUtils().unsubscribe(
+          referenceList,
+          overriddenParamFields,
+          getPConnect().getContextName(),
+          getPConnect().getPageReference(),
+          `${subscriptionId}-override-params`
+        );
+      }
+    };
+  }, [listContext]);
+}
 
 export default function useInit(props) {
   const {

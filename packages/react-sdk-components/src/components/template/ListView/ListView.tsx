@@ -41,6 +41,7 @@ import { getGenericFieldsLocalizedValue } from '../../helpers/common-utils';
 import { format } from '../../helpers/formatters';
 
 import useInit from './hooks';
+import { useCascadeAndUpdate } from './hooks';
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface ListViewProps extends PConnProps {
@@ -77,6 +78,7 @@ let sortColumnId: any;
 const filterByColumns: any[] = [];
 
 export default function ListView(props: ListViewProps) {
+  console.log('ListView props', props);
   const { getPConnect, bInForm = true } = props;
   const {
     globalSearch,
@@ -459,7 +461,7 @@ export default function ListView(props: ListViewProps) {
     fetchDataFromServer();
   }
 
-  function fetchAllData(fields): any {
+  function fetchAllData(fields, overrideParams?: any): any {
     if (displayAs === 'advancedSearch' && !showRecords) {
       return Promise.resolve({ data: null });
     }
@@ -479,12 +481,13 @@ export default function ListView(props: ListViewProps) {
       query = filterPayload.current?.query;
     }
     const context = getPConnect().getContextName();
+    const resolvedParams = overrideParams ?? dataViewParameters;
     // getDataAsync isn't returning correct data for the Page(i.e. ListView within a page) case
     return !bInForm
       ? // @ts-ignore - 3rd parameter "context" should be optional in getData method
         PCore.getDataApiUtils().getData(referenceList, payload)
       : // @ts-ignore - Argument of type 'null' is not assignable to parameter of type 'object'
-        PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : dataViewParameters, null, query);
+        PCore.getDataPageUtils().getDataAsync(referenceList, context, payload ? payload.dataViewParameters : resolvedParams, null, query);
   }
 
   const buildSelect = (fieldDefs, colId, patchQueryFields = [], compositeKeys = []) => {
@@ -557,12 +560,12 @@ export default function ListView(props: ListViewProps) {
     return fieldsMap;
   };
 
-  async function fetchDataFromServer() {
+  async function fetchDataFromServer(overrideParams?: any) {
     let bCallSetRowsColumns = true;
     const { fieldDefs, itemKey, patchQueryFields } = meta;
     let listFields = fieldDefs ? buildSelect(fieldDefs, undefined, patchQueryFields, compositeKeys) : [];
     listFields = addItemKeyInSelect(fieldDefs, itemKey, listFields, compositeKeys);
-    const workListJSON = await fetchAllData(listFields);
+    const workListJSON = await fetchAllData(listFields, overrideParams);
 
     // this is an unresovled version of this.fields$, need unresolved, so can get the property reference
     const columnFields = componentConfig.presets[0].children[0].children;
@@ -651,6 +654,14 @@ export default function ListView(props: ListViewProps) {
       return acc;
     }, {});
   }
+
+  useCascadeAndUpdate({
+    getPConnect,
+    listContext,
+    referenceList,
+    parameters,
+    fetchDataFromServer
+  });
 
   useEffect(() => {
     if (listContext.meta) {
