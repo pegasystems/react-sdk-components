@@ -134,6 +134,9 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
               skipDirtyValidation: true
             });
           }
+        })
+        .catch(e => {
+          console.error(e);
         });
     }
   }, []);
@@ -170,7 +173,10 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     if (imageKey && portalTemplate === 'wss') {
       PCore.getAssetLoader()
         .getSvcImageUrl(imageKey)
-        .then(imagePath => setImageBlobUrl(imagePath));
+        .then(imagePath => setImageBlobUrl(imagePath))
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, []);
 

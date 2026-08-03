@@ -135,18 +135,22 @@ export default function useInit(props) {
         compositeKeys,
         isSearchable,
         isCacheable: true
-      }).then(async context => {
-        if (isCompStillMounted) {
-          return readContextResponse(context, {
-            ...props,
-            editing,
-            selectionCountThreshold,
-            ref,
-            selectionMode,
-            cosmosTableRef
-          });
-        }
-      });
+      })
+        .then(async context => {
+          if (isCompStillMounted) {
+            return readContextResponse(context, {
+              ...props,
+              editing,
+              selectionCountThreshold,
+              ref,
+              selectionMode,
+              cosmosTableRef
+            });
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
     })();
 
     return () => {

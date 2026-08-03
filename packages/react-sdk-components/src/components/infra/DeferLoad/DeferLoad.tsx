@@ -125,6 +125,9 @@ export default function DeferLoad(props: DeferLoadProps) {
           })
           .then(data => {
             onResponse(data);
+          })
+          .catch(e => {
+            console.error(e);
           });
       } else {
         console.error('Cannot load the defer loaded view without container information');
@@ -136,6 +139,9 @@ export default function DeferLoad(props: DeferLoadProps) {
         .loadView(encodeURI(loadViewCaseID), name, getViewOptions())
         .then(data => {
           onResponse(data);
+        })
+        .catch(e => {
+          console.error(e);
         });
     } else if (template === 'HierarchicalForm') {
       const root = {

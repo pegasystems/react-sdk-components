@@ -195,7 +195,9 @@ export default function FileUtility(props: FileUtilityProps) {
           window.open(content.data, '_blank');
         }
       })
-      .catch();
+      .catch(e => {
+        console.error(e);
+      });
   }
 
   function deleteAttachedFile(att: any) {
@@ -208,7 +210,9 @@ export default function FileUtility(props: FileUtilityProps) {
       .then(() => {
         getAttachments();
       })
-      .catch();
+      .catch(e => {
+        console.error(e);
+      });
   }
 
   const getAttachments = () => {
@@ -217,33 +221,37 @@ export default function FileUtility(props: FileUtilityProps) {
     if (caseID && caseID !== '') {
       const attPromise = attachmentUtils.getCaseAttachments(caseID, thePConn.getContextName());
 
-      attPromise.then((resp: any) => {
-        const arFullListAttachments = addAttachments(resp);
-        const attachmentsCount = arFullListAttachments.length;
-        const arItems: any = arFullListAttachments.slice(0, 3).map(att => {
-          return getListUtilityItemProps({
-            att,
-            downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
-            cancelFile: null,
-            deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
-            removeFile: null
+      attPromise
+        .then((resp: any) => {
+          const arFullListAttachments = addAttachments(resp);
+          const attachmentsCount = arFullListAttachments.length;
+          const arItems: any = arFullListAttachments.slice(0, 3).map(att => {
+            return getListUtilityItemProps({
+              att,
+              downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
+              cancelFile: null,
+              deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
+              removeFile: null
+            });
           });
-        });
-        const viewAllarItems: any = arFullListAttachments.map(att => {
-          return getListUtilityItemProps({
-            att,
-            downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
-            cancelFile: null,
-            deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
-            removeFile: null
+          const viewAllarItems: any = arFullListAttachments.map(att => {
+            return getListUtilityItemProps({
+              att,
+              downloadFile: !att.progress ? () => downloadAttachedFile(att) : null,
+              cancelFile: null,
+              deleteFile: !att.progress ? () => deleteAttachedFile(att) : null,
+              removeFile: null
+            });
           });
+          setProgress(false);
+          setList(current => {
+            return { ...current, count: attachmentsCount, data: arItems };
+          });
+          setFullAttachments(viewAllarItems);
+        })
+        .catch(e => {
+          console.error(e);
         });
-        setProgress(false);
-        setList(current => {
-          return { ...current, count: attachmentsCount, data: arItems };
-        });
-        setFullAttachments(viewAllarItems);
-      });
     }
   };
 
@@ -373,10 +381,14 @@ export default function FileUtility(props: FileUtilityProps) {
               });
               getAttachments();
             })
-            .catch();
+            .catch(e => {
+              console.error(e);
+            });
         }
       })
-      .catch();
+      .catch(e => {
+        console.error(e);
+      });
   }
 
   function onAddLinksClick() {

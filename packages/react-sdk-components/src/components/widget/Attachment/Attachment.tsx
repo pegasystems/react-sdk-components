@@ -328,9 +328,14 @@ export default function Attachment(props: AttachmentProps) {
 
   useEffect(() => {
     if (toggleUploadBegin && files.length > 0) {
-      actionSequencer.registerBlockingAction(contextName).then(() => {
-        uploadFiles();
-      });
+      actionSequencer
+        .registerBlockingAction(contextName)
+        .then(() => {
+          uploadFiles();
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, [toggleUploadBegin]);
 

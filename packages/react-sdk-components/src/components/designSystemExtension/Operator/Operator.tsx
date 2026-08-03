@@ -80,80 +80,84 @@ export default function Operator(props: OperatorProps) {
     const localizedVal = PCore.getLocaleUtils().getLocaleValue;
     const localeCategory = 'Operator';
 
-    operatorPreviewPromise.then((res: any) => {
-      const fillerString = '---';
-      let fields: any = [];
-      if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
-        fields = [
-          {
-            id: 'pyPosition',
-            name: localizedVal('Position', localeCategory),
-            value: res.data.pyOperatorInfo.pyPosition ? res.data.pyOperatorInfo.pyPosition : fillerString
-          },
-          {
-            id: 'pyOrganization',
-            name: localizedVal('Organization', localeCategory),
-            value: res.data.pyOperatorInfo.pyOrganization ? res.data.pyOperatorInfo.pyOrganization : fillerString
-          },
-          {
-            id: 'ReportToUserName',
-            name: localizedVal('Reports to', localeCategory),
-            value: res.data.pyOperatorInfo.pyReportToUserName ? res.data.pyOperatorInfo.pyReportToUserName : fillerString
-          },
-          {
-            id: 'pyTelephone',
-            name: localizedVal('Telephone', localeCategory),
-            value: res.data.pyOperatorInfo.pyTelephone ? (
-              <a href={`tel:${res.data.pyOperatorInfo.pyTelephone}`}>{res.data.pyOperatorInfo.pyTelephone}</a>
-            ) : (
-              fillerString
-            )
-          },
-          {
-            id: 'pyEmailAddress',
-            name: localizedVal('Email address', localeCategory),
-            value: res.data.pyOperatorInfo.pyEmailAddress ? (
-              <a href={`mailto:${res.data.pyOperatorInfo.pyEmailAddress}`}>{res.data.pyOperatorInfo.pyEmailAddress}</a>
-            ) : (
-              fillerString
-            )
-          }
-        ];
-      } else {
-        console.log(
-          `Operator: PCore.getUserApi().getOperatorDetails(${caseOpId}); returned empty res.data.pyOperatorInfo.pyUserName - adding default`
-        );
-        fields = [
-          {
-            id: 'pyPosition',
-            name: localizedVal('Position', localeCategory),
-            value: fillerString
-          },
-          {
-            id: 'pyOrganization',
-            name: localizedVal('Organization', localeCategory),
-            value: fillerString
-          },
-          {
-            id: 'ReportToUserName',
-            name: localizedVal('Reports to', localeCategory),
-            value: fillerString
-          },
-          {
-            id: 'pyTelephone',
-            name: localizedVal('Telephone', localeCategory),
-            value: fillerString
-          },
-          {
-            id: 'pyEmailAddress',
-            name: localizedVal('Email address', localeCategory),
-            value: fillerString
-          }
-        ];
-      }
-      // Whatever the fields are, update the component's popoverFields
-      setPopoverFields(fields);
-    });
+    operatorPreviewPromise
+      .then((res: any) => {
+        const fillerString = '---';
+        let fields: any = [];
+        if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
+          fields = [
+            {
+              id: 'pyPosition',
+              name: localizedVal('Position', localeCategory),
+              value: res.data.pyOperatorInfo.pyPosition ? res.data.pyOperatorInfo.pyPosition : fillerString
+            },
+            {
+              id: 'pyOrganization',
+              name: localizedVal('Organization', localeCategory),
+              value: res.data.pyOperatorInfo.pyOrganization ? res.data.pyOperatorInfo.pyOrganization : fillerString
+            },
+            {
+              id: 'ReportToUserName',
+              name: localizedVal('Reports to', localeCategory),
+              value: res.data.pyOperatorInfo.pyReportToUserName ? res.data.pyOperatorInfo.pyReportToUserName : fillerString
+            },
+            {
+              id: 'pyTelephone',
+              name: localizedVal('Telephone', localeCategory),
+              value: res.data.pyOperatorInfo.pyTelephone ? (
+                <a href={`tel:${res.data.pyOperatorInfo.pyTelephone}`}>{res.data.pyOperatorInfo.pyTelephone}</a>
+              ) : (
+                fillerString
+              )
+            },
+            {
+              id: 'pyEmailAddress',
+              name: localizedVal('Email address', localeCategory),
+              value: res.data.pyOperatorInfo.pyEmailAddress ? (
+                <a href={`mailto:${res.data.pyOperatorInfo.pyEmailAddress}`}>{res.data.pyOperatorInfo.pyEmailAddress}</a>
+              ) : (
+                fillerString
+              )
+            }
+          ];
+        } else {
+          console.log(
+            `Operator: PCore.getUserApi().getOperatorDetails(${caseOpId}); returned empty res.data.pyOperatorInfo.pyUserName - adding default`
+          );
+          fields = [
+            {
+              id: 'pyPosition',
+              name: localizedVal('Position', localeCategory),
+              value: fillerString
+            },
+            {
+              id: 'pyOrganization',
+              name: localizedVal('Organization', localeCategory),
+              value: fillerString
+            },
+            {
+              id: 'ReportToUserName',
+              name: localizedVal('Reports to', localeCategory),
+              value: fillerString
+            },
+            {
+              id: 'pyTelephone',
+              name: localizedVal('Telephone', localeCategory),
+              value: fillerString
+            },
+            {
+              id: 'pyEmailAddress',
+              name: localizedVal('Email address', localeCategory),
+              value: fillerString
+            }
+          ];
+        }
+        // Whatever the fields are, update the component's popoverFields
+        setPopoverFields(fields);
+      })
+      .catch(e => {
+        console.error(e);
+      });
 
     setPopoverAnchorEl(event.currentTarget);
   }

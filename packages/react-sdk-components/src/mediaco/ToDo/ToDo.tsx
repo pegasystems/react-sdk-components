@@ -169,9 +169,13 @@ export default function ToDo(props: ToDoProps) {
 
   useEffect(() => {
     if (Object.keys(myWorkList).length && myWorkList.datapage) {
-      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context).then(responseData => {
-        deferLoadWorklistItems(responseData);
-      });
+      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context)
+        .then(responseData => {
+          deferLoadWorklistItems(responseData);
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, []);
 

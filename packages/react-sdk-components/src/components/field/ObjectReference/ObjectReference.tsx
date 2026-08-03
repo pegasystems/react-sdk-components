@@ -178,7 +178,13 @@ export default function ObjectReference(props: ObjectReferenceProps) {
             .then((response: any) => {
               PCore.getContainerUtils().updateParentLastUpdateTime(pConn.getContextName(), (response.data as any).data.caseInfo.lastUpdateTime);
               PCore.getContainerUtils().updateRelatedContextEtag(pConn.getContextName(), response.headers.etag);
+            })
+            .catch(e => {
+              console.error(e);
             });
+        })
+        .catch(e => {
+          console.error(e);
         });
     }
   };

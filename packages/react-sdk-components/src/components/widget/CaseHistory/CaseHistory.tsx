@@ -101,18 +101,22 @@ export default function CaseHistory(props: CaseHistoryProps) {
       context
     ) as Promise<any>;
 
-    historyData.then((historyJSON: any) => {
-      const tableDataResults = historyJSON.data.data;
+    historyData
+      .then((historyJSON: any) => {
+        const tableDataResults = historyJSON.data.data;
 
-      // compute the rowData using the tableDataResults
-      computeRowData(tableDataResults);
+        // compute the rowData using the tableDataResults
+        computeRowData(tableDataResults);
 
-      // At this point, if we have data ready to render and haven't been asked
-      //  to NOT call setWaitingForData, we can stop progress indicator
-      if (bCallSetWaitingForData) {
-        setWaitingForData(false);
-      }
-    });
+        // At this point, if we have data ready to render and haven't been asked
+        //  to NOT call setWaitingForData, we can stop progress indicator
+        if (bCallSetWaitingForData) {
+          setWaitingForData(false);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
 
     return () => {
       // Inspired by https://juliangaramendy.dev/blog/use-promise-subscription

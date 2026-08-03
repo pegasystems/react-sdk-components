@@ -165,9 +165,13 @@ export default function ToDo(props: ToDoProps) {
 
   useEffect(() => {
     if (Object.keys(myWorkList).length && myWorkList.datapage) {
-      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context).then(responseData => {
-        deferLoadWorklistItems(responseData);
-      });
+      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, 3, true, context)
+        .then(responseData => {
+          deferLoadWorklistItems(responseData);
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, []);
 
@@ -203,9 +207,13 @@ export default function ToDo(props: ToDoProps) {
   function _showMore() {
     setBShowMore(false);
     if (type === CONSTS.WORKLIST && count && count > assignments.length && !assignmentsSource) {
-      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, count, false, context).then(response => {
-        setAssignments(response.data);
-      });
+      fetchMyWorkList(myWorkList.datapage, getPConnect().getComponentConfig()?.myWorkList.fields, count, false, context)
+        .then(response => {
+          setAssignments(response.data);
+        })
+        .catch(e => {
+          console.error(e);
+        });
     } else {
       setAssignments(assignmentsSource);
     }
