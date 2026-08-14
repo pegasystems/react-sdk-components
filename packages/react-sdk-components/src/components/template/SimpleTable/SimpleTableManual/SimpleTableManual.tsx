@@ -196,6 +196,23 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const allowEditingInModal =
     (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);
   const showDeleteButton = editableMode && !hideDeleteRow;
+  const { allowRowDelete: allowRowDeleteConfig } = pConn.getComponentConfig?.() ?? {};
+
+  const isDeleteAllowedForRow = (index: number): boolean => {
+    if (!showDeleteButton) return false;
+    if (allowRowDeleteConfig === undefined || allowRowDeleteConfig === true) return true;
+    if (typeof allowRowDeleteConfig === 'string' && allowRowDeleteConfig.startsWith('@E ')) {
+      try {
+        const expression = allowRowDeleteConfig.replace('@E ', '');
+        // @ts-expect-error - options param is optional per corejs docs
+        return PCore.getExpressionEngine().evaluate(expression, referenceList[index]);
+      } catch {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const defaultView = editModeConfig ? editModeConfig.defaultView : viewForAddAndEditModal;
   const bUseSeparateViewForEdit = editModeConfig ? editModeConfig.useSeparateViewForEdit : useSeparateViewForEdit;
   const editView = editModeConfig ? editModeConfig.editView : viewForEditModal;
@@ -715,15 +732,17 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                     })}
                     {showDeleteButton && (
                       <TableCell>
-                        <button
-                          type='button'
-                          className='psdk-utility-button'
-                          id='delete-button'
-                          aria-label='Delete Cell'
-                          onClick={() => deleteRecordFromInlineEditable(index)}
-                        >
-                          <img className='psdk-utility-card-action-svg-icon' src={menuIconOverride$} />
-                        </button>
+                        {isDeleteAllowedForRow(index) && (
+                          <button
+                            type='button'
+                            className='psdk-utility-button'
+                            id='delete-button'
+                            aria-label='Delete Cell'
+                            onClick={() => deleteRecordFromInlineEditable(index)}
+                          >
+                            <img className='psdk-utility-card-action-svg-icon' src={menuIconOverride$} />
+                          </button>
+                        )}
                       </TableCell>
                     )}
                   </TableRow>
@@ -756,7 +775,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                           />
                           <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
                             <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
-                            <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>
+                            {isDeleteAllowedForRow(originalIndex) && <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>}
                           </Menu>
                         </div>
                       </TableCell>
