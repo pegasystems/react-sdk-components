@@ -1,9 +1,7 @@
 {
   "version": "0.16.0",
   "integration_state_schema": 1,
-  "installed_integrations": [
-    "copilot"
-  ],
+  "installed_integrations": ["copilot"],
   "integration_settings": {
     "copilot": {
       "script": "sh",
