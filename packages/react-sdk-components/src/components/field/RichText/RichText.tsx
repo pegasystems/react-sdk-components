@@ -69,7 +69,7 @@ export default function RichText(props: RichTextProps) {
 
     const handleBlur = () => {
       if (editorRef.current) {
-        const editorValue = editorRef.current.getContent({ format: 'html' });
+        const editorValue = editorRef.current.getHTML();
         const property = (pConn.getStateProps() as any).value;
         handleEvent(actionsApi, 'changeNblur', property, editorValue);
       }

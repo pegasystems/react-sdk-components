@@ -1,6 +1,21 @@
-import React, { forwardRef } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
-import { FormControl, FormHelperText, FormLabel, useTheme } from '@mui/material';
+import React, { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
+import Placeholder from '@tiptap/extension-placeholder';
+import { FormControl, FormHelperText, FormLabel, useTheme, IconButton, Box } from '@mui/material';
+import {
+  FormatBold,
+  FormatItalic,
+  StrikethroughS,
+  FormatListBulleted,
+  FormatListNumbered,
+  FormatIndentDecrease,
+  FormatIndentIncrease,
+  InsertLink,
+  Image as ImageIcon
+} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import { useAfterInitialEffect, useConsolidatedRef, useUID } from '../../../hooks';
 
@@ -10,6 +25,44 @@ const useStyles = makeStyles(theme => ({
     transform: 'translate(0, 0px) scale(1)',
     marginBottom: '5px',
     color: theme.palette.text.secondary
+  },
+  editorWrapper: {
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: 4,
+    minHeight: 130,
+    '& .ProseMirror': {
+      padding: '8px 12px',
+      minHeight: 100,
+      outline: 'none',
+      fontFamily: theme.typography.fontFamily,
+      fontSize: theme.typography.fontSize,
+      color: theme.palette.text.primary,
+      '& p.is-editor-empty:first-child::before': {
+        color: theme.palette.text.secondary,
+        opacity: 0.7,
+        content: 'attr(data-placeholder)',
+        float: 'left',
+        height: 0,
+        pointerEvents: 'none'
+      },
+      '& a': { color: theme.palette.primary.main },
+      '& h1, & h2, & h3, & h4, & h5, & h6': { color: theme.palette.text.primary },
+      '& blockquote': {
+        color: theme.palette.text.secondary,
+        borderLeft: `4px solid ${theme.palette.primary.light}`,
+        paddingLeft: 8
+      },
+      '& ul, & ol': {
+        paddingLeft: 24
+      }
+    }
+  },
+  toolbar: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 2,
+    padding: '4px 8px',
+    borderTop: `1px solid ${theme.palette.divider}`
   }
 }));
 
@@ -29,109 +82,96 @@ interface RichTextEditorProps {
   onChange: React.EventHandler<any>;
 }
 
-const RichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
+const RichTextEditor = forwardRef(function RichTextEditor(props: RichTextEditorProps, ref) {
   const theme = useTheme();
   const classes = useStyles();
   const uid = useUID();
   const { id = uid, defaultValue, label, labelHidden, info, testId, placeholder, disabled, required, readOnly, error, onBlur, onChange } = props;
 
   const editorRef: any = useConsolidatedRef(ref);
-  let richTextComponent: any = null;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const editor = useEditor({
+    extensions: [StarterKit, Link.configure({ openOnClick: false }), Image.configure({ allowBase64: true }), Placeholder.configure({ placeholder })],
+    content: defaultValue || '',
+    editable: !readOnly && !disabled,
+    onUpdate: ({ editor: ed }) => {
+      onChange?.(ed.getHTML());
+    },
+    onBlur: ({ event }) => {
+      onBlur?.(event);
+    }
+  });
 
   useAfterInitialEffect(() => {
-    editorRef?.current.mode.set(readOnly || disabled ? 'readonly' : 'design');
+    editor?.setEditable(!readOnly && !disabled);
   }, [readOnly, disabled]);
 
-  const filePickerCallback = cb => {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
+  useEffect(() => {
+    if (editor) {
+      editorRef.current = editor;
+    }
+  }, [editor]);
 
-    input.addEventListener('change', (e: any) => {
-      const file = e.target.files[0];
+  const handleImageUpload = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
 
-      const reader: any = new FileReader();
+  const onFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file || !editor) return;
+
+      const reader = new FileReader();
       reader.addEventListener('load', () => {
-        /*
-          Note: Now we need to register the blob in TinyMCEs image blob
-          registry. In the next release this part hopefully won't be
-          necessary, as we are looking to handle it internally.
-        */
-        const blobId = `blobid${new Date().getTime()}`;
-        const blobCache = editorRef.current.editorUpload.blobCache;
-        const base64 = reader.result.split(',')[1];
-        const blobInfo = blobCache.create(blobId, file, base64);
-        blobCache.add(blobInfo);
-
-        /* call the callback and populate the Title field with the file name */
-        cb(blobInfo.blobUri(), { title: file.name });
+        editor
+          .chain()
+          .focus()
+          .setImage({ src: reader.result as string })
+          .run();
       });
       reader.readAsDataURL(file);
-    });
+      e.target.value = '';
+    },
+    [editor]
+  );
 
-    input.click();
-  };
+  const handleLinkInsert = useCallback(() => {
+    if (!editor) return;
+    const { from, to } = editor.state.selection;
+    const previousUrl = editor.getAttributes('link').href;
+    const url = window.prompt('URL', previousUrl);
+    if (url === null) return;
+
+    // Restore selection lost by the prompt dialog
+    editor.chain().focus().setTextSelection({ from, to }).run();
+
+    if (url === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+    } else if (from === to) {
+      // No text selected — insert URL as linked text
+      editor
+        .chain()
+        .focus()
+        .insertContent({ type: 'text', text: url, marks: [{ type: 'link', attrs: { href: url } }] })
+        .run();
+    } else {
+      editor.chain().focus().setLink({ href: url }).run();
+    }
+  }, [editor]);
 
   if (readOnly) {
     const value = defaultValue || '--';
-
-    richTextComponent = <div key={id} id={id} className='readonly-richtext-editor' dangerouslySetInnerHTML={{ __html: value }} />;
-  } else {
-    richTextComponent = (
-      <Editor
-        tinymceScriptSrc='tinymce/tinymce.min.js'
-        onInit={(_evt, editor) => {
-          editorRef.current = editor;
-        }}
-        id={id}
-        initialValue={defaultValue}
-        disabled={disabled}
-        init={{
-          skin: theme.palette.mode === 'dark' ? 'oxide-dark' : 'oxide',
-          // ...other TinyMCE config...
-          content_style: `
-            body {
-              font-family: ${theme.typography.fontFamily};
-              font-size: ${theme.typography.fontSize}px;
-              color: ${theme.palette.text.primary};
-              background: ${theme.palette.background.paper};
-            }
-            a { color: ${theme.palette.primary.main}; }
-            h1, h2, h3, h4, h5, h6 { color: ${theme.palette.text.primary}; font-family: ${theme.typography.fontFamily}; }
-            blockquote { color: ${theme.palette.text.secondary}; border-left: 4px solid ${theme.palette.primary.light}; padding-left: 8px; }
-            ul, ol { color: ${theme.palette.text.primary}; }
-            input, textarea, select {
-              background: ${theme.palette.background.paper};
-              color: ${theme.palette.text.primary};
-              border: 1px solid ${theme.palette.divider};
-              border-radius: 4px;
-              padding: 6px 10px;
-              font-size: 1em;
-              font-family: inherit;
-            }
-            .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
-              color: ${theme.palette.text.secondary};
-              opacity: 0.7;
-            }
-            /* Add more styles as needed */
-          `,
-          placeholder,
-          menubar: false,
-          statusbar: false,
-          min_height: 130,
-          plugins: ['lists', 'advlist', 'autolink', 'image', 'link', 'autoresize'],
-          autoresize_bottom_margin: 0,
-          toolbar: disabled ? false : 'blocks | bold italic strikethrough | bullist numlist outdent indent | link image',
-          toolbar_location: 'bottom',
-          // content_style: 'body { font-family:Helvetica, Arial,sans-serif; font-size:14px }',
-          branding: false,
-          paste_data_images: true,
-          file_picker_types: 'image',
-          file_picker_callback: filePickerCallback
-        }}
-        onBlur={onBlur}
-        onEditorChange={onChange}
-      />
+    return (
+      <FormControl variant='standard' data-test-id={testId} error={error} required={required} fullWidth>
+        {!labelHidden && (
+          <FormLabel htmlFor={id} className={classes.fieldLabel}>
+            {label}
+          </FormLabel>
+        )}
+        <div key={id} id={id} className='readonly-richtext-editor' dangerouslySetInnerHTML={{ __html: value }} />
+        {info && <FormHelperText>{info}</FormHelperText>}
+      </FormControl>
     );
   }
 
@@ -142,7 +182,61 @@ const RichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
           {label}
         </FormLabel>
       )}
-      {richTextComponent}
+      <Box className={classes.editorWrapper} sx={{ background: theme.palette.background.paper }}>
+        <EditorContent editor={editor} id={id} />
+        {!disabled && (
+          <div className={classes.toolbar}>
+            <IconButton
+              size='small'
+              onClick={() => editor?.chain().focus().toggleBold().run()}
+              color={editor?.isActive('bold') ? 'primary' : 'default'}
+            >
+              <FormatBold fontSize='small' />
+            </IconButton>
+            <IconButton
+              size='small'
+              onClick={() => editor?.chain().focus().toggleItalic().run()}
+              color={editor?.isActive('italic') ? 'primary' : 'default'}
+            >
+              <FormatItalic fontSize='small' />
+            </IconButton>
+            <IconButton
+              size='small'
+              onClick={() => editor?.chain().focus().toggleStrike().run()}
+              color={editor?.isActive('strike') ? 'primary' : 'default'}
+            >
+              <StrikethroughS fontSize='small' />
+            </IconButton>
+            <IconButton
+              size='small'
+              onClick={() => editor?.chain().focus().toggleBulletList().run()}
+              color={editor?.isActive('bulletList') ? 'primary' : 'default'}
+            >
+              <FormatListBulleted fontSize='small' />
+            </IconButton>
+            <IconButton
+              size='small'
+              onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+              color={editor?.isActive('orderedList') ? 'primary' : 'default'}
+            >
+              <FormatListNumbered fontSize='small' />
+            </IconButton>
+            <IconButton size='small' onClick={() => editor?.chain().focus().liftListItem('listItem').run()}>
+              <FormatIndentDecrease fontSize='small' />
+            </IconButton>
+            <IconButton size='small' onClick={() => editor?.chain().focus().sinkListItem('listItem').run()}>
+              <FormatIndentIncrease fontSize='small' />
+            </IconButton>
+            <IconButton size='small' onClick={handleLinkInsert} color={editor?.isActive('link') ? 'primary' : 'default'}>
+              <InsertLink fontSize='small' />
+            </IconButton>
+            <IconButton size='small' onClick={handleImageUpload}>
+              <ImageIcon fontSize='small' />
+            </IconButton>
+          </div>
+        )}
+      </Box>
+      <input ref={fileInputRef} type='file' accept='image/*' style={{ display: 'none' }} onChange={onFileChange} />
       {info && <FormHelperText>{info}</FormHelperText>}
     </FormControl>
   );

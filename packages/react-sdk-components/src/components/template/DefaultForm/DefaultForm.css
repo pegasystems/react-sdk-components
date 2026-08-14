@@ -33,6 +33,16 @@
   padding-bottom: 0.625rem;
 }
 
+.psdk-default-form-instruction-text ul {
+  padding-left: 30px;
+  list-style-type: disc;
+}
+
+.psdk-default-form-instruction-text ol {
+  padding-left: 30px;
+  list-style-type: decimal;
+}
+
 /* Banner styles */
 .psdk-banner {
   display: flex;
