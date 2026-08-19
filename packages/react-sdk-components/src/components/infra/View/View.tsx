@@ -42,25 +42,14 @@ const NO_HEADER_TEMPLATES = [
 ];
 
 export default function View(props: PropsWithChildren<ViewProps>) {
-  const { children, template, getPConnect, mode, visibility, name: pageName, type, title } = props;
-  let { label = '', showLabel = false } = props;
+  const { children, template, getPConnect, visibility, name: pageName, type, title } = props;
+  let { label = '', showLabel } = props;
   const { PAGE_TYPES: { PAGE, LANDINGPAGE, LISTPAGE } = {}, MODAL } = PCore.getConstants();
 
-  // Get the inherited props from the parent to determine label settings. For 8.6, this is only for embedded data form views
-  // Putting this logic here instead of copy/paste in every Form template index.js
-
+  // Get the inherited props from the parent to determine label settings
   const inheritedProps: any = getPConnect().getInheritedProps(); // try to remove any when getInheritedProps typedefs are fixed
-
-  const isEmbeddedDataView = mode === 'editable'; // would be better to check the reference child for `context` attribute if possible
-
-  // Only apply inherited label settings for embedded data views (per 8.6 design)
-  if (isEmbeddedDataView) {
-    label = inheritedProps.label || label;
-    showLabel = inheritedProps.showLabel || showLabel;
-    if (showLabel === undefined) {
-      showLabel = true;
-    }
-  }
+  label = inheritedProps.label || label;
+  showLabel = inheritedProps.showLabel ?? showLabel ?? true;
 
   const localeUtils = PCore.getLocaleUtils();
 
@@ -146,7 +135,7 @@ export default function View(props: PropsWithChildren<ViewProps>) {
 
     return (
       <div className='grid-column'>
-        {isEmbeddedDataView && showLabel && !NO_HEADER_TEMPLATES.includes(template) && (
+        {showLabel && !NO_HEADER_TEMPLATES.includes(template) && (
           <div className='template-title-container'>
             <span>{label}</span>
           </div>
