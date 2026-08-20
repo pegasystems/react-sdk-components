@@ -62,29 +62,26 @@ test.describe('E2E test', () => {
     const alwaysDisabledRichTextContainer = page.locator('div[data-test-id="f8a6fa176e492f0b2c3a2ecce916a1cc"]');
     const alwaysDisabledRichTextLabel = alwaysDisabledRichTextContainer.locator('label');
     expect(await alwaysDisabledRichTextLabel.innerText()).toEqual('RichText Disabled Always');
-    const alwaysDisabledRichTextBox = alwaysDisabledRichTextContainer.locator('div[role="application"]');
-    attributes = await common.getAttributes(alwaysDisabledRichTextBox);
-    await expect(attributes.includes('aria-disabled')).toBeTruthy();
+    const alwaysDisabledRichTextBox = alwaysDisabledRichTextContainer.locator('div[role="textbox"]');
+    await expect(alwaysDisabledRichTextBox).toHaveAttribute('contenteditable', 'false');
 
     // Conditionally Disabled RichText
     const conditionallyDisabledRichTextContainer = page.locator('div[data-test-id="a1f1fed886e4277998358560643d5b80"]');
     const conditionallyDisabledRichTextLabel = conditionallyDisabledRichTextContainer.locator('label');
     expect(await conditionallyDisabledRichTextLabel.innerText()).toEqual('RichText Disabled Condition');
-    const conditionallyDisabledRichTextBox = conditionallyDisabledRichTextContainer.locator('div[role="application"]');
-    attributes = await common.getAttributes(conditionallyDisabledRichTextBox);
+    const conditionallyDisabledRichTextBox = conditionallyDisabledRichTextContainer.locator('div[role="textbox"]');
     if (isDisabled) {
-      await expect(attributes.includes('aria-disabled')).toBeTruthy();
+      await expect(conditionallyDisabledRichTextBox).toHaveAttribute('contenteditable', 'false');
     } else {
-      await expect(attributes.includes('aria-disabled')).toBeFalsy();
+      await expect(conditionallyDisabledRichTextBox).toHaveAttribute('contenteditable', 'true');
     }
 
     // Never Disabled RichText
     const neverDisabledRichTextContainer = page.locator('div[data-test-id="0706d1c3117909bba5dc3b11282c84c1"]');
     const neverDisabledRichTextLabel = neverDisabledRichTextContainer.locator('label');
     expect(await neverDisabledRichTextLabel.innerText()).toEqual('RichText Disabled Never');
-    const neverDisabledRichTextBox = neverDisabledRichTextContainer.locator('div[role="application"]');
-    const disabledValue = await neverDisabledRichTextBox.getAttribute('aria-disabled');
-    await expect(disabledValue).toBe('false');
+    const neverDisabledRichTextBox = neverDisabledRichTextContainer.locator('div[role="textbox"]');
+    await expect(neverDisabledRichTextBox).toHaveAttribute('contenteditable', 'true');
 
     /** Selecting Update from the Sub Category dropdown */
     selectedSubCategory = page.locator('div[data-test-id="9463d5f18a8924b3200b56efaad63bda"]');
@@ -101,7 +98,7 @@ test.describe('E2E test', () => {
     const editableRichTextContainer = page.locator('div[data-test-id="c5f3892e688f607040637162ef2d61e2"]');
     const editableRichTextLabel = editableRichTextContainer.locator('label');
     expect(await editableRichTextLabel.innerText()).toEqual('RichText Editable');
-    const editableRichTextDiv = editableRichTextContainer.locator('div[role="application"]');
+    const editableRichTextDiv = editableRichTextContainer.locator('div[role="textbox"]');
     expect(editableRichTextDiv).toBeVisible();
 
     /** Selecting Visibility from the Sub Category dropdown */

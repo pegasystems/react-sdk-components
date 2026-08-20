@@ -31,6 +31,16 @@ const useStyles = makeStyles(theme => ({
   },
   noPaddingBottom: {
     paddingBottom: '0 !important'
+  },
+  htmlContent: {
+    '& ul': {
+      paddingLeft: '30px',
+      listStyleType: 'disc'
+    },
+    '& ol': {
+      paddingLeft: '30px',
+      listStyleType: 'decimal'
+    }
   }
 }));
 
@@ -70,7 +80,7 @@ export default function FieldValueList(props: FieldValueListProps) {
         className={variant === 'stacked' ? classes.noPaddingTop : ''}
       >
         {isHtml ? (
-          <div dangerouslySetInnerHTML={{ __html: formattedValue }} />
+          <div className={classes.htmlContent} dangerouslySetInnerHTML={{ __html: formattedValue }} />
         ) : (
           <Typography variant={variant === 'stacked' ? 'h6' : 'body2'} component='span' className={classes.fieldValue}>
             {formattedValue}

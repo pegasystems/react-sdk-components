@@ -21,7 +21,11 @@
     "@mui/styles": "^6.5.0",
     "@mui/x-date-pickers": "^7.29.4",
     "@react-google-maps/api": "^2.20.7",
-    "@tinymce/tinymce-react": "^6.3.0",
+    "@tiptap/extension-image": "^2.11.0",
+    "@tiptap/extension-link": "^2.11.0",
+    "@tiptap/extension-placeholder": "^2.11.0",
+    "@tiptap/react": "^2.11.0",
+    "@tiptap/starter-kit": "^2.11.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "downloadjs": "^1.4.7",
@@ -35,8 +39,7 @@
     "throttle-debounce": "^5.0.2"
   },
   "devDependencies": {
-    "@pega/pcore-pconnect-typedefs": "~3.2.2",
-    "tinymce": "^6.8.6"
+    "@pega/pcore-pconnect-typedefs": "~3.2.2"
   },
   "peerDependencies": {
     "@pega/auth": "~0.2",
