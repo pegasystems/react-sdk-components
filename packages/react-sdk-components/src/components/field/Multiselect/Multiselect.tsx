@@ -132,20 +132,6 @@ export default function Multiselect(props) {
 
   // main search function trigger
   const getCaseListBasedOnParams = async (searchText, group, selectedRows, currentItemsTree, isTriggeredFromSearch = false) => {
-    if (referenceList && referenceList.length > 0) {
-      selectedRows = await listActions.getSelectedRows(true);
-
-      selectedRows =
-        selectedRows &&
-        selectedRows.map(item => {
-          return {
-            id: item[selectionKey.startsWith('.') ? selectionKey.substring(1) : selectionKey],
-            primary: item[primaryField.startsWith('.') ? primaryField.substring(1) : primaryField]
-          };
-        });
-      setSelectedItems(selectedRows);
-    }
-
     // if items tree is null or text search is triggered then always should use fresh data object, we use the original object
     const initalItemsTree = isTriggeredFromSearch || !currentItemsTree ? [...itemsTreeBaseData] : [...currentItemsTree];
     const res = await doSearch(
@@ -160,6 +146,20 @@ export default function Multiselect(props) {
       selectedRows || []
     );
     setItemsTree(res);
+    if (referenceList && referenceList.length > 0) {
+      selectedRows = await listActions.getSelectedRows(true);
+      selectedRows =
+        selectedRows &&
+        selectedRows.map(item => {
+          const id = item[selectionKey.startsWith('.') ? selectionKey.substring(1) : selectionKey];
+          let primary = item[primaryField.startsWith('.') ? primaryField.substring(1) : primaryField];
+          if (primary === undefined) {
+            primary = res.find(r => r.id === id)?.primary;
+          }
+          return { id, primary, selected: true };
+        });
+      setSelectedItems(selectedRows);
+    }
   };
 
   useEffect(() => {
@@ -242,7 +242,7 @@ export default function Multiselect(props) {
       fullWidth
       options={itemsTree}
       disableCloseOnSelect
-      // getOptionSelected={(option: any, val: any) => option?.primary === val?.primary}
+      isOptionEqualToValue={(option: any, val: any) => option?.id === val?.id}
       getOptionLabel={(option: any) => option?.primary}
       onChange={handleChange}
       value={selectedItems}
