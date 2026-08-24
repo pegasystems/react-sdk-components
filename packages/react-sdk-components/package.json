@@ -1,6 +1,6 @@
 {
   "name": "@pega/react-sdk-components",
-  "version": "25.1.11",
+  "version": "0.26.8",
   "description": "React SDK Infrastructure: bridge and components",
   "_filesComment": "During packing, npm ignores everything NOT in the files list",
   "files": [
@@ -39,7 +39,7 @@
     "throttle-debounce": "^5.0.2"
   },
   "devDependencies": {
-    "@pega/pcore-pconnect-typedefs": "~3.2.2"
+    "@pega/pcore-pconnect-typedefs": "~4.1.0"
   },
   "peerDependencies": {
     "@pega/auth": "~0.2",

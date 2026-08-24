@@ -263,7 +263,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
         .initDefaultPageInstructions(
           getPConnect().getReferenceList(),
           // Temporary filter for attachments to align with constellation payload behavior.
-          fieldDefs.filter(item => item.id && item.meta?.type !== 'Attachment').map(item => item.id)
+          fieldDefs.filter(item => item.name && item.meta?.type !== 'Attachment').map(item => item.name)
         );
     } else {
       // @ts-ignore - fields param is optional, uniqueField passed as 3rd arg for page instructions
