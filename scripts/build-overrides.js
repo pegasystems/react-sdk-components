@@ -479,7 +479,7 @@ const processOverrideFile = function (filePath) {
     countMatches: true
   };
 
-  const theResults = replaceInFile.sync(options);
+  const theResults = replaceInFile.replaceInFileSync(options);
 
   const { hasChanged, file } = theResults[0];
   // console.log(`replacement results: ${JSON.stringify(results[0])}`);
