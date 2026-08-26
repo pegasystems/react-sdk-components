@@ -65,7 +65,7 @@ const flattenObj = obj => {
 export default function SearchGroups(props) {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const { getPConnect, editableField, localeReference, setShowRecords, searchSelectCacheKey, cache } = props;
-  const referenceFieldName = editableField.replaceAll('.', '_');
+  const referenceFieldName = editableField?.replaceAll('.', '_');
 
   const state: any = useRef({ searchFields: {}, activeGroupId: '' }).current;
   const options = componentCachePersistUtils.getComponentStateOptions(getPConnect);

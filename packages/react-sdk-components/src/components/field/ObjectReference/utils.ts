@@ -171,7 +171,7 @@ export const createNewRecord = ({
   if (referenceType === 'Case') {
     if (!disableStartingFieldsForReference) {
       // @ts-ignore
-      startingFields[PCore.getNameSpaceUtils().getDefaultQualifiedName('pyAddCaseContextPage')] = {
+      startingFields[PCore.getNameSpaceUtils?.()?.getDefaultQualifiedName('pyAddCaseContextPage') ?? 'pyAddCaseContextPage'] = {
         pyID: pConn.getCaseInfo().getKey()?.split(' ')?.pop()
       };
     }

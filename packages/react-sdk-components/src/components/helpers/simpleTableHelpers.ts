@@ -118,7 +118,7 @@ export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex)
 
   if (primaryFieldsViewIndex > -1) {
     // @ts-ignore
-    const qualifiedName = PCore.getNameSpaceUtils().getDefaultQualifiedName(PRIMARY_FIELDS);
+    const qualifiedName = PCore.getNameSpaceUtils?.()?.getDefaultQualifiedName(PRIMARY_FIELDS);
     let primaryFieldVMD: any = PCore.getMetadataUtils().resolveView(qualifiedName);
     if (Array.isArray(primaryFieldVMD)) {
       primaryFieldVMD = primaryFieldVMD.find(primaryFieldView => primaryFieldView.classID === contextClass);
@@ -202,7 +202,7 @@ export const updateFieldLabels = (fields, configFields, primaryFieldsViewIndex, 
   const labelsOfFields: any = [];
   const { columnsRawConfig = [] } = options;
   // @ts-ignore
-  const qualifiedPrimaryFields = PCore.getNameSpaceUtils().getDefaultQualifiedName(PRIMARY_FIELDS);
+  const qualifiedPrimaryFields = PCore.getNameSpaceUtils?.()?.getDefaultQualifiedName(PRIMARY_FIELDS);
   fields.forEach((field, idx) => {
     const rawColumnConfig = columnsRawConfig[idx]?.config;
     if (field.config.value === PRIMARY_FIELDS || field.config.value === qualifiedPrimaryFields) {

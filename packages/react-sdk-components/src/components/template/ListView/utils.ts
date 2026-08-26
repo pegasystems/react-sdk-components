@@ -622,7 +622,7 @@ export function initializeColumns(fields: any[] = [], getMappedProperty: any = n
 
 export function getMappedKey(key) {
   // @ts-ignore
-  const qualifiedKey = PCore.getNameSpaceUtils().getDefaultQualifiedName(key);
+  const qualifiedKey = PCore.getNameSpaceUtils?.()?.getDefaultQualifiedName(key) ?? key;
   const mappedKey = PCore.getEnvironmentInfo().getKeyMapping(qualifiedKey);
   if (!mappedKey) {
     return qualifiedKey;
