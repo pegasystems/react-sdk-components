@@ -170,7 +170,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   const resolvedFields = children?.[0]?.children || presets?.[0].children?.[0].children;
   // @ts-ignore
-  const qualifiedPrimaryFields = PCore.getNameSpaceUtils().getDefaultQualifiedName('pyPrimaryFields');
+  const qualifiedPrimaryFields = PCore.getNameSpaceUtils?.()?.getDefaultQualifiedName('pyPrimaryFields');
   const primaryFieldsViewIndex = resolvedFields?.findIndex(field => {
     const value = field.config.value;
     return value === 'pyPrimaryFields' || value === qualifiedPrimaryFields;
