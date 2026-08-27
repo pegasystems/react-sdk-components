@@ -443,7 +443,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           };
           const referenceListData = getReferenceList(pConn);
           const isDatapage = referenceListData.startsWith('D_');
-          const pageReferenceValue = isDatapage ? `${referenceListData}[${index}]` : `${pConn.getPageReference()}${referenceListStr}[${index}]`;
+          const pageReferenceValue = isDatapage ? `${referenceListData}[${index}]` : `${pConn.getPageReference()}${referenceListData}[${index}]`;
           const config = {
             meta: item,
             options: {
