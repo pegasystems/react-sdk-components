@@ -22,6 +22,8 @@ interface SimpleTableProps extends PConnProps {
   ruleClass?: string;
   authorContext?: string;
   name?: string;
+  allowActions?: any;
+  editMode?: string;
 }
 
 export default function SimpleTable(props: SimpleTableProps) {
@@ -44,7 +46,9 @@ export default function SimpleTable(props: SimpleTableProps) {
     type,
     ruleClass,
     authorContext,
-    name
+    name,
+    allowActions,
+    editMode
   } = props;
 
   let { contextClass } = props;
@@ -117,7 +121,18 @@ export default function SimpleTable(props: SimpleTableProps) {
     return <ListView {...listViewProps} />;
   }
   const simpleTableManualProps: any = { ...props, contextClass };
-  if (allowTableEdit === false) {
+
+  const checkIfAllowActionsOrRowEditingExist = newflagobject => {
+    return (newflagobject && Object.keys(newflagobject).length > 0) || getPConnect().getComponentConfig().allowRowEdit;
+  };
+
+  if (checkIfAllowActionsOrRowEditingExist(allowActions) && editMode) {
+    simpleTableManualProps.hideAddRow = allowActions?.allowAdd === false;
+    simpleTableManualProps.hideDeleteRow = allowActions?.allowDelete === false;
+    simpleTableManualProps.hideEditRow = allowActions?.allowEdit === false;
+    simpleTableManualProps.allowRowEdit = getPConnect().getComponentConfig().allowRowEdit;
+    simpleTableManualProps.allowEdit = getPConnect().getComponentConfig().allowActions?.allowEdit;
+  } else if (allowTableEdit === false) {
     simpleTableManualProps.hideAddRow = true;
     simpleTableManualProps.hideDeleteRow = true;
     simpleTableManualProps.disableDragDrop = true;
