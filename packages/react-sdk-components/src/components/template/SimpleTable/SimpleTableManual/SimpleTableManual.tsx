@@ -57,6 +57,7 @@ interface SimpleTableManualProps extends PConnProps {
   required?: boolean;
   targetClassLabel?: string;
   uniqueField?: string;
+  hideEditRow?: boolean;
 }
 
 const useStyles = makeStyles((/* theme */) => ({
@@ -117,6 +118,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
     contextClass,
     hideAddRow,
     hideDeleteRow,
+    hideEditRow,
     propertyLabel,
     fieldMetadata,
     editMode,
@@ -196,6 +198,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
   const allowEditingInModal =
     (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);
   const showDeleteButton = editableMode && !hideDeleteRow;
+  const showEditButton = allowEditingInModal && !hideEditRow;
   const { allowRowDelete: allowRowDeleteConfig } = pConn.getComponentConfig?.() ?? {};
 
   const isDeleteAllowedForRow = (index: number): boolean => {
@@ -235,7 +238,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
 
   useEffect(() => {
     buildElementsForTable();
-    if (readOnlyMode || allowEditingInModal) {
+    if (readOnlyMode || allowEditingInModal || hideEditRow) {
       generateRowsData();
     }
   }, [referenceList]);
@@ -434,7 +437,10 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
       configFields.forEach(item => {
         // removing label field from config to hide title in the table cell
         if (!item.config.hide) {
-          item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'DISPLAY_ONLY' : undefined } };
+          item = {
+            ...item,
+            config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal || hideEditRow ? 'DISPLAY_ONLY' : undefined }
+          };
           const referenceListData = getReferenceList(pConn);
           const isDatapage = referenceListData.startsWith('D_');
           const pageReferenceValue = isDatapage
@@ -685,7 +691,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                 }
                 return (
                   <TableCell key={`head-${displayedColumns[index]}`} className={classes.tableCell}>
-                    {(readOnlyMode || allowEditingInModal) && field.cellRenderer !== 'DeleteIcon' ? (
+                    {(readOnlyMode || allowEditingInModal || hideEditRow) && field.cellRenderer !== 'DeleteIcon' ? (
                       <div style={{ display: 'flex' }}>
                         <TableSortLabel
                           style={{ width: '75%' }}
@@ -718,6 +724,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           <TableBody>
             {editableMode &&
               !allowEditingInModal &&
+              !hideEditRow &&
               elements.map((row: any, index) => {
                 const theKey = `row-${index}`;
                 return (
@@ -748,7 +755,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                   </TableRow>
                 );
               })}
-            {(readOnlyMode || allowEditingInModal) &&
+            {(readOnlyMode || allowEditingInModal || hideEditRow) &&
               rowData &&
               rowData.length > 0 &&
               stableSort(rowData, getComparator(order, orderBy)).map((row: any, displayIndex) => {
@@ -763,7 +770,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                         </TableCell>
                       );
                     })}
-                    {showDeleteButton && (
+                    {(showDeleteButton || showEditButton) && (
                       <TableCell key='DeleteIcon' className={classes.tableCell}>
                         <div>
                           <MoreIcon
@@ -774,7 +781,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
                             }}
                           />
                           <Menu id='table-edit-menu' anchorEl={editAnchorEl} keepMounted open={Boolean(editAnchorEl)} onClose={_menuClose}>
-                            <MenuItem onClick={() => editRecord()}>Edit</MenuItem>
+                            {showEditButton && <MenuItem onClick={() => editRecord()}>Edit</MenuItem>}
                             {isDeleteAllowedForRow(originalIndex) && <MenuItem onClick={() => deleteRecord()}>Delete</MenuItem>}
                           </Menu>
                         </div>
@@ -786,8 +793,9 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           </TableBody>
         </Table>
         {((readOnlyMode && (!rowData || rowData?.length === 0)) ||
-          (editableMode && (!referenceList || referenceList?.length === 0)) ||
-          (allowEditingInModal && (!rowData || rowData?.length === 0))) && (
+          (editableMode && !hideEditRow && (!referenceList || referenceList?.length === 0)) ||
+          (allowEditingInModal && (!rowData || rowData?.length === 0)) ||
+          (hideEditRow && (!rowData || rowData?.length === 0))) && (
           <div className='no-records' id='no-records'>
             {getGenericFieldsLocalizedValue('COSMOSFIELDS.lists', 'No records found.')}
           </div>
