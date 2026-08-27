@@ -445,7 +445,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           const isDatapage = referenceListData.startsWith('D_');
           const pageReferenceValue = isDatapage
             ? `${referenceListData}[${index}]`
-            : `${pConn.getPageReference()}${referenceListData.substring(referenceListData.lastIndexOf('.'))}[${index}]`;
+            : `${pConn.getPageReference()}${referenceListStr}[${index}]`;
           const config = {
             meta: item,
             options: {
