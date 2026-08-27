@@ -437,9 +437,7 @@ export default function SimpleTableManual(props: PropsWithChildren<SimpleTableMa
           item = { ...item, config: { ...item.config, label: '', displayMode: readOnlyMode || allowEditingInModal ? 'DISPLAY_ONLY' : undefined } };
           const referenceListData = getReferenceList(pConn);
           const isDatapage = referenceListData.startsWith('D_');
-          const pageReferenceValue = isDatapage
-            ? `${referenceListData}[${index}]`
-            : `${pConn.getPageReference()}${referenceListStr}[${index}]`;
+          const pageReferenceValue = isDatapage ? `${referenceListData}[${index}]` : `${pConn.getPageReference()}${referenceListStr}[${index}]`;
           const config = {
             meta: item,
             options: {
