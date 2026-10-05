@@ -114,7 +114,7 @@
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.4.0",
     "json5": ">=2.2.3",
-    "monocart-reporter": "^2.9.21",
+    "monocart-reporter": "^2.14.0",
     "npm-run-all2": "^7.0.2",
     "null-loader": "^4.0.1",
     "prettier": "^3.6.2",
