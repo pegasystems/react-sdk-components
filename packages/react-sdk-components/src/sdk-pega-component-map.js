@@ -8,6 +8,7 @@
 import ActionButtons from './components/infra/ActionButtons';
 import ActionButtonsForFileUtil from './components/widget/FileUtility/ActionButtonsForFileUtil';
 import AdvancedSearch from './components/template/AdvancedSearch';
+import AgentRichTextViewer from './components/designSystemExtension/AgentRichTextViewer';
 import AlertBanner from './components/designSystemExtension/AlertBanner';
 import AppAnnouncement from './components/widget/AppAnnouncement';
 import AppShell from './components/template/AppShell/AppShell';
@@ -25,6 +26,7 @@ import CaseView from './components/template/CaseView';
 import CaseViewActionsMenu from './components/template/CaseViewActionsMenu';
 import Checkbox from './components/field/Checkbox';
 import Confirmation from './components/template/Confirmation';
+import ConversationHistory from './components/designSystemExtension/ConversationHistory';
 import Currency from './components/field/Currency';
 import DashboardFilter from './components/infra/DashboardFilter';
 import DataReference from './components/template/DataReference';
@@ -52,7 +54,13 @@ import FieldValueList from './components/designSystemExtension/FieldValueList';
 import FileUtility from './components/widget/FileUtility/FileUtility';
 import FlowContainer from './components/infra/Containers/FlowContainer';
 import Followers from './components/widget/Followers';
+import GenAICoach from './components/widget/GenAICoach';
+import GenAICoachContent from './components/designSystemExtension/GenAICoachContent';
+import GenAIMessage from './components/designSystemExtension/GenAIMessage';
+import GenAIMessageFeedback from './components/designSystemExtension/GenAIMessageFeedback';
+import GenAIMessageProgress from './components/designSystemExtension/GenAIMessageProgress';
 import Group from './components/field/Group';
+import InitialSuggestedMessage from './components/designSystemExtension/InitialSuggestedMessage';
 import InlineDashboard from './components/template/InlineDashboard';
 import InlineDashboardPage from './components/template/InlineDashboardPage/InlineDashboardPage';
 import Integer from './components/field/Integer';
@@ -78,8 +86,10 @@ import OneColumnTab from './components/template/OneColumn/OneColumnTab';
 import Operator from './components/designSystemExtension/Operator';
 import Percentage from './components/field/Percentage';
 import Phone from './components/field/Phone/Phone';
+import PortalAgentSplitView from './components/designSystemExtension/PortalAgentSplitView';
 import PromotedFilters from './components/template/PromotedFilters';
 import Pulse from './components/designSystemExtension/Pulse';
+import Questionnaire from './components/designSystemExtension/Questionnaire';
 import QuickCreate from './components/widget/QuickCreate';
 import RadioButtons from './components/field/RadioButtons';
 import Reference from './components/infra/Reference/Reference';
@@ -102,6 +112,7 @@ import Stages from './components/infra/Stages';
 import SubTabs from './components/template/SubTabs';
 import SummaryItem from './components/widget/SummaryItem';
 import SummaryList from './components/widget/SummaryList';
+import TabContent from './components/template/TabContent';
 import TextArea from './components/field/TextArea';
 import TextContent from './components/field/TextContent';
 import TextInput from './components/field/TextInput/TextInput';
@@ -112,6 +123,7 @@ import TwoColumnPage from './components/template/TwoColumn/TwoColumnPage';
 import TwoColumnTab from './components/template/TwoColumn/TwoColumnTab';
 import URL from './components/field/URL';
 import UserReference from './components/field/UserReference';
+import UtilitiesLayout from './components/designSystemExtension/UtilitiesLayout';
 import VerticalTabs from './components/infra/VerticalTabs/VerticalTabs';
 import View from './components/infra/View';
 import ViewContainer from './components/infra/Containers/ViewContainer';
@@ -135,6 +147,7 @@ const pegaSdkComponentMap = {
   ActionButtons,
   ActionButtonsForFileUtil,
   AdvancedSearch,
+  AgentRichTextViewer,
   AlertBanner,
   AppAnnouncement,
   AppShell,
@@ -152,6 +165,7 @@ const pegaSdkComponentMap = {
   CaseViewActionsMenu,
   Checkbox,
   Confirmation,
+  ConversationHistory,
   Currency,
   DashboardFilter,
   DataReference,
@@ -179,7 +193,13 @@ const pegaSdkComponentMap = {
   FileUtility,
   FlowContainer,
   Followers,
+  GenAICoach,
+  GenAICoachContent,
+  GenAIMessage,
+  GenAIMessageFeedback,
+  GenAIMessageProgress,
   Group,
+  InitialSuggestedMessage,
   InlineDashboard,
   InlineDashboardPage,
   Integer,
@@ -205,8 +225,10 @@ const pegaSdkComponentMap = {
   Operator,
   Percentage,
   Phone,
+  PortalAgentSplitView,
   PromotedFilters,
   Pulse,
+  Questionnaire,
   QuickCreate,
   reference: Reference, // See note about about non-standard capitalization
   RadioButtons,
@@ -229,6 +251,7 @@ const pegaSdkComponentMap = {
   SubTabs,
   SummaryItem,
   SummaryList,
+  TabContent,
   TextArea,
   TextContent,
   TextInput,
@@ -239,6 +262,7 @@ const pegaSdkComponentMap = {
   TwoColumnTab,
   URL,
   UserReference,
+  UtilitiesLayout,
   VerticalTabs,
   View,
   ViewContainer,

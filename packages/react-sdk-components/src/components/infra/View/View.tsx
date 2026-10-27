@@ -38,7 +38,8 @@ const NO_HEADER_TEMPLATES = [
   'Confirmation',
   'DynamicTabs',
   'DetailsSubTabs',
-  'ListView'
+  'ListView',
+  'TabContent'
 ];
 
 export default function View(props: PropsWithChildren<ViewProps>) {

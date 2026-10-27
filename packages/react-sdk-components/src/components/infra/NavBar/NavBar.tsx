@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useTheme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
@@ -47,6 +47,8 @@ interface NavBarProps extends PConnProps {
   pages?: any[];
   caseTypes: any[];
   pConn?: any;
+  // AI Assistant entry (the Cosmos AppShell `agent` prop), passed by AppShell when the portal assistant is enabled
+  agent?: { id: string; name: string; icon: ReactNode; active: boolean; onClick: () => void };
 }
 
 const iconMap = {
@@ -115,7 +117,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function NavBar(props: NavBarProps) {
-  const { pConn, pages = [], caseTypes = [] } = props;
+  const { pConn, pages = [], caseTypes = [], agent } = props;
 
   const classes = useStyles();
   const theme = useTheme();
@@ -267,6 +269,12 @@ export default function NavBar(props: NavBarProps) {
             <ListItemText primary={page.name} />
           </ListItemButton>
         ))}
+        {agent && (
+          <ListItemButton id={agent.id} key={agent.id} selected={agent.active} aria-pressed={agent.active} onClick={agent.onClick}>
+            <ListItemIcon>{agent.icon}</ListItemIcon>
+            <ListItemText primary={agent.name} />
+          </ListItemButton>
+        )}
       </List>
       <Divider />
       <List className='marginTopAuto'>

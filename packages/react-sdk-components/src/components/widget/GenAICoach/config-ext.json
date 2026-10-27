@@ -1,0 +1,8 @@
+{
+  "name": "GenAICoach",
+  "label": "Agent",
+  "description": "Agent",
+  "type": "Widget",
+  "subtype": "CASE",
+  "properties": []
+}

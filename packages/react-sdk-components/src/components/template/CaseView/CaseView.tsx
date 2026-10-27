@@ -8,6 +8,10 @@ import Grid2 from '@mui/material/Grid2';
 import { Utils } from '../../helpers/utils';
 import StoreContext from '../../../bridge/Context/StoreContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import useGenAICoachObj from '../../../hooks/useGenAICoachObj';
+import { getTabLabel } from '../SubTabs/tabUtils';
+import type { GenAICoach } from '../../widget/GenAICoach/GenAICoach.types';
+import type { State } from '../../designSystemExtension/GenAICoachContent/GenAICoach.types';
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface CaseViewProps extends PConnProps {
@@ -18,6 +22,8 @@ interface CaseViewProps extends PConnProps {
   showIconInHeader: boolean;
   caseInfo: any;
   lastUpdateCaseTime: any;
+  // Agents configured on the case type's case view (AI agent panel in the utilities column)
+  coaches?: GenAICoach[];
 }
 
 const useStyles = makeStyles(theme => ({
@@ -49,6 +55,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const CaseViewActionsMenu = getComponentFromMap('CaseViewActionsMenu');
   const VerticalTabs = getComponentFromMap('VerticalTabs');
   const DeferLoad = getComponentFromMap('DeferLoad');
+  const GenAICoachContent = getComponentFromMap('GenAICoachContent');
 
   const {
     getPConnect,
@@ -56,6 +63,7 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
     header,
     subheader,
     children = [],
+    coaches = [],
     caseInfo: { availableActions = [], availableProcesses = [], hasNewAttachments, caseTypeID = '', caseTypeName = '', caseTypeIcon }
   } = props;
   const { lastUpdateCaseTime = getPConnect().getValue('caseInfo.lastUpdateTime') } = props;
@@ -76,6 +84,18 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
   const localizedVal = PCore.getLocaleUtils().getLocaleValue;
   const localizationService = thePConn.getLocalizationService();
   const localeCategory = 'CaseView';
+
+  // AI agent panel (port of the Constellation case view's agent hosting): the conversation context is
+  // the data object ("<pxObjClass> <pyGUID>") or the full case ID. Infinity runtime only (isInfinityRuntime()
+  // is not in the 4.1 typings).
+  const fullCaseID = thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
+  const dataContent = thePConn.getValue(PCore.getConstants().DATA_INFO.DATA_INFO_CONTENT);
+  const namespacedVar = (PCore as any).getNameSpaceUtils().getDefaultQualifiedName;
+  const contextID = dataContent ? `${dataContent.pxObjClass} ${dataContent[namespacedVar('pyGUID')]}` : fullCaseID;
+  const isInfinityRuntime = !!(PCore.getEnvironmentInfo() as any).isInfinityRuntime?.();
+
+  const coachProps = useGenAICoachObj(isInfinityRuntime && coaches.length ? coaches : undefined, contextID, getPConnect(), true, true);
+  const [genAIState, setGenAIState] = useState<State>('minimized');
 
   /**
    *
@@ -128,18 +148,39 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
       let { label, inheritedProps } = theTabCompConfig;
       // For some tabs, "label" property is not avaialable in theTabCompConfig, so will get them from inheritedProps
       if (!label) {
-        inheritedProps.forEach(inheritedProp => {
+        inheritedProps?.forEach(inheritedProp => {
           if (inheritedProp.prop === 'label') {
             label = inheritedProp.value;
           }
         });
       }
+      // A widget placed directly in the tabs may have neither (the referenced view's label, or a placeholder, is shown).
+      if (!label) {
+        label = getTabLabel(tabComp.getPConnect());
+      }
       // We'll display the tabs when either visibility property doesn't exist or is true(if exists)
       if (theTabCompConfig.visibility === undefined || theTabCompConfig.visibility === true) {
         vertTabInfo.push({ name: label, id: index });
-        deferLoadInfo.push({ type: 'DeferLoad', config: theTabCompConfig });
+        deferLoadInfo.push({ type: 'DeferLoad', config: theTabCompConfig, getPConnect: tabComp.getPConnect });
       }
     });
+  }
+
+  // Tabs with a view name are loaded by DeferLoad. A tab without one is a widget placed directly in the Tabs
+  // region (such as an agent), so it renders its own component, as in Constellation.
+  function getActiveTabContent() {
+    const activeTab = deferLoadInfo[activeVertTab];
+    if (!activeTab) return null;
+
+    if (activeTab.config.name) {
+      return <DeferLoad getPConnect={getPConnect} name={activeTab.config.name} isTab lastUpdateCaseTime={lastUpdateCaseTime} />;
+    }
+
+    return (
+      <Card key={`tab-${activeVertTab}`} className={classes.root}>
+        {activeTab.getPConnect().getComponent()}
+      </Card>
+    );
   }
 
   function handleVerticalTabClick(eventDetail: any) {
@@ -246,12 +287,26 @@ export default function CaseView(props: PropsWithChildren<CaseViewProps>) {
           <Grid2 size={{ xs: 6 }}>
             {theStagesRegion}
             {theTodoRegion}
-            {deferLoadInfo.length > 0 && (
-              <DeferLoad getPConnect={getPConnect} name={deferLoadInfo[activeVertTab].config.name} isTab lastUpdateCaseTime={lastUpdateCaseTime} />
-            )}
+            {getActiveTabContent()}
           </Grid2>
 
-          <Grid2 size={{ xs: 3 }}>{theUtilitiesRegion}</Grid2>
+          <Grid2 size={{ xs: 3 }}>
+            {theUtilitiesRegion}
+            {coachProps && (
+              <GenAICoachContent
+                {...coachProps}
+                allowFullScreen
+                variant={{
+                  placement: 'utilities',
+                  state: genAIState,
+                  onStateChange: (state: State) => {
+                    coachProps.onStateChange?.(state);
+                    setGenAIState(state);
+                  }
+                }}
+              />
+            )}
+          </Grid2>
         </Grid2>
       );
     }

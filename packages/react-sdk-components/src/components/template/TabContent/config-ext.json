@@ -1,0 +1,8 @@
+{
+  "name": "TabContent",
+  "label": "Tab content",
+  "description": "Tab content template",
+  "type": "Template",
+  "subtype": "TAB",
+  "properties": []
+}

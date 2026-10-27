@@ -1,13 +1,27 @@
-import { type PropsWithChildren, useEffect, useState } from 'react';
+import { createElement, type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import Avatar from '@mui/material/Avatar';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 import { Utils } from '../../helpers/utils';
 import { NavContext } from '../../helpers/reactContextHelpers';
+import PortalAgentContext from '../../helpers/PortalAgentContext';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import createPConnectComponent from '../../../bridge/react_pconnect';
 import type { PConnProps } from '../../../types/PConnProps';
 
 import './AppShell.css';
+
+// An agent selected for the portal's AI assistant (portal navigation settings).
+interface PortalAgentConfig {
+  pyComponentName: string;
+  classID: string;
+  pxInsName: string;
+  pyDisplayLabel?: string;
+  pyLabel?: string;
+}
 
 interface AppShellProps extends PConnProps {
   // If any, enter additional props that only exist on this component
@@ -23,10 +37,56 @@ interface AppShellProps extends PConnProps {
   portalTemplate: string;
   portalName: string;
   portalLogo: string;
-  navDisplayOptions: { alignment: string; position: string };
+  navDisplayOptions: {
+    alignment: string;
+    position: string;
+    enableAIAgent?: boolean;
+    selectedAgents?: PortalAgentConfig[];
+    aiAssistantWidth?: string;
+  };
   httpMessages: string[];
   pageMessages: string[];
 }
+
+const DEFAULT_AI_ASSISTANT_MODE = 'Hidden';
+
+const getAIAssistantMode = (value?: string) => {
+  if (value === 'Hidden' || value === 'Split-width' || value === 'Full-width') {
+    return value;
+  }
+
+  return DEFAULT_AI_ASSISTANT_MODE;
+};
+
+const getPortalAgentInitialState = (mode: string) => {
+  switch (mode) {
+    case 'Hidden':
+      return {
+        showAgentPanel: false,
+        showPageContent: true,
+        agentExpanded: false
+      };
+    case 'Split-width':
+      return {
+        showAgentPanel: true,
+        showPageContent: true,
+        agentExpanded: false
+      };
+    case 'Full-width':
+    default:
+      return {
+        showAgentPanel: true,
+        showPageContent: false,
+        agentExpanded: true
+      };
+  }
+};
+
+const getInitialPageName = (pgs: any[]) => {
+  if (!pgs || !Array.isArray(pgs) || pgs.length === 0) return null;
+
+  return pgs[0].NavigationPages && pgs[0].NavigationPages.length > 0 ? pgs[0].NavigationPages[0].pyRuleName : pgs[0].pyRuleName;
+};
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -42,6 +102,15 @@ const useStyles = makeStyles(theme => ({
     height: '100vh',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1)
+  },
+  agentLayout: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
+  agentArea: {
+    flexGrow: 1,
+    minHeight: 0
   }
 }));
 
@@ -96,6 +165,161 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
     <div style={{ display: 'flex', flexDirection: 'column', padding: '1em 0' }}>
       <AlertBanner id='AppShell' variant='urgent' messages={messages} />
     </div>
+  );
+
+  // ── Portal AI assistant (port of the Constellation AppShell portal agent; default shell only) ──
+  const theme = useTheme();
+  const isNarrow = !useMediaQuery(theme.breakpoints.up('md'));
+  const isNarrowRef = useRef(isNarrow);
+  isNarrowRef.current = isNarrow;
+
+  const portalAgentElement = useMemo(() => {
+    const { enableAIAgent, selectedAgents } = navDisplayOptions ?? {};
+    // Infinity runtime only; isInfinityRuntime() is not in the 4.1 typings. The WSS shell is unchanged.
+    const isInfinityRuntime = !!(PCore.getEnvironmentInfo() as any).isInfinityRuntime?.();
+    if (portalTemplate !== 'wss' && isInfinityRuntime && enableAIAgent && selectedAgents && selectedAgents.length > 0) {
+      const coaches = selectedAgents.map(agent => {
+        const componentName = agent.pyComponentName;
+        return {
+          type: componentName,
+          config: {
+            coach: {
+              classID: agent.classID,
+              insName: agent.pxInsName,
+              label: agent.pyDisplayLabel || agent.pyLabel,
+              type: agent.pyComponentName === 'AIAgentObject' ? 'agent' : 'coach'
+            }
+          }
+        };
+      });
+
+      const genAICoachMeta = {
+        type: 'GenAICoach',
+        config: { coaches, isPortalAgent: true }
+      };
+      const agentPConnectConfig = {
+        meta: genAICoachMeta,
+        options: {
+          context: pConn.getContextName(),
+          pageReference: 'pyPortal'
+        }
+      };
+      const agentVisualConfig = PCore.createPConnect(agentPConnectConfig as any);
+      return createElement(createPConnectComponent(), agentVisualConfig);
+    }
+    return null;
+  }, [navDisplayOptions?.enableAIAgent, navDisplayOptions?.selectedAgents]);
+
+  const aiAssistantMode = getAIAssistantMode(navDisplayOptions?.aiAssistantWidth);
+  const initialPortalAgentState = getPortalAgentInitialState(aiAssistantMode);
+
+  const [showAgentPanel, setShowAgentPanel] = useState(initialPortalAgentState.showAgentPanel);
+  const [showPageContent, setShowPageContent] = useState(initialPortalAgentState.showPageContent);
+  const [agentExpanded, setAgentExpanded] = useState(initialPortalAgentState.agentExpanded);
+
+  const isAgentInStartupMode = useRef(true);
+  const homePageRuleName = useRef(getInitialPageName(pages));
+  // The page shown in the primary container (the source tracks it as the active nav tab).
+  const currentPageName = useRef<string | null | undefined>(homePageRuleName.current);
+
+  useEffect(() => {
+    if (!portalAgentElement) return;
+
+    // A page shown, a case opened or created leaves full width and shows the page;
+    // on narrow screens the assistant is hidden instead, as it is never shown beside the page.
+    const showPage = () => {
+      if (isNarrowRef.current) {
+        setShowAgentPanel(false);
+      }
+      setAgentExpanded(false);
+      setShowPageContent(true);
+    };
+
+    const { SHOW_PAGE_DONE } = PCore.getConstants().PUB_SUB_EVENTS.UI_EVENTS;
+    PCore.getPubSubUtils().subscribe(
+      SHOW_PAGE_DONE,
+      (data: { target?: string; pageName?: string }) => {
+        const { target, pageName } = data ?? {};
+        if (target === 'app/primary') {
+          currentPageName.current = pageName;
+
+          const isAgentStartupNavigation = isAgentInStartupMode.current && pageName === homePageRuleName.current;
+          isAgentInStartupMode.current = false;
+
+          if (!isAgentStartupNavigation) {
+            showPage();
+          }
+        }
+      },
+      'AppShell_PortalAgent_Page'
+    );
+
+    const { CREATE_STAGE_DONE, CASE_OPENED } = PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS;
+    PCore.getPubSubUtils().subscribe(
+      CREATE_STAGE_DONE,
+      () => {
+        currentPageName.current = undefined;
+        showPage();
+      },
+      'AppShell_PortalAgent_CreateCase'
+    );
+    PCore.getPubSubUtils().subscribe(
+      CASE_OPENED,
+      () => {
+        currentPageName.current = undefined;
+        showPage();
+      },
+      'AppShell_PortalAgent_OpenCase'
+    );
+
+    return () => {
+      PCore.getPubSubUtils().unsubscribe(SHOW_PAGE_DONE, 'AppShell_PortalAgent_Page');
+      PCore.getPubSubUtils().unsubscribe(CREATE_STAGE_DONE, 'AppShell_PortalAgent_CreateCase');
+      PCore.getPubSubUtils().unsubscribe(CASE_OPENED, 'AppShell_PortalAgent_OpenCase');
+    };
+  }, [portalAgentElement]);
+
+  const onAgentClick = useCallback(() => {
+    const isOnHomePage = currentPageName.current === homePageRuleName.current;
+
+    if (showAgentPanel) {
+      if (!showPageContent || isAgentInStartupMode.current || isOnHomePage) {
+        setAgentExpanded(false);
+        setShowAgentPanel(false);
+        setShowPageContent(true);
+
+        return;
+      }
+
+      setAgentExpanded(false);
+      setShowAgentPanel(prev => !prev);
+      return;
+    }
+
+    setShowAgentPanel(true);
+    setAgentExpanded(false);
+    setShowPageContent(true);
+  }, [showPageContent, showAgentPanel]);
+
+  const pageContent = (
+    <>
+      {banners}
+      {children}
+    </>
+  );
+
+  const portalAgentContextValue = useMemo(
+    () => ({
+      showAgentPanel,
+      agentExpanded,
+      pagePanel: { content: children, visible: showPageContent && !agentExpanded },
+      onAgentToggle: () => {
+        setAgentExpanded(prev => !prev);
+        setShowPageContent(prev => !prev);
+      },
+      onAgentClick
+    }),
+    [showAgentPanel, showPageContent, agentExpanded, children, onAgentClick]
   );
   // Initial setting of appName and mapChildren
   useEffect(() => {
@@ -253,11 +477,32 @@ export default function AppShell(props: PropsWithChildren<AppShellProps>) {
           appName={localizedVal(appNameToDisplay || '', '', `${portalClass}!PORTAL!${envPortalName}`.toUpperCase())}
           pages={pages}
           caseTypes={caseTypes}
+          agent={
+            portalAgentElement
+              ? {
+                  id: 'agent',
+                  name: localizedVal('AI Assistant', 'AppShell'),
+                  icon: <AutoAwesomeIcon fontSize='large' />,
+                  active: showAgentPanel,
+                  onClick: onAgentClick
+                }
+              : undefined
+          }
         />
 
         <div className={classes.content}>
-          {banners}
-          {children}
+          {portalAgentElement ? (
+            // The banners stay visible above the assistant, also when the page is hidden, as the Cosmos AppShell renders them
+            // before its main content.
+            <div className={classes.agentLayout}>
+              {banners}
+              <div className={classes.agentArea}>
+                <PortalAgentContext.Provider value={portalAgentContextValue}>{portalAgentElement}</PortalAgentContext.Provider>
+              </div>
+            </div>
+          ) : (
+            pageContent
+          )}
         </div>
       </div>
     </NavContext.Provider>
