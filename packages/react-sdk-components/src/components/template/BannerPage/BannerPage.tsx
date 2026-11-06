@@ -1,6 +1,8 @@
 import { Children, type PropsWithChildren, useMemo } from 'react';
 
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { usePageGenAICoach, withPageUtilities } from '../utils';
+import type { GenAICoach } from '../../widget/GenAICoach/GenAICoach.types';
 import type { PConnProps } from '../../../types/PConnProps';
 
 interface BannerPageProps extends PConnProps {
@@ -12,6 +14,9 @@ interface BannerPageProps extends PConnProps {
   backgroundImage?: string;
   backgroundColor?: string;
   tintImage?: boolean;
+  // Agents configured on the page
+  coaches?: GenAICoach[];
+  localeReference?: string;
 }
 
 /*
@@ -23,6 +28,9 @@ export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
 
   const {
     children,
+    getPConnect,
+    coaches,
+    localeReference,
     layout = 'two-column',
     heading = '',
     message = '',
@@ -32,11 +40,13 @@ export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
     tintImage = false
   } = props;
 
+  const genAICoachProps = usePageGenAICoach(getPConnect, coaches, localeReference);
+
   const childArray = useMemo(() => {
     return Children.toArray(children);
   }, [children]);
 
-  return (
+  return withPageUtilities(
     <Banner
       variant={layout}
       a={childArray[0]}
@@ -49,6 +59,7 @@ export default function BannerPage(props: PropsWithChildren<BannerPageProps>) {
         backgroundImage,
         tintImage
       }}
-    />
+    />,
+    genAICoachProps
   );
 }
