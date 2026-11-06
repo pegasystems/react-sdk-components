@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react';
 import { isValidElement } from 'react';
+import { Box } from '@mui/material';
+
+import { getComponentFromMap } from '../../bridge/helpers/sdk_component_map';
+import useGenAICoachObj from '../../hooks/useGenAICoachObj';
+import type { GenAICoach } from '../widget/GenAICoach/GenAICoach.types';
+import type { UtilitiesLayoutProps } from '../designSystemExtension/GenAICoachContent/GenAICoach.types';
 
 export function prepareCaseSummaryData(caseSummaryRegion, portalSpecificVisibilityChecker?) {
   const filterVisibleChildren = children => {
@@ -55,4 +61,29 @@ export const filterUtilities = (utils: ReactNode) => {
     return utilsMeta.children?.length ? pConnect.createComponent(utilsMeta) : undefined;
   }
   return utilsMeta;
+};
+
+/**
+ * Agent props for the agents configured on a landing page. As in the Constellation page templates, the page's locale
+ * reference is the conversation context.
+ */
+export const usePageGenAICoach = (getPConnect: () => typeof PConnect, coaches: GenAICoach[] = [], localeReference = '') => {
+  return useGenAICoachObj(coaches.length ? coaches : undefined, localeReference, getPConnect());
+};
+
+/**
+ * Renders a landing page with its utilities column at the end, as the Cosmos page templates do with their
+ * `utilities` slot; below the md breakpoint the column follows the page. A page without agents is returned unchanged.
+ */
+export const withPageUtilities = (page: ReactNode, genAICoachProps?: UtilitiesLayoutProps['genAICoachProps']) => {
+  if (!genAICoachProps) return page;
+
+  const UtilitiesLayout = getComponentFromMap('UtilitiesLayout');
+  // The Cosmos page layout separates the page and its utilities column with a gap.
+  return (
+    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'flex-start' }, gap: { md: 2 } }}>
+      <Box sx={{ flexGrow: 1, minWidth: 0 }}>{page}</Box>
+      <UtilitiesLayout genAICoachProps={genAICoachProps} />
+    </Box>
+  );
 };
