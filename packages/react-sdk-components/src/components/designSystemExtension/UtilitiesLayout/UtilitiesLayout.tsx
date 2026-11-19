@@ -74,7 +74,7 @@ const getFocusables = (container: HTMLElement) =>
   );
 
 /**
- * The utilities column of a landing page: MUI port of the Cosmos `UtilitiesLayout` component. Collapsed, it offers a
+ * The utilities column of a landing page, ported from Constellation's `UtilitiesLayout`. Collapsed, it offers a
  * "Chat with AI" button that opens the agent next to it; expanded, it shows the agent in the column (in a drawer
  * below the lg breakpoint). Below the md breakpoint the agent is shown in the page.
  */
@@ -109,7 +109,7 @@ export default function UtilitiesLayout(props: UtilitiesLayoutProps) {
     }
   }, [utilitiesExpanded]);
 
-  // As in Cosmos, the opened agent takes the focus.
+  // As in Constellation, the opened agent takes the focus.
   useEffect(() => {
     const panel = coachPanelRef.current;
     if (!showCoach || !panel) return;
@@ -180,7 +180,7 @@ export default function UtilitiesLayout(props: UtilitiesLayoutProps) {
     genAICoachButtonRef.current?.focus();
   };
 
-  // Escape closes the agent and Tab cycles within it, as in the Cosmos dialog. Keys from the menus and dialogs the agent
+  // Like a dialog, Escape closes the agent and Tab cycles within it. Keys from the menus and dialogs the agent
   // opens reach this handler through the React tree, so only keys pressed in the panel itself are handled.
   const handleCoachKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const panel = coachPanelRef.current;
@@ -223,7 +223,7 @@ export default function UtilitiesLayout(props: UtilitiesLayoutProps) {
           </Fab>
         </Tooltip>
       )}
-      {/* Non-modal, as the Cosmos dialog: the page stays scrollable and usable while the agent is open. */}
+      {/* Non-modal, as in Constellation: the page stays scrollable and usable while the agent is open. */}
       {genAICoachProps && showCoach && (
         <Popper
           open

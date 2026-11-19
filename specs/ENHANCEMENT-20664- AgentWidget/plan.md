@@ -58,7 +58,7 @@ Each is marked in the code with a `Deviation from Constellation:` comment.
 - The "file too big" error is always shown.
 - Only a complete last answer stops loading: the SDK panel remounts its messages (fullscreen, minimize and maximize, history), which Cosmos never does.
 - Attachments: sent files are downloaded (the lightbox is not ported); a pending file can be previewed in a new tab only if its type cannot run scripts (not HTML or SVG).
-- MUI equivalents of Cosmos features: the Copy confirmation in a snackbar, the agent avatar and colors in both SDK themes, agents as cards like the other SDK widgets, and the '25 layout.
+- MUI equivalents of Cosmos features: the Copy confirmation in a snackbar, the agent avatar with the Material `AutoAwesome` icon in the theme's primary color (Constellation uses its `polaris-solid` icon and AI color), agents as cards like the other SDK widgets, and the '25 layout.
 
 ### Open items
 

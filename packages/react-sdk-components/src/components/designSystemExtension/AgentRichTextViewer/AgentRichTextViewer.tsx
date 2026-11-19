@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- * Renders agent markdown: the Cosmos `AgentRichTextViewer` (a `RichTextViewer` in markdown mode).
+ * Renders the markdown of messages with MUI elements.
  * The markdown is parsed with `marked.lexer()` and the tokens are rendered as React elements, so no HTML
  * string is ever injected; raw HTML in the markdown is shown as plain text.
  * `markdownMap` maps a token type to a function returning the component that renders that token instead.
@@ -132,8 +132,8 @@ function AgentRichTextViewer(props: AgentRichTextViewerProps) {
         return <br />;
       case 'link': {
         const { href, text, tokens: linkTokens } = token as Tokens.Link;
-        // Deviation from Constellation: the link text keeps its formatting (as in `[**T-1001**](…)`), where the Cosmos
-        // viewer shows the link's raw markdown.
+        // Deviation from Constellation: the link text keeps its formatting (as in `[**T-1001**](…)`), where Constellation
+        // shows the link's raw markdown.
         const linkContent = linkTokens?.length ? renderTokens(linkTokens) : text;
         if (!isSafeHref(href)) return linkContent;
         return (

@@ -1,6 +1,6 @@
 import type { ComponentType, ReactNode } from 'react';
 
-// ─── Local stand-ins for the Cosmos core prop types used by the port ─────────
+// ─── Prop types of the menus, actions and files of the agent components ─────────
 
 export interface MenuItemProps {
   id: string;
@@ -21,7 +21,7 @@ export interface Action {
   id: string;
   text: string;
   visual?: ReactNode;
-  /** Name of the Cosmos icon of the action; `copy` is rendered for message actions. */
+  /** Icon name of the action; `copy` is rendered for message actions. */
   icon?: string;
   onClick?: (id: string) => void;
 }
@@ -150,7 +150,7 @@ export interface ComposerState {
   setMessage: (message: string) => void;
 }
 
-/** Props of the Cosmos `GenAICoach` component, registered here as `GenAICoachContent`. */
+/** Props of the agent panel (Constellation's `GenAICoach` component), registered as `GenAICoachContent`. */
 export interface GenAICoachContentProps {
   coachOptions: MenuItems;
   onCoachChange?: (id: string) => void;
@@ -176,19 +176,19 @@ export interface GenAICoachContentProps {
   disclaimerMessage?: ReactNode;
   /** The agent is shown in the expanded utilities column of a landing page, where it fills the column. */
   isInLandingPageUtilities?: boolean;
-  /** Set on the panel's own fullscreen copy (the Cosmos component reads this state from its fullscreen context). */
+  /** Set on the panel's own fullscreen copy (Constellation reads this state from a fullscreen context). */
   isFullscreenView?: boolean;
   /** The panel's composer state, shared with its fullscreen copy so that the text carries over both ways. */
   composerState?: ComposerState;
   /** When set, pre-populates the message box with the given text without sending. */
   draftMessage?: string;
-  /** Message shown briefly by the panel; stands in for the Cosmos toaster (for example after copying a response). */
+  /** Message shown briefly by the panel in a snackbar (for example after copying a response). */
   toastMessage?: string;
   /** Called when the toast message is dismissed. */
   onToastClose?: () => void;
 }
 
-/** Props of the Cosmos `UtilitiesLayout` component: the utilities column of a landing page. */
+/** Props of `UtilitiesLayout`: the utilities column of a landing page. */
 export interface UtilitiesLayoutProps {
   /** Agent props from `useGenAICoachObj`; the panel's `variant` is set by the layout. */
   genAICoachProps?: Omit<GenAICoachContentProps, 'variant'>;

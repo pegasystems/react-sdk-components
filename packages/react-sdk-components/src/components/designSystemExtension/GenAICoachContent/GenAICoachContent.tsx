@@ -51,15 +51,15 @@ import type {
   Variant
 } from './GenAICoach.types';
 
-// Width from which the history is shown beside the conversation (the Cosmos `sm` breakpoint of the component).
+// Width from which the history is shown beside the conversation (the panel's own breakpoint, as in Constellation).
 const sideBySideMinWidthPx = 768;
 const scrollThresholdPx = 50;
-// Cosmos `maxWidthMessage`: in wide layouts the conversation is a centered column of this width.
+// In wide layouts the conversation is a centered column of this width, as in Constellation.
 const maxWidthMessage = '46rem';
 
 const prefersReducedMotion = () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-// Deviation from Constellation: the Cosmos lightbox is not ported, so a pending attachment is previewed in a new tab, which
+// Deviation from Constellation: the lightbox is not ported, so a pending attachment is previewed in a new tab, which
 // shows it in the application's origin. Only types that cannot run scripts there can be previewed (not HTML or SVG).
 const previewableFileTypes = /^(image\/(png|jpeg|gif|webp|bmp|avif)|application\/pdf|text\/plain|audio\/|video\/)/i;
 const canPreviewFile = (file?: File): file is File => !!file && previewableFileTypes.test(file.type);
@@ -83,7 +83,7 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     minHeight: '28rem'
   },
-  // Cosmos full-page height outside the portal: once there are messages, the panel is as tall as the view (without
+  // Full-page height outside the portal, as in Constellation: once there are messages, the panel is as tall as the view (without
   // its top and bottom margins).
   fillInView: {
     height: `calc(var(--content-height-in-view, 100vh) - ${theme.spacing(2)})`
@@ -168,7 +168,7 @@ const useStyles = makeStyles(theme => ({
     gap: theme.spacing(1),
     padding: theme.spacing(3, 0)
   },
-  // Centered in the panel's height, as the Cosmos initial screen.
+  // Centered in the panel's height, as Constellation's initial screen.
   emptyState: {
     display: 'flex',
     flexDirection: 'column',
@@ -185,7 +185,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     gap: theme.spacing(1)
   },
-  // The Cosmos salutation is bold and 1.5rem.
+  // The salutation is bold and 1.5rem, as in Constellation.
   salutation: {
     fontWeight: theme.typography.fontWeightBold,
     overflowWrap: 'break-word',
@@ -327,7 +327,7 @@ interface HeaderActionsProps {
   buttonRef?: RefObject<HTMLButtonElement>;
 }
 
-// The header actions in one "Actions" menu, as the Cosmos `Actions` component renders them with `menuAt={1}`.
+// The header actions in one "Actions" menu, like the menu of agent actions in Constellation.
 const HeaderActions = ({
   actions,
   allowFullScreen,
@@ -406,7 +406,7 @@ const HeaderActions = ({
 };
 
 /**
- * The agent panel: MUI port of the Cosmos `GenAICoach` component (`GenAICoachContent` and `HeaderActions`).
+ * The agent panel, ported from Constellation's `GenAICoach` component (`GenAICoachContent` and `HeaderActions`).
  * It is registered as `GenAICoachContent` because `GenAICoach` is the widget's key in the component map.
  */
 // GenAICoachContent is one of the few components that does NOT have getPConnect.
@@ -469,7 +469,7 @@ export default function GenAICoachContent(props: GenAICoachContentProps) {
 
   const [rootWidth, setRootWidth] = useState(0);
   const [ownMessage, setOwnMessage] = useState('');
-  // The fullscreen copy edits the panel's composer state, as Cosmos shows the same component in fullscreen.
+  // The fullscreen copy edits the panel's composer state, so the typed text carries over both ways.
   const message = composerState ? composerState.message : ownMessage;
   const setMessage = composerState ? composerState.setMessage : setOwnMessage;
   const [fullScreen, setFullScreen] = useState(false);
@@ -480,9 +480,9 @@ export default function GenAICoachContent(props: GenAICoachContentProps) {
 
   const isMinimized = isInUtilities(variant) && variant.state === 'minimized';
   const inPage = variant.placement === 'fullpage' && !isInLandingPageUtilities;
-  // As Cosmos `isCompact` and `fullPageAndInitialScreen`: before the first message, an agent on a page fits its content,
+  // As Constellation's `isCompact` and `fullPageAndInitialScreen`: before the first message, an agent on a page fits its content,
   // and there and in fullscreen the message box follows the suggestions. The same elements are rearranged with styles
-  // (not moved, as in Cosmos), so the message box keeps the focus when the first message is sent.
+  // (not moved, as in Constellation), so the message box keeps the focus when the first message is sent.
   const isCompact = inPage && messages.length === 0;
   const composerFollowsSuggestions = (inPage || isFullscreenView) && messages.length === 0;
 
@@ -503,7 +503,7 @@ export default function GenAICoachContent(props: GenAICoachContentProps) {
     return flatItems[0]?.primary;
   }, [coachOptionsProps]);
 
-  // Tracks the component width (the Cosmos component uses its own breakpoint, not the viewport's).
+  // Tracks the panel width: the history is placed by the panel's own width, not the viewport's.
   useEffect(() => {
     const el = rootRef.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
@@ -523,7 +523,7 @@ export default function GenAICoachContent(props: GenAICoachContentProps) {
   }, []);
 
   // After the user minimizes or maximizes the panel, focus moves to the control that is now shown. Guided mode has no
-  // text box, and none is shown while the agent loads, so focus then moves to the panel's first control, as in Cosmos.
+  // text box, and none is shown while the agent loads, so focus then moves to the panel's first control, as in Constellation.
   useEffect(() => {
     if (!isUserTriggered.current) return;
     isUserTriggered.current = false;
@@ -537,7 +537,7 @@ export default function GenAICoachContent(props: GenAICoachContentProps) {
   }, [isMinimized]);
 
   // Guided mode: the Ask button gives way to the progress indicator while an answer is generated, so focus moves to the
-  // indicator and, once the answer is complete, back to the Ask button (Cosmos `Progress focusOnVisible` and its menu button).
+  // indicator and, once the answer is complete, back to the Ask button, as in Constellation.
   useEffect(() => {
     if (!guidedMode) return;
     if (isLatestAgentMessageStreaming) {
@@ -1151,7 +1151,7 @@ export default function GenAICoachContent(props: GenAICoachContentProps) {
         {announcement}
       </Box>
 
-      {/* Stand-in for the Cosmos toaster; while the fullscreen copy is open, the copy shows it. */}
+      {/* Toast messages; while the fullscreen copy is open, the copy shows them. */}
       {(isFullscreenView || !fullScreen) && (
         <Snackbar
           open={!!toastMessage}

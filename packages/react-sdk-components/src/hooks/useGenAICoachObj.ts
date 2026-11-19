@@ -185,7 +185,7 @@ const useGenAICoachObj = (
   const [salutation, setSalutation] = useState<string | undefined>(undefined);
   const [disclaimerMessage, setDisclaimerMessage] = useState<string | undefined>(undefined);
   const [guidedMode, setGuidedMode] = useState(true);
-  // Stand-in for the Cosmos toaster: the panel shows this message.
+  // Shown briefly by the panel in a snackbar.
   const [toastMessage, setToastMessage] = useState('');
 
   const [showHistory, setShowHistory] = useState(false);
@@ -676,7 +676,7 @@ const useGenAICoachObj = (
         if (attachment) {
           files.push({
             id,
-            // The Cosmos lightbox is not ported: a sent attachment is downloaded, from the file the user selected
+            // Constellation's lightbox is not ported: a sent attachment is downloaded, from the file the user selected
             // (the ID of an upload is not an attachment key, so the server cannot return it yet).
             onPreview: attachment.file ? () => download(attachment.file as File, attachment.name) : undefined,
             displayText: attachment.name,
@@ -811,7 +811,7 @@ const useGenAICoachObj = (
                 attachments: attachmentsWithFormat?.map(attachment => ({
                   id: attachment.id,
                   name: attachment.fileName,
-                  // The Cosmos lightbox is not ported: the attachment is downloaded.
+                  // Constellation's lightbox is not ported: the attachment is downloaded.
                   onPreview: () => {
                     downloadFile(attachment.ID || attachment.id, attachment.fileName);
                   },
@@ -925,7 +925,7 @@ const useGenAICoachObj = (
 
     // Deviation from Constellation: only a complete answer (all chunks received) stops loading. Here the messages remount
     // (fullscreen, minimize and maximize, history), and a remounted earlier answer reports that it is complete again;
-    // in Cosmos they never remount.
+    // in Constellation they never remount.
     const handleStreamingProgress = (isStreamingDone: boolean) => {
       if (isStreamingDone) {
         setMessages(currentMessages => {

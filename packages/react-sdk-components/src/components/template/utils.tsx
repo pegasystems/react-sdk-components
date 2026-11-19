@@ -72,14 +72,14 @@ export const usePageGenAICoach = (getPConnect: () => typeof PConnect, coaches: G
 };
 
 /**
- * Renders a landing page with its utilities column at the end, as the Cosmos page templates do with their
+ * Renders a landing page with its utilities column at the end, as Constellation's page templates do with their
  * `utilities` slot; below the md breakpoint the column follows the page. A page without agents is returned unchanged.
  */
 export const withPageUtilities = (page: ReactNode, genAICoachProps?: UtilitiesLayoutProps['genAICoachProps']) => {
   if (!genAICoachProps) return page;
 
   const UtilitiesLayout = getComponentFromMap('UtilitiesLayout');
-  // The Cosmos page layout separates the page and its utilities column with a gap.
+  // A gap separates the page and its utilities column, as in Constellation.
   return (
     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'flex-start' }, gap: { md: 2 } }}>
       <Box sx={{ flexGrow: 1, minWidth: 0 }}>{page}</Box>

@@ -43,7 +43,7 @@ export const copyToClipboard = async (text: string) => {
   }
 };
 
-// Local stand-ins for the Cosmos helpers the ported code uses.
+// Local versions of Constellation helpers used by the ported code.
 export const createUID = (): string => {
   return `_${Math.random().toString(36).slice(2, 11)}`;
 };

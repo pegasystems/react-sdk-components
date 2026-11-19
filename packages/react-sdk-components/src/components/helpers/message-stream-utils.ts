@@ -8,7 +8,7 @@ class MessageStreamError extends Error {
   }
 }
 
-// Local stand-in for the Cosmos `tryCatch` helper: the result of `fn`, or undefined if it throws.
+// Local version of Constellation's `tryCatch` helper: the result of `fn`, or undefined if it throws.
 const tryCatch = <T>(fn: () => T): T | undefined => {
   try {
     return fn();

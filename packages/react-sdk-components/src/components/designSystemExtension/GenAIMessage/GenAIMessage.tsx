@@ -1,6 +1,7 @@
 import { useEffect, useMemo, type ReactNode } from 'react';
-import { Alert, Avatar, Box, Button, Chip, CircularProgress, IconButton, SvgIcon, Tooltip, type PaletteMode } from '@mui/material';
+import { Alert, Avatar, Box, Button, Chip, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -9,23 +10,10 @@ import { StreamingContext, type StreamingContextProps } from '../../helpers/Stre
 import { isCoachMessage, isUserMessage } from '../GenAICoachContent/GenAICoach.utils';
 import type { Action, GenAIMessageProps } from '../GenAICoachContent/GenAICoach.types';
 
-// MUI icons for the Cosmos icon names of the message actions.
+// MUI icons for the icon names of the message actions.
 const actionIcons: Record<string, ReactNode> = {
   copy: <ContentCopyIcon fontSize='small' />
 };
-
-// The Cosmos `palette.ai` color of the light and dark themes.
-const aiColor: Record<PaletteMode, string> = {
-  light: '#681fc3',
-  dark: '#d6bcf5'
-};
-
-// The Cosmos `polaris-solid` icon, inline so that it takes the theme color.
-const PolarisSolidIcon = () => (
-  <SvgIcon viewBox='0 0 25 25'>
-    <path d='M24.5 12.501c-3.61.375-6.422 1.453-8.344 3.281-2.203 2.016-3.422 4.922-3.656 8.719-.47-3.844-1.781-6.75-3.89-8.766C6.64 13.907 3.921 12.828.5 12.5c3.61-.281 6.422-1.406 8.437-3.375C10.953 7.11 12.125 4.251 12.5.5c.281 4.172 1.64 7.266 4.125 9.281 2.016 1.594 4.64 2.485 7.875 2.72Zm-1.5-7.5c-.891.094-1.594.374-2.157.89-.515.516-.796 1.22-.843 2.11-.094-.89-.375-1.593-.843-2.062C18.64 5.424 17.937 5.096 17 5c.891-.046 1.547-.328 2.063-.796.515-.516.843-1.266.937-2.203.047.984.375 1.734.938 2.203.515.468 1.172.75 2.062.796ZM8 20c-.938.094-1.641.374-2.157.89-.515.47-.796 1.173-.843 2.11-.094-.984-.422-1.687-.984-2.203-.422-.422-1.125-.703-2.016-.796.797-.047 1.453-.282 1.922-.704.61-.469.984-1.219 1.078-2.297.047.797.281 1.5.75 2.062.469.516 1.219.844 2.25.938Z' />
-  </SvgIcon>
-);
 
 const useStyles = makeStyles(theme => ({
   coachMessage: {
@@ -34,11 +22,11 @@ const useStyles = makeStyles(theme => ({
     gap: theme.spacing(0.5),
     padding: theme.spacing(1, 0)
   },
-  // The Cosmos agent avatar: the AI color on a subtle circle with a faint ring, in light and dark themes.
+  // The agent avatar: the theme's primary color on a subtle circle with a faint ring.
   coachAvatar: {
     width: '2rem',
     height: '2rem',
-    color: aiColor[theme.palette.mode],
+    color: theme.palette.primary.main,
     backgroundColor: theme.palette.action.hover,
     boxShadow: `inset 0 0 0 0.0625rem ${theme.palette.divider}`,
     '& svg': {
@@ -128,7 +116,7 @@ export default function GenAIMessage(props: GenAIMessageProps) {
   const allChunksReceived = isCoachMessage(props) && props.allChunksReceived;
 
   useEffect(() => {
-    // The text is shown as it arrives (the Cosmos typing animation is not ported),
+    // The text is shown as it arrives (Constellation's typing animation is not ported),
     // so streaming is done as soon as all chunks are received. An answer that is no longer loading
     // does not report it again when it remounts (as when the fullscreen view opens).
     if (isStreamingMessage && isCoachMessage(props) && props.loading && props.onStreamingUpdate) {
@@ -162,7 +150,7 @@ export default function GenAIMessage(props: GenAIMessageProps) {
     return (
       <li className={classes.coachMessage}>
         <Avatar className={classes.coachAvatar} {...(coachName ? { role: 'img', 'aria-label': coachName } : { 'aria-hidden': true })}>
-          <PolarisSolidIcon />
+          <AutoAwesomeIcon />
         </Avatar>
 
         <Box className={classes.coachContent}>

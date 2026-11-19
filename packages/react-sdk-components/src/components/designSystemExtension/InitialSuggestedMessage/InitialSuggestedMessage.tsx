@@ -7,7 +7,7 @@ import type { InitialSuggestedMessageProps } from '../GenAICoachContent/GenAICoa
 const minTextContrast = 4.5;
 
 const useStyles = makeStyles(theme => ({
-  // The Cosmos default (secondary) button: outlined in the primary color, the label centered while it fits on one line.
+  // An outlined button in the primary color, as in Constellation; the label is centered while it fits on one line.
   root: {
     height: '100%',
     width: '100%',
@@ -30,7 +30,7 @@ export default function InitialSuggestedMessage(props: InitialSuggestedMessagePr
   const { id, message, testId, onSend } = props;
   const classes = useStyles();
   const theme = useTheme();
-  // As Cosmos keeps its buttons readable in dark themes, the label uses the text color where the primary color is too faint.
+  // To stay readable in dark themes, the label uses the text color where the primary color is too faint.
   const color = getContrastRatio(theme.palette.primary.main, theme.palette.background.paper) >= minTextContrast ? 'primary' : 'inherit';
 
   return (
