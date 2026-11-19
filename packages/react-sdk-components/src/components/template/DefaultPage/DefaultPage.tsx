@@ -2,6 +2,8 @@ import { useMemo, Children } from 'react';
 import type { ReactNode } from 'react';
 import { Grid2 } from '@mui/material';
 import { getComponentFromMap } from '../../../bridge/helpers/sdk_component_map';
+import { usePageGenAICoach, withPageUtilities } from '../utils';
+import type { GenAICoach } from '../../widget/GenAICoach/GenAICoach.types';
 
 export interface CommonPageProps {
   /** Page title */
@@ -14,13 +16,13 @@ export interface CommonPageProps {
   children: ReactNode | ReactNode[];
 
   /** Dynamic page pconnect object */
-  // getPConnect: () => PConnect;
+  getPConnect: () => typeof PConnect;
 
   /** Enable GetNextWork in page */
   enableGetNextWork?: boolean;
 
   /** GetAI coaches configured in page */
-  // coaches?: GenAICoach[];
+  coaches?: GenAICoach[];
 
   /** Locale reference */
   localeReference: string;
@@ -64,6 +66,9 @@ const COLUMNS_WIDTHS = {
 export default function DefaultPage({
   layout = 'one-column',
   children,
+  getPConnect,
+  localeReference,
+  coaches,
   enableBanner,
   heading = '',
   message = '',
@@ -74,12 +79,14 @@ export default function DefaultPage({
 }: DefaultPageProps) {
   const Banner = getComponentFromMap('Banner');
 
+  const genAICoachProps = usePageGenAICoach(getPConnect, coaches, localeReference);
+
   const childArray = useMemo(() => {
     return Children.toArray(children);
   }, [children]);
 
   if (enableBanner) {
-    return (
+    return withPageUtilities(
       <Banner
         variant={layout === 'one-column' ? 'two-column' : layout}
         a={[childArray[0]]}
@@ -92,17 +99,19 @@ export default function DefaultPage({
           backgroundImage,
           tintImage
         }}
-      />
+      />,
+      genAICoachProps
     );
   }
 
-  return (
+  return withPageUtilities(
     <Grid2 container spacing={1}>
       {childArray.map((child, index) => (
         <Grid2 key={index} size={COLUMNS_WIDTHS[layout][index]}>
           {child}
         </Grid2>
       ))}
-    </Grid2>
+    </Grid2>,
+    genAICoachProps
   );
 }
