@@ -77,6 +77,10 @@ export default function Multiselect(props) {
       parameters,
       matchPosition,
       listType,
+      // Scope the cached DataApi instance to the current context. Without this, Core persists the instance
+      // across contexts and, once the original context is destroyed (e.g. assignment cancelled),
+      // fetchData() on the reused instance resolves with empty data.
+      cacheLifeSpan: 'form',
       maxResultsDisplay: maxResultsDisplay || '100',
       columns: preProcessColumns(columns),
       groupColumnsConfig: preProcessColumns(groupColumnsConfig)
