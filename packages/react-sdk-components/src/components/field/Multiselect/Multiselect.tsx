@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
-import { doSearch, getDisplayFieldsMetaData, useDeepMemo, preProcessColumns, getGroupDataForItemsTree } from './utils';
+import { doSearch, getDisplayFieldsMetaData, useDeepMemo, preProcessColumns, getGroupDataForItemsTree, setValuesToPropertyList } from './utils';
 import { insertInstruction, deleteInstruction } from '../../helpers/instructions-utils';
 import { debounce } from 'throttle-debounce';
 
@@ -24,7 +24,11 @@ export default function Multiselect(props) {
     maxResultsDisplay,
     groupColumnsConfig = [{}],
     selectionList,
-    value
+    value,
+    required = false,
+    validatemessage = '',
+    status = '',
+    helperText = ''
   } = props;
   let { datasource = [], columns = [{}] } = props;
 
@@ -113,6 +117,8 @@ export default function Multiselect(props) {
   const pConn = getPConnect();
   const contextName = pConn.getContextName();
   const listActions = pConn.getListActions();
+  const actions = pConn.getActionsApi();
+  const helperTextToDisplay = validatemessage || helperText;
   const dataApiObj: any = useRef();
 
   // main search function trigger
@@ -176,19 +182,45 @@ export default function Multiselect(props) {
     getCaseListBasedOnParamsDebounced.current(searchText, '', [...selectedItems], [...itemsTree], true);
   };
 
-  const setSelectedItemsForReferenceList = item => {
-    // Clear error messages if any
-    const propName = pConn.getStateProps().selectionList;
-    pConn.clearErrorMessages({
-      property: propName
-    });
-    const { selected } = item;
-    if (selected) {
-      insertInstruction(pConn, selectionList, selectionKey, primaryField, item);
-    } else {
-      deleteInstruction(pConn, selectionList, selectionKey, item);
-    }
-  };
+  const setSelectedItemsForReferenceList = useCallback(
+    item => {
+      // Clear error messages if any
+      const propName = pConn.getStateProps().selectionList;
+      pConn.clearErrorMessages({
+        property: propName
+      });
+      const { selected } = item;
+      if (selected) {
+        insertInstruction(pConn, selectionList, selectionKey, primaryField, item);
+      } else {
+        deleteInstruction(pConn, selectionList, selectionKey, item);
+      }
+    },
+    [pConn, primaryField, selectionKey, selectionList]
+  );
+
+  // function to add items to redux every time the selected list changes
+  const updateReduxAndValidate = useCallback(
+    updatedItems => {
+      let assocProp = pConn.getStateProps().value;
+      if (referenceList) {
+        assocProp = pConn.getStateProps().selectionList;
+      }
+      let propValue = '';
+      propValue = setValuesToPropertyList(
+        inputValue,
+        assocProp,
+        updatedItems,
+        dataConfig.columns,
+        actions,
+        !referenceList // Skipped adding properties to redux when display is combobox
+      );
+
+      // Trigger field change so that validation will be triggered
+      actions.triggerFieldChange(assocProp, propValue);
+    },
+    [actions, dataConfig.columns, inputValue, pConn, referenceList]
+  );
 
   const handleChange = (event, newSelectedValues) => {
     let clickedItem;
@@ -216,6 +248,8 @@ export default function Multiselect(props) {
 
     // if this is a referenceList case
     if (referenceList) setSelectedItemsForReferenceList(clickedItem[0]);
+
+    updateReduxAndValidate(updatedItems);
   };
 
   return (
@@ -235,7 +269,18 @@ export default function Multiselect(props) {
       //   </>
       // )}
       renderInput={params => (
-        <TextField {...params} variant='outlined' fullWidth label={label} placeholder={placeholder} size='small' onChange={onSearchHandler} />
+        <TextField
+          {...params}
+          variant='outlined'
+          fullWidth
+          label={label}
+          placeholder={placeholder}
+          size='small'
+          required={required}
+          error={status === 'error'}
+          helperText={helperTextToDisplay}
+          onChange={onSearchHandler}
+        />
       )}
     />
   );
