@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 import { doSearch, getDisplayFieldsMetaData, useDeepMemo, preProcessColumns, getGroupDataForItemsTree, setValuesToPropertyList } from './utils';
-import { insertInstruction, deleteInstruction } from '../../helpers/instructions-utils';
+import { insertInstruction, deleteInstruction, updateNewInstuctions } from '../../helpers/instructions-utils';
 import { debounce } from 'throttle-debounce';
 
 export default function Multiselect(props) {
@@ -154,6 +154,7 @@ export default function Multiselect(props) {
   };
 
   useEffect(() => {
+    pConn.setStateProps({ selectionList });
     if (referenceList && referenceList.length > 0) {
       pConn.setReferenceList(selectionList);
     }
@@ -161,6 +162,10 @@ export default function Multiselect(props) {
 
   useEffect(() => {
     getCaseListBasedOnParamsDebounced.current = debounce(500, getCaseListBasedOnParams);
+    // Seed default page instructions for already-selected rows (keyed by the list's self-referenced datasource params, e.g. pyID), matching Constellation
+    if (referenceList?.length > 0) {
+      updateNewInstuctions(pConn, selectionList);
+    }
   }, []);
 
   useEffect(() => {
