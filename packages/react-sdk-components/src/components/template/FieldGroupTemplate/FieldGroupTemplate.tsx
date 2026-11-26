@@ -15,6 +15,7 @@ interface FieldGroupTemplateProps extends PConnProps {
   fieldHeader?: string;
   allowTableEdit: boolean;
   allowActions?: any;
+  uniqueField?: string;
 }
 
 export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
@@ -32,7 +33,8 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     displayMode,
     fieldHeader,
     allowActions,
-    allowTableEdit: allowAddEdit
+    allowTableEdit: allowAddEdit,
+    uniqueField
   } = props;
   const pConn = getPConnect();
   const resolvedList = getReferenceList(pConn);
@@ -48,8 +50,9 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
 
   useLayoutEffect(() => {
     if (!isReadonlyMode) {
-      // @ts-expect-error - Expected 3 arguments, but got 1
-      pConn.getListActions().initDefaultPageInstructions(resolvedList);
+      // uniqueField (e.g. '.EmbedListUUID__') lets core seed a row UUID in the default page instructions, matching Constellation
+      // @ts-expect-error - Argument of type 'undefined' is not assignable to parameter of type 'string[]'
+      pConn.getListActions().initDefaultPageInstructions(resolvedList, undefined, uniqueField);
     }
   }, [referenceList?.length]);
 
@@ -60,11 +63,19 @@ export default function FieldGroupTemplate(props: FieldGroupTemplateProps) {
     return `Row ${index + 1}`;
   };
 
+  // Seed a UUID for the list's uniqueField on new rows, matching Constellation
+  const withUniqueField = (payload: Record<string, string>) => {
+    if (uniqueField) {
+      payload[uniqueField.startsWith('.') ? uniqueField.substring(1) : uniqueField] = crypto.randomUUID();
+    }
+    return payload;
+  };
+
   const addRecord = () => {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
-      pConn.getListActions().insert({ classID: contextClass }, referenceList.length, pageReference);
+      pConn.getListActions().insert(withUniqueField({ classID: contextClass }), referenceList.length, pageReference);
     } else {
-      pConn.getListActions().insert({}, referenceList.length);
+      pConn.getListActions().insert(withUniqueField({}), referenceList.length);
     }
   };
 
