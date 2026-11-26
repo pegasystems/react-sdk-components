@@ -15,6 +15,8 @@ import StoreContext from './Context/StoreContext';
 
 import { SdkComponentMap } from './helpers/sdk_component_map';
 
+const MULTI_SELECT = 'Multiselect';
+
 const isClassIDCompare = (key, prev, next) => {
   return !(key === 'classID' && (!prev[key] || !next[key]));
 };
@@ -200,6 +202,11 @@ class PConnect extends Component {
 
   componentDidMount() {
     this.c11nEnv.addFormField();
+    // Multiselect's selectionList is not @P annotated in the metadata, so it isn't part of stateProps by default.
+    // Register it (as Constellation does) so validation and field-level messages resolve the selectionList property.
+    if (this.c11nEnv?.meta?.type === MULTI_SELECT && this.c11nEnv.meta?.config?.selectionList) {
+      this.c11nEnv.setStateProps({ selectionList: this.c11nEnv.meta.config.selectionList });
+    }
     setVisibilityForList(this.c11nEnv, true);
   }
 
